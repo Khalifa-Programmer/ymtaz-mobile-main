@@ -1,0 +1,142 @@
+{
+  "project_info": {
+    "project_number": "884990344289",
+    "project_id": "ymtaz-51895",
+    "storage_bucket": "ymtaz-51895.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884990344289:android:f4b0fbd5deeae532153e20",
+        "android_client_info": {
+          "package_name": "com.yamtaz.yamtaz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "884990344289-qt634eqehcu5o8p4dsv23hndckrlm4qn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yamtaz.yamtaz",
+            "certificate_hash": "d666b3b476546bb749926375dcd7500b175a28d4"
+          }
+        },
+        {
+          "client_id": "884990344289-hoj1fr2cj4n9m07jba24d82gfnvu7dmi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDU8dph-nH7OmPwAxyQlk9BjmEMstKrLbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "884990344289-hoj1fr2cj4n9m07jba24d82gfnvu7dmi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "884990344289-fprenhpogsu528flnco897ua1pvu1o7s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ymtaz.yamtaz"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884990344289:android:2de58d37b3df8bb3153e20",
+        "android_client_info": {
+          "package_name": "com.ymtaz.ymtaz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "884990344289-b2bpjdub19isqineflujll007deru70f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ymtaz.ymtaz",
+            "certificate_hash": "d666b3b476546bb749926375dcd7500b175a28d4"
+          }
+        },
+        {
+          "client_id": "884990344289-vql1g84ciqdpei237es39k4bpj9hg0ci.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ymtaz.ymtaz",
+            "certificate_hash": "b9624415b5ba82d0c5ed43b92ac629302efbe0e8"
+          }
+        },
+        {
+          "client_id": "884990344289-hoj1fr2cj4n9m07jba24d82gfnvu7dmi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDU8dph-nH7OmPwAxyQlk9BjmEMstKrLbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "884990344289-hoj1fr2cj4n9m07jba24d82gfnvu7dmi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "884990344289-fprenhpogsu528flnco897ua1pvu1o7s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ymtaz.yamtaz"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884990344289:android:ec709d918fbd2b67153e20",
+        "android_client_info": {
+          "package_name": "com.ymtaz.ymtaz.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "884990344289-hoj1fr2cj4n9m07jba24d82gfnvu7dmi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDU8dph-nH7OmPwAxyQlk9BjmEMstKrLbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "884990344289-hoj1fr2cj4n9m07jba24d82gfnvu7dmi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "884990344289-fprenhpogsu528flnco897ua1pvu1o7s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ymtaz.yamtaz"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

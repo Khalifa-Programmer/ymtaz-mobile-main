@@ -1,0 +1,9 @@
+export 'user_profile_widget.dart';
+export 'upgrade_button_widget.dart';
+export 'daily_progress_widget.dart';
+export 'learning_path_widget.dart';
+export 'expert_section_widget.dart';
+export 'statistics_widget.dart';
+export 'support_button_widget.dart';
+export 'invite_friends_widget.dart';
+export 'week_day_item_widget.dart'; 

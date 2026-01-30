@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+    <key>NSContactsUsageDescription</key>
+    <string>We need access to your contacts to invite users easily.</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>12.0</string>
+    <key>FlutterDeepLinkingEnabled</key>
+    <true/>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need access to your location to confirm your address.</string>
+    <key>GIDClientID</key>
+    <string>884990344289-rq31c9a4ur6meho4msgi3vs4gl4np80j.apps.googleusercontent.com</string>
+
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.884990344289-rq31c9a4ur6meho4msgi3vs4gl4np80j</string>
+                <string>signinwithapple</string>
+            </array>
+        </dict>
+    </array>
+
+    <key>NSAppleMusicUsageDescription</key>
+    <string>We need access to your Apple account for sign-in.</string>
+    <key>NSUserAuthenticationUsageDescription</key>
+    <string>We need access to your Apple account to log in.</string>
+
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>NSCameraUsageDescription</key>
+    <string>We need access to your camera for video calls.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We need access to your microphone for voice notes and calls.</string>
+
+    <key>UIApplicationSupportsIndirectInputEvents</key>
+    <true/>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>processing</string>
+        <string>remote-notification</string>
+        <string>audio</string>
+    </array>
+    <key>BGTaskSchedulerPermittedIdentifiers</key>
+    <array>
+        <string>com.ymtaz.ymtaz.refresh</string>
+        <string>com.ymtaz.ymtaz.process</string>
+    </array>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to your photo library to allow you to upload photos to your profile.</string>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Notification permission is required to inform you about updates.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We need access to your location to verify your address and suggest nearby clients.</string>
+    <key>NSCalendarsUsageDescription</key>
+    <string>We need access to your calendar to add reminders.</string>
+    <key>NSRemindersUsageDescription</key>
+    <string>We need access to your reminders to add new reminders.</string>
+
+    <key>CFBundleDisplayName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>Ymtaz</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(FLUTTER_BUILD_NAME)</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleVersion</key>
+    <string>$(FLUTTER_BUILD_NUMBER)</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    <key>UIMainStoryboardFile</key>
+    <string>Main</string>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>CADisableMinimumFrameDurationOnPhone</key>
+    <true/>
+    <key>UIStatusBarHidden</key>
+    <false/>
+</dict>
+</plist>
