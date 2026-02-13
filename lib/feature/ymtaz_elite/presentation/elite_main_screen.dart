@@ -11,7 +11,6 @@ import 'package:yamtaz/feature/ymtaz_elite/presentation/widgets/item_card_widget
 class EliteMainScreen extends StatefulWidget {
   const EliteMainScreen({super.key});
 
-
   @override
   State<EliteMainScreen> createState() => _EliteMainScreenState();
 }
