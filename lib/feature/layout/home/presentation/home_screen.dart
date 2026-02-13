@@ -18,6 +18,7 @@ import 'package:yamtaz/feature/layout/account/presentation/guest_screen.dart';
 import 'package:yamtaz/feature/layout/home/logic/home_cubit.dart';
 import 'package:yamtaz/feature/layout/home/logic/home_state.dart';
 import 'package:yamtaz/feature/layout/home/presentation/recent_joined_lawyers.dart';
+import 'package:yamtaz/feature/layout/home/presentation/elite_lawyers_section.dart';
 
 import '../../../notifications/logic/notification_cubit.dart';
 import '../../account/logic/my_account_cubit.dart';
@@ -110,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SliverToBoxAdapter(child: RecentJoinedLawyers()),
               // Recent Lawyers
               SliverToBoxAdapter(child: verticalSpace(20.h)),
+              const SliverToBoxAdapter(child: EliteLawyersSection()),
               SliverToBoxAdapter(child: verticalSpace(20.h)),
 
               _buildGridSection(context),

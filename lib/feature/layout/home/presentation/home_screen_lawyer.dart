@@ -18,6 +18,7 @@ import 'package:yamtaz/feature/layout/account/presentation/guest_screen.dart';
 import 'package:yamtaz/feature/layout/home/logic/home_cubit.dart';
 import 'package:yamtaz/feature/layout/home/logic/home_state.dart';
 import 'package:yamtaz/feature/layout/home/presentation/recent_joined_lawyers.dart';
+import 'package:yamtaz/feature/layout/home/presentation/elite_lawyers_section.dart';
 
 import '../../../digital_office/logic/office_provider_cubit.dart';
 import '../../../digital_office/view/adjust_office_main.dart';
@@ -106,6 +107,8 @@ class _HomeScreenLawyerState extends State<HomeScreenLawyer> {
               // Search bar
               SliverToBoxAdapter(child: RecentJoinedLawyers()),
               // Recent Lawyers
+              SliverToBoxAdapter(child: verticalSpace(20.h)),
+              const SliverToBoxAdapter(child: EliteLawyersSection()),
               SliverToBoxAdapter(child: verticalSpace(20.h)),
 
               SliverToBoxAdapter(
