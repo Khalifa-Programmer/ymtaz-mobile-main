@@ -394,26 +394,28 @@ class MyPageClientImproved extends StatelessWidget {
   // دالة لبناء حالة فارغة
   Widget _buildEmptyState(String message) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.info_outline,
-            size: 60.sp,
-            color: appColors.grey3,
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            message,
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-              color: appColors.grey10,
-              fontFamily: 'Cairo',
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.info_outline,
+              size: 60.sp,
+              color: appColors.grey3,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            SizedBox(height: 16.h),
+            Text(
+              message,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: appColors.grey10,
+                fontFamily: 'Cairo',
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -421,28 +423,30 @@ class MyPageClientImproved extends StatelessWidget {
   // دالة لبناء حالة التحميل
   Widget _buildLoadingState() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 50.w,
-            height: 50.w,
-            child: CircularProgressIndicator(
-              color: appColors.primaryColorYellow,
-              strokeWidth: 3.w,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 50.w,
+              height: 50.w,
+              child: CircularProgressIndicator(
+                color: appColors.primaryColorYellow,
+                strokeWidth: 3.w,
+              ),
             ),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            'جاري التحميل...',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-              color: appColors.grey10,
-              fontFamily: 'Cairo',
+            SizedBox(height: 16.h),
+            Text(
+              'جاري التحميل...',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: appColors.grey10,
+                fontFamily: 'Cairo',
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
