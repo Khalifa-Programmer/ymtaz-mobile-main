@@ -1,12 +1,26 @@
 workflows:
-  ios-release-no-shorebird:
-    name: iOS Release
+  ios-debug-testing:
+    name: iOS Ad Hoc Build
+    max_build_duration: 60
+    instance_type: mac_mini_m1
     environment:
       flutter: stable
       xcode: latest
     scripts:
-      - flutter build ios --simulator
-      - mkdir -p build/ios/ipa
-      - zip -r build/ios/ipa/Runner.app.zip build/ios/iphonesimulator/Runner.app
+      - name: Get Flutter packages
+        script: flutter pub get
+      - name: Update CocoaPods Repo (حل المشكلة السابقة)
+        script: |
+          cd ios
+          pod repo update
+      - name: Flutter build IPA for Testing
+        script: |
+          # نستخدم build ipa مع تصدير بنوع ad-hoc
+          flutter build ipa --release --export-method=ad-hoc --no-codesign
     artifacts:
-      - build/ios/ipa/Runner.app.zip
+      - build/ios/ipa/*.ipa
+    publishing:
+      # نترك قسم النشر فارغاً أو نرسله للإيميل فقط
+      email:
+        recipients:
+          - alhajamekh@gmail.com
