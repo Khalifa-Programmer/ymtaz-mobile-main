@@ -17,7 +17,7 @@ String formatDateToEnglish(DateTime? date) {
 }
 
 class WorkExperienceScreen extends StatefulWidget {
-  WorkExperienceScreen({super.key});
+  const WorkExperienceScreen({super.key});
 
   @override
   State<WorkExperienceScreen> createState() => _WorkExperienceScreenState();
@@ -312,7 +312,7 @@ class _ExperienceDialogState extends State<ExperienceDialog> {
         widget.experience == null ? 'إضافة خبرة' : 'تعديل الخبرة',
         textAlign: TextAlign.center,
       ),
-      content: Container(
+      content: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height * 0.9,
         child: SingleChildScrollView(

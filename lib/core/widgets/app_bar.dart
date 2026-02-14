@@ -80,7 +80,7 @@ AppBar buildBlurredUserAppBar(BuildContext context, String title) {
   );
 }
 
-_buildUserProfileRow(BuildContext context) {
+Column _buildUserProfileRow(BuildContext context) {
   var userType = CacheHelper.getData(key: 'userType');
   return Column(
     children: [
@@ -136,11 +136,10 @@ _buildUserProfileRow(BuildContext context) {
       ConditionalBuilder(
         condition: userType == 'guest',
         builder: (BuildContext context) => UserProfileRow(
-          imageUrl:
-              "https://e7.pngegg.com/pngimages/141/425/png-clipart-user-profile-computer-icons-avatar-profile-s-free-angle-rectangle-thumbnail.png",
+          imageUrl: "", 
           name: "ضيفنا الكريم",
           color: appColors.primaryColorYellow,
-          image: "https://api.ymtaz.sa/uploads/ranks/BrownShield.svg",
+          image: "", // Empty to trigger placeholder icon
         ),
         fallback: (BuildContext context) => const SizedBox(),
       ),

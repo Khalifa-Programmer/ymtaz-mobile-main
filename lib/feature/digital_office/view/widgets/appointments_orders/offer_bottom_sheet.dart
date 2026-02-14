@@ -107,7 +107,7 @@ class _AppointmetnsOfferBottomSheetState
                           borderRadius: BorderRadius.circular(8.sp),
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: 50.sp,
                         height: 4.sp,
                       ),
@@ -249,7 +249,7 @@ class _AppointmetnsOfferBottomSheetState
                         ),
                       ),
                     ),
-                    orElse: () => Container(
+                    orElse: () => SizedBox(
                       width: double.infinity,
                       child: CupertinoButton(
                         color: appColors.primaryColorYellow,

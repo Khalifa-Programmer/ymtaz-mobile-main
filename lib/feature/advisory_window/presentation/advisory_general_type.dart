@@ -12,6 +12,8 @@ import '../../../core/widgets/spacing.dart';
 import '../logic/advisory_cubit.dart';
 
 class AdvisoryGeneralType extends StatelessWidget {
+  const AdvisoryGeneralType({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AdvisoryCubit, AdvisoryState>(

@@ -11,12 +11,15 @@ import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/widgets/spacing.dart';
 import '../../../core/widgets/webpay_new.dart';
+import '../../../core/constants/assets.dart';
 import '../../layout/account/presentation/client_profile/presentation/client_my_profile.dart';
 import '../../layout/account/presentation/widgets/user_profile_row.dart';
 import '../logic/advisory_cubit.dart';
 import 'advisor_time_selection.dart';
 
 class AdvisoryPaymentScreen extends StatelessWidget {
+  const AdvisoryPaymentScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     var cubit = getit<AdvisoryCubit>();
@@ -70,7 +73,7 @@ class AdvisoryPaymentScreen extends StatelessWidget {
             verticalSpace(20.h),
             advisoryData(),
             verticalSpace(50.h),
-            Container(
+            SizedBox(
               width: double.infinity,
               child: CupertinoButton(
                   padding: EdgeInsets.zero,
@@ -179,7 +182,7 @@ class AdvisoryPaymentScreen extends StatelessWidget {
             ),
             horizontalSpace(5.w),
             Text(
-              "${lawyer.region?.name ?? ''} - ${lawyer.city?.title ?? ''}",
+              "${(lawyer.region?.name == null || lawyer.region!.name.toString().toLowerCase() == 'null') ? '-' : lawyer.region!.name!} - ${(lawyer.city?.title == null || lawyer.city!.title.toString().toLowerCase() == 'null') ? '-' : lawyer.city!.title!}",
               style:
                   TextStyles.cairo_12_regular.copyWith(color: appColors.grey15),
             ),
@@ -222,10 +225,19 @@ class AdvisoryPaymentScreen extends StatelessWidget {
             child: CircleAvatar(
               radius: 10.sp,
               backgroundColor: appColors.white,
-              child: SvgPicture.network(
-                lawyer.currentRank?.image ?? '',
+              child: CachedNetworkImage(
+                imageUrl: lawyer.currentRank?.image ?? '',
                 width: 12.0.w,
                 height: 12.0.h,
+                placeholder: (context, url) => SizedBox(
+                    width: 12.w,
+                    height: 12.h,
+                    child: const CircularProgressIndicator(strokeWidth: 2)),
+                errorWidget: (context, url, error) => SvgPicture.asset(
+                  AppAssets.rank,
+                  width: 12.0.w,
+                  height: 12.0.h,
+                ),
               ),
             ),
           ),
@@ -234,7 +246,7 @@ class AdvisoryPaymentScreen extends StatelessWidget {
     );
   }
 
-  advisoryData() {
+  RenderObjectWidget advisoryData() {
     var cubit = getit<AdvisoryCubit>();
     if (cubit.selectedLawyer == null || cubit.selectedLawyer!.subCategory == null) {
       return SizedBox.shrink(); // Return an empty widget if data is null

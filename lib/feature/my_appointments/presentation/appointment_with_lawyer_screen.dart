@@ -357,7 +357,7 @@ class _AppointmentDataState extends State<AppointmentData> {
     );
   }
 
-  _buildAppointmentDetails(ReservationsType reservationsTypes) {
+  Column _buildAppointmentDetails(ReservationsType reservationsTypes) {
     return Column(
       children: [
         CustomContainer(

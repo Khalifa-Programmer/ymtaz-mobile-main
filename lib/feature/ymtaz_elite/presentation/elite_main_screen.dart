@@ -9,7 +9,7 @@ import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
 import 'package:yamtaz/feature/ymtaz_elite/presentation/widgets/item_card_widget.dart';
 
 class EliteMainScreen extends StatefulWidget {
-  EliteMainScreen({super.key});
+  const EliteMainScreen({super.key});
 
   @override
   State<EliteMainScreen> createState() => _EliteMainScreenState();
@@ -25,7 +25,7 @@ class _EliteMainScreenState extends State<EliteMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildBlurredAppBar(context, "هيئة المستشارين"),
+      appBar: buildBlurredAppBar(context, "نخبة المستشارين"),
       body: Animate(
         effects: [FadeEffect(duration: 500.ms)],
         child: BlocBuilder<YmtazEliteCubit, YmtazEliteState>(

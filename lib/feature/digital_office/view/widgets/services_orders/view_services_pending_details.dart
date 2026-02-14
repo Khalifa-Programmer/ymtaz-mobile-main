@@ -183,7 +183,7 @@ class _ServiceScreenSetailsClientState
           children: [
             Expanded(
               flex: 2,
-              child: Container(
+              child: SizedBox(
                 height: 35.h,
                 child: CupertinoButton(
                     padding:
@@ -201,7 +201,7 @@ class _ServiceScreenSetailsClientState
             horizontalSpace(10.w),
             Expanded(
               flex: 2,
-              child: Container(
+              child: SizedBox(
                 height: 35.h,
                 child: CupertinoButton(
                     padding:

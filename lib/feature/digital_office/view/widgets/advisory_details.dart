@@ -31,7 +31,7 @@ import '../../logic/office_provider_cubit.dart';
 import '../../logic/office_provider_state.dart';
 
 class ViewAdvisoryDetails extends StatefulWidget {
-  ViewAdvisoryDetails({super.key, required this.servicesRequirementsResponse});
+  const ViewAdvisoryDetails({super.key, required this.servicesRequirementsResponse});
 
   final Reservation servicesRequirementsResponse;
 
@@ -42,7 +42,7 @@ class ViewAdvisoryDetails extends StatefulWidget {
 class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
   final TextEditingController externalController = TextEditingController();
 
-  List<PlatformFile> _files = [];
+  final List<PlatformFile> _files = [];
 
   @override
   Widget build(BuildContext context) {
@@ -443,7 +443,7 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
                     ..._files.map((file) {
                       int index = _files.indexOf(file);
                       return _buildFileListItem(file, index);
-                    }).toList(),
+                    }),
                     Container(
                       color: appColors.white,
                       width: double.infinity,

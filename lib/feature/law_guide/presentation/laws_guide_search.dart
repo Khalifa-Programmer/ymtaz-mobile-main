@@ -281,7 +281,7 @@ class LawGuideSearch extends StatelessWidget {
         });
   }
 
-  _subData() {
+  ConditionalBuilder _subData() {
     return ConditionalBuilder(
         condition:
             getit<LawGuideCubit>().lawGuideSearchResponse!.data!.lawGuide !=
@@ -418,7 +418,7 @@ class LawGuideSearch extends StatelessWidget {
         });
   }
 
-  _lawsData() {
+  ConditionalBuilder _lawsData() {
     return ConditionalBuilder(
         condition:
             getit<LawGuideCubit>().lawGuideSearchResponse!.data!.laws != null,

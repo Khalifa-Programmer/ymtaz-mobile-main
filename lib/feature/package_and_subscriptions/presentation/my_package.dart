@@ -1,6 +1,5 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -485,7 +484,7 @@ class MyPackage extends StatelessWidget {
     );
   }
 
-  getDurationType(param0) {
+  String getDurationType(param0) {
     switch (param0) {
       case 1:
         return 'يوم';

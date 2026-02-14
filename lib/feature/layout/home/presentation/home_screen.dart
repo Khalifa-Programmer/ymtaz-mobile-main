@@ -1,11 +1,11 @@
 import 'dart:ui';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/core/constants/colors.dart';
@@ -18,13 +18,13 @@ import 'package:yamtaz/feature/layout/account/presentation/guest_screen.dart';
 import 'package:yamtaz/feature/layout/home/logic/home_cubit.dart';
 import 'package:yamtaz/feature/layout/home/logic/home_state.dart';
 import 'package:yamtaz/feature/layout/home/presentation/recent_joined_lawyers.dart';
+import 'package:yamtaz/feature/layout/home/presentation/elite_lawyers_section.dart';
 
 import '../../../notifications/logic/notification_cubit.dart';
-import '../../../package_and_subscriptions/presentation/all_packages_screen.dart';
 import '../../account/logic/my_account_cubit.dart';
 import '../../account/presentation/client_profile/presentation/client_my_profile.dart';
 import '../../account/presentation/widgets/user_profile_row.dart';
-import 'ads_banner/ads_banner.dart';
+
 
 bool showDialogComplete = true;
 
@@ -44,10 +44,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Perform actions after the first frame is rendered
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      getit<NotificationCubit>().getNotifications();
-
       // Fetch user type once to avoid redundant calls
       final userType = CacheHelper.getData(key: 'userType');
+
+      if (userType != 'guest' && userType != 'visitor') {
+        getit<NotificationCubit>().getNotifications();
+      }
 
       if (showDialogComplete) {
         if (userType == 'client') {
@@ -82,128 +84,35 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userType = CacheHelper.getData(key: 'userType');
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         // Add state listener if needed
       },
       builder: (context, state) {
         return Scaffold(
-          body: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              _buildPinnedHeader(context),
+          body: RefreshIndicator(
+            onRefresh: () async {
+              await context.read<HomeCubit>().getHomeData();
+              if (userType != 'guest' && userType != 'visitor') {
+                getit<NotificationCubit>().getNotifications();
+                await getit<MyAccountCubit>().refresh();
+              }
+            },
+            color: appColors.primaryColorYellow,
+            child: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                _buildPinnedHeader(context),
 
               // Add pinned header
-              SliverToBoxAdapter(child: _buildSearchField()),
+              //SliverToBoxAdapter(child: _buildSearchField()),
               // Search bar
               SliverToBoxAdapter(child: RecentJoinedLawyers()),
               // Recent Lawyers
               SliverToBoxAdapter(child: verticalSpace(20.h)),
-              SliverToBoxAdapter(child: AdsBanner()),
+              const SliverToBoxAdapter(child: EliteLawyersSection()),
               SliverToBoxAdapter(child: verticalSpace(20.h)),
-
-              // Ads banner
-              // todo elite card
-
-              // SliverToBoxAdapter(child: verticalSpace(20.h)),
-              // SliverToBoxAdapter(
-              //   child: GestureDetector(
-              //     onTap: () {
-              //       Navigator.pushNamed(context, Routes.elite);
-              //     },
-              //     child: Container(
-              //         width: 350.w,
-              //         margin:
-              //             EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
-              //         padding: EdgeInsets.all(1.5.r),
-              //         decoration: BoxDecoration(
-              //           // gradient: LinearGradient(
-              //           //   colors: [
-              //           //     appColors.primaryColorYellow.withOpacity(0.5),
-              //           //     appColors.white,
-              //           //   ],
-              //           //   end: Alignment.bottomLeft,
-              //           //   begin: Alignment.topRight,
-              //           //   stops: [0.1, 0.3],
-              //           // ),
-              //           color: appColors.white,
-              //
-              //           borderRadius:
-              //               BorderRadius.circular(20.r), // تحديد الحواف
-              //         ),
-              //         child: Container(
-              //           width: 350.w,
-              //           padding: EdgeInsets.all(20.r),
-              //           decoration: BoxDecoration(
-              //             color: appColors.white,
-              //             // gradient: LinearGradient(
-              //             //   colors: [
-              //             //     appColors.lightYellow10,
-              //             //     appColors.lightYellow10,
-              //             //     appColors.primaryColorYellow.withOpacity(0.5),
-              //             //     appColors.lightYellow10,
-              //             //     appColors.lightYellow10,
-              //             //   ],
-              //             //   end: Alignment.bottomLeft,
-              //             //   begin: Alignment.topRight,
-              //             // ),
-              //             borderRadius: BorderRadius.circular(20.r),
-              //             boxShadow: [
-              //               BoxShadow(
-              //                 color: Colors.black12,
-              //                 blurRadius: 10.r,
-              //                 offset: Offset(0, 2.r),
-              //               ),
-              //             ],
-              //           ),
-              //           child: Column(
-              //             mainAxisAlignment: MainAxisAlignment.center,
-              //             crossAxisAlignment: CrossAxisAlignment.start,
-              //             children: [
-              //               Row(
-              //                 children: [
-              //                   SvgPicture.asset(
-              //                     AppAssets.crown,
-              //                     width: 30.w,
-              //                     height: 30.h,
-              //                   ),
-              //                   horizontalSpace(10.w),
-              //                   Text(
-              //                     'هيئة المستشارين',
-              //                     style: TextStyles.cairo_15_bold
-              //                         .copyWith(color: appColors.blue100),
-              //                   ),
-              //                 ],
-              //               ),
-              //               verticalSpace(5.h),
-              //               Text(
-              //                 "تقدیم حلول متنوعة وخطوات مدروسة لحل المشكلة بشكل شامل من قبل نخبة من المستشارین المتخصصین بأحدث التقنیات المتاحة",
-              //                 style: TextStyles.cairo_12_medium
-              //                     .copyWith(color: appColors.blue100),
-              //                 textAlign: TextAlign.right,
-              //               ),
-              //               verticalSpace(10.h),
-              //               Container(
-              //                 width: 350.w,
-              //                 padding: EdgeInsets.all(8.r),
-              //                 decoration: BoxDecoration(
-              //                   color: appColors.primaryColorYellow,
-              //                   borderRadius: BorderRadius.circular(8.r),
-              //                 ),
-              //                 child: Center(
-              //                   child: Text(
-              //                     'ابدأ الآن',
-              //                     style: TextStyles.cairo_12_bold
-              //                         .copyWith(color: appColors.white),
-              //                   ),
-              //                 ),
-              //               ),
-              //             ],
-              //           ),
-              //         )),
-              //   ),
-              // ),
-              // SliverToBoxAdapter(child: verticalSpace(20.h)),
 
               _buildGridSection(context),
               SliverToBoxAdapter(child: verticalSpace(20.h)),
@@ -212,6 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // Grid Section
             ],
           ),
+        ),
             // floatingActionButton: FloatingActionButton(
             //   onPressed: () {
             //     Navigator.push(
@@ -233,6 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final userType = CacheHelper.getData(key: 'userType');
 
     return SliverAppBar(
+      automaticallyImplyLeading: userType == 'guest',
       pinned: true,
       elevation: 0,
       backgroundColor: Colors.transparent,
@@ -341,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // User Profile Row
 
-  _buildUserProfileRow(BuildContext context) {
+  Column _buildUserProfileRow(BuildContext context) {
     var userType = CacheHelper.getData(key: 'userType');
     return Column(
       children: [
@@ -351,22 +262,18 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (BuildContext context) =>
               UserProfileRow(
                 imageUrl:
-                getit<MyAccountCubit>().clientProfile!.data!.account!.photo ??
+                getit<MyAccountCubit>().clientProfile?.data?.account?.photo ??
+                    getit<MyAccountCubit>().clientProfile?.data?.account?.image ??
+                    getit<MyAccountCubit>().clientProfile?.data?.account?.logo ??
                     "https://api.ymtaz.sa/uploads/person.png",
-                name: getit<MyAccountCubit>().clientProfile!.data!.account!
-                    .name!,
+
+                name: getit<MyAccountCubit>().clientProfile?.data?.account?.name ?? "بدون اسم",
                 color: getColor(getit<MyAccountCubit>()
-                    .clientProfile!
-                    .data!
-                    .account!
-                    .currentRank!
-                    .borderColor!),
+                    .clientProfile?.data?.account?.currentRank?.borderColor ?? "FF0000"),
                 image: getit<MyAccountCubit>()
-                    .clientProfile!
-                    .data!
-                    .account!
-                    .currentRank!
-                    .image!,
+                    .clientProfile?.data?.account?.currentRank?.image ?? "",
+
+
               ),
           fallback: (BuildContext context) => const SizedBox(),
         ),
@@ -380,32 +287,39 @@ class _HomeScreenState extends State<HomeScreen> {
                     .data!
                     .account!
                     .hasBadge,
-                imageUrl: getit<MyAccountCubit>()
-                    .userDataResponse!
-                    .data!
-                    .account!
-                    .photo ??
+                imageUrl: getit<MyAccountCubit>().userDataResponse?.data?.account?.photo ??
+                    getit<MyAccountCubit>().userDataResponse?.data?.account?.image ??
+                    getit<MyAccountCubit>().userDataResponse?.data?.account?.logo ??
                     "https://api.ymtaz.sa/uploads/person.png",
+
                 name:
-                '${getit<MyAccountCubit>().userDataResponse!.data!.account!
-                    .name}',
+                '${getit<MyAccountCubit>().userDataResponse?.data?.account?.name ?? "بدون اسم"}',
                 color: getColor(getit<MyAccountCubit>()
-                    .userDataResponse!
-                    .data!
-                    .account!
-                    .currentRank!
-                    .borderColor!),
+                    .userDataResponse?.data?.account?.currentRank?.borderColor ?? "FF0000"),
                 image: getit<MyAccountCubit>()
-                    .userDataResponse!
-                    .data!
-                    .account!
-                    .currentRank!
-                    .image!,
+                    .userDataResponse?.data?.account?.currentRank?.image ?? "",
+
+
               ),
           fallback: (BuildContext context) => const SizedBox(),
         ),
         ConditionalBuilder(
+          condition: userType == 'visitor',
+          builder: (BuildContext context) {
+            String? userName = CacheHelper.getData(key: 'userName');
+            String? userImage = CacheHelper.getData(key: 'userImage');
+            return UserProfileRow(
+              imageUrl: userImage ?? "https://api.ymtaz.sa/uploads/person.png",
+              name: userName ?? "زائر",
+              color: appColors.primaryColorYellow,
+              image: "https://api.ymtaz.sa/uploads/ranks/BrownShield.svg",
+            );
+          },
+          fallback: (BuildContext context) => const SizedBox(),
+        ),
+        ConditionalBuilder(
           condition: userType == 'guest',
+
           builder: (BuildContext context) =>
           const UserProfileRow(
             imageUrl:

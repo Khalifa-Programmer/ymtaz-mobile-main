@@ -8,7 +8,7 @@ class AppTheme {
 
       useMaterial3: true,
       appBarTheme: const AppBarTheme(
-        color: appColors.white,
+        backgroundColor: appColors.white,
         surfaceTintColor: Colors.white,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,

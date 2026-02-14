@@ -85,23 +85,33 @@ class AppointmentRepo {
   }
 
   // request appointment
-  Future<ApiResult<AppontmentRequestResponse>> requestAppointment(
-      FormData data) async {
-    var token = CacheHelper.getData(key: 'token');
-    var userType = CacheHelper.getData(key: 'userType');
-    try {
-      var response;
-
-      if (userType == 'client') {
-        response = await _apiService.appointmentsRequest(token, data);
-      } else if (userType == 'provider') {
-        response = await _apiService.appointmentsRequest(token, data);
-      }
-      return ApiResult.success(response);
-    } on DioException catch (error) {
-      return ApiResult.failure(error.response?.data);
+Future<ApiResult<AppontmentRequestResponse>> requestAppointment(FormData data) async {
+  var token = CacheHelper.getData(key: 'token');
+  var userType = CacheHelper.getData(key: 'userType');
+  
+  try {
+    // التحقق من وجود التوكن ونوع المستخدم أولاً لضمان الأمان
+    if (token == null || userType == null) {
+      return const ApiResult.failure({"message": "يجب تسجيل الدخول أولاً"});
     }
+
+    // بما أن الدالة المستدعاة من الـ API واحدة للحالتين، يمكننا طلبها مباشرة
+    // أو استخدام final لضمان تعيين القيمة
+    final AppontmentRequestResponse response;
+
+    if (userType == 'client' || userType == 'provider') {
+      response = await _apiService.appointmentsRequest(token, data);
+    } else {
+      return const ApiResult.failure({"message": "عذراً، هذه الخدمة غير متاحة لنوع حسابك"});
+    }
+
+    return ApiResult.success(response);
+  } on DioException catch (error) {
+    return ApiResult.failure(error.response?.data);
+  } catch (e) {
+    return ApiResult.failure({"message": e.toString()});
   }
+}
   Future<ApiResult<ReplyToOfferAppointmentResponse>> respondToAppointmentOffer(
       FormData data) async {
     var token = CacheHelper.getData(key: 'token');

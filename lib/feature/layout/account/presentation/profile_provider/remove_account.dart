@@ -13,17 +13,30 @@ import '../../../../../core/constants/colors.dart';
 import '../../../../../core/widgets/alerts.dart';
 import '../../../../../core/widgets/primary/text_form_primary.dart';
 
-class RemoveAccountProvider extends StatelessWidget {
-  RemoveAccountProvider({super.key});
+class RemoveAccountProvider extends StatefulWidget {
+  const RemoveAccountProvider({super.key});
 
-  var formKey = GlobalKey<FormState>();
+  @override
+  State<RemoveAccountProvider> createState() => _RemoveAccountProviderState();
+}
+
+class _RemoveAccountProviderState extends State<RemoveAccountProvider> {
+  final formKey = GlobalKey<FormState>();
+  String? selectedReason;
+  final List<String> reasons = [
+    "لم أعد بحاجة للخدمة",
+    "وجدت بديل أفضل",
+    "أسباب تتعلق بالخصوصية",
+    "الواجهة صعبة الاستخدام",
+    "أخرى"
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('حذف الحساب',
+        title: Text('إزالة الحساب',
             style: TextStyles.cairo_14_bold.copyWith(
               color: appColors.black,
             )),
@@ -74,22 +87,64 @@ class RemoveAccountProvider extends StatelessWidget {
                 key: formKey,
                 child: Column(
                   children: [
-                    CustomTextFieldPrimary(
-                      hintText: 'سبب الحذف.....',
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'الرجاء إدخال سبب الحذف';
-                        }
-                        return null;
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: 'سبب الحذف',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 10.w, vertical: 15.h),
+                      ),
+                      value: selectedReason,
+                      items: reasons
+                          .map((reason) => DropdownMenuItem(
+                                value: reason,
+                                child: Text(
+                                  reason,
+                                  style: TextStyles.cairo_14_medium,
+                                ),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedReason = value;
+                          if (value != "أخرى") {
+                            context
+                                .read<MyAccountCubit>()
+                                .removeAccountController
+                                .text = value!;
+                          } else {
+                            context
+                                .read<MyAccountCubit>()
+                                .removeAccountController
+                                .text = "";
+                          }
+                        });
                       },
-                      type: TextInputType.text,
-                      typeInputAction: TextInputAction.done,
-                      externalController: context
-                          .read<MyAccountCubit>()
-                          .removeAccountController,
-                      multiLine: true,
-                      title: 'سبب الحذف',
+                      validator: (value) =>
+                          value == null ? 'الرجاء اختيار سبب الحذف' : null,
                     ),
+                    if (selectedReason == "أخرى") ...[
+                      SizedBox(height: 10.h),
+                      CustomTextFieldPrimary(
+                        hintText: 'سبب الحذف.....',
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'الرجاء إدخال سبب الحذف';
+                          }
+                          return null;
+                        },
+                        type: TextInputType.text,
+                        typeInputAction: TextInputAction.done,
+                        externalController: context
+                            .read<MyAccountCubit>()
+                            .removeAccountController,
+                        multiLine: true,
+                        title: 'سبب الحذف',
+                      ),
+                    ],
+                    SizedBox(height: 10.h),
                     CustomTextFieldPrimary(
                       hintText: 'مقترح للتطوير......',
                       validator: (value) {

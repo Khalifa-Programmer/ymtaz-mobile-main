@@ -166,7 +166,7 @@ class ViewOfferScreen extends StatelessWidget {
         verticalSpace(10.h),
         Row(
           children: [
-            Text(offer.price.toString() + " ريال",
+            Text("${offer.price} ريال",
                 style: TextStyles.cairo_16_bold
                     .copyWith(color: appColors.blue100)),
           ],
@@ -176,7 +176,7 @@ class ViewOfferScreen extends StatelessWidget {
           children: [
             Expanded(
               flex: 2,
-              child: Container(
+              child: SizedBox(
                 height: 35.h,
                 child: CupertinoButton(
                     padding:
@@ -198,7 +198,7 @@ class ViewOfferScreen extends StatelessWidget {
             horizontalSpace(10.w),
             Expanded(
               flex: 2,
-              child: Container(
+              child: SizedBox(
                 height: 35.h,
                 child: CupertinoButton(
                     padding:

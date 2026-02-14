@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -610,11 +609,11 @@ class ViewOrderDetails extends StatelessWidget {
           _showAIAssistantSheet(context);
         },
         backgroundColor: appColors.primaryColorYellow,
+        tooltip: 'المساعد الذكي',
         child: Icon(
           Icons.psychology,
           color: Colors.white,
         ),
-        tooltip: 'المساعد الذكي',
       ),
     );
   }
@@ -635,9 +634,9 @@ class AIAssistantBottomSheet extends StatefulWidget {
   final Reservation orderDetails;
 
   const AIAssistantBottomSheet({
-    Key? key,
+    super.key,
     required this.orderDetails,
-  }) : super(key: key);
+  });
 
   @override
   State<AIAssistantBottomSheet> createState() => _AIAssistantBottomSheetState();

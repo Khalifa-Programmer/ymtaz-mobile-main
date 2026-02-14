@@ -2,14 +2,10 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yamtaz/core/di/dependency_injection.dart';
 import 'package:yamtaz/core/helpers/fuctions_helpers/functions_helpers.dart';
 import 'package:yamtaz/feature/digital_office/view/widgets/service_screen_details_lawyer.dart';
 
-import '../../../../config/themes/styles.dart';
-import '../../../../core/constants/colors.dart';
-import '../../../../core/widgets/spacing.dart';
 import '../../../layout/services/presentation/widgets/no_data_services.dart';
 import '../../../layout/services/presentation/widgets/service_card.dart';
 import '../../data/models/services_from_provider_response.dart';
@@ -17,7 +13,7 @@ import '../../logic/office_provider_cubit.dart';
 import '../../logic/office_provider_state.dart';
 
 class ProviderServicesScreen extends StatelessWidget {
-  const ProviderServicesScreen({Key? key}) : super(key: key);
+  const ProviderServicesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

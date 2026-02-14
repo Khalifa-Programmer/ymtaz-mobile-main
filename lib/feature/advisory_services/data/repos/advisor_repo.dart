@@ -6,6 +6,8 @@ import 'package:yamtaz/core/network/remote/api_service.dart';
 import 'package:yamtaz/feature/advisory_services/data/model/advisory_category_response.dart';
 import 'package:yamtaz/feature/advisory_services/data/model/advisory_payment_types.dart';
 import 'package:yamtaz/feature/advisory_services/data/model/all_advirsory_response.dart';
+import 'package:yamtaz/feature/advisory_window/data/model/advisory_request_response.dart';
+import 'package:yamtaz/feature/advisory_window/data/model/all_advirsory_response.dart';
 import 'package:yamtaz/feature/layout/account/data/models/advisory_services_types_response.dart';
 
 import '../../../my_appointments/data/model/working_hours_response.dart';
@@ -22,7 +24,7 @@ class AdvisorRepo {
     var token = CacheHelper.getData(key: 'token');
     var userType = CacheHelper.getData(key: 'userType');
     try {
-      var response;
+      AllAdvisoryResponse response;
 
       if (userType == 'client') {
         response = await _apiService.getMyAdvisorClientFromYmtaz(token);
@@ -39,7 +41,7 @@ class AdvisorRepo {
     var token = CacheHelper.getData(key: 'token');
     var userType = CacheHelper.getData(key: 'userType');
     try {
-      var response;
+      AllAdvisoryResponse response;
 
       if (userType == 'client') {
         response = await _apiService.getMyAdvisorClientFromDigital(token);
@@ -57,7 +59,7 @@ class AdvisorRepo {
     var token = CacheHelper.getData(key: 'token');
     var userType = CacheHelper.getData(key: 'userType');
     try {
-      var response;
+      AdvisoryRequestResponse response;
 
       if (userType == 'client' || userType == 'guest') {
         response =
@@ -76,7 +78,7 @@ class AdvisorRepo {
     var token = CacheHelper.getData(key: 'token');
     var userType = CacheHelper.getData(key: 'userType');
     try {
-      var response;
+      AdvisoryRequestResponse response;
 
       if (userType == 'client' || userType == 'guest') {
         response =
@@ -114,7 +116,7 @@ class AdvisorRepo {
     var token = CacheHelper.getData(key: 'token');
     var userType = CacheHelper.getData(key: 'userType');
     try {
-      var response;
+      AdvisoryServicesTypesResponse response;
 
       if (userType == 'client' || userType == 'guest') {
         response =

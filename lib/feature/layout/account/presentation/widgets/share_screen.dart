@@ -35,7 +35,7 @@ class ShareScreen extends StatelessWidget {
         listener: (context, state) {
           if (state is SuccessSendInvite) {
             AnimatedSnackBar.material(
-              "تم إرسال الدعوة بنجاح",
+              state.data.message ?? "تم إرسال الدعوة بنجاح",
               type: AnimatedSnackBarType.success,
             ).show(context);
           }
@@ -208,7 +208,7 @@ class InviteUserScreen extends StatelessWidget {
         listener: (context, state) {
           if (state is SuccessSendInvite) {
             AnimatedSnackBar.material(
-              "تم إرسال الدعوة بنجاح",
+              state.data.message ?? "تم إرسال الدعوة بنجاح",
               type: AnimatedSnackBarType.success,
             ).show(context);
           }
@@ -406,7 +406,7 @@ class InviteUserScreen extends StatelessWidget {
                                       ),
                                       leading: const CircleAvatar(
                                         backgroundImage: NetworkImage(
-                                            'https://api.ymtaz.sa/uploads/person.png'),
+                                            'https://ymtaz.sa/uploads/person.png'),
                                       ),
                                       trailing: Icon(
                                         data.status == 1

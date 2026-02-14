@@ -9,8 +9,9 @@ final class RegisterLoading extends RegisterState {}
 
 final class RegisterSuccess extends RegisterState {
   final String message;
+  final String accountType; // 'client' or 'lawyer'
 
-  RegisterSuccess(this.message);
+  RegisterSuccess(this.message, this.accountType);
 }
 
 final class RegisterFailure extends RegisterState {

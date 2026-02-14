@@ -56,6 +56,9 @@ class Lawyer {
   int? type;
   @JsonKey(name: "image")
   String? image;
+  @JsonKey(name: "photo")
+  String? photo;
+
   @JsonKey(name: "nationality")
   Country? nationality;
   @JsonKey(name: "country")
@@ -171,7 +174,9 @@ class Lawyer {
     this.phoneCode,
     this.type,
     this.image,
+    this.photo,
     this.nationality,
+
     this.country,
     this.region,
     this.city,
@@ -233,7 +238,8 @@ class Lawyer {
 @JsonSerializable()
 class AccurateSpecialty {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "title")
   String? title;
 
@@ -251,7 +257,8 @@ class AccurateSpecialty {
 @JsonSerializable()
 class Country {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "name")
   String? name;
 
@@ -269,7 +276,8 @@ class Country {
 @JsonSerializable()
 class CurrentRank {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "name")
   String? name;
   @JsonKey(name: "border_color")
@@ -293,7 +301,8 @@ class CurrentRank {
 @JsonSerializable()
 class Degree {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "title")
   String? title;
   @JsonKey(name: "isSpecial")
@@ -316,7 +325,8 @@ class Degree {
 @JsonSerializable()
 class SectionElement {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "section")
   SectionSection? section;
   @JsonKey(name: "lawyer_license_no")
@@ -340,7 +350,8 @@ class SectionElement {
 @JsonSerializable()
 class SectionSection {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "title")
   String? title;
   @JsonKey(name: "image")

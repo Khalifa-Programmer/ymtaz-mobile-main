@@ -13,6 +13,8 @@ import '../../../../core/network/error/api_result.dart';
 import '../data/models/banners_model.dart';
 import '../data/models/recent_joined_lawyers_model.dart';
 
+import 'package:yamtaz/core/network/local/cache_helper.dart';
+
 class HomeCubit extends Cubit<HomeState> {
   final HomeRepo _homeRepo;
 
@@ -49,15 +51,25 @@ class HomeCubit extends Cubit<HomeState> {
           height: 30.sp,
         )),
 
-    // HomeModel(
-    //     title: LocaleKeys.consultantsBoard.tr(),
-    //     description: LocaleKeys.consultantsBoard.tr(),
-    //     route: Routes.advisoryCommitteesScreen,
-    //     icon: SvgPicture.asset(
-    //       AppAssets.users,
-    //       width: 30.sp,
-    //       height: 30.sp,
-    //     )),
+    HomeModel(
+        title: "هيئة المستشارين",
+        description: "هيئة المستشارين",
+        route: Routes.advisoryCommitteesScreen,
+        icon: SvgPicture.asset(
+          AppAssets.users,
+          width: 30.sp,
+          height: 30.sp,
+        )),
+
+    HomeModel(
+        title: "الدليل الرقمي",
+        description: "الدليل الرقمي",
+        route: Routes.digitalGuide,
+        icon: SvgPicture.asset(
+          AppAssets.digital,
+          width: 30.sp,
+          height: 30.sp,
+        )),
 
     HomeModel(
         title: LocaleKeys.legalGuide.tr(),
@@ -98,7 +110,7 @@ class HomeCubit extends Cubit<HomeState> {
     //       width: 30.sp,
     //       height: 30.sp,
     //     )),
-    HomeModel(
+    /*HomeModel(
         title: "المساعد الذكي",
         description: LocaleKeys.libraryAndSystems.tr(),
         route: Routes.aiAssistant,
@@ -106,9 +118,29 @@ class HomeCubit extends Cubit<HomeState> {
           AppAssets.logo,
           width: 30.sp,
           height: 30.sp,
-        )),
+        )),*/
   ];
   List<HomeModel> homeDataLawyer = [
+    HomeModel(
+        title: "هيئة المستشارين",
+        description: "هيئة المستشارين",
+        route: Routes.advisoryCommitteesScreen,
+        icon: SvgPicture.asset(
+          AppAssets.users,
+          width: 30.sp,
+          height: 30.sp,
+        )),
+
+    HomeModel(
+        title: "الدليل الرقمي",
+        description: "الدليل الرقمي",
+        route: Routes.digitalGuide,
+        icon: SvgPicture.asset(
+          AppAssets.digital,
+          width: 30.sp,
+          height: 30.sp,
+        )),
+
     HomeModel(
         title: "دليل الأنظمة",
         description: LocaleKeys.libraryAndSystems.tr(),
@@ -136,7 +168,7 @@ class HomeCubit extends Cubit<HomeState> {
           width: 30.sp,
           height: 30.sp,
         )),
-    HomeModel(
+    /*HomeModel(
         title: "المساعد الذكي",
         description: LocaleKeys.libraryAndSystems.tr(),
         route: Routes.aiAssistant,
@@ -144,7 +176,7 @@ class HomeCubit extends Cubit<HomeState> {
           AppAssets.logo,
           width: 30.sp,
           height: 30.sp,
-        )),
+        )),*/
     //todo learning card
 
     // HomeModel(
@@ -160,7 +192,14 @@ class HomeCubit extends Cubit<HomeState> {
   List<NewAdvisory>? advisoriesNew;
 
   Future<void> getHomeData() async {
-    emit(HomeStateLoading());
+    // emit(HomeStateLoading()); // Removed to prevent persistent loading for visitors
+    
+    // final userType = CacheHelper.getData(key: 'userType');
+    // if (userType == 'visitor') {
+    //   advisoriesNew = []; // No data for visitors -> No loading
+    //   emit(HomeStateRecentJoinedLawyersLoaded([]));
+    //   return;
+    // }
 
     try {
       final responses = await Future.wait([
@@ -180,6 +219,7 @@ class HomeCubit extends Cubit<HomeState> {
               lawyerTypesResponse.data!.newAdvisories!));
         },
         failure: (fail) {
+          advisoriesNew = []; // Stop loading logic
           emit(HomeStateRecentJoinedLawyersError(
               "حدث خطأ اثناء تحميل البيانات"));
         },
@@ -196,6 +236,7 @@ class HomeCubit extends Cubit<HomeState> {
       );
     } catch (e) {
       // Handle any errors that may occur during the requests
+      advisoriesNew = []; // Stop loading logic
       emit(HomeStateError("حدث خطأ اثناء تحميل البيانات"));
     }
   }

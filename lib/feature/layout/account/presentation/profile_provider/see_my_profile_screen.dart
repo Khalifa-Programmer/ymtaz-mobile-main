@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/colors.dart';
+import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/core/di/dependency_injection.dart';
 import 'package:yamtaz/core/helpers/fuctions_helpers/functions_helpers.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
@@ -124,16 +125,29 @@ class SeeMyProfileProvider extends StatelessWidget {
                                           child: CircleAvatar(
                                             radius: 10.sp,
                                             backgroundColor: appColors.white,
-                                            child: SvgPicture.network(
-                                              myAccountCubit
+                                            child: CachedNetworkImage(
+                                              imageUrl: myAccountCubit
                                                   .userDataResponse!
                                                   .data!
                                                   .account!
                                                   .currentRank!
                                                   .image!,
                                               width: 12.0.w,
-                                              // Adjust width according to your design
                                               height: 12.0.h,
+                                              placeholder: (context, url) =>
+                                                  SizedBox(
+                                                      width: 12.w,
+                                                      height: 12.h,
+                                                      child:
+                                                          const CircularProgressIndicator(
+                                                              strokeWidth: 2)),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      SvgPicture.asset(
+                                                AppAssets.rank,
+                                                width: 12.0.w,
+                                                height: 12.0.h,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -309,14 +323,29 @@ class SeeMyProfileProvider extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(height: 8.h),
-                                  Text(
-                                    "${myAccountCubit.userDataResponse!.data!.account!.about}",
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: appColors.blue100,
+                                    Text(
+                                      (myAccountCubit.userDataResponse!.data!
+                                                      .account!.about ==
+                                                  null ||
+                                              myAccountCubit.userDataResponse!
+                                                  .data!.account!.about!.isEmpty ||
+                                              myAccountCubit
+                                                      .userDataResponse!
+                                                      .data!
+                                                      .account!
+                                                      .about!
+                                                      .toString()
+                                                      .toLowerCase() ==
+                                                  "null")
+                                          ? "-"
+                                          : myAccountCubit.userDataResponse!
+                                              .data!.account!.about!,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: appColors.blue100,
+                                      ),
                                     ),
-                                  ),
                                   SizedBox(height: 15.h),
                                   const Text(
                                     "المهن",
@@ -400,9 +429,20 @@ class SeeMyProfileProvider extends StatelessWidget {
                                       ),
                                       const Spacer(),
                                       Text(
-                                        myAccountCubit.userDataResponse!.data!
-                                                .account!.country?.name ??
-                                            'لم يتم اختيارها',
+                                        (myAccountCubit.userDataResponse!.data!
+                                                        .account!.country?.name !=
+                                                    null &&
+                                                myAccountCubit
+                                                        .userDataResponse!
+                                                        .data!
+                                                        .account!
+                                                        .country!
+                                                        .name!
+                                                        .toLowerCase() !=
+                                                    'null')
+                                            ? myAccountCubit.userDataResponse!
+                                                .data!.account!.country!.name!
+                                            : '-',
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(color: appColors.blue100),
                                       ),
@@ -424,9 +464,20 @@ class SeeMyProfileProvider extends StatelessWidget {
                                       ),
                                       const Spacer(),
                                       Text(
-                                        myAccountCubit.userDataResponse!.data!
-                                                .account!.city?.title ??
-                                            'لم يتم اختيارها',
+                                        (myAccountCubit.userDataResponse!.data!
+                                                        .account!.city?.title !=
+                                                    null &&
+                                                myAccountCubit
+                                                        .userDataResponse!
+                                                        .data!
+                                                        .account!
+                                                        .city!
+                                                        .title!
+                                                        .toLowerCase() !=
+                                                    'null')
+                                            ? myAccountCubit.userDataResponse!
+                                                .data!.account!.city!.title!
+                                            : '-',
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(color: appColors.blue100),
                                       ),
@@ -448,9 +499,20 @@ class SeeMyProfileProvider extends StatelessWidget {
                                       ),
                                       const Spacer(),
                                       Text(
-                                        myAccountCubit.userDataResponse!.data!
-                                                .account!.region?.name ??
-                                            'لم يتم اختيارها',
+                                        (myAccountCubit.userDataResponse!.data!
+                                                        .account!.region?.name !=
+                                                    null &&
+                                                myAccountCubit
+                                                        .userDataResponse!
+                                                        .data!
+                                                        .account!
+                                                        .region!
+                                                        .name!
+                                                        .toLowerCase() !=
+                                                    'null')
+                                            ? myAccountCubit.userDataResponse!
+                                                .data!.account!.region!.name!
+                                            : '-',
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(color: appColors.blue100),
                                       ),
@@ -472,9 +534,19 @@ class SeeMyProfileProvider extends StatelessWidget {
                                       ),
                                       const Spacer(),
                                       Text(
-                                        myAccountCubit.userDataResponse!.data!
-                                                .account!.nationality?.name ??
-                                            'لم يتم اختيارها',
+                                        (myAccountCubit.userDataResponse!.data!
+                                                        .account!.nationality?.name !=
+                                                    null &&
+                                                myAccountCubit.userDataResponse!
+                                                        .data!
+                                                        .account!
+                                                        .nationality!
+                                                        .name!
+                                                        .toLowerCase() !=
+                                                    'null')
+                                            ? myAccountCubit.userDataResponse!
+                                                .data!.account!.nationality!.name!
+                                            : '-',
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(color: appColors.blue100),
                                       ),
@@ -496,9 +568,20 @@ class SeeMyProfileProvider extends StatelessWidget {
                                       ),
                                       const Spacer(),
                                       Text(
-                                        myAccountCubit.userDataResponse!.data!
-                                                .account!.degree?.title ??
-                                            'لم يتم اختيارها',
+                                        (myAccountCubit.userDataResponse!.data!
+                                                        .account!.degree?.title !=
+                                                    null &&
+                                                myAccountCubit
+                                                        .userDataResponse!
+                                                        .data!
+                                                        .account!
+                                                        .degree!
+                                                        .title!
+                                                        .toLowerCase() !=
+                                                    'null')
+                                            ? myAccountCubit.userDataResponse!
+                                                .data!.account!.degree!.title!
+                                            : '-',
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(color: appColors.blue100),
                                       ),

@@ -209,11 +209,11 @@ class _StepsSignUpState extends State<StepsSignUp> {
     );
   }
 
-  tapped(int step) {
+  void tapped(int step) {
     setState(() => _currentStep = step);
   }
 
-  continued() async {
+  Future<void> continued() async {
     hideKeyboard(navigatorKey.currentContext!);
 
     switch (_currentStep) {
@@ -358,12 +358,12 @@ class _StepsSignUpState extends State<StepsSignUp> {
     return false;
   }
 
-  cancel() {
+  void cancel() {
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
     FocusScope.of(context).unfocus();
   }
 
-  firstStep() {
+  StatefulBuilder firstStep() {
     return StatefulBuilder(
       builder: (context, state) {
         return Form(
@@ -633,7 +633,7 @@ class _StepsSignUpState extends State<StepsSignUp> {
     );
   }
 
-  secondStep() {
+  Form secondStep() {
     return Form(
         key: _formKey2,
         child: Column(children: [
@@ -827,7 +827,7 @@ class _StepsSignUpState extends State<StepsSignUp> {
         ]));
   }
 
-  thirdStep() {
+  Form thirdStep() {
     return Form(
         key: _formKey3,
         child: Column(children: [
@@ -1432,7 +1432,7 @@ class _StepsSignUpState extends State<StepsSignUp> {
         ]));
   }
 
-  fourthStep() {
+  Column fourthStep() {
     return Column(
       children: [
         Container(
@@ -1596,33 +1596,76 @@ class _StepsSignUpState extends State<StepsSignUp> {
   }
 
   Future<bool?> _showLocationServiceDialog() {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('خدمة الموقع معطلة'),
-          content: const Text('يرجى تفعيلها من خلال الإعدادات.'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('إلغاء'),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            TextButton(
-              child: const Text('فتح الإعدادات'),
-              onPressed: () async {
-                Navigator.of(context).pop(true);
-                if (Platform.isAndroid) {
-                  _openLocationSettings(); // فتح إعدادات الموقع
-                }
-              },
+  debugPrint("عرض حوار خدمة الموقع");
+  const Color navyBlue = Color(0xFF00262f);
+  const Color goldColor = Color(0xFFDDB762);
+  const Color whiteColor = Colors.white;
+
+  return showDialog<bool>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: whiteColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+          side: BorderSide(color: goldColor, width: 2),
+        ),
+        title: Row(
+          children: [
+            const Icon(Icons.location_off, color: goldColor),
+            const SizedBox(width: 10),
+            // الحل هنا: تغليف النص بـ Expanded لمنع الـ Overflow
+            Expanded(
+              child: Text(
+                'خدمة الموقع معطلة',
+                style: TextStyle(
+                  color: navyBlue, 
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18, // يمكنك تصغير الخط قليلاً إذا لزم الأمر
+                ),
+                softWrap: true, // السماح للنص بالنزول لسطر جديد
+                overflow: TextOverflow.visible, 
+              ),
             ),
           ],
-        );
-      },
-    );
-  }
+        ),
+        content: const Text(
+          'لتقديم أفضل خدمة، يرجى تفعيل الموقع من خلال الإعدادات.',
+          style: TextStyle(color: Colors.black87, fontSize: 16),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text(
+              'إلغاء',
+              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
+            ),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: navyBlue,
+              foregroundColor: goldColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            ),
+            onPressed: () async {
+              Navigator.of(context).pop(true);
+              if (Platform.isAndroid) {
+                _openLocationSettings();
+              }
+            },
+            child: const Text(
+              'فتح الإعدادات',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
 
   void _openLocationSettings() {
     // سيفتح إعدادات الموقع على الجهاز باستخدام android_intent_plus

@@ -12,8 +12,8 @@ import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/feature/layout/account/logic/my_account_cubit.dart';
 import 'package:yamtaz/feature/digital_office/view/widgets/main_screen/tabs_analysis_for_products.dart';
 import 'package:yamtaz/feature/digital_office/view/widgets/main_screen/my_orders_card.dart';
-import 'package:yamtaz/feature/package_and_subscriptions/presentation/widgets/time_remainig_progress.dart';
 import 'package:yamtaz/feature/layout/services/presentation/widgets/item_widget.dart';
+import 'package:yamtaz/feature/package_and_subscriptions/presentation/widgets/lawyer_package_card.dart';
 
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/constants/colors.dart';
@@ -26,8 +26,12 @@ class MyPageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = getit<MyPageCubit>();
+    if (userType != "guest") {
+      cubit.getMyPageData();
+    }
     return BlocProvider.value(
-      value: getit<MyPageCubit>()..getMyPageData(),
+      value: cubit,
       child: BlocConsumer<MyPageCubit, MyPageState>(
         listener: (context, state) {
           // TODO: implement listener
@@ -125,7 +129,7 @@ class MyPageClientImproved extends StatelessWidget {
                     unselectedLabelColor: appColors.grey10,
                     indicatorSize: TabBarIndicatorSize.tab,
                     dividerColor: Colors.transparent,
-                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                    overlayColor: WidgetStateProperty.all(Colors.transparent),
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 13.sp,
@@ -390,26 +394,28 @@ class MyPageClientImproved extends StatelessWidget {
   // دالة لبناء حالة فارغة
   Widget _buildEmptyState(String message) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.info_outline,
-            size: 60.sp,
-            color: appColors.grey3,
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            message,
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-              color: appColors.grey10,
-              fontFamily: 'Cairo',
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.info_outline,
+              size: 60.sp,
+              color: appColors.grey3,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            SizedBox(height: 16.h),
+            Text(
+              message,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: appColors.grey10,
+                fontFamily: 'Cairo',
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -417,28 +423,30 @@ class MyPageClientImproved extends StatelessWidget {
   // دالة لبناء حالة التحميل
   Widget _buildLoadingState() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 50.w,
-            height: 50.w,
-            child: CircularProgressIndicator(
-              color: appColors.primaryColorYellow,
-              strokeWidth: 3.w,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 50.w,
+              height: 50.w,
+              child: CircularProgressIndicator(
+                color: appColors.primaryColorYellow,
+                strokeWidth: 3.w,
+              ),
             ),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            'جاري التحميل...',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-              color: appColors.grey10,
-              fontFamily: 'Cairo',
+            SizedBox(height: 16.h),
+            Text(
+              'جاري التحميل...',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: appColors.grey10,
+                fontFamily: 'Cairo',
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

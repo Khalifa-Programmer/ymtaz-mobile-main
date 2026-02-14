@@ -31,7 +31,7 @@ class ServiceDetailsScreen extends StatefulWidget {
 class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
   final TextEditingController externalController = TextEditingController();
 
-  List<PlatformFile> _files = [];
+  final List<PlatformFile> _files = [];
 
   final RecorderController _recorderController = RecorderController();
 
@@ -142,7 +142,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                   verticalSpace(20.h),
                   Text("مستوى الطلب ", style: TextStyles.cairo_12_bold),
                   CustomCheckSelectLevelServices(
-                    items: levels!,
+                    items: levels,
                     onChanged: (item) {
                       serviseCubit.selectedLevel = item;
                     },
@@ -217,7 +217,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                               ..._files.map((file) {
                                 int index = _files.indexOf(file);
                                 return _buildFileListItem(file, index);
-                              }).toList(),
+                              }),
                               Container(
                                 color: appColors.white,
                                 width: double.infinity,
@@ -244,7 +244,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                     playerController: _playerController,
                   ), // Use the custom component
                   verticalSpace(20.h),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: CupertinoButton(
                         padding: EdgeInsets.zero,

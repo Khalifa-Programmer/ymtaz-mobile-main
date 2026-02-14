@@ -41,6 +41,7 @@ Account _$AccountFromJson(Map<String, dynamic> json) => Account(
       phoneCode: (json['phone_code'] as num?)?.toInt(),
       type: (json['type'] as num?)?.toInt(),
       image: json['image'] as String?,
+      photo: json['photo'] as String?,
       nationality: json['nationality'] == null
           ? null
           : Country.fromJson(json['nationality'] as Map<String, dynamic>),
@@ -134,6 +135,7 @@ Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
       'phone_code': instance.phoneCode,
       'type': instance.type,
       'image': instance.image,
+      'photo': instance.photo,
       'nationality': instance.nationality,
       'country': instance.country,
       'region': instance.region,

@@ -15,10 +15,10 @@ class ServiceForm extends StatefulWidget {
   final Function(BaseServiceRequest) onSuccess;
 
   const ServiceForm({
-    Key? key,
+    super.key,
     required this.priceController,
     required this.onSuccess,
-  }) : super(key: key);
+  });
 
   @override
   State<ServiceForm> createState() => _ServiceFormState();

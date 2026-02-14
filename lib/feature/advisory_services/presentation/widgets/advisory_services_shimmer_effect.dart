@@ -12,8 +12,8 @@ class AdvisoryServiceCardShimmer extends StatelessWidget {
 
 
   const AdvisoryServiceCardShimmer({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
 
 

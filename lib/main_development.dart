@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:yamtaz/config/themes/localization.dart';
@@ -16,11 +15,15 @@ import 'package:yamtaz/core/shared/notofication/notification.dart';
 import 'package:yamtaz/firebase_options.dart';
 import 'package:yamtaz/yamtaz.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter/services.dart';
 
 import 'main.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // 2. إخفاء شريط التنقل (Navigation Bar) وشريط الحالة (Status Bar) بشكل دائم
+  // وضع immersiveSticky يجعل الشريط يظهر عند السحب ويختفي تلقائياً دون التأثير على حجم الشاشة
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   await EasyLocalization.ensureInitialized();
 
   // FlavorConfig(
@@ -39,9 +42,16 @@ Future<void> main() async {
   //     }
   // );
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // Initialize Firebase with a check to prevent duplicate app error
+  try {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    }
+  } catch (e) {
+    debugPrint('Firebase already initialized: $e');
+  }
   final messaging = FirebaseMessaging.instance;
   setGetIt();
 

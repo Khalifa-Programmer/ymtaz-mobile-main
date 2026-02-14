@@ -1,6 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:yamtaz/core/services/notification_service.dart';
-import 'package:uuid/uuid.dart';
 
 import '../models/reminder_model.dart';
 

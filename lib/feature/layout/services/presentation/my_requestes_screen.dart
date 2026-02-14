@@ -76,7 +76,7 @@ class MyServicesRequestsScreen extends StatelessWidget {
                     );
                   },
                   fallback: (BuildContext context) {
-                    return Container(
+                    return SizedBox(
                         height: 400, child: ShimmerServiceOfferCardPending());
                   },
                 ),

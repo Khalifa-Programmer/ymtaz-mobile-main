@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/di/dependency_injection.dart';
@@ -12,7 +13,9 @@ import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/digital_guide/data/model/fast_search_response_model.dart';
 import 'package:yamtaz/feature/digital_guide/logic/digital_guide_cubit.dart';
 import 'package:yamtaz/feature/digital_guide/logic/digital_guide_state.dart';
+import 'package:yamtaz/feature/auth/login/presentation/view/login_body.dart';
 
+import 'package:yamtaz/core/network/local/cache_helper.dart';
 import '../../forensic_guide/data/model/judicial_guide_response_model.dart';
 import '../data/model/digital_search_response_model.dart';
 import 'digetal_providers_screen.dart';
@@ -37,6 +40,9 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
         // TODO: implement listener
       },
       builder: (context, state) {
+        if (CacheHelper.getData(key: 'userType') == 'guest') {
+          return _buildGuestView(context);
+        }
         var data = getit<DigitalGuideCubit>().fastSearchResponseModel;
         return GestureDetector(
           onTap: () {
@@ -44,6 +50,7 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
             FocusManager.instance.primaryFocus?.unfocus();
           },
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             appBar: AppBar(
               title: Text("البحث", style: TextStyles.cairo_16_bold),
               centerTitle: true,
@@ -161,9 +168,11 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
                                                     BorderRadius.circular(4),
                                                 color: const Color(0xFFF6E3B8)),
                                             child: Text(
-                                                "${data.data!.judicialGuide!.length + data.data!.lawyers!.length}",
+                                                "${(data?.data?.judicialGuide?.length ?? 0) + (data?.data?.lawyers?.length ?? 0)}",
                                                 style:
                                                     TextStyles.cairo_10_medium),
+
+
                                           ),
                                         ],
                                       ),
@@ -245,9 +254,10 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
                                                     BorderRadius.circular(4),
                                                 color: const Color(0xFFF6E3B8)),
                                             child: Text(
-                                                "${data.data!.lawyers!.length}",
+                                                "${data?.data?.lawyers?.length ?? 0}",
                                                 style:
                                                     TextStyles.cairo_10_medium),
+
                                           ),
                                         ],
                                       ),
@@ -266,9 +276,10 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
                                                     BorderRadius.circular(4),
                                                 color: const Color(0xFFF6E3B8)),
                                             child: Text(
-                                                "${data.data!.judicialGuide!.length}",
+                                                "${data?.data?.judicialGuide?.length ?? 0}",
                                                 style:
                                                     TextStyles.cairo_10_medium),
+
                                           ),
                                         ],
                                       ),
@@ -278,10 +289,9 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
                     ],
                   ),
                   data == null
-                      ? Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 250.h),
-                            child: const Text("قم بالبحث الان"),
+                      ? const Expanded(
+                          child: Center(
+                            child: Text("قم بالبحث الان"),
                           ),
                         )
                       : state is LoadingFastSearch
@@ -303,9 +313,10 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
                                   },
                                   child: TabBarView(children: [
                                     _allListData(
-                                        data.data!.services,
-                                        data.data!.advisoryServicesTypes,
-                                        data.data!.lawyers),
+                                        data?.data?.services,
+                                        data?.data?.advisoryServicesTypes,
+                                        data?.data?.lawyers),
+
                                     // Padding(
                                     //   padding: EdgeInsets.all(14.0.sp),
                                     //   child:
@@ -324,12 +335,14 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
                                     Padding(
                                       padding: EdgeInsets.all(14.0.sp),
                                       child:
-                                          _lawyersListData(data.data!.lawyers),
+                                          _lawyersListData(data?.data?.lawyers),
+
                                     ),
                                     Padding(
                                       padding: EdgeInsets.all(14.0.sp),
                                       child: _judicialGuideData(
-                                          data.data!.judicialGuide),
+                                          data?.data?.judicialGuide),
+
                                     ),
                                   ]),
                                 ),
@@ -341,6 +354,91 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildGuestView(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("البحث", style: TextStyles.cairo_16_bold),
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(20.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                "assets/svgs/logo.svg",
+                width: 150.w,
+                height: 150.h,
+              ),
+              verticalSpace(20.h),
+              Icon(CupertinoIcons.search, size: 80.sp, color: appColors.grey15),
+              verticalSpace(30.h),
+              
+              // Login Section
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "للتمتع بمحرك البحث يرجى تسجيل الدخول",
+                    style: TextStyles.cairo_14_semiBold,
+                    textAlign: TextAlign.center,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      context.pushNamedAndRemoveUntil(Routes.login,
+                          predicate: (Route<dynamic> route) => false);
+                    },
+                    child: Text(
+                      "تسجيل الدخول",
+                      style: TextStyles.cairo_14_bold.copyWith(
+                        color: appColors.primaryColorYellow,
+                        decoration: TextDecoration.underline,
+                        decorationColor: appColors.primaryColorYellow,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              
+              verticalSpace(15.h),
+              Text("أو", style: TextStyles.cairo_14_semiBold.copyWith(color: appColors.grey15)),
+              verticalSpace(15.h),
+
+              // Register Section
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "يمكنك البدء بإنشاء حساب جديد",
+                    style: TextStyles.cairo_14_semiBold,
+                    textAlign: TextAlign.center,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      context.pushNamedAndRemoveUntil(Routes.login,
+                          predicate: (Route<dynamic> route) => false);
+                      showRegisterType(context: context);
+                    },
+                    child: Text(
+                      "إنشاء حساب جديد",
+                      style: TextStyles.cairo_14_bold.copyWith(
+                        color: appColors.primaryColorYellow,
+                        decoration: TextDecoration.underline,
+                        decorationColor: appColors.primaryColorYellow,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -623,15 +721,17 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
                       CircleAvatar(
                         radius: 25.r,
                         backgroundColor: appColors.grey15,
-                        backgroundImage: lawyers[index].image != null
-                            ? NetworkImage(lawyers[index].image!)
-                            : null,
+                        backgroundImage: NetworkImage(
+                            lawyers[index].image ?? lawyers[index].photo ?? lawyers[index].logo ?? "https://api.ymtaz.sa/uploads/person.png"
+                        ),
+
                       ),
                       horizontalSpace(16.w),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(lawyers[index].name!,
+                          Text(lawyers[index].name ?? "بدون اسم",
+
                               style: TextStyles.cairo_12_bold),
                           verticalSpace(4.h),
                           Row(
@@ -687,7 +787,7 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
     );
   }
 
-  _allListData(
+  Container _allListData(
       List<Service>? services,
       List<AdvisoryServicesType>? advisoryServicesTypes,
       List<Lawyer>? lawyers) {

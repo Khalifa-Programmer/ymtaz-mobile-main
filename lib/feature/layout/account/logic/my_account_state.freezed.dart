@@ -336,9 +336,6 @@ class _$MyAccountStateCopyWithImpl<T, $Res, $Val extends MyAccountState<T>>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -355,9 +352,6 @@ class __$$InitialImplCopyWithImpl<T, $Res>
   __$$InitialImplCopyWithImpl(
       _$InitialImpl<T> _value, $Res Function(_$InitialImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -724,9 +718,6 @@ class __$$LoadingGetProviderImplCopyWithImpl<T, $Res>
   __$$LoadingGetProviderImplCopyWithImpl(_$LoadingGetProviderImpl<T> _value,
       $Res Function(_$LoadingGetProviderImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1097,8 +1088,6 @@ class __$$SuccessGetProviderImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessGetProviderImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1137,9 +1126,7 @@ class _$SuccessGetProviderImpl<T> implements SuccessGetProvider<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessGetProviderImplCopyWith<T, _$SuccessGetProviderImpl<T>>
@@ -1478,10 +1465,7 @@ abstract class SuccessGetProvider<T> implements MyAccountState<T> {
       _$SuccessGetProviderImpl<T>;
 
   LoginProviderResponse get data;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessGetProviderImplCopyWith<T, _$SuccessGetProviderImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1503,8 +1487,6 @@ class __$$ErrorGetProviderImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorGetProviderImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1543,9 +1525,7 @@ class _$ErrorGetProviderImpl<T> implements ErrorGetProvider<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorGetProviderImplCopyWith<T, _$ErrorGetProviderImpl<T>> get copyWith =>
@@ -1884,10 +1864,7 @@ abstract class ErrorGetProvider<T> implements MyAccountState<T> {
       _$ErrorGetProviderImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorGetProviderImplCopyWith<T, _$ErrorGetProviderImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1906,9 +1883,6 @@ class __$$LoadingGetClientImplCopyWithImpl<T, $Res>
   __$$LoadingGetClientImplCopyWithImpl(_$LoadingGetClientImpl<T> _value,
       $Res Function(_$LoadingGetClientImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -2279,8 +2253,6 @@ class __$$SuccessGetClientImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessGetClientImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2319,9 +2291,7 @@ class _$SuccessGetClientImpl<T> implements SuccessGetClient<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessGetClientImplCopyWith<T, _$SuccessGetClientImpl<T>> get copyWith =>
@@ -2660,10 +2630,7 @@ abstract class SuccessGetClient<T> implements MyAccountState<T> {
       _$SuccessGetClientImpl<T>;
 
   LoginProviderResponse get data;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessGetClientImplCopyWith<T, _$SuccessGetClientImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -2685,8 +2652,6 @@ class __$$ErrorGetClientImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorGetClientImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2725,9 +2690,7 @@ class _$ErrorGetClientImpl<T> implements ErrorGetClient<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorGetClientImplCopyWith<T, _$ErrorGetClientImpl<T>> get copyWith =>
@@ -3066,10 +3029,7 @@ abstract class ErrorGetClient<T> implements MyAccountState<T> {
       _$ErrorGetClientImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorGetClientImplCopyWith<T, _$ErrorGetClientImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -3091,9 +3051,6 @@ class __$$LoadingSignUpProviderOtpImplCopyWithImpl<T, $Res>
       _$LoadingSignUpProviderOtpImpl<T> _value,
       $Res Function(_$LoadingSignUpProviderOtpImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -3467,8 +3424,6 @@ class __$$SuccessSignUpProviderOtpImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessSignUpProviderOtpImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -3507,9 +3462,7 @@ class _$SuccessSignUpProviderOtpImpl<T> implements SuccessSignUpProviderOtp<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessSignUpProviderOtpImplCopyWith<T, _$SuccessSignUpProviderOtpImpl<T>>
@@ -3848,10 +3801,7 @@ abstract class SuccessSignUpProviderOtp<T> implements MyAccountState<T> {
       _$SuccessSignUpProviderOtpImpl<T>;
 
   ResponseModel get data;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessSignUpProviderOtpImplCopyWith<T, _$SuccessSignUpProviderOtpImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -3876,8 +3826,6 @@ class __$$ErrorSignUpProviderOtpImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorSignUpProviderOtpImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -3916,9 +3864,7 @@ class _$ErrorSignUpProviderOtpImpl<T> implements ErrorSignUpProviderOtp<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorSignUpProviderOtpImplCopyWith<T, _$ErrorSignUpProviderOtpImpl<T>>
@@ -4257,10 +4203,7 @@ abstract class ErrorSignUpProviderOtp<T> implements MyAccountState<T> {
       _$ErrorSignUpProviderOtpImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorSignUpProviderOtpImplCopyWith<T, _$ErrorSignUpProviderOtpImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -4282,9 +4225,6 @@ class __$$LoadingSignUpProviderOtpEditImplCopyWithImpl<T, $Res>
       _$LoadingSignUpProviderOtpEditImpl<T> _value,
       $Res Function(_$LoadingSignUpProviderOtpEditImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -4660,8 +4600,6 @@ class __$$SuccessSignUpProviderOtpEditImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessSignUpProviderOtpEditImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -4701,9 +4639,7 @@ class _$SuccessSignUpProviderOtpEditImpl<T>
   @override
   int get hashCode => Object.hash(runtimeType, verify);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessSignUpProviderOtpEditImplCopyWith<T,
@@ -5043,10 +4979,7 @@ abstract class SuccessSignUpProviderOtpEdit<T> implements MyAccountState<T> {
       _$SuccessSignUpProviderOtpEditImpl<T>;
 
   ResponseModel get verify;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessSignUpProviderOtpEditImplCopyWith<T,
           _$SuccessSignUpProviderOtpEditImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
@@ -5072,8 +5005,6 @@ class __$$ErrorSignUpProviderOtpEditImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorSignUpProviderOtpEditImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -5113,9 +5044,7 @@ class _$ErrorSignUpProviderOtpEditImpl<T>
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorSignUpProviderOtpEditImplCopyWith<T,
@@ -5455,10 +5384,7 @@ abstract class ErrorSignUpProviderOtpEdit<T> implements MyAccountState<T> {
       _$ErrorSignUpProviderOtpEditImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorSignUpProviderOtpEditImplCopyWith<T,
           _$ErrorSignUpProviderOtpEditImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
@@ -5481,9 +5407,6 @@ class __$$LoadingGetAccountExperienceImplCopyWithImpl<T, $Res>
       _$LoadingGetAccountExperienceImpl<T> _value,
       $Res Function(_$LoadingGetAccountExperienceImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -5859,8 +5782,6 @@ class __$$SuccessGetAccountExperienceImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessGetAccountExperienceImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -5900,9 +5821,7 @@ class _$SuccessGetAccountExperienceImpl<T>
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessGetAccountExperienceImplCopyWith<T,
@@ -6242,10 +6161,7 @@ abstract class SuccessGetAccountExperience<T> implements MyAccountState<T> {
       _$SuccessGetAccountExperienceImpl<T>;
 
   ExperienceModel get data;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessGetAccountExperienceImplCopyWith<T,
           _$SuccessGetAccountExperienceImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
@@ -6271,8 +6187,6 @@ class __$$ErrorGetAccountExperienceImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorGetAccountExperienceImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -6312,9 +6226,7 @@ class _$ErrorGetAccountExperienceImpl<T>
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorGetAccountExperienceImplCopyWith<T,
@@ -6654,10 +6566,7 @@ abstract class ErrorGetAccountExperience<T> implements MyAccountState<T> {
       _$ErrorGetAccountExperienceImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorGetAccountExperienceImplCopyWith<T,
           _$ErrorGetAccountExperienceImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
@@ -6678,9 +6587,6 @@ class __$$LoadingGetPayoutIbanImplCopyWithImpl<T, $Res>
   __$$LoadingGetPayoutIbanImplCopyWithImpl(_$LoadingGetPayoutIbanImpl<T> _value,
       $Res Function(_$LoadingGetPayoutIbanImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -7052,8 +6958,6 @@ class __$$SuccessGetPayoutIbanImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessGetPayoutIbanImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -7092,9 +6996,7 @@ class _$SuccessGetPayoutIbanImpl<T> implements SuccessGetPayoutIban<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessGetPayoutIbanImplCopyWith<T, _$SuccessGetPayoutIbanImpl<T>>
@@ -7433,10 +7335,7 @@ abstract class SuccessGetPayoutIban<T> implements MyAccountState<T> {
       _$SuccessGetPayoutIbanImpl<T>;
 
   IbanModel get data;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessGetPayoutIbanImplCopyWith<T, _$SuccessGetPayoutIbanImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -7458,8 +7357,6 @@ class __$$ErrorGetPayoutIbanImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorGetPayoutIbanImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -7498,9 +7395,7 @@ class _$ErrorGetPayoutIbanImpl<T> implements ErrorGetPayoutIban<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorGetPayoutIbanImplCopyWith<T, _$ErrorGetPayoutIbanImpl<T>>
@@ -7839,10 +7734,7 @@ abstract class ErrorGetPayoutIban<T> implements MyAccountState<T> {
       _$ErrorGetPayoutIbanImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorGetPayoutIbanImplCopyWith<T, _$ErrorGetPayoutIbanImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -7861,9 +7753,6 @@ class __$$LoadingEditClientImplCopyWithImpl<T, $Res>
   __$$LoadingEditClientImplCopyWithImpl(_$LoadingEditClientImpl<T> _value,
       $Res Function(_$LoadingEditClientImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -8234,8 +8123,6 @@ class __$$SuccessEditClientImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessEditClientImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -8274,9 +8161,7 @@ class _$SuccessEditClientImpl<T> implements SuccessEditClient<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessEditClientImplCopyWith<T, _$SuccessEditClientImpl<T>>
@@ -8616,10 +8501,7 @@ abstract class SuccessEditClient<T> implements MyAccountState<T> {
       _$SuccessEditClientImpl<T>;
 
   LoginProviderResponse get data;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessEditClientImplCopyWith<T, _$SuccessEditClientImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -8641,8 +8523,6 @@ class __$$ErrorEditClientImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorEditClientImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -8681,9 +8561,7 @@ class _$ErrorEditClientImpl<T> implements ErrorEditClient<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorEditClientImplCopyWith<T, _$ErrorEditClientImpl<T>> get copyWith =>
@@ -9022,10 +8900,7 @@ abstract class ErrorEditClient<T> implements MyAccountState<T> {
       _$ErrorEditClientImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorEditClientImplCopyWith<T, _$ErrorEditClientImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -9044,9 +8919,6 @@ class __$$LoadDataSuccessImplCopyWithImpl<T, $Res>
   __$$LoadDataSuccessImplCopyWithImpl(_$LoadDataSuccessImpl<T> _value,
       $Res Function(_$LoadDataSuccessImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -9414,9 +9286,6 @@ class __$$LoadingRemoveAccountImplCopyWithImpl<T, $Res>
   __$$LoadingRemoveAccountImplCopyWithImpl(_$LoadingRemoveAccountImpl<T> _value,
       $Res Function(_$LoadingRemoveAccountImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -9788,8 +9657,6 @@ class __$$SuccessRemoveAccountImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessRemoveAccountImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -9828,9 +9695,7 @@ class _$SuccessRemoveAccountImpl<T> implements SuccessRemoveAccount<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessRemoveAccountImplCopyWith<T, _$SuccessRemoveAccountImpl<T>>
@@ -10169,10 +10034,7 @@ abstract class SuccessRemoveAccount<T> implements MyAccountState<T> {
       _$SuccessRemoveAccountImpl<T>;
 
   RemoveResponse get data;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessRemoveAccountImplCopyWith<T, _$SuccessRemoveAccountImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -10194,8 +10056,6 @@ class __$$ErrorRemoveAccountImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorRemoveAccountImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -10234,9 +10094,7 @@ class _$ErrorRemoveAccountImpl<T> implements ErrorRemoveAccount<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorRemoveAccountImplCopyWith<T, _$ErrorRemoveAccountImpl<T>>
@@ -10575,10 +10433,7 @@ abstract class ErrorRemoveAccount<T> implements MyAccountState<T> {
       _$ErrorRemoveAccountImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorRemoveAccountImplCopyWith<T, _$ErrorRemoveAccountImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -10597,9 +10452,6 @@ class __$$LoadingSendFcmTokenImplCopyWithImpl<T, $Res>
   __$$LoadingSendFcmTokenImplCopyWithImpl(_$LoadingSendFcmTokenImpl<T> _value,
       $Res Function(_$LoadingSendFcmTokenImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -10967,9 +10819,6 @@ class __$$SuccessSendFcmTokenImplCopyWithImpl<T, $Res>
   __$$SuccessSendFcmTokenImplCopyWithImpl(_$SuccessSendFcmTokenImpl<T> _value,
       $Res Function(_$SuccessSendFcmTokenImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -11340,8 +11189,6 @@ class __$$ErrorSendFcmTokenImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorSendFcmTokenImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -11380,9 +11227,7 @@ class _$ErrorSendFcmTokenImpl<T> implements ErrorSendFcmToken<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorSendFcmTokenImplCopyWith<T, _$ErrorSendFcmTokenImpl<T>>
@@ -11722,10 +11567,7 @@ abstract class ErrorSendFcmToken<T> implements MyAccountState<T> {
       _$ErrorSendFcmTokenImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorSendFcmTokenImplCopyWith<T, _$ErrorSendFcmTokenImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -11744,9 +11586,6 @@ class __$$LoadingPointsRulesImplCopyWithImpl<T, $Res>
   __$$LoadingPointsRulesImplCopyWithImpl(_$LoadingPointsRulesImpl<T> _value,
       $Res Function(_$LoadingPointsRulesImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -12117,8 +11956,6 @@ class __$$SuccessPointsRulesImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessPointsRulesImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -12157,9 +11994,7 @@ class _$SuccessPointsRulesImpl<T> implements SuccessPointsRules<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessPointsRulesImplCopyWith<T, _$SuccessPointsRulesImpl<T>>
@@ -12498,10 +12333,7 @@ abstract class SuccessPointsRules<T> implements MyAccountState<T> {
       _$SuccessPointsRulesImpl<T>;
 
   PointsRules get data;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessPointsRulesImplCopyWith<T, _$SuccessPointsRulesImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -12523,8 +12355,6 @@ class __$$ErrorPointsRulesImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorPointsRulesImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -12563,9 +12393,7 @@ class _$ErrorPointsRulesImpl<T> implements ErrorPointsRules<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorPointsRulesImplCopyWith<T, _$ErrorPointsRulesImpl<T>> get copyWith =>
@@ -12904,10 +12732,7 @@ abstract class ErrorPointsRules<T> implements MyAccountState<T> {
       _$ErrorPointsRulesImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorPointsRulesImplCopyWith<T, _$ErrorPointsRulesImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -12926,9 +12751,6 @@ class __$$LoadingInvitationsImplCopyWithImpl<T, $Res>
   __$$LoadingInvitationsImplCopyWithImpl(_$LoadingInvitationsImpl<T> _value,
       $Res Function(_$LoadingInvitationsImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -13299,8 +13121,6 @@ class __$$SuccessInvitationsImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessInvitationsImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -13339,9 +13159,7 @@ class _$SuccessInvitationsImpl<T> implements SuccessInvitations<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessInvitationsImplCopyWith<T, _$SuccessInvitationsImpl<T>>
@@ -13680,10 +13498,7 @@ abstract class SuccessInvitations<T> implements MyAccountState<T> {
       _$SuccessInvitationsImpl<T>;
 
   InvitesModel get data;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessInvitationsImplCopyWith<T, _$SuccessInvitationsImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -13705,8 +13520,6 @@ class __$$ErrorInvitationsImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorInvitationsImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -13745,9 +13558,7 @@ class _$ErrorInvitationsImpl<T> implements ErrorInvitations<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorInvitationsImplCopyWith<T, _$ErrorInvitationsImpl<T>> get copyWith =>
@@ -14086,10 +13897,7 @@ abstract class ErrorInvitations<T> implements MyAccountState<T> {
       _$ErrorInvitationsImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorInvitationsImplCopyWith<T, _$ErrorInvitationsImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -14108,9 +13916,6 @@ class __$$LoadingSendInviteImplCopyWithImpl<T, $Res>
   __$$LoadingSendInviteImplCopyWithImpl(_$LoadingSendInviteImpl<T> _value,
       $Res Function(_$LoadingSendInviteImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -14481,8 +14286,6 @@ class __$$SuccessSendInviteImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessSendInviteImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -14521,9 +14324,7 @@ class _$SuccessSendInviteImpl<T> implements SuccessSendInvite<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessSendInviteImplCopyWith<T, _$SuccessSendInviteImpl<T>>
@@ -14863,10 +14664,7 @@ abstract class SuccessSendInvite<T> implements MyAccountState<T> {
       _$SuccessSendInviteImpl<T>;
 
   ResponseModel get data;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessSendInviteImplCopyWith<T, _$SuccessSendInviteImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -14888,8 +14686,6 @@ class __$$ErrorSendInviteImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorSendInviteImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -14928,9 +14724,7 @@ class _$ErrorSendInviteImpl<T> implements ErrorSendInvite<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorSendInviteImplCopyWith<T, _$ErrorSendInviteImpl<T>> get copyWith =>
@@ -15269,10 +15063,7 @@ abstract class ErrorSendInvite<T> implements MyAccountState<T> {
       _$ErrorSendInviteImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorSendInviteImplCopyWith<T, _$ErrorSendInviteImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -15291,9 +15082,6 @@ class __$$LoadingPaymentsDoneImplCopyWithImpl<T, $Res>
   __$$LoadingPaymentsDoneImplCopyWithImpl(_$LoadingPaymentsDoneImpl<T> _value,
       $Res Function(_$LoadingPaymentsDoneImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -15664,8 +15452,6 @@ class __$$SuccessPaymentsDoneImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessPaymentsDoneImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -15704,9 +15490,7 @@ class _$SuccessPaymentsDoneImpl<T> implements SuccessPaymentsDone<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessPaymentsDoneImplCopyWith<T, _$SuccessPaymentsDoneImpl<T>>
@@ -16045,10 +15829,7 @@ abstract class SuccessPaymentsDone<T> implements MyAccountState<T> {
       _$SuccessPaymentsDoneImpl<T>;
 
   MyPaymentsResponse get data;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessPaymentsDoneImplCopyWith<T, _$SuccessPaymentsDoneImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -16070,8 +15851,6 @@ class __$$ErrorPaymentsDoneImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorPaymentsDoneImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -16110,9 +15889,7 @@ class _$ErrorPaymentsDoneImpl<T> implements ErrorPaymentsDone<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorPaymentsDoneImplCopyWith<T, _$ErrorPaymentsDoneImpl<T>>
@@ -16452,10 +16229,7 @@ abstract class ErrorPaymentsDone<T> implements MyAccountState<T> {
       _$ErrorPaymentsDoneImpl<T>;
 
   String get error;
-
-  /// Create a copy of MyAccountState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorPaymentsDoneImplCopyWith<T, _$ErrorPaymentsDoneImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }

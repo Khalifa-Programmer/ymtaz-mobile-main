@@ -120,9 +120,6 @@ class _$ForgetStateCopyWithImpl<T, $Res, $Val extends ForgetState<T>>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -139,9 +136,6 @@ class __$$InitialImplCopyWithImpl<T, $Res>
   __$$InitialImplCopyWithImpl(
       _$InitialImpl<T> _value, $Res Function(_$InitialImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -292,9 +286,6 @@ class __$$LoadingEmailCheckImplCopyWithImpl<T, $Res>
   __$$LoadingEmailCheckImplCopyWithImpl(_$LoadingEmailCheckImpl<T> _value,
       $Res Function(_$LoadingEmailCheckImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -449,8 +440,6 @@ class __$$SuccessEmailCheckImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessEmailCheckImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -489,9 +478,7 @@ class _$SuccessEmailCheckImpl<T> implements SuccessEmailCheck<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessEmailCheckImplCopyWith<T, _$SuccessEmailCheckImpl<T>>
@@ -615,10 +602,7 @@ abstract class SuccessEmailCheck<T> implements ForgetState<T> {
       _$SuccessEmailCheckImpl<T>;
 
   ForgetResponse get data;
-
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessEmailCheckImplCopyWith<T, _$SuccessEmailCheckImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -640,8 +624,6 @@ class __$$ErrorEmailCheckImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorEmailCheckImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -680,9 +662,7 @@ class _$ErrorEmailCheckImpl<T> implements ErrorEmailCheck<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorEmailCheckImplCopyWith<T, _$ErrorEmailCheckImpl<T>> get copyWith =>
@@ -805,10 +785,7 @@ abstract class ErrorEmailCheck<T> implements ForgetState<T> {
       _$ErrorEmailCheckImpl<T>;
 
   String get error;
-
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorEmailCheckImplCopyWith<T, _$ErrorEmailCheckImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -827,9 +804,6 @@ class __$$LoadingCodeCheckImplCopyWithImpl<T, $Res>
   __$$LoadingCodeCheckImplCopyWithImpl(_$LoadingCodeCheckImpl<T> _value,
       $Res Function(_$LoadingCodeCheckImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -984,8 +958,6 @@ class __$$SuccessCodeCheckImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessCodeCheckImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1024,9 +996,7 @@ class _$SuccessCodeCheckImpl<T> implements SuccessCodeCheck<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessCodeCheckImplCopyWith<T, _$SuccessCodeCheckImpl<T>> get copyWith =>
@@ -1149,10 +1119,7 @@ abstract class SuccessCodeCheck<T> implements ForgetState<T> {
       _$SuccessCodeCheckImpl<T>;
 
   CheckCodeResponse get data;
-
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessCodeCheckImplCopyWith<T, _$SuccessCodeCheckImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1174,8 +1141,6 @@ class __$$ErrorCodeCheckImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorCodeCheckImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1214,9 +1179,7 @@ class _$ErrorCodeCheckImpl<T> implements ErrorCodeCheck<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorCodeCheckImplCopyWith<T, _$ErrorCodeCheckImpl<T>> get copyWith =>
@@ -1339,10 +1302,7 @@ abstract class ErrorCodeCheck<T> implements ForgetState<T> {
       _$ErrorCodeCheckImpl<T>;
 
   String get error;
-
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorCodeCheckImplCopyWith<T, _$ErrorCodeCheckImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1361,9 +1321,6 @@ class __$$LoadingResetImplCopyWithImpl<T, $Res>
   __$$LoadingResetImplCopyWithImpl(
       _$LoadingResetImpl<T> _value, $Res Function(_$LoadingResetImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1517,8 +1474,6 @@ class __$$SuccessResetImplCopyWithImpl<T, $Res>
       _$SuccessResetImpl<T> _value, $Res Function(_$SuccessResetImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1557,9 +1512,7 @@ class _$SuccessResetImpl<T> implements SuccessReset<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessResetImplCopyWith<T, _$SuccessResetImpl<T>> get copyWith =>
@@ -1681,10 +1634,7 @@ abstract class SuccessReset<T> implements ForgetState<T> {
   const factory SuccessReset(final LoginResponse data) = _$SuccessResetImpl<T>;
 
   LoginResponse get data;
-
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessResetImplCopyWith<T, _$SuccessResetImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1706,8 +1656,6 @@ class __$$ErrorResetImplCopyWithImpl<T, $Res>
       _$ErrorResetImpl<T> _value, $Res Function(_$ErrorResetImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1746,9 +1694,7 @@ class _$ErrorResetImpl<T> implements ErrorReset<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorResetImplCopyWith<T, _$ErrorResetImpl<T>> get copyWith =>
@@ -1869,10 +1815,7 @@ abstract class ErrorReset<T> implements ForgetState<T> {
   const factory ErrorReset({required final String error}) = _$ErrorResetImpl<T>;
 
   String get error;
-
-  /// Create a copy of ForgetState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorResetImplCopyWith<T, _$ErrorResetImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }

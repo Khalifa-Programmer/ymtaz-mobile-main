@@ -164,7 +164,7 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
 
   List<TextEditingController> textEditingControllers = [];
 
-  loadServices() async {
+  Future<void> loadServices() async {
     pendingServicesRequest = null;
     clientOrders = null;
     emit(const OfficeProviderState.loadingServicesRequestFromClients());
@@ -211,7 +211,7 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
     );
   }
 
-  loadAppoinemtns() async {
+  Future<void> loadAppoinemtns() async {
     appointmentsRequested = null;
     pendingAppointmentsRequest = null;
     emit(const OfficeProviderState.loadingServicesRequestFromClients());
@@ -242,7 +242,7 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
     );
   }
 
-  loadAdvisory() {
+  void loadAdvisory() {
     getAdvisoryRequestFromClients();
   }
 

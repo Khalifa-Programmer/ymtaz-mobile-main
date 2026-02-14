@@ -58,6 +58,9 @@ class Account {
   int? type;
   @JsonKey(name: "image")
   String? image;
+  @JsonKey(name: "photo")
+  String? photo;
+
   @JsonKey(name: "nationality")
   Country? nationality;
   @JsonKey(name: "country")
@@ -177,7 +180,9 @@ class Account {
     this.phoneCode,
     this.type,
     this.image,
+    this.photo,
     this.nationality,
+
     this.country,
     this.region,
     this.city,

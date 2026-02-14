@@ -4,9 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/core/widgets/custom_button.dart';
-import 'package:yamtaz/feature/advisory_window/logic/advisory_cubit.dart';
 import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
-import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/constants/colors.dart';
 import 'widgets/consultation_form.dart';
@@ -179,10 +177,10 @@ class ServiceSelectionContent extends StatefulWidget {
   final Function(BaseServiceRequest) onServiceAdded;
 
   const ServiceSelectionContent({
-    Key? key,
+    super.key,
     required this.priceController,
     required this.onServiceAdded,
-  }) : super(key: key);
+  });
 
   @override
   State<ServiceSelectionContent> createState() => _ServiceSelectionContentState();

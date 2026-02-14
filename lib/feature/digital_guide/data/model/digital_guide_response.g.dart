@@ -37,7 +37,7 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
     };
 
 Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       title: json['title'] as String?,
       image: json['image'] as String?,
       needLicense: (json['need_license'] as num?)?.toInt(),

@@ -15,8 +15,7 @@ import '../data/model/elite_request_model.dart';
 class EliteRequestSuccessScreen extends StatelessWidget {
   final EliteRequestModel request;
 
-  const EliteRequestSuccessScreen({Key? key, required this.request})
-      : super(key: key);
+  const EliteRequestSuccessScreen({super.key, required this.request});
 
   @override
   Widget build(BuildContext context) {

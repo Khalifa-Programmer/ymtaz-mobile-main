@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:yamtaz/core/network/remote/api_service.dart';
 
 import '../../../../../core/network/error/api_result.dart';
@@ -12,9 +13,12 @@ class RegisterRepo {
   Future<ApiResult<ResponseModel>> register(
       FormData registerRequestBody) async {
     try {
-      final response = await _apiService.register(registerRequestBody);
+      final response = await _apiService.register(registerRequestBody); 
+      
+      debugPrint("register response: $response");
       return ApiResult.success(response);
     } on DioException catch (error) {
+      debugPrint("register error: ${error.response?.data}");
       return ApiResult.failure(error.response?.data);
     }
   }

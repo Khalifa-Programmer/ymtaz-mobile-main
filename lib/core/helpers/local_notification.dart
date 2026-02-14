@@ -22,7 +22,7 @@ class NotificationService {
             (NotificationResponse notificationResponse) async {});
   }
 
-  notificationDetails() {
+  NotificationDetails notificationDetails() {
     return const NotificationDetails(
         android: AndroidNotificationDetails('1', 'channelName',
             importance: Importance.max),

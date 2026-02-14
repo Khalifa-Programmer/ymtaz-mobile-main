@@ -17,7 +17,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _chatController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  List<Map<String, dynamic>> _chatHistory = [];
+  final List<Map<String, dynamic>> _chatHistory = [];
   String? _file;
 
   late final GenerativeModel _model;
@@ -64,7 +64,7 @@ class _ChatPageState extends State<ChatPage> {
     _chatController.clear();
   }
   Future<void> getAnswer(String text) async {
-    late final response;
+    late final GenerateContentResponse response;
     if(_file != null){
       // final firstImage = await (File(_file!).readAsBytes());
       final prompt = TextPart(text);
@@ -171,7 +171,7 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: Stack(
         children: [
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height - 160,
             child: ListView.builder(
               itemCount: _chatHistory.length,

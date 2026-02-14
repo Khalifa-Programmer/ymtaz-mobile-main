@@ -6,11 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
 import 'package:yamtaz/core/router/routes.dart';
-import 'package:yamtaz/feature/forensic_guide/presentation/sub_data_details.dart';
 import 'package:yamtaz/feature/package_and_subscriptions/logic/packages_and_sbuscriptions_cubit.dart';
 import 'package:yamtaz/feature/package_and_subscriptions/logic/packages_and_sbuscriptions_state.dart';
 import 'package:yamtaz/feature/package_and_subscriptions/presentation/widgets/features_widgets.dart';
-import 'package:yamtaz/feature/package_and_subscriptions/presentation/widgets/web_payment_screen.dart';
 
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
@@ -27,29 +25,48 @@ class PackageDetails extends StatelessWidget {
     return BlocConsumer<PackagesAndSubscriptionsCubit,
         PackagesAndSbuscriptionsState>(
       listener: (context, state) {
+        print('📱 PackageDetails State: $state');
+        
         if (state is LoadingBuy) {
-          // show loading dialog
+          print('⏳ Loading purchase...');
         } else if (state is LoadedBuy) {
+          print('✅ Purchase loaded successfully');
           var data = state.data;
-          if  (data.data!.paymentUrl == null) {
+          
+          if (data.data == null) {
+            print('⚠️ Warning: data.data is null');
             AnimatedSnackBar.material(
-              'تم الإشتراك بنجاح',
+              'حدث خطأ في معالجة الطلب',
+              type: AnimatedSnackBarType.error,
+            ).show(context);
+            return;
+          }
+          
+          if (data.data!.paymentUrl == null || data.data!.paymentUrl!.isEmpty) {
+            print('✅ Free package or already subscribed');
+            AnimatedSnackBar.material(
+              data.message ?? 'تم الإشتراك بنجاح',
               type: AnimatedSnackBarType.success,
             ).show(context);
             context.pushNamedAndRemoveUntil(Routes.homeLayout, predicate: (Route<dynamic> route) { return false; });
             return;
           }
 
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => WebPaymentScreen(
-                      link: data.data!.paymentUrl!.toString())));
+          print('💳 Opening payment URL: ${data.data!.paymentUrl}');
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => WebPaymentScreen(
+                        link: data.data!.paymentUrl!.toString())));
+          });
 
         } else if (state is ErrorBuy) {
+          print('❌ Error buying package: ${state.message}');
           AnimatedSnackBar.material(
-            state.message,
+            state.message ?? 'حدث خطأ أثناء الاشتراك',
             type: AnimatedSnackBarType.error,
+            duration: const Duration(seconds: 4),
           ).show(context);
         }
       },
@@ -128,7 +145,6 @@ class PackageDetails extends StatelessWidget {
                             ),
                             CupertinoButton(
                               padding: EdgeInsets.symmetric(horizontal: 8.w),
-                              minSize: 30.h,
                               onPressed: () {
                                 if (state is! LoadingBuy) {
                                   BlocProvider.of<
@@ -138,6 +154,7 @@ class PackageDetails extends StatelessWidget {
                                 }
                               },
                               color: appColors.blue100,
+                              minimumSize: Size(30.h, 30.h),
                               child: state is LoadingBuy
                                   ? CupertinoActivityIndicator(
                                       color: appColors.white,

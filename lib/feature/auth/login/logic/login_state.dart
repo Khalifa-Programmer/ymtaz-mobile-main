@@ -15,7 +15,7 @@ class LoginState<T> with _$LoginState<T> {
 
   const factory LoginState.loading() = Loading;
 
-  const factory LoginState.success(LoginResponse data) = Success<T>;
+  const factory LoginState.success(LoginProviderResponse data) = Success<T>;
 
   const factory LoginState.successProvider(LoginProviderResponse data) =
       SuccessProvider<T>;
@@ -28,7 +28,7 @@ class LoginState<T> with _$LoginState<T> {
   const factory LoginState.visitorSuccess(VisitorLogin data) =
       VisitorSuccess<T>;
 
-  const factory LoginState.appleSuccess(BaseResponse data) =
+  const factory LoginState.appleSuccess(VisitorLogin data) =
   AppleSuccess<T>;
 
   const factory LoginState.visitorError({required String error}) = VisitorError;

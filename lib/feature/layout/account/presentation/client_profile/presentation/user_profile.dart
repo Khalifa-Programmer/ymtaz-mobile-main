@@ -15,6 +15,7 @@ import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/layout/account/presentation/client_profile/presentation/client_my_profile.dart';
 import 'package:yamtaz/feature/layout/account/presentation/gamification/gamification.dart';
 import 'package:yamtaz/l10n/locale_keys.g.dart';
+import 'package:yamtaz/core/constants/assets.dart';
 
 import '../../../../../../core/di/dependency_injection.dart';
 import '../../../logic/my_account_cubit.dart';
@@ -108,16 +109,31 @@ class SeeMyProfileClient extends StatelessWidget {
                                             child: CircleAvatar(
                                               radius: 10.sp,
                                               backgroundColor: appColors.white,
-                                              child: SvgPicture.network(
-                                                myAccountCubit
-                                                    .clientProfile!
-                                                    .data!
-                                                    .account!
-                                                    .currentRank!
-                                                    .image!,
+                                              child: CachedNetworkImage(
+                                                imageUrl: myAccountCubit
+                                                        .clientProfile!
+                                                        .data!
+                                                        .account!
+                                                        .currentRank
+                                                        ?.image ??
+                                                    "",
                                                 width: 12.0.w,
-                                                // Adjust width according to your design
                                                 height: 12.0.h,
+                                                placeholder: (context, url) =>
+                                                    SizedBox(
+                                                        width: 12.w,
+                                                        height: 12.h,
+                                                        child:
+                                                            const CircularProgressIndicator(
+                                                                strokeWidth:
+                                                                    2)),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        SvgPicture.asset(
+                                                  AppAssets.rank,
+                                                  width: 12.0.w,
+                                                  height: 12.0.h,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -204,6 +220,137 @@ class SeeMyProfileClient extends StatelessWidget {
                                           .currentRank!
                                           .name!,
                                     ),
+                                    SizedBox(height: 20.h),
+                                    Container(
+                                      padding: const EdgeInsets.all(20),
+                                      width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                        color: appColors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.1),
+                                            spreadRadius: 4,
+                                            blurRadius: 9,
+                                            offset: const Offset(3, 3),
+                                          ),
+                                        ],
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            LocaleKeys.profileOverview.tr(),
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color: appColors.grey15,
+                                            ),
+                                          ),
+                                          SizedBox(height: 8.h),
+                                            Text(
+                                            (myAccountCubit.clientProfile!.data!
+                                                            .account!.about ==
+                                                        null ||
+                                                    myAccountCubit
+                                                        .clientProfile!
+                                                        .data!
+                                                        .account!
+                                                        .about!
+                                                        .isEmpty ||
+                                                    myAccountCubit
+                                                            .clientProfile!
+                                                            .data!
+                                                            .account!
+                                                            .about!
+                                                            .toString()
+                                                            .toLowerCase() ==
+                                                        "null")
+                                                ? "-"
+                                                : myAccountCubit.clientProfile!
+                                                    .data!.account!.about!,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color: appColors.blue100,
+                                            ),
+                                          ),
+                                          SizedBox(height: 15.h),
+                                          const Text(
+                                            "المهن",
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color: appColors.grey15,
+                                            ),
+                                          ),
+                                          SizedBox(height: 8.h),
+                                          (myAccountCubit.clientProfile!.data!
+                                                          .account!.sections ==
+                                                      null ||
+                                                  myAccountCubit
+                                                      .clientProfile!
+                                                      .data!
+                                                      .account!
+                                                      .sections!
+                                                      .isEmpty)
+                                              ? const Text(
+                                                  "-",
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: appColors.blue100,
+                                                  ),
+                                                )
+                                              : Wrap(
+                                                  spacing: 8.0.w,
+                                                  // spacing between chips
+                                                  runSpacing: 4.0,
+                                                  // spacing between rows of chips
+                                                  children: (myAccountCubit
+                                                              .clientProfile!
+                                                              .data!
+                                                              .account!
+                                                              .sections ??
+                                                          [])
+                                                      .map((section) {
+                                                    return Chip(
+                                                      side: BorderSide(
+                                                        color: appColors
+                                                            .primaryColorYellow
+                                                            .withOpacity(0.1),
+                                                        width: 1,
+                                                      ),
+                                                      color:
+                                                          WidgetStatePropertyAll<
+                                                                  Color>(
+                                                              appColors
+                                                                  .primaryColorYellow
+                                                                  .withOpacity(
+                                                                      0.1)),
+
+                                                      label: Text(
+                                                        section.section
+                                                                ?.title ??
+                                                            "",
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight
+                                                              .bold,
+                                                          color:
+                                                              appColors.blue100,
+                                                        ),
+                                                      ),
+                                                      // Add any additional styling here if needed
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                        ],
+                                      ),
+                                    ),
                                     Container(
                                       padding: const EdgeInsets.all(20),
                                       width: MediaQuery.of(context).size.width,
@@ -252,13 +399,39 @@ class SeeMyProfileClient extends StatelessWidget {
                                               ),
                                               const Spacer(),
                                               Text(
-                                                myAccountCubit
+                                                (myAccountCubit.clientProfile!
+                                                                .data!.account!
+                                                                .country ==
+                                                            null ||
+                                                        myAccountCubit
+                                                            .clientProfile!
+                                                            .data!
+                                                            .account!
+                                                            .country!
+                                                            .name ==
+                                                            null ||
+                                                        myAccountCubit
+                                                            .clientProfile!
+                                                            .data!
+                                                            .account!
+                                                            .country!
+                                                            .name!
+                                                            .isEmpty ||
+                                                        myAccountCubit
+                                                                .clientProfile!
+                                                                .data!
+                                                                .account!
+                                                                .country!
+                                                                .name!
+                                                                .toLowerCase() ==
+                                                            'null')
+                                                    ? "-"
+                                                    : myAccountCubit
                                                         .clientProfile!
                                                         .data!
-                                                        .account
-                                                        ?.country
-                                                        ?.name ??
-                                                    "غير مختارة",
+                                                        .account!
+                                                        .country!
+                                                        .name!,
                                                 style: TextStyles
                                                     .cairo_14_semiBold
                                                     .copyWith(
@@ -286,13 +459,39 @@ class SeeMyProfileClient extends StatelessWidget {
                                               ),
                                               Spacer(),
                                               Text(
-                                                myAccountCubit
+                                                (myAccountCubit.clientProfile!
+                                                                .data!.account!
+                                                                .city ==
+                                                            null ||
+                                                        myAccountCubit
+                                                            .clientProfile!
+                                                            .data!
+                                                            .account!
+                                                            .city!
+                                                            .title ==
+                                                            null ||
+                                                        myAccountCubit
+                                                            .clientProfile!
+                                                            .data!
+                                                            .account!
+                                                            .city!
+                                                            .title!
+                                                            .isEmpty ||
+                                                        myAccountCubit
+                                                                .clientProfile!
+                                                                .data!
+                                                                .account!
+                                                                .city!
+                                                                .title!
+                                                                .toLowerCase() ==
+                                                            'null')
+                                                    ? "-"
+                                                    : myAccountCubit
                                                         .clientProfile!
                                                         .data!
                                                         .account!
-                                                        .city
-                                                        ?.title ??
-                                                    "غير مختارة",
+                                                        .city!
+                                                        .title!,
                                                 style: TextStyles
                                                     .cairo_14_semiBold
                                                     .copyWith(
@@ -320,13 +519,39 @@ class SeeMyProfileClient extends StatelessWidget {
                                               ),
                                               Spacer(),
                                               Text(
-                                                myAccountCubit
+                                                (myAccountCubit.clientProfile!
+                                                                .data!.account!
+                                                                .region ==
+                                                            null ||
+                                                        myAccountCubit
+                                                            .clientProfile!
+                                                            .data!
+                                                            .account!
+                                                            .region!
+                                                            .name ==
+                                                            null ||
+                                                        myAccountCubit
+                                                            .clientProfile!
+                                                            .data!
+                                                            .account!
+                                                            .region!
+                                                            .name!
+                                                            .isEmpty ||
+                                                        myAccountCubit
+                                                                .clientProfile!
+                                                                .data!
+                                                                .account!
+                                                                .region!
+                                                                .name!
+                                                                .toLowerCase() ==
+                                                            'null')
+                                                    ? "-"
+                                                    : myAccountCubit
                                                         .clientProfile!
                                                         .data!
-                                                        .account
-                                                        ?.region
-                                                        ?.name ??
-                                                    "غير مختارة",
+                                                        .account!
+                                                        .region!
+                                                        .name!,
                                                 style: TextStyles
                                                     .cairo_14_semiBold
                                                     .copyWith(
@@ -354,13 +579,39 @@ class SeeMyProfileClient extends StatelessWidget {
                                               ),
                                               Spacer(),
                                               Text(
-                                                myAccountCubit
+                                                (myAccountCubit.clientProfile!
+                                                                .data!.account!
+                                                                .nationality ==
+                                                            null ||
+                                                        myAccountCubit
+                                                            .clientProfile!
+                                                            .data!
+                                                            .account!
+                                                            .nationality!
+                                                            .name ==
+                                                            null ||
+                                                        myAccountCubit
+                                                            .clientProfile!
+                                                            .data!
+                                                            .account!
+                                                            .nationality!
+                                                            .name!
+                                                            .isEmpty ||
+                                                        myAccountCubit
+                                                                .clientProfile!
+                                                                .data!
+                                                                .account!
+                                                                .nationality!
+                                                                .name!
+                                                                .toLowerCase() ==
+                                                            'null')
+                                                    ? "-"
+                                                    : myAccountCubit
                                                         .clientProfile!
                                                         .data!
                                                         .account!
-                                                        .nationality
-                                                        ?.name ??
-                                                    "غير مختارة",
+                                                        .nationality!
+                                                        .name!,
                                                 style: TextStyles
                                                     .cairo_14_semiBold
                                                     .copyWith(

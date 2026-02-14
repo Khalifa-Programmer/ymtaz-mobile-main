@@ -12,6 +12,7 @@ import '../../../../../core/widgets/spacing.dart';
 import '../../../../digital_guide/presentation/digetal_providers_screen.dart';
 import '../../../account/presentation/client_profile/presentation/client_my_profile.dart';
 import '../../../account/presentation/widgets/user_profile_row.dart';
+import '../../../../../core/constants/assets.dart';
 
 class LawyerCard extends StatelessWidget {
   const LawyerCard(this.lawyer, this.service, this.price, this.importance,
@@ -80,7 +81,11 @@ class LawyerCard extends StatelessWidget {
           ),
           verticalSpace(10.h),
           Text(
-            "${lawyer.about!}",
+            (lawyer.about == null ||
+                        lawyer.about.toString().toLowerCase() == "null" ||
+                        lawyer.about!.isEmpty)
+                    ? "-"
+                    : lawyer.about!,
             style: TextStyles.cairo_12_regular.copyWith(
               color: appColors.grey15,
             ),
@@ -169,7 +174,7 @@ class LawyerCard extends StatelessWidget {
             ),
             horizontalSpace(5.w),
             Text(
-              "${lawyer.region!.name!} - ${lawyer.city!.title!}",
+              "${(lawyer.region?.name == null || lawyer.region!.name.toString().toLowerCase() == 'null') ? '-' : lawyer.region!.name!} - ${(lawyer.city?.title == null || lawyer.city!.title.toString().toLowerCase() == 'null') ? '-' : lawyer.city!.title!}",
               style:
                   TextStyles.cairo_12_regular.copyWith(color: appColors.grey15),
             ),
@@ -215,10 +220,19 @@ class LawyerCard extends StatelessWidget {
             child: CircleAvatar(
               radius: 10.sp,
               backgroundColor: appColors.white,
-              child: SvgPicture.network(
-                lawyer.currentRank!.image!,
-                width: 12.0.w, // Adjust width according to your design
+              child: CachedNetworkImage(
+                imageUrl: lawyer.currentRank!.image!,
+                width: 12.0.w,
                 height: 12.0.h,
+                placeholder: (context, url) => SizedBox(
+                    width: 12.w,
+                    height: 12.h,
+                    child: const CircularProgressIndicator(strokeWidth: 2)),
+                errorWidget: (context, url, error) => SvgPicture.asset(
+                  AppAssets.rank,
+                  width: 12.0.w,
+                  height: 12.0.h,
+                ),
               ),
             ),
           ),
@@ -279,7 +293,7 @@ class LawyerCard extends StatelessWidget {
               verticalSpace(10.h),
               const Divider(color: appColors.grey),
               verticalSpace(10.h),
-              _buildRow("المجموع الكلي", "${price} ريال"),
+              _buildRow("المجموع الكلي", "$price ريال"),
               verticalSpace(10.h),
               _buildRow('الضرائب', '15%'),
               verticalSpace(3.h),

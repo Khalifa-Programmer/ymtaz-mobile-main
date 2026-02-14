@@ -38,7 +38,7 @@ class AdvisorCubit extends Cubit<AdvisorState> {
     }
   }
 
-  getMyServices() {
+  void getMyServices() {
     if (mainCategoryResponse == null) {
       getMainCategories();
     }
@@ -69,7 +69,7 @@ class AdvisorCubit extends Cubit<AdvisorState> {
   AllAdvisoryResponse? advisoriesResponseYmtaz;
   AllAdvisoryResponse? advisoriesResponseDigital;
 
-   getAdvisories() async {
+   Future<void> getAdvisories() async {
      getAdvisoriesFromYmtaz();
      getAdvisoriesFromDigitalGuide();
   }

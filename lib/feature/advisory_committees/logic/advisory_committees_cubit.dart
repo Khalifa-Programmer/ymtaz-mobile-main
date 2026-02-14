@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:yamtaz/core/network/local/cache_helper.dart';
 import 'package:yamtaz/feature/advisory_committees/data/model/advisory_committees_lawyers_response.dart';
 import 'package:yamtaz/feature/advisory_committees/data/repos/advisory_committees_repo.dart';
 import 'package:yamtaz/feature/advisory_committees/logic/advisory_committees_state.dart';
@@ -60,7 +59,7 @@ class AdvisoryCommitteesCubit extends Cubit<AdvisoryCommitteesState> {
     try {
       final result = await _advisoryCommitteesRepo.getLawyerData(id);
 
-      result.forEach((apiResult) {
+      for (var apiResult in result) {
         apiResult.when(
           success: (data) {
             if (data is LawyerAdvisoryServicesResponseModel) {
@@ -73,7 +72,7 @@ class AdvisoryCommitteesCubit extends Cubit<AdvisoryCommitteesState> {
             emit(AdvisoryCommitteesState.errorGetLawyerAdvisory(error));
           },
         );
-      });
+      }
 
       emit(AdvisoryCommitteesState.loadedGetLawyerAdvisory(lawyerAdvisoryServicesResponseModel!));
     } catch (error) {

@@ -19,10 +19,10 @@ class FirstStepForm extends StatefulWidget {
   final Function(BuildContext) selectDateCallback;
 
   const FirstStepForm({
-    Key? key,
+    super.key,
     required this.formKey,
     required this.selectDateCallback,
-  }) : super(key: key);
+  });
 
   @override
   State<FirstStepForm> createState() => _FirstStepFormState();

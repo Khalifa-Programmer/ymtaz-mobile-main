@@ -20,327 +20,263 @@ import '../logic/law_guide_cubit.dart';
 import 'law_data_screen.dart';
 
 class LawsFromSub extends StatelessWidget {
-  LawsFromSub(
-      {super.key,
-      required this.title,
-      required this.subId,
-      this.arPdfUrl,
-      this.enPdfUrl,
-      this.enwordUrl,
-      this.arwordUrl});
+  const LawsFromSub({
+    super.key,
+    required this.title,
+    required this.subId,
+    this.arPdfUrl,
+    this.enPdfUrl,
+    this.enwordUrl,
+    this.arwordUrl,
+  });
 
   final String title;
   final String subId;
 
-  String? arPdfUrl;
-  String? enPdfUrl;
-  String? enwordUrl;
-  String? arwordUrl;
+  final String? arPdfUrl;
+  final String? enPdfUrl;
+  final String? enwordUrl;
+  final String? arwordUrl;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-        value: getit<LawGuideCubit>()..getLawsGuideSubFromSub(subId),
-        child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(title,
-                style: TextStyles.cairo_14_bold.copyWith(
-                  color: appColors.black,
-                )),
+      value: getit<LawGuideCubit>()..getLawsGuideSubFromSub(subId),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            title,
+            style: TextStyles.cairo_14_bold.copyWith(color: appColors.black),
           ),
-          body: BlocConsumer<LawGuideCubit, LawGuideState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              var userType = CacheHelper.getData(key: 'userType');
-              return userType == "guest"
-                  ? const GestScreen()
-                  : ConditionalBuilder(
-                      condition: getit<LawGuideCubit>().lawResponse == null,
-                      builder: (context) {
-                        return const Center(
-                          child: CupertinoActivityIndicator(),
-                        );
-                      },
-                      fallback: (context) {
-                        return Animate(
-                            effects: [FadeEffect(delay: 200.ms)],
-                            child: SingleChildScrollView(
-                              physics: NeverScrollableScrollPhysics(),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 20.0.w, vertical: 20.0.h),
-                                    child: CupertinoTextField(
-                                      placeholder: 'قم بالبحث في $title',
-                                      placeholderStyle: TextStyles
-                                          .cairo_14_semiBold
-                                          .copyWith(color: appColors.grey15),
-                                      prefix: const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Icon(
-                                          CupertinoIcons.search,
-                                          color: appColors.grey15,
-                                        ),
-                                      ),
-                                      padding: const EdgeInsets.all(8.0),
-                                      decoration: BoxDecoration(
-                                          color:
-                                              appColors.grey15.withOpacity(0.1),
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      clearButtonMode:
-                                          OverlayVisibilityMode.editing,
-                                      clearButtonSemanticLabel: 'مسح',
-                                      readOnly: true,
-                                      onTap: () {
-                                        Map<String, String> data = {
-                                          'searchTerm': '',
-                                          'lawGuideSubCategoryId': subId,
-                                        };
-
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LawGuideSearch(
-                                                      title:
-                                                          'البحث في دليل الأنظمة',
-                                                      data: data),
-                                            ));
-                                      },
+        ),
+        body: BlocConsumer<LawGuideCubit, LawGuideState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            var userType = CacheHelper.getData(key: 'userType');
+            return userType == "guest"
+                ? const GestScreen()
+                : ConditionalBuilder(
+                    condition: getit<LawGuideCubit>().lawResponse == null,
+                    builder: (context) => const Center(
+                      child: CupertinoActivityIndicator(),
+                    ),
+                    fallback: (context) {
+                      return Animate(
+                        effects: [FadeEffect(delay: 200.ms)],
+                        child: SingleChildScrollView(
+                          physics: const NeverScrollableScrollPhysics(),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0.w, vertical: 20.0.h),
+                                child: CupertinoTextField(
+                                  placeholder: 'قم بالبحث في $title',
+                                  placeholderStyle: TextStyles.cairo_14_semiBold
+                                      .copyWith(color: appColors.grey15),
+                                  prefix: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      CupertinoIcons.search,
+                                      color: appColors.grey15,
                                     ),
                                   ),
-                                  const LawsGuideBodyWidget(),
-                                ],
-                              ),
-                            ));
-                      });
-            },
-          ),
-          floatingActionButton: BlocBuilder<LawGuideCubit, LawGuideState>(
-            builder: (context, state) {
-              return ConditionalBuilder(
-                condition: getit<LawGuideCubit>().lawResponse != null,
-                builder: (BuildContext context) => Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    FloatingActionButton(
-                      heroTag: 'fab1',
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(45),
-                      ),
-                      onPressed: () {
-                        // open bottom sheet
-                        showBottomModalDialog(
-                            context: context,
-                            isLight: true,
-                            children: [
-                              verticalSpace(10.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                      width: 50.w,
-                                      height: 5.h,
-                                      decoration: BoxDecoration(
-                                          color: appColors.grey5,
-                                          borderRadius:
-                                              BorderRadius.circular(5))),
-                                ],
-                              ),
-                              verticalSpace(10.h),
-                              Padding(
-                                padding:
-                                    EdgeInsets.symmetric(horizontal: 20.0.w),
-                                child: Text('تحميل القانون',
-                                    style: TextStyles.cairo_14_bold.copyWith(
-                                      color: appColors.blue100,
-                                    )),
-                              ),
-                              verticalSpace(10.h),
-                              ListTile(
-                                title: Text('النسخه العربية - PDF',
-                                    style:
-                                        TextStyles.cairo_14_semiBold.copyWith(
-                                      color: appColors.black,
-                                    )),
-                                onTap: () {
-                                  if (arPdfUrl != null) {
-                                    print(arPdfUrl);
-                                    // open pdf
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                      color: appColors.grey15.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(8)),
+                                  readOnly: true,
+                                  onTap: () {
+                                    Map<String, String> data = {
+                                      'searchTerm': '',
+                                      'lawGuideSubCategoryId': subId,
+                                    };
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PdfWebView(
-                                            link: arPdfUrl!,
-                                          ),
-                                        ));
-                                  } else {
-                                    context.pop();
-
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('لا يوجد ملف PDF'),
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => LawGuideSearch(
+                                            title: 'البحث في دليل الأنظمة',
+                                            data: data),
                                       ),
                                     );
-                                  }
-                                },
-                                leading: const Icon(
-                                  FontAwesomeIcons.filePdf,
-                                  color: Colors.red,
+                                  },
                                 ),
                               ),
-                              ListTile(
-                                title: Text('النسخه الانجليزية - PDF',
-                                    style:
-                                        TextStyles.cairo_14_semiBold.copyWith(
-                                      color: appColors.black,
-                                    )),
-                                leading: const Icon(
-                                  FontAwesomeIcons.filePdf,
-                                  color: Colors.red,
-                                ),
-                                onTap: () {
-                                  if (enPdfUrl != null) {
-                                    print(enPdfUrl);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PdfWebView(
-                                            link: enPdfUrl!,
-                                          ),
-                                        ));
-                                  } else {
-                                    context.pop();
-
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('لا يوجد ملف PDF'),
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                              ListTile(
-                                title: Text('Word - النسخه العربية',
-                                    style:
-                                        TextStyles.cairo_14_semiBold.copyWith(
-                                      color: appColors.black,
-                                    )),
-                                onTap: () {
-                                  if (arwordUrl != null) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PdfWebView(
-                                            link: arwordUrl!,
-                                          ),
-                                        ));
-                                  } else {
-                                    context.pop();
-
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('لا يوجد ملف WORD'),
-                                      ),
-                                    );
-                                  }
-                                },
-                                leading: const Icon(
-                                  FontAwesomeIcons.noteSticky,
-                                  color: Colors.blueAccent,
-                                ),
-                              ),
-                              ListTile(
-                                title: Text('Word - النسخه الانجليزية',
-                                    style:
-                                        TextStyles.cairo_14_semiBold.copyWith(
-                                      color: appColors.black,
-                                    )),
-                                onTap: () {
-                                  if (enwordUrl != null) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PdfWebView(
-                                            link: enwordUrl!,
-                                          ),
-                                        ));
-                                  } else {
-                                    context.pop();
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('لا يوجد ملف WORD'),
-                                      ),
-                                    );
-                                  }
-                                },
-                                leading: const Icon(FontAwesomeIcons.noteSticky,
-                                    color: Colors.blueAccent),
-                              ),
-                            ]);
-                      },
-                      backgroundColor: appColors.primaryColorYellow,
-                      child: const Icon(
-                        FontAwesomeIcons.filePdf,
-                        color: Colors.white,
-                      ),
+                              const LawsGuideBodyWidget(),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+          },
+        ),
+        floatingActionButton: BlocBuilder<LawGuideCubit, LawGuideState>(
+          builder: (context, state) {
+            return ConditionalBuilder(
+              condition: getit<LawGuideCubit>().lawResponse != null,
+              builder: (BuildContext context) => Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FloatingActionButton(
+                    heroTag: 'fab1',
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(45),
                     ),
-                    verticalSpace(10.h),
-                    FloatingActionButton(
-                      heroTag: 'fab2',
-                      onPressed: () {
-                        Navigator.push(
+                    onPressed: () {
+                      showBottomModalDialog(
+                        context: context,
+                        isLight: true,
+                        children: [
+                          verticalSpace(10.h),
+                          // Drag Handle
+                          Center(
+                            child: Container(
+                              width: 50.w,
+                              height: 5.h,
+                              decoration: BoxDecoration(
+                                color: appColors.grey5,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          ),
+                          verticalSpace(15.h),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+                            child: Text(
+                              'تحميل القانون',
+                              style: TextStyles.cairo_14_bold.copyWith(
+                                color: appColors.blue100,
+                              ),
+                            ),
+                          ),
+                          verticalSpace(10.h),
+                          _buildListTile(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => LawsDataScreen(
-                                title: title,
-                              ),
-                            ));
-                      },
-                      backgroundColor: appColors.white,
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(45),
-                      ),
-                      child: const Icon(
-                        CupertinoIcons.eye_solid,
-                        color: appColors.primaryColorYellow,
-                      ),
+                            'النسخه العربية - PDF',
+                            arPdfUrl,
+                            FontAwesomeIcons.filePdf,
+                            Colors.red,
+                            'لا يوجد ملف PDF',
+                          ),
+                          _buildListTile(
+                            context,
+                            'النسخه الانجليزية - PDF',
+                            enPdfUrl,
+                            FontAwesomeIcons.filePdf,
+                            Colors.red,
+                            'لا يوجد ملف PDF',
+                          ),
+                          _buildListTile(
+                            context,
+                            'Word - النسخه العربية',
+                            arwordUrl,
+                            FontAwesomeIcons.noteSticky,
+                            Colors.blueAccent,
+                            'لا يوجد ملف WORD',
+                          ),
+                          _buildListTile(
+                            context,
+                            'Word - النسخه الانجليزية',
+                            enwordUrl,
+                            FontAwesomeIcons.noteSticky,
+                            Colors.blueAccent,
+                            'لا يوجد ملف WORD',
+                          ),
+                          verticalSpace(20.h),
+                        ],
+                      );
+                    },
+                    backgroundColor: appColors.primaryColorYellow,
+                    child: const Icon(FontAwesomeIcons.filePdf, color: Colors.white),
+                  ),
+                  verticalSpace(10.h),
+                  FloatingActionButton(
+                    heroTag: 'fab2',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LawsDataScreen(title: title),
+                        ),
+                      );
+                    },
+                    backgroundColor: appColors.white,
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(45),
                     ),
-                  ],
-                ),
-                fallback: (BuildContext context) {
-                  return const SizedBox();
-                },
-              );
-            },
-          ),
-        ));
+                    child: const Icon(
+                      CupertinoIcons.eye_solid,
+                      color: appColors.primaryColorYellow,
+                    ),
+                  ),
+                ],
+              ),
+              fallback: (BuildContext context) => const SizedBox(),
+            );
+          },
+        ),
+      ),
+    );
   }
 
-  showBottomModalDialog({
+  // Helper to keep the code clean and avoid repetition
+  Widget _buildListTile(BuildContext context, String title, String? url,
+      IconData icon, Color iconColor, String errorMsg) {
+    return ListTile(
+      leading: Icon(icon, color: iconColor),
+      title: Text(title,
+          style: TextStyles.cairo_14_semiBold.copyWith(color: appColors.black)),
+      onTap: () {
+        if (url != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PdfWebView(link: url)),
+          );
+        } else {
+          context.pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMsg)),
+          );
+        }
+      },
+    );
+  }
+
+  void showBottomModalDialog({
     required BuildContext context,
     required bool isLight,
     required List<Widget> children,
   }) {
     showCupertinoModalPopup(
-        barrierDismissible: true,
-        barrierColor: Colors.black.withOpacity(0.5),
-        context: context,
-        builder: (BuildContext modalContext) => Container(
-            height: 300.h,
-            decoration: const BoxDecoration(
-              color: appColors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      context: context,
+      builder: (BuildContext modalContext) => Container(
+        // Use constraints instead of hard height to prevent overflow
+        constraints: BoxConstraints(maxHeight: 400.h),
+        decoration: const BoxDecoration(
+          color: appColors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        ),
+        child: Material(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(25.0)),
+          color: appColors.white,
+          child: SafeArea(
+            top: false,
+            child: SingleChildScrollView(
+              // The magic fix for the 1.5px overflow
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: children,
+              ),
             ),
-            child: Material(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(25.0)),
-                color: appColors.white,
-                child: Column(
-                    mainAxisSize: MainAxisSize.max, children: children))));
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -16,22 +16,28 @@ class ServicesRepo {
 
   // reqquest services  to api
 
-  Future<ApiResult<ServicesRequestResponse>> servicesRequest(
-      FormData data) async {
-    var token = CacheHelper.getData(key: 'token');
-    var userType = CacheHelper.getData(key: 'userType');
-    try {
-      var response;
-      if (userType == 'client') {
-        response = await _apiService.servicesRequestClient(token, data);
-      } else if (userType == 'provider') {
-        response = await _apiService.servicesRequestProvider(token, data);
-      }
-      return ApiResult.success(response);
-    } on DioException catch (error) {
-      return ApiResult.failure(error.response?.data);
+Future<ApiResult<ServicesRequestResponse>> servicesRequest(FormData data) async {
+  var token = CacheHelper.getData(key: 'token');
+  var userType = CacheHelper.getData(key: 'userType');
+
+  try {
+    // نستخدم final ونعطي قيمة مباشرة بناءً على نوع المستخدم
+    final ServicesRequestResponse response;
+
+    if (userType == 'client') {
+      response = await _apiService.servicesRequestClient(token, data);
+    } else if (userType == 'provider') {
+      response = await _apiService.servicesRequestProvider(token, data);
+    } else {
+      // حالة أمان: إذا لم يكن المستخدم أحد النوعين، نرجع خطأ مخصص
+      return const ApiResult.failure({"message": "نوع المستخدم غير صالح"});
     }
+
+    return ApiResult.success(response);
+  } on DioException catch (error) {
+    return ApiResult.failure(error.response?.data);
   }
+}
 
   //serviceLawyersById
 
@@ -50,21 +56,30 @@ class ServicesRepo {
   }
 
   Future<ApiResult<ServicesRequirementsResponse>> getServices() async {
-    var token = CacheHelper.getData(key: 'token');
-    var userType = CacheHelper.getData(key: 'userType');
-    try {
-      var response;
+  var token = CacheHelper.getData(key: 'token');
+  var userType = CacheHelper.getData(key: 'userType');
+  
+  try {
+    // 1. تعريف المتغير كـ final وتعيينه مباشرة باستخدام التعبيرات الشرطية
+    final ServicesRequirementsResponse response;
 
-      if (userType == 'client' || userType == 'guest') {
-        response = await _apiService.getServicesClient(token ?? "");
-      } else if (userType == 'provider') {
-        response = await _apiService.ggetServicesProvider(token);
-      }
-      return ApiResult.success(response);
-    } on DioException catch (error) {
-      return ApiResult.failure(error.response?.data);
+    if (userType == 'client' || userType == 'guest') {
+      response = await _apiService.getServicesClient(token ?? "");
+    } else if (userType == 'provider') {
+      response = await _apiService.ggetServicesProvider(token);
+    } else {
+      // 2. معالجة حالة إذا كان نوع المستخدم غير معروف (أمان إضافي)
+      return const ApiResult.failure({"message": "نوع المستخدم غير معروف"});
     }
+
+    return ApiResult.success(response);
+  } on DioException catch (error) {
+    return ApiResult.failure(error.response?.data);
+  } catch (e) {
+    // 3. إضافة catch عامة للتعامل مع أي أخطاء أخرى غير متوقعة
+    return ApiResult.failure({"message": e.toString()});
   }
+}
 
   // get services from api
   Future<ApiResult<MyServicesRequestsResponse>>

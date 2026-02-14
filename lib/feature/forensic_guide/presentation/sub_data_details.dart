@@ -57,7 +57,7 @@ class SubDataDetails extends StatelessWidget {
     );
   }
 
-  _buildHeader(BuildContext context) {
+  Padding _buildHeader(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(

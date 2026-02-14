@@ -18,6 +18,9 @@ import 'package:yamtaz/feature/library_guide/data/repo/library_guide_repo.dart';
 import 'package:yamtaz/feature/library_guide/logic/library_cubit.dart';
 import 'package:yamtaz/feature/ymtaz_elite/data/repo/ymtaz_elite_repo.dart';
 import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
+import 'package:yamtaz/feature/advisory_committees/data/repos/advisory_committees_repo.dart';
+import 'package:yamtaz/feature/advisory_committees/logic/advisory_committees_cubit.dart';
+
 
 import '../../config/enviroment.dart';
 import '../../feature/advisory_window/data/repo/advisory_repo.dart';
@@ -35,7 +38,6 @@ import '../../feature/layout/account/data/repos/my_account_repo.dart';
 import '../../feature/layout/account/logic/my_account_cubit.dart';
 import '../../feature/layout/my_page/data/repos/my_page_repo.dart';
 import '../../feature/layout/my_page/logic/my_page_cubit.dart';
-import '../../feature/learning_path/logic/law_details_cubit.dart';
 import '../../feature/my_appointments/data/repo/appointment_repo.dart';
 import '../../feature/my_appointments/logic/appointments_cubit.dart';
 import '../../feature/notifications/data/repo/notification_repo.dart';
@@ -82,6 +84,12 @@ Future<void> setGetIt() async {
       .registerLazySingleton<DigitalGuideRepo>(() => DigitalGuideRepo(getit()));
   getit.registerLazySingleton<DigitalGuideCubit>(
       () => DigitalGuideCubit(getit()));
+
+  getit.registerLazySingleton<AdvisoryCommitteesRepo>(
+      () => AdvisoryCommitteesRepo(getit()));
+  getit.registerLazySingleton<AdvisoryCommitteesCubit>(
+      () => AdvisoryCommitteesCubit(getit()));
+
 
   // services
   getit.registerLazySingleton<ServicesRepo>(() => ServicesRepo(getit()));

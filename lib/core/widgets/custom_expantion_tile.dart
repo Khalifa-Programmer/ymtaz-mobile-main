@@ -10,13 +10,13 @@ class CustomExpansionTile extends StatefulWidget {
   final EdgeInsetsGeometry padding;
 
   const CustomExpansionTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.children,
     required this.initialGradient,
     required this.expandedGradient,
     this.padding = const EdgeInsets.all(10.0),
-  }) : super(key: key);
+  });
 
   @override
   _CustomExpansionTileState createState() => _CustomExpansionTileState();

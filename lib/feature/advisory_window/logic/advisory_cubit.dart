@@ -258,7 +258,7 @@ class AdvisoryCubit extends Cubit<AdvisoryState> {
   AllAdvisoryResponse? advisoriesResponseYmtaz;
   AllAdvisoryResponse? advisoriesResponseDigital;
 
-  getAdvisories() async {
+  Future<void> getAdvisories() async {
     getAdvisoriesFromYmtaz();
     getAdvisoriesFromDigitalGuide();
   }

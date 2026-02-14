@@ -61,7 +61,7 @@ class EliteToolSelectionType extends StatelessWidget {
             ],
           ),
           verticalSpace(15.h),
-          Container(
+          SizedBox(
             width: double.infinity,
             child: CupertinoButton(
               padding: EdgeInsets.zero,

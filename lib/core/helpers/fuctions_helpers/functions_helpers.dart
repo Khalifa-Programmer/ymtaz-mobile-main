@@ -31,7 +31,7 @@ String getDate(String? timestamp) {
   }
 }
 
-getTypeNotificationText(String type) {
+String getTypeNotificationText(String type) {
   if (type == "service") {
     return "خدمات";
   } else if (type == "appointment") {
@@ -52,7 +52,7 @@ String getTimeDate(String lastSeen) {
   DateTime lastSeenDateTime = DateTime.parse(lastSeen).toLocal();
 
   // تنسيق التاريخ والوقت باستخدام اللغة العربية
-  final DateFormat dateFormatter = DateFormat('d MMMM yyyy', 'ar');
+  final DateFormat dateFormatter = DateFormat('d MMMM yyyy   HH:mm', 'ar');
   // final DateFormat timeFormatter = DateFormat('HH:mm', 'ar');
 
   String formattedDate = dateFormatter.format(lastSeenDateTime);
@@ -83,7 +83,7 @@ enum NotificationType {
   officeLawyer,
 }
 
-typeNotificationNavigation(String type) {
+String typeNotificationNavigation(String type) {
   if (type == "service" || type == "service-offer") {
     return Routes.myServices;
   } else if (type == "appointment" || type == "offer-reservation") {
@@ -144,7 +144,7 @@ String getOfferStatusText(String requestStatus) {
       : 'حالة غير معروفة';
 }
 
-getOfferStatusColor(String requestStatus) {
+ColorSwatch<int> getOfferStatusColor(String requestStatus) {
   final statusTextMap = {
     'pending-offer': Colors.blueAccent,
     'pending-acceptance': Colors.orange,
@@ -170,7 +170,7 @@ String getStatusText(int requestStatus) {
       : 'حالة غير معروفة';
 }
 
-getStatusColor(String requestStatus) {
+ColorSwatch<int> getStatusColor(String requestStatus) {
   final statusTextMap = {
     'جديد': Colors.blueAccent,
     'انتظار': Colors.orange,

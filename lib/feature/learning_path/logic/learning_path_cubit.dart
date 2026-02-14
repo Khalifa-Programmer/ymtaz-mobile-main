@@ -5,9 +5,7 @@ import 'package:yamtaz/feature/learning_path/data/models/learning_path_items_res
 import 'package:yamtaz/feature/learning_path/data/models/learning_paths_response.dart';
 import 'package:yamtaz/feature/learning_path/data/repos/learning_path_repo.dart';
 
-import '../data/models/book_guide_items_response.dart';
 import '../data/models/law_details_response.dart';
-import '../data/models/law_guide_items_response.dart';
 import 'learning_path_state.dart';
 
 

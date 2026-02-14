@@ -14,10 +14,10 @@ class ConsultationForm extends StatefulWidget {
   final Function(BaseServiceRequest) onSuccess;
 
   const ConsultationForm({
-    Key? key,
+    super.key,
     required this.priceController,
     required this.onSuccess,
-  }) : super(key: key);
+  });
 
   @override
   State<ConsultationForm> createState() => _ConsultationFormState();

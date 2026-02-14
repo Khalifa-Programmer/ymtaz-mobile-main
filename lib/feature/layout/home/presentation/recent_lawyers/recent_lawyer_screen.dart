@@ -20,7 +20,7 @@ class RecentLawyers extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("الدليل الرقمي",
+        title: Text("المنضمون حديثا",
             style: TextStyles.cairo_14_bold.copyWith(
               color: appColors.black,
             )),
@@ -53,59 +53,76 @@ class RecentLawyers extends StatelessWidget {
 
                   // context.pushNamed(Routes.digitalGuideSearch, arguments: category);
                 },
-                child: Row(
-                  children: [
-                    Container(
-                      width: 50.w,
-                      height: 50.h,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(lawyer.photo ??
-                              "https://api.ymtaz.sa/uploads/person.png"),
-                          fit: BoxFit.cover,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                  decoration: ShapeDecoration(
+                    color: Colors.white,
+                    shadows: [
+                      BoxShadow(
+                        color: Colors.black12.withOpacity(0.04),
+                        spreadRadius: 3,
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 50.w,
+                        height: 50.h,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: NetworkImage(lawyer.photo ??
+                                "https://api.ymtaz.sa/uploads/person.png"),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 10.0.h),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("${lawyer.name}",
-                            style: TextStyles.cairo_14_bold.copyWith(
+                      SizedBox(width: 10.0.h),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("${lawyer.name}",
+                              style: TextStyles.cairo_14_bold.copyWith(
+                                color: appColors.blue100,
+                              )),
+                          verticalSpace(6.h),
+                          Row(
+                            children: [
+                              Icon(
+                                CupertinoIcons.location_solid,
+                                color: appColors.primaryColorYellow,
+                                size: 20.sp,
+                              ),
+                              horizontalSpace(0.w),
+                              Text(lawyer.cityRel?.title ?? "",
+                                  style: TextStyles.cairo_12_semiBold),
+                            ],
+                          )
+                        ],
+                      ),
+                      Spacer(),
+                      Container(
+                        margin: EdgeInsets.only(left: 0.w),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        decoration: BoxDecoration(
+                          color: appColors.lightYellow10,
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        child: Text("جديد",
+                            style: TextStyles.cairo_12_semiBold.copyWith(
                               color: appColors.blue100,
                             )),
-                        verticalSpace(6.h),
-                        Row(
-                          children: [
-                            Icon(
-                              CupertinoIcons.location_solid,
-                              color: appColors.primaryColorYellow,
-                              size: 20.sp,
-                            ),
-                            horizontalSpace(0.w),
-                            Text(lawyer.cityRel!.title ?? "",
-                                style: TextStyles.cairo_12_semiBold),
-                          ],
-                        )
-                      ],
-                    ),
-                    Spacer(),
-                    Container(
-                      margin: EdgeInsets.only(left: 0.w),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        color: appColors.lightYellow10,
-                        borderRadius: BorderRadius.circular(6.r),
-                      ),
-                      child: Text("جديد",
-                          style: TextStyles.cairo_12_semiBold.copyWith(
-                            color: appColors.blue100,
-                          )),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               );
             },

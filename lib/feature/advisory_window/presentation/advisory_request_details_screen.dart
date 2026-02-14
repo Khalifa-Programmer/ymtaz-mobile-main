@@ -21,7 +21,7 @@ import '../logic/advisory_cubit.dart';
 enum RecordingState { idle, recording, recorded }
 
 class AdvisoryRequestDetailsScreen extends StatefulWidget {
-  AdvisoryRequestDetailsScreen({super.key});
+  const AdvisoryRequestDetailsScreen({super.key});
 
   @override
   _AdvisoryRequestDetailsScreenState createState() =>
@@ -31,7 +31,7 @@ class AdvisoryRequestDetailsScreen extends StatefulWidget {
 class _AdvisoryRequestDetailsScreenState
     extends State<AdvisoryRequestDetailsScreen> {
   final TextEditingController externalController = TextEditingController();
-  List<PlatformFile> _files = [];
+  final List<PlatformFile> _files = [];
 
   final RecorderController _recorderController = RecorderController();
   final PlayerController _playerController = PlayerController();
@@ -243,7 +243,7 @@ class _AdvisoryRequestDetailsScreenState
                           ..._files.map((file) {
                             int index = _files.indexOf(file);
                             return _buildFileListItem(file, index);
-                          }).toList(),
+                          }),
                           Container(
                             color: appColors.white,
                             width: double.infinity,
@@ -270,17 +270,17 @@ class _AdvisoryRequestDetailsScreenState
                 playerController: _playerController,
               ), // Use the custom component
               verticalSpace(20.h),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: CupertinoButton(
                     padding: EdgeInsets.zero,
                     color: appColors.primaryColorYellow,
+                    onPressed: _validateAndSubmit,
                     child: Text(
                       "التالي",
                       style: TextStyles.cairo_14_bold
                           .copyWith(color: appColors.white),
-                    ),
-                    onPressed: _validateAndSubmit),
+                    )),
               ),
               verticalSpace(50.h),
             ],

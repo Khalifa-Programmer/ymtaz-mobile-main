@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yamtaz/core/network/local/cache_helper.dart';
-import 'package:yamtaz/core/network/error/api_result.dart';
 import 'package:yamtaz/feature/learning_path/data/repos/learning_path_repo.dart';
 import 'package:yamtaz/feature/learning_path/logic/favourite_items_state.dart';
 

@@ -115,36 +115,50 @@ class AdvisoryRepo {
   // orders
 
   Future<ApiResult<AllAdvisoryResponse>> getAdvisoriesFromYmtaz() async {
-    var token = CacheHelper.getData(key: 'token');
-    var userType = CacheHelper.getData(key: 'userType');
-    try {
-      var response;
+  var token = CacheHelper.getData(key: 'token');
+  var userType = CacheHelper.getData(key: 'userType');
+  
+  try {
+    // نستخدم late أو نعطي قيمة ابتدائية، والأفضل استخدام الـ else لضمان التعيين
+    final AllAdvisoryResponse response;
 
-      if (userType == 'client') {
-        response = await _apiService.getMyAdvisorClientFromYmtaz(token);
-      } else if (userType == 'provider') {
-        response = await _apiService.getMyAdvisorProviderFromYmtaz(token);
-      }
-      return ApiResult.success(response);
-    } on DioException catch (error) {
-      return ApiResult.failure(error.response?.data);
+    if (userType == 'client') {
+      response = await _apiService.getMyAdvisorClientFromYmtaz(token);
+    } else if (userType == 'provider') {
+      response = await _apiService.getMyAdvisorProviderFromYmtaz(token);
+    } else {
+      // التعامل مع حالة الزائر أو نوع مستخدم غير معروف
+      return const ApiResult.failure({"message": "يجب تسجيل الدخول لعرض الاستشارات"});
     }
+
+    return ApiResult.success(response);
+  } on DioException catch (error) {
+    return ApiResult.failure(error.response?.data);
+  } catch (e) {
+    return ApiResult.failure({"message": e.toString()});
   }
+}
 
   Future<ApiResult<AllAdvisoryResponse>> getAdvisoriesFromDigital() async {
-    var token = CacheHelper.getData(key: 'token');
-    var userType = CacheHelper.getData(key: 'userType');
-    try {
-      var response;
-
-      if (userType == 'client') {
-        response = await _apiService.getMyAdvisorClientFromDigital(token);
-      } else if (userType == 'provider') {
-        response = await _apiService.getMyAdvisorProviderFromDigital(token);
-      }
-      return ApiResult.success(response);
-    } on DioException catch (error) {
-      return ApiResult.failure(error.response?.data);
+  var token = CacheHelper.getData(key: 'token');
+  var userType = CacheHelper.getData(key: 'userType');
+  
+  try {
+    // التحقق من نوع المستخدم أولاً لضمان عدم وجود أخطاء منطقية
+    if (userType != 'client' && userType != 'provider') {
+      return const ApiResult.failure({"message": "نوع المستخدم غير معروف"});
     }
+
+    // تعيين القيمة مباشرة باستخدام final لضمان الأمان البرمجي
+    final AllAdvisoryResponse response = (userType == 'client')
+        ? await _apiService.getMyAdvisorClientFromDigital(token)
+        : await _apiService.getMyAdvisorProviderFromDigital(token);
+
+    return ApiResult.success(response);
+  } on DioException catch (error) {
+    return ApiResult.failure(error.response?.data);
+  } catch (e) {
+    return ApiResult.failure({"message": e.toString()});
   }
+}
 }

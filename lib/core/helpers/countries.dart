@@ -2,6 +2,7 @@
 // for list of country/calling codes
 
 const List<Country> countries = [
+  
   Country(
     name: "Afghanistan",
     nameTranslations: {

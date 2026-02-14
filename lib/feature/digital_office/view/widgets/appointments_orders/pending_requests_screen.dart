@@ -11,7 +11,7 @@ import '../../../logic/office_provider_cubit.dart';
 import '../../../logic/office_provider_state.dart';
 
 class AppointmetnsPendingRequestsScreen extends StatelessWidget {
-  AppointmetnsPendingRequestsScreen({super.key, required this.offers});
+  const AppointmetnsPendingRequestsScreen({super.key, required this.offers});
 
   final List<Offer> offers;
 

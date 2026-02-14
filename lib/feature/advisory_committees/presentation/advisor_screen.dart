@@ -54,7 +54,8 @@ class _AdvisorScreenState extends State<AdvisorScreen>
       ),
       body: BlocProvider.value(
         value: getit<AdvisoryCommitteesCubit>()
-          ..getLawyerdatabtid(widget.lawyer.id!.toString()),
+          ..getLawyerdatabtid(widget.lawyer.id?.toString() ?? ""),
+
         child: BlocConsumer<AdvisoryCommitteesCubit, AdvisoryCommitteesState>(
           listener: (context, state) {
             // TODO: implement listener
@@ -102,8 +103,9 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                         image: NetworkImage(
-                                            widget.lawyer.photo ??
-                                                "https://via.placeholder.com/150",
+                                            widget.lawyer.photo ?? widget.lawyer.image ?? widget.lawyer.logo ??
+                                                "https://api.ymtaz.sa/uploads/person.png",
+
                                             scale: 1.0),
                                         fit: BoxFit.cover,
                                       ),
@@ -122,7 +124,8 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                               CrossAxisAlignment.center,
                                           children: [
                                             Text(
-                                              widget.lawyer.name!,
+                                              widget.lawyer.name ?? "بدون اسم",
+
                                               // Static name
                                               style: const TextStyle(
                                                 fontSize: 18,
@@ -230,7 +233,8 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                     runSpacing: 4.0,
                                     // spacing between rows of chips
                                     children:
-                                        widget.lawyer.sections!.map((section) {
+                                        (widget.lawyer.sections ?? []).map((section) {
+
                                       return Chip(
                                         side: BorderSide(
                                           color: appColors
@@ -238,12 +242,13 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                               .withOpacity(0.1),
                                           width: 1,
                                         ),
-                                        color: MaterialStatePropertyAll<Color>(
+                                        color: WidgetStatePropertyAll<Color>(
                                             appColors.primaryColorYellow
                                                 .withOpacity(0.1)),
 
                                         label: Text(
-                                          section.section!.title!,
+                                          section.section?.title ?? "",
+
                                           style: const TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.bold,
@@ -300,10 +305,11 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                       ),
                                       const Spacer(),
                                       Text(
-                                        widget.lawyer.country!.name!,
+                                        widget.lawyer.country?.name ?? "",
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(
                                                 color: appColors.blue100),
+
                                       ),
                                     ],
                                   ),
@@ -325,10 +331,11 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                       ),
                                       const Spacer(),
                                       Text(
-                                        widget.lawyer.region!.name!,
+                                        widget.lawyer.region?.name ?? "",
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(
                                                 color: appColors.blue100),
+
                                       ),
                                     ],
                                   ),
@@ -350,10 +357,11 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                       ),
                                       const Spacer(),
                                       Text(
-                                        widget.lawyer.nationality!.name!,
+                                        widget.lawyer.nationality?.name ?? "",
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(
                                                 color: appColors.blue100),
+
                                       ),
                                     ],
                                   ),
@@ -375,10 +383,11 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                       ),
                                       const Spacer(),
                                       Text(
-                                        widget.lawyer.degree!.title!,
+                                        widget.lawyer.degree?.title ?? "",
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(
                                                 color: appColors.blue100),
+
                                       ),
                                     ],
                                   ),
@@ -413,7 +422,7 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                           appColors.primaryColorYellow,
                                       labelStyle: TextStyles.cairo_14_bold,
                                       indicatorSize: TabBarIndicatorSize.tab,
-                                      overlayColor: MaterialStateProperty.all(
+                                      overlayColor: WidgetStateProperty.all(
                                           Colors.transparent),
                                       unselectedLabelColor:
                                           const Color(0xFF808D9E),
@@ -430,7 +439,7 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                           text: 'المواعيد',
                                         ),
                                       ]),
-                                  Container(
+                                  SizedBox(
                                     height: 300.h,
                                     child: TabBarView(
                                       controller: _tabController,
@@ -512,7 +521,7 @@ class _AdvisorScreenState extends State<AdvisorScreen>
     );
   }
 
-  _servicesTab() {
+  SingleChildScrollView _servicesTab() {
     return SingleChildScrollView(
       child: Column(
         children: [

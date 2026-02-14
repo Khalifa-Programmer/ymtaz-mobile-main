@@ -1,6 +1,6 @@
 import 'package:package_info_plus/package_info_plus.dart';
 
-const apiBaseUrlProd = "https://api.ymtaz.sa/api/"; // Production API URL
+const apiBaseUrlProd = "https://ymtaz.sa/api/"; // Production API URL
 const apiBaseUrlDev = "https://dev.ymtaz.sa/api/"; // Development API URL
 
 enum EnvironmentType {

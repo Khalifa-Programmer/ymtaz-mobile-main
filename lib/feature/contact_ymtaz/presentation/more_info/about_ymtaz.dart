@@ -45,11 +45,9 @@ class AboutYmtaz extends StatelessWidget {
                             SizedBox(
                               height: 10.h,
                             ),
-                            Text(
-                              aboutData.data!.description!,
-                              style: TextStyles.cairo_14_medium.copyWith(
-                                color: appColors.black,
-                              ),
+                            _buildFormattedText(
+                              aboutData.data!.description ?? '',
+                              context,
                             ),
                           ],
                         ),
@@ -64,5 +62,61 @@ class AboutYmtaz extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Widget _buildFormattedText(String text, BuildContext context) {
+    final List<String> lines = text.split('\n');
+    final List<Widget> widgets = [];
+
+    for (String line in lines) {
+      if (line.trim().isEmpty) {
+        widgets.add(SizedBox(height: 10.h));
+        continue;
+      }
+
+      bool isTitle = line.trim().startsWith('(') && line.trim().endsWith(')');
+      
+      final spans = _getSpansForText(line.trim());
+
+      widgets.add(
+        Padding(
+          padding: EdgeInsets.only(bottom: 8.h),
+          child: RichText(
+            textAlign: isTitle ? TextAlign.start : TextAlign.justify,
+            text: TextSpan(
+              children: spans,
+              style: isTitle 
+                ? TextStyles.cairo_14_bold.copyWith(color: appColors.blue100, height: 1.6)
+                : TextStyles.cairo_14_medium.copyWith(color: appColors.black, height: 1.6),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: widgets,
+    );
+  }
+
+  List<TextSpan> _getSpansForText(String text) {
+    const String targetWord = "يمتاز";
+    final List<TextSpan> spans = [];
+    
+    final parts = text.split(targetWord);
+    for (int i = 0; i < parts.length; i++) {
+      spans.add(TextSpan(text: parts[i]));
+      if (i < parts.length - 1) {
+        spans.add(TextSpan(
+          text: targetWord,
+          style: TextStyle(
+            color: appColors.primaryColorYellow,
+            fontWeight: FontWeight.bold,
+          ),
+        ));
+      }
+    }
+    return spans;
   }
 }

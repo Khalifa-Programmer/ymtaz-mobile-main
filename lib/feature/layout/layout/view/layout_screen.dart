@@ -18,6 +18,7 @@ class LayoutScreen extends StatelessWidget {
           LayoutCubit mainPagesCubit = LayoutCubit.get(context);
 
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             key: mainPagesCubit.scaffoldKey,
             body: mainPagesCubit.pages[mainPagesCubit.currentIndex],
             bottomNavigationBar: ClipRRect(

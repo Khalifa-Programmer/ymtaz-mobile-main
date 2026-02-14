@@ -307,7 +307,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
                                                                             .cairo_16_bold
                                                                             .copyWith(color: appColors.blue100),
                                                                       ),
-                                                                      Container(
+                                                                      SizedBox(
                                                                         width:
                                                                             180.w,
                                                                         child:
@@ -463,7 +463,7 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
                     )),
               ],
             ),
-            Container(
+            SizedBox(
               height: double.infinity,
               width: 4.h,
             ),

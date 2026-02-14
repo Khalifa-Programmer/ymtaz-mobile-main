@@ -19,12 +19,14 @@ import '../../../core/constants/colors.dart';
 import '../../../l10n/locale_keys.g.dart';
 
 class DigetalScreen extends StatelessWidget {
-  const DigetalScreen({Key? key});
+  const DigetalScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: getit<DigitalGuideCubit>()..loadDigitalGuide(),
+      value: getit<DigitalGuideCubit>()..getDigitalGuide(),
+
       child: BlocConsumer<DigitalGuideCubit, DigitalGuideState>(
         listener: (context, state) {
           state.whenOrNull(
@@ -43,17 +45,20 @@ class DigetalScreen extends StatelessWidget {
             current is ErrorGetDigi,
         builder: (context, state) {
           return Scaffold(
+            backgroundColor: Colors.white,
             appBar: AppBar(
+              backgroundColor: Colors.white,
+              surfaceTintColor: Colors.transparent,
+              iconTheme: IconThemeData(color: appColors.black),
               actions: [
                 IconButton(
                     onPressed: () {
                       context.pushNamed(Routes.fastSearch);
                     },
-                    icon: const Icon(CupertinoIcons.search)),
+                    icon: Icon(CupertinoIcons.search, color: appColors.black)),
               ],
               centerTitle: true,
               titleSpacing: 0,
-              backgroundColor: Colors.white,
               title: Text(
                 LocaleKeys.digitalGuide.tr(),
                 style: TextStyles.cairo_16_bold.copyWith(
@@ -61,6 +66,7 @@ class DigetalScreen extends StatelessWidget {
                 ),
               ),
             ),
+
             body: Animate(
                 effects: [FadeEffect(delay: 200.ms)],
                 child: _buildBody(state, context)),
@@ -79,31 +85,31 @@ class DigetalScreen extends StatelessWidget {
           onRefresh: () async {
             getit<DigitalGuideCubit>().getDigitalGuide();
           },
+
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0.w),
               child: Column(
                 children: [
-                  GridView.builder(
+                   GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: 1.71,
+                      childAspectRatio: 1.2,
                       crossAxisCount: 2,
-                      crossAxisSpacing: 8.0.w,
-                      mainAxisSpacing: 8.0.h,
+                      crossAxisSpacing: 12.0.w,
+                      mainAxisSpacing: 12.0.h,
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 10.0.h),
+                    padding: EdgeInsets.only(top: 10.h, bottom: 50.h),
                     itemCount: getit<DigitalGuideCubit>()
-                        .digitalGuideResponse!
-                        .data!
-                        .categories!
-                        .length,
+                        .digitalGuideResponse?.data?.categories?.length ?? 0,
                     itemBuilder: (context, index) {
                       Category category = getit<DigitalGuideCubit>()
                           .digitalGuideResponse!
                           .data!
                           .categories![index];
+
                       return _buildCategoryItem(category, context, index);
                     },
                   ),
@@ -114,10 +120,11 @@ class DigetalScreen extends StatelessWidget {
         );
       },
       fallback: (BuildContext context) {
-        return const Center(
-          child: CupertinoActivityIndicator(),
+        return Center(
+          child: CupertinoActivityIndicator(color: appColors.primaryColorYellow),
         );
       },
+
     );
   }
 
@@ -128,75 +135,90 @@ class DigetalScreen extends StatelessWidget {
         context.pushNamed(Routes.digitalGuideSearch, arguments: category);
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5),
         decoration: ShapeDecoration(
           color: Colors.white,
           shadows: [
             BoxShadow(
               color: Colors.black12.withOpacity(0.04),
-              // Shadow color
               spreadRadius: 3,
-              // Spread radius
               blurRadius: 10,
-              // Blur radius
-              offset: const Offset(0, 3), // Offset in x and y direction
+              offset: const Offset(0, 3),
             ),
           ],
           shape: RoundedRectangleBorder(
-            // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
-
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
+              width: 4.w,
               height: double.infinity,
-              width: 4.h,
               decoration: BoxDecoration(
                 color: index % 4 < 2
                     ? appColors.primaryColorYellow
                     : appColors.blue90,
                 borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10.r),
-                    bottomRight: Radius.circular(10.r)),
+                  topRight: Radius.circular(10.r),
+                  bottomRight: Radius.circular(10.r),
+                ),
               ),
             ),
-            Center(
+            Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  FaIcon(
-                    CupertinoIcons.person_2_square_stack_fill,
-                    size: 24.sp,
-                    color: appColors.primaryColorYellow,
+                  SizedBox(
+                    width: 35.w,
+                    height: 35.h,
+                    child: Image.network(
+                      category.image ?? "",
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Icon(
+                          FontAwesomeIcons.briefcase,
+                          color: index % 4 < 2
+                              ? appColors.primaryColorYellow
+                              : appColors.blue90,
+                          size: 30.sp,
+                        );
+                      },
+                    ),
                   ),
-                  verticalSpace(8.h),
-                  Text(category.title ?? '',
-                      style: TextStyles.cairo_12_bold.copyWith(
+                  verticalSpace(10.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    child: Text(
+                      category.title ?? '',
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
                         color: appColors.blue100,
-                      )),
-                  verticalSpace(8.h),
+                        fontSize: 12.sp,
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  verticalSpace(5.h),
                   Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 13.0.w, vertical: 2.0.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: appColors.primaryColorYellow.withOpacity(0.5)),
-                    child: Text("${category.lawyersCount}",
-                        style: TextStyles.cairo_12_semiBold.copyWith(
-                          color: appColors.blue90,
-                        )),
+                      color: appColors.primaryColorYellow.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      "${category.lawyersCount} محترف",
+                      style: TextStyles.cairo_10_bold.copyWith(
+                        color: appColors.primaryColorYellow,
+                        fontSize: 10.sp,
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
-            Container(
-              height: double.infinity,
-              width: 4.h,
-              color: Colors.white,
             ),
           ],
         ),

@@ -102,9 +102,6 @@ class _$MyPageStateCopyWithImpl<T, $Res, $Val extends MyPageState<T>>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -121,9 +118,6 @@ class __$$InitialImplCopyWithImpl<T, $Res>
   __$$InitialImplCopyWithImpl(
       _$InitialImpl<T> _value, $Res Function(_$InitialImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -256,9 +250,6 @@ class __$$LoadingImplCopyWithImpl<T, $Res>
   __$$LoadingImplCopyWithImpl(
       _$LoadingImpl<T> _value, $Res Function(_$LoadingImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -394,8 +385,6 @@ class __$$ErrorImplCopyWithImpl<T, $Res>
       _$ErrorImpl<T> _value, $Res Function(_$ErrorImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -435,9 +424,7 @@ class _$ErrorImpl<T> implements _Error<T> {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(error));
 
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorImplCopyWith<T, _$ErrorImpl<T>> get copyWith =>
@@ -540,10 +527,7 @@ abstract class _Error<T> implements MyPageState<T> {
   const factory _Error(final dynamic error) = _$ErrorImpl<T>;
 
   dynamic get error;
-
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorImplCopyWith<T, _$ErrorImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -565,8 +549,6 @@ class __$$SuccessImplCopyWithImpl<T, $Res>
       _$SuccessImpl<T> _value, $Res Function(_$SuccessImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -606,9 +588,7 @@ class _$SuccessImpl<T> implements _Success<T> {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(data));
 
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessImplCopyWith<T, _$SuccessImpl<T>> get copyWith =>
@@ -711,10 +691,7 @@ abstract class _Success<T> implements MyPageState<T> {
   const factory _Success(final T data) = _$SuccessImpl<T>;
 
   T get data;
-
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessImplCopyWith<T, _$SuccessImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -733,9 +710,6 @@ class __$$LoadingMyClientsImplCopyWithImpl<T, $Res>
   __$$LoadingMyClientsImplCopyWithImpl(_$LoadingMyClientsImpl<T> _value,
       $Res Function(_$LoadingMyClientsImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -872,8 +846,6 @@ class __$$LoadedMyClientsImplCopyWithImpl<T, $Res>
       $Res Function(_$LoadedMyClientsImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -912,9 +884,7 @@ class _$LoadedMyClientsImpl<T> implements LoadedMyClients<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadedMyClientsImplCopyWith<T, _$LoadedMyClientsImpl<T>> get copyWith =>
@@ -1019,10 +989,7 @@ abstract class LoadedMyClients<T> implements MyPageState<T> {
       _$LoadedMyClientsImpl<T>;
 
   MyLawyersResponse get data;
-
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LoadedMyClientsImplCopyWith<T, _$LoadedMyClientsImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1044,8 +1011,6 @@ class __$$ErrorMyClientsImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorMyClientsImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1084,9 +1049,7 @@ class _$ErrorMyClientsImpl<T> implements ErrorMyClients<T> {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorMyClientsImplCopyWith<T, _$ErrorMyClientsImpl<T>> get copyWith =>
@@ -1190,10 +1153,7 @@ abstract class ErrorMyClients<T> implements MyPageState<T> {
   const factory ErrorMyClients(final String message) = _$ErrorMyClientsImpl<T>;
 
   String get message;
-
-  /// Create a copy of MyPageState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorMyClientsImplCopyWith<T, _$ErrorMyClientsImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }

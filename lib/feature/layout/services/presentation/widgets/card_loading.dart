@@ -4,7 +4,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 
 class LawyerCardLoading extends StatelessWidget {
-  const LawyerCardLoading({Key? key}) : super(key: key);
+  const LawyerCardLoading({super.key});
 
   @override
   Widget build(BuildContext context) {

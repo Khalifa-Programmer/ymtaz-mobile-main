@@ -126,7 +126,7 @@ class _AppointmentScreenSetailsClientState
                       children: [
                         Expanded(
                           flex: 2,
-                          child: Container(
+                          child: SizedBox(
                             height: 35.h,
                             child: CupertinoButton(
                                 padding: EdgeInsets.symmetric(
@@ -148,7 +148,7 @@ class _AppointmentScreenSetailsClientState
                       children: [
                         Expanded(
                           flex: 2,
-                          child: Container(
+                          child: SizedBox(
                             height: 35.h,
                             child: CupertinoButton(
                                 padding: EdgeInsets.symmetric(

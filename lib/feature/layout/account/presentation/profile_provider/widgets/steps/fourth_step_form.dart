@@ -9,9 +9,9 @@ class FourthStepForm extends StatefulWidget {
   final Function(void Function()) setStateCallback;
 
   const FourthStepForm({
-    Key? key,
+    super.key,
     required this.setStateCallback,
-  }) : super(key: key);
+  });
 
   @override
   State<FourthStepForm> createState() => _FourthStepFormState();

@@ -41,7 +41,7 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
     };
 
 Subscription _$SubscriptionFromJson(Map<String, dynamic> json) => Subscription(
-      packageId: json['package_id'] as String?,
+      packageId: (json['package_id'] as num?)?.toInt(),
       accountId: json['account_id'] as String?,
       transactionId: json['transaction_id'] as String?,
       transactionComplete: (json['transaction_complete'] as num?)?.toInt(),

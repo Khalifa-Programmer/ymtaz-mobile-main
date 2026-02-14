@@ -64,7 +64,7 @@ class MyProfileClientScreen extends StatelessWidget {
   }
 }
 
-getColor(String s) {
+Color getColor(String s) {
   // #FF0000 TO Color(0xFFff0000)
   return Color(int.parse(s.substring(1, 7), radix: 16) + 0xFF000000);
 }

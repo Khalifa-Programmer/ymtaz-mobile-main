@@ -189,10 +189,10 @@ class ApiConstants {
   static const packageSubscribe = "v1/packages/subscribe";
 
   // visitor
-  static const visitorLogin = "auth/google/callback/";
+  static const googleLogin = "v1/auth/google/callback";
 
   // Apple Sign In 
-  static const appleLogin = "auth/apple/callback";
+  static const appleLogin = "v1/auth/apple/callback";
 
   ///-------------------- provier office ----------------------------------------//
   ///
