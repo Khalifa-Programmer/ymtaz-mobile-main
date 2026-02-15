@@ -112,7 +112,7 @@ workflows:
                      -exportPath build/ipa \
                      -exportOptionsPlist ExportOptions.plist \
                      CODE_SIGNING_ALLOWED=NO
-                     
+                            
     artifacts:
       - ios/build/ipa/*.ipa
     publishing:
