@@ -14,11 +14,11 @@ workflows:
         
       - name: Hard-Override Deployment Target
         script: |
-          # 1. حذف المخلفات القديمة تماماً
+          # 1. حذف المخلفات القديمة والروابط الرمزية تماماً
           rm -rf ios/Pods ios/Podfile.lock ios/.symlinks
           
           # 2. البحث عن أي ذكر لإصدار iOS قديم في كامل المشروع واستبداله بـ 13.0
-          # هذا يشمل ملفات Xcode، ملفات الإعدادات، وملفات الـ Plugins
+          # يشمل ملفات Xcode وملفات الـ podspec الخاصة بالـ Plugins
           find . -type f -name "*.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]*/IPHONEOS_DEPLOYMENT_TARGET = 13.0/g' {} +
           find . -type f -name "*.podspec" -exec sed -i '' 's/[.]ios[.]deployment_target.*/.ios.deployment_target = "13.0"/g' {} +
           find . -type f -name "*.podspec" -exec sed -i '' "s/'deployment_target' => '[0-9.]*'/'deployment_target' => '13.0'/g" {} +
@@ -72,6 +72,7 @@ workflows:
       - name: Update CocoaPods (Clean Install)
         script: |
           cd ios
+          # تنظيف الكاش الخاص بـ CocoaPods على السيرفر تماماً
           pod cache clean --all
           pod install --repo-update
           
