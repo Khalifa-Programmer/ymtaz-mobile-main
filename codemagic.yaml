@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Path Fix)
+    name: iOS Ad Hoc Build (Path Resolution)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -10,13 +10,12 @@ workflows:
       - name: Get Flutter packages
         script: flutter pub get
         
-      - name: Initialize Flutter iOS (To generate podhelper)
+      - name: Initialize Flutter iOS
         script: |
-          # هذا الأمر سيولد ملفات البيئة الضرورية في مجلد ios/Flutter
+          # توليد ملفات البيئة اللازمة
           flutter build ios --release --no-codesign --flavor production || true
-          # أضفنا || true لأننا نعلم أنه سيفشل في البداية بسبب الـ Pods، لكنه سيولد الملف المطلوب
 
-      - name: Reconstruct Podfile & Force Target
+      - name: Reconstruct Podfile
         script: |
           cd ios
           rm -f Podfile
@@ -33,8 +32,8 @@ workflows:
             'Release' => :release,
           }
 
-          # استخدام المسار الكامل والمباشر للملف المولد
-          require File.expand_path(File.join('Flutter', 'podhelper.rb'), __FILE__)
+          # تصحيح استدعاء podhelper باستخدام مسار نسبي مباشر
+          require_relative 'Flutter/podhelper.rb'
 
           target 'Runner' do
             use_frameworks!
@@ -56,7 +55,7 @@ workflows:
           end
           EOF
 
-      - name: Update CocoaPods (Final Attempt)
+      - name: Update CocoaPods
         script: |
           cd ios
           rm -rf Pods
@@ -82,7 +81,6 @@ workflows:
           
       - name: Manual Xcode Build
         script: |
-          # الآن نبني بشكل فعلي بعد حل مشاكل الـ Pods
           cd ios
           xcodebuild archive \
                      -workspace Runner.xcworkspace \
