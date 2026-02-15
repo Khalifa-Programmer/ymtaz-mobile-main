@@ -1,22 +1,22 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Absolute Path Fix)
+    name: iOS Ad Hoc Build (Complete Environment Fix)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
       flutter: stable
       xcode: latest
     scripts:
-      - name: Get Flutter packages
-        script: flutter pub get
+      - name: Prepare Flutter Environment
+        script: |
+          flutter precache --ios
+          flutter pub get
         
-      - name: Reconstruct Podfile (Absolute Path)
+      - name: Reconstruct Podfile
         script: |
           cd ios
           rm -f Podfile
-          # تحديد مسار فلاتر SDK في بيئة كود ماجيك
-          FLUTTER_SDK_PATH=$FLUTTER_ROOT
-          
+          # تحديد مسار الـ SDK بشكل ديناميكي
           cat > Podfile <<EOF
           platform :ios, '13.0'
 
@@ -30,14 +30,15 @@ workflows:
             'Release' => :release,
           }
 
-          # استدعاء ملف podhelper مباشرة من الـ SDK لضمان وجوده
-          load File.join('$FLUTTER_SDK_PATH', 'packages', 'flutter_tools', 'bin', 'podhelper.rb')
+          # استخدام المساعد من الـ SDK مباشرة
+          load File.join('$FLUTTER_ROOT', 'packages', 'flutter_tools', 'bin', 'podhelper.rb')
 
           target 'Runner' do
             use_frameworks!
             use_modular_headers!
             
-            flutter_install_all_ios_pods File.dirname(File.expand_path('..', __FILE__))
+            # هنا التعديل: سنمرر المسار الحالي لمجلد الـ ios
+            flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
             
             pod 'PhoneNumberKit', '~> 3.7.6'
           end
@@ -53,13 +54,17 @@ workflows:
           end
           EOF
 
+      - name: Force Generate Flutter Podspecs
+        script: |
+          # هذا هو السطر السحري الذي سينشئ ملف Flutter.podspec المفقود
+          flutter build ios --release --no-codesign --flavor production --pub
+
       - name: Update CocoaPods
         script: |
           cd ios
-          # مسح أي ملفات قديمة قد تسبب تضارباً في المسارات
           rm -rf Pods
           rm -rf Podfile.lock
-          rm -rf .symlinks
+          # لا نحذف .symlinks هنا لأن الأمر السابق قام بإنشائها
           pod install --repo-update
           
       - name: Create ExportOptions.plist
@@ -81,9 +86,6 @@ workflows:
           
       - name: Manual Xcode Build
         script: |
-          # تجهيز المحتوى لـ Xcode
-          flutter build ios --release --no-codesign --flavor production
-          
           cd ios
           xcodebuild archive \
                      -workspace Runner.xcworkspace \
