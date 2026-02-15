@@ -10,12 +10,21 @@ workflows:
       - name: Get Flutter packages
         script: flutter pub get
         
+      - name: Pre-configure iOS Deployment Target
+        script: |
+          # إجبار المشروع على إصدار 14.0 في ملف الإعدادات الخاص بفلاتر
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*/IPHONEOS_DEPLOYMENT_TARGET = 14.0/g' ios/Flutter/AppFrameworkInfo.plist
+          # تحديث الـ Deployment Target في ملف المشروع نفسه عبر سطر الأوامر
+          find . -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*;/IPHONEOS_DEPLOYMENT_TARGET = 14.0;/g' {} +
+
       - name: Update CocoaPods
         script: |
           cd ios
           rm -rf Pods
           rm -rf Podfile.lock
-          pod install --repo-update
+          # تحديث المستودعات أولاً لضمان وجود أحدث نسخ Firebase
+          pod repo update
+          pod install
           
       - name: Create ExportOptions.plist
         script: |
@@ -36,16 +45,17 @@ workflows:
           
       - name: Manual Xcode Build
         script: |
-          # تجهيز ملفات فلاتر
+          # بناء ملفات فلاتر (iOS Frameworks)
           flutter build ios --release --no-codesign
           
-          # البناء باستخدام xcodebuild مباشرة
           cd ios
+          # بناء الأرشيف مع التحديد الصريح للإصدار
           xcodebuild archive \
                      -workspace Runner.xcworkspace \
                      -scheme Runner \
                      -configuration "Release-production" \
                      -archivePath build/Runner.xcarchive \
+                     IPHONEOS_DEPLOYMENT_TARGET=14.0 \
                      CODE_SIGNING_ALLOWED=NO \
                      CODE_SIGNING_REQUIRED=NO \
                      CODE_SIGN_IDENTITY="" \
@@ -60,9 +70,7 @@ workflows:
                      
     artifacts:
       - ios/build/ipa/*.ipa
-
     publishing:
-      # نترك قسم النشر فارغاً أو نرسله للإيميل فقط
       email:
         recipients:
           - alhajamekh@gmail.com
