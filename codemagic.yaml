@@ -1,33 +1,34 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Direct Configuration)
+    name: iOS Ad Hoc Build
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
       flutter: stable
       xcode: latest
+      # هنا نضع متغيرات البيئة لكل المشروع
+      vars:
+        XCODE_CONFIGURATION: "Release-production" 
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
         
-      - name: Update CocoaPods (حل مشكلة المكتبات)
+      - name: Update CocoaPods
         script: |
           cd ios
           pod repo update
           
-      - name: List Xcode Configurations (لمعرفة الأسماء بدقة)
+      - name: List Xcode Configurations (للتأكد فقط)
         script: |
           cd ios
           xcodebuild -list -project Runner.xcodeproj
           
-      - name: Flutter build IPA (The Correct Way)
+      - name: Flutter build IPA
         script: |
-          # نستخدم --release العادية مع تمرير اسم الـ Configuration كمتغير بيئة لـ Xcode
-          flutter build ipa --release --export-method=ad-hoc --no-codesign --extra-gen-snapshot-options=--obfuscate --build-inputs=ios/Flutter/Release.xcconfig
-        environment:
-          # هذا السطر هو السحر الذي سيجعل Xcode يختار الإعداد الصحيح
-          FLUTTER_BUILD_MODE: release
-          XCODE_CONFIGURATION: Release-production
+          # سنستخدم الأمر القياسي مع إجبار Xcode على الإعداد المطلوب عبر متغير البيئة
+          export XCODE_CONFIGURATION="Release-production"
+          flutter build ipa --release --export-method=ad-hoc --no-codesign
+
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
