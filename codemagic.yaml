@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Final Firebase Solution)
+    name: iOS Ad Hoc Build (Absolute Firebase Fix)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -12,24 +12,22 @@ workflows:
           flutter precache --ios
           flutter pub get
         
-      - name: Force Project & Plugins Deployment Target
+      - name: Force Project & Podspec Targets
         script: |
-          # 1. تحديث إصدار iOS في ملف المشروع الأساسي
+          # 1. إجبار ملفات المشروع (pbxproj) على إصدار 13.0
           find . -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*;/IPHONEOS_DEPLOYMENT_TARGET = 13.0;/g' {} +
           
-          # 2. تحديث الإصدار داخل ملفات الـ podspec الخاصة بالـ Plugins (هذا هو السطر الحاسم)
+          # 2. تحديث ملفات الـ podspec داخل مجلد الـ Plugins (هذا هو الحل الجذري)
+          # هذا الأمر يبحث عن كل plugin ويغير الحد الأدنى فيه إلى 13.0
           find . -name "*.podspec" -exec sed -i '' 's/s.ios.deployment_target = .*/s.ios.deployment_target = "13.0"/g' {} +
           
-          # 3. تحديث ملفات الـ Plist لضمان التوافق
-          find . -name "*.plist" -exec sed -i '' 's/MinimumOSVersion.*/MinimumOSVersion<\/key><string>13.0<\/string>/g' {} +
-
-          # 4. خدعة تجاوز قيود Flutter CLI للـ Configurations
+          # 3. خدعة تجاوز قيود Flutter CLI للـ Configurations
           sed -i '' 's/Release-production/Release/g' ios/Runner.xcodeproj/project.pbxproj
           
-          # 5. توليد ملفات الربط
+          # 4. توليد ملفات الربط
           flutter build ios --release --no-codesign --pub
           
-          # 6. إعادة التسمية للأصل
+          # 5. إعادة التسمية للأصل لضمان عمل xcodebuild
           sed -i '' 's/Release/Release-production/g' ios/Runner.xcodeproj/project.pbxproj
 
       - name: Reconstruct Podfile
@@ -69,20 +67,22 @@ workflows:
           end
           EOF
 
-      - name: Update CocoaPods (Deep Clean)
+      - name: Update CocoaPods (Atomic Clean)
         script: |
           cd ios
-          # تنظيف شامل لمنع أي تضارب مع كاش قديم
+          # مسح شامل وشديد للـ Cache والروابط القديمة
+          pod cache clean --all
           rm -rf Pods
           rm -rf Podfile.lock
           rm -rf .symlinks
+          # تثبيت المكتبات مع تحديث المستودع لضمان جلب Firebase 12.8 بشكل صحيح
           pod install --repo-update
           
       - name: Create ExportOptions.plist
         script: |
           cat > ios/ExportOptions.plist <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0 ://EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
               <key>method</key>
