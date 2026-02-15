@@ -10,29 +10,6 @@ workflows:
       - name: Get Flutter packages
         script: flutter pub get
         
-      - name: Fix Podfile Configurations
-        script: |
-          # هذا السكريبت يقوم بتعديل ملف Podfile ليعرف الإعدادات المخصصة
-          cd ios
-          cat > Podfile <<EOF
-          project 'Runner', {
-            'Debug-production' => :debug,
-            'Release-production' => :release,
-            'Debug-development' => :debug,
-            'Release-development' => :release,
-            'Debug' => :debug,
-            'Profile' => :release,
-            'Release' => :release,
-          }
-          EOF
-          # هنا نقوم بإعادة إضافة المحتوى الأصلي لـ Podfile (بافتراض أنه قياسي)
-          # ملاحظة: إذا كان لديك تعديلات خاصة في Podfile يفضل رفعها من ويندوز بدلاً من هذه الخطوة
-          echo "target 'Runner' do" >> Podfile
-          echo "  use_frameworks!" >> Podfile
-          echo "  use_modular_headers!" >> Podfile
-          echo "  flutter_install_all_ios_pods File.dirname(File.expand_path('..', __FILE__))" >> Podfile
-          echo "end" >> Podfile
-
       - name: Update CocoaPods
         script: |
           cd ios
