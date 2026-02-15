@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Absolute Deployment Fix)
+    name: iOS Ad Hoc Build (Deployment Target Force)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -12,25 +12,24 @@ workflows:
           flutter precache --ios
           flutter pub get
         
-      - name: Hard-Fix Project Targets
+      - name: Hard-Override Deployment Target
         script: |
-          # 1. تنظيف عميق للمخلفات والروابط القديمة
+          # 1. حذف المخلفات القديمة تماماً
           rm -rf ios/Pods ios/Podfile.lock ios/.symlinks
           
-          # 2. إجبار كل ملفات Xcode (pbxproj) على إصدار 13.0 في كل مكان
-          find . -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*;/IPHONEOS_DEPLOYMENT_TARGET = 13.0;/g' {} +
+          # 2. البحث عن أي ذكر لإصدار iOS قديم في كامل المشروع واستبداله بـ 13.0
+          # هذا يشمل ملفات Xcode، ملفات الإعدادات، وملفات الـ Plugins
+          find . -type f -name "*.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]*/IPHONEOS_DEPLOYMENT_TARGET = 13.0/g' {} +
+          find . -type f -name "*.podspec" -exec sed -i '' 's/[.]ios[.]deployment_target.*/.ios.deployment_target = "13.0"/g' {} +
+          find . -type f -name "*.podspec" -exec sed -i '' "s/'deployment_target' => '[0-9.]*'/'deployment_target' => '13.0'/g" {} +
           
-          # 3. تحديث ملفات الـ podspec للـ Plugins (هذا هو السطر الحاسم)
-          # سنقوم بإجبار كل Plugin على قبول iOS 13.0
-          find . -name "*.podspec" -exec sed -i '' 's/s.ios.deployment_target = .*/s.ios.deployment_target = "13.0"/g' {} +
-
-          # 4. خدعة الـ Configuration لتجاوز قيود فلاتر
+          # 3. خدعة الـ Configuration لتجاوز قيود Flutter CLI
           sed -i '' 's/Release-production/Release/g' ios/Runner.xcodeproj/project.pbxproj
           
-          # 5. تشغيل بناء أولي لتوليد ملفات الربط الجديدة
+          # 4. توليد ملفات الربط (بإصدار 13.0 المجبور الآن)
           flutter build ios --release --no-codesign --pub
           
-          # 6. إعادة الأسماء الأصلية لضمان توافق الـ xcodebuild
+          # 5. إعادة التسمية للأصل لضمان عمل xcodebuild
           sed -i '' 's/Release/Release-production/g' ios/Runner.xcodeproj/project.pbxproj
 
       - name: Reconstruct Podfile
@@ -65,19 +64,15 @@ workflows:
               target.build_configurations.each do |config|
                 config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
                 config.build_settings['ENABLE_BITCODE'] = 'NO'
-                # سطر إضافي لضمان السيادة على الإعدادات
-                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET[sdk=iphoneos*]'] = '13.0'
               end
             end
           end
           EOF
 
-      - name: Update CocoaPods (Master Clean)
+      - name: Update CocoaPods (Clean Install)
         script: |
           cd ios
-          # مسح كاش الـ CocoaPods بالكامل من السيرفر
           pod cache clean --all
-          # التثبيت مع تحديث المستودعات
           pod install --repo-update
           
       - name: Create ExportOptions.plist
