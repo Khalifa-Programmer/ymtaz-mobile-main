@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Manual Bypass)
+    name: iOS Ad Hoc Build (Complete Fix)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -10,14 +10,38 @@ workflows:
       - name: Get Flutter packages
         script: flutter pub get
         
+      - name: Fix Podfile Configurations
+        script: |
+          # هذا السكريبت يقوم بتعديل ملف Podfile ليعرف الإعدادات المخصصة
+          cd ios
+          cat > Podfile <<EOF
+          project 'Runner', {
+            'Debug-production' => :debug,
+            'Release-production' => :release,
+            'Debug-development' => :debug,
+            'Release-development' => :release,
+            'Debug' => :debug,
+            'Profile' => :release,
+            'Release' => :release,
+          }
+          EOF
+          # هنا نقوم بإعادة إضافة المحتوى الأصلي لـ Podfile (بافتراض أنه قياسي)
+          # ملاحظة: إذا كان لديك تعديلات خاصة في Podfile يفضل رفعها من ويندوز بدلاً من هذه الخطوة
+          echo "target 'Runner' do" >> Podfile
+          echo "  use_frameworks!" >> Podfile
+          echo "  use_modular_headers!" >> Podfile
+          echo "  flutter_install_all_ios_pods File.dirname(File.expand_path('..', __FILE__))" >> Podfile
+          echo "end" >> Podfile
+
       - name: Update CocoaPods
         script: |
           cd ios
-          pod repo update
+          rm -rf Pods
+          rm -rf Podfile.lock
+          pod install --repo-update
           
       - name: Create ExportOptions.plist
         script: |
-          # هذا الملف يخبر Xcode كيف يقوم بتصدير الـ IPA بدون توقيع رسمي
           cat > ios/ExportOptions.plist <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -29,29 +53,28 @@ workflows:
               <string>manual</string>
               <key>compileBitcode</key>
               <false/>
-              <key>thinning</key>
-              <string>&lt;none&gt;</string>
           </dict>
           </plist>
           EOF
           
-      - name: Manual Xcode Build (Bypass Flutter CLI)
+      - name: Manual Xcode Build
         script: |
-          # 1. تجهيز كود فلاتر
+          # تجهيز ملفات فلاتر
           flutter build ios --release --no-codesign
           
-          # 2. بناء الأرشيف باستخدام الإعداد المخصص لديك مباشرة
+          # البناء باستخدام xcodebuild مباشرة
           cd ios
-          xcodebuild -workspace Runner.xcworkspace \
+          xcodebuild archive \
+                     -workspace Runner.xcworkspace \
                      -scheme Runner \
                      -configuration "Release-production" \
-                     -archivePath build/Runner.xcarchive archive \
+                     -archivePath build/Runner.xcarchive \
                      CODE_SIGNING_ALLOWED=NO \
                      CODE_SIGNING_REQUIRED=NO \
                      CODE_SIGN_IDENTITY="" \
                      PROVISIONING_PROFILE=""
 
-          # 3. تحويل الأرشيف إلى ملف IPA
+          # تصدير الـ IPA
           xcodebuild -exportArchive \
                      -archivePath build/Runner.xcarchive \
                      -exportPath build/ipa \
@@ -60,6 +83,7 @@ workflows:
                      
     artifacts:
       - ios/build/ipa/*.ipa
+
     publishing:
       # نترك قسم النشر فارغاً أو نرسله للإيميل فقط
       email:
