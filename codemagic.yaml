@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Absolute Clean Fix)
+    name: iOS Ad Hoc Build (Absolute Deployment Fix)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -12,33 +12,33 @@ workflows:
           flutter precache --ios
           flutter pub get
         
-      - name: Hard Reset iOS Project Targets
+      - name: Hard-Fix Project Targets
         script: |
-          # 1. تنظيف شامل للمجلدات التي قد تحتوي على إعدادات قديمة
+          # 1. تنظيف عميق للمخلفات والروابط القديمة
           rm -rf ios/Pods ios/Podfile.lock ios/.symlinks
           
-          # 2. إجبار كل ملفات pbxproj على 14.0
-          find . -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*;/IPHONEOS_DEPLOYMENT_TARGET = 14.0;/g' {} +
+          # 2. إجبار كل ملفات Xcode (pbxproj) على إصدار 13.0 في كل مكان
+          find . -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*;/IPHONEOS_DEPLOYMENT_TARGET = 13.0;/g' {} +
           
-          # 3. تعديل ملفات الـ podspec للـ Plugins قبل أن يراها CocoaPods
-          find . -name "*.podspec" -exec sed -i '' 's/s.ios.deployment_target = .*/s.ios.deployment_target = "14.0"/g' {} +
+          # 3. تحديث ملفات الـ podspec للـ Plugins (هذا هو السطر الحاسم)
+          # سنقوم بإجبار كل Plugin على قبول iOS 13.0
+          find . -name "*.podspec" -exec sed -i '' 's/s.ios.deployment_target = .*/s.ios.deployment_target = "13.0"/g' {} +
 
-          # 4. خدعة الـ Configuration (تغيير Release-production إلى Release مؤقتاً)
+          # 4. خدعة الـ Configuration لتجاوز قيود فلاتر
           sed -i '' 's/Release-production/Release/g' ios/Runner.xcodeproj/project.pbxproj
           
-          # 5. بناء أولي لتوليد الروابط الرمزية الجديدة بإصدار 14.0
+          # 5. تشغيل بناء أولي لتوليد ملفات الربط الجديدة
           flutter build ios --release --no-codesign --pub
           
-          # 6. إعادة الاسم الأصلي لـ xcodebuild
+          # 6. إعادة الأسماء الأصلية لضمان توافق الـ xcodebuild
           sed -i '' 's/Release/Release-production/g' ios/Runner.xcodeproj/project.pbxproj
 
-      - name: Reconstruct Podfile (Strict Mode)
+      - name: Reconstruct Podfile
         script: |
           cd ios
           rm -f Podfile
           cat > Podfile <<EOF
-          # تحديد المنصة 14.0 بوضوح في بداية الملف
-          platform :ios, '14.0'
+          platform :ios, '13.0'
 
           project 'Runner', {
             'Debug-production' => :debug,
@@ -63,19 +63,21 @@ workflows:
             installer.pods_project.targets.each do |target|
               flutter_additional_ios_build_settings(target)
               target.build_configurations.each do |config|
-                # ضمان أن كل Pod يتم بناؤه لـ 14.0
-                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
                 config.build_settings['ENABLE_BITCODE'] = 'NO'
+                # سطر إضافي لضمان السيادة على الإعدادات
+                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET[sdk=iphoneos*]'] = '13.0'
               end
             end
           end
           EOF
 
-      - name: Update CocoaPods (Final Repo Update)
+      - name: Update CocoaPods (Master Clean)
         script: |
           cd ios
-          # مسح كاش CocoaPods تماماً لضمان عدم قراءة إصدارات قديمة من Firebase
+          # مسح كاش الـ CocoaPods بالكامل من السيرفر
           pod cache clean --all
+          # التثبيت مع تحديث المستودعات
           pod install --repo-update
           
       - name: Create ExportOptions.plist
@@ -107,7 +109,7 @@ workflows:
                      CODE_SIGNING_REQUIRED=NO \
                      CODE_SIGN_IDENTITY="" \
                      PROVISIONING_PROFILE="" \
-                     IPHONEOS_DEPLOYMENT_TARGET=14.0
+                     IPHONEOS_DEPLOYMENT_TARGET=13.0
 
           xcodebuild -exportArchive \
                      -archivePath build/Runner.xcarchive \
