@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Master Post-Install Fix)
+    name: iOS Ad Hoc Build (Final Strike)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -10,39 +10,59 @@ workflows:
       - name: Get Flutter packages
         script: flutter pub get
         
-      - name: Advanced Podfile & Project Fix
+      - name: Reconstruct Podfile & Force Target
         script: |
           cd ios
-          # 1. تنظيف الـ Podfile من أي platform أو post_install قديم لتجنب التكرار
-          sed -i '' '/platform :ios/d' Podfile
-          # حذف كل شيء من بداية أول ظهور لـ post_install وحتى نهاية الملف
-          sed -i '' '/post_install do |installer|/,$d' Podfile
+          # 1. مسح ملف Podfile القديم تماماً لإنهاء صراع التكرار
+          rm -f Podfile
           
-          # 2. إعادة إضافة المنصة وبلوك الـ post_install الموحد
-          echo "platform :ios, '13.0'" >> Podfile
-          cat >> Podfile <<EOF
+          # 2. إنشاء ملف Podfile جديد ونظيف جداً يدعم الـ Flavors
+          cat > Podfile <<EOF
+          platform :ios, '13.0'
+
+          project 'Runner', {
+            'Debug-production' => :debug,
+            'Release-production' => :release,
+            'Debug-development' => :debug,
+            'Release-development' => :release,
+            'Debug' => :debug,
+            'Profile' => :release,
+            'Release' => :release,
+          }
+
+          # استدعاء ملف مساعد فلاتر
+          require_relative File.join('Flutter', 'podhelper.rb')
+
+          target 'Runner' do
+            use_frameworks!
+            use_modular_headers!
+            
+            # تثبيت كافة مكتبات فلاتر
+            flutter_install_all_ios_pods File.dirname(File.expand_path('..', __FILE__))
+            
+            # إذا كان لديك مكتبات يدوية مثل PhoneNumberKit أضفها هنا
+            pod 'PhoneNumberKit', '~> 3.7.6'
+          end
 
           post_install do |installer|
             installer.pods_project.targets.each do |target|
               flutter_additional_ios_build_settings(target)
               target.build_configurations.each do |config|
+                # إجبار كل شيء على 13.0
                 config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
-                # إضافة هذا السطر لحل مشاكل التوقيع في المكتبات الفرعية
-                config.build_settings['ENABLE_BITCODE'] = 'NO'
               end
             end
           end
           EOF
-          
-          # 3. تحديث ملفات Xcode لضمان توافق الـ Flavors
-          cd ..
-          find . -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*;/IPHONEOS_DEPLOYMENT_TARGET = 13.0;/g' {} +
 
-      - name: Update CocoaPods
+      - name: Update CocoaPods (Clean Install)
         script: |
           cd ios
+          # تنظيف شامل للمخلفات
           rm -rf Pods
           rm -rf Podfile.lock
+          rm -rf .symlinks
+          # تثبيت المكتبات مع تحديث المستودع
           pod install --repo-update
           
       - name: Create ExportOptions.plist
@@ -64,6 +84,7 @@ workflows:
           
       - name: Manual Xcode Build
         script: |
+          # تجهيز ملفات فلاتر
           flutter build ios --release --no-codesign
           
           cd ios
