@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Final Deployment Fix)
+    name: iOS Ad Hoc Build (Final Fix)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -10,24 +10,24 @@ workflows:
       - name: Get Flutter packages
         script: flutter pub get
         
-      - name: Force Deployment Target in Project Files
+      - name: Unified Deployment Target Fix
         script: |
-          # 1. تعديل ملف المشروع لضبط الإصدار 13.0 كحد أدنى في كل مكان
-          find . -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*;/IPHONEOS_DEPLOYMENT_TARGET = 13.0;/g' {} +
+          # 1. حذف أي سطر يحدد المنصة في الـ Podfile لتجنب التكرار
+          sed -i '' '/platform :ios/d' ios/Podfile
           
-          # 2. تعديل الـ Podfile لإجبار جميع المكتبات (بما فيها Firebase) على 13.0
-          # سنقوم بإضافة سطر في بداية الـ Podfile لضمان التوافق
-          sed -i '' "1s/.*/platform :ios, '13.0'/" ios/Podfile
+          # 2. إضافة المنصة في أول السطر بوضوح
+          sed -i '' "1s|^|platform :ios, '14.0'\n|" ios/Podfile
+          
+          # 3. توحيد الإصدار في ملف إعدادات Xcode (pbxproj)
+          find . -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*;/IPHONEOS_DEPLOYMENT_TARGET = 14.0;/g' {} +
 
       - name: Update CocoaPods
         script: |
           cd ios
-          # تنظيف شامل
+          # تنظيف شامل للمجلدات المؤقتة
           rm -rf Pods
           rm -rf Podfile.lock
-          rm -rf ~/Library/Developer/Xcode/DerivedData
-          
-          # تثبيت المكتبات مع تحديث المستودع
+          # تثبيت المكتبات
           pod install --repo-update
           
       - name: Create ExportOptions.plist
@@ -49,9 +49,11 @@ workflows:
           
       - name: Manual Xcode Build
         script: |
+          # تجهيز ملفات فلاتر
           flutter build ios --release --no-codesign
           
           cd ios
+          # بناء الأرشيف النهائي
           xcodebuild archive \
                      -workspace Runner.xcworkspace \
                      -scheme Runner \
@@ -61,8 +63,9 @@ workflows:
                      CODE_SIGNING_REQUIRED=NO \
                      CODE_SIGN_IDENTITY="" \
                      PROVISIONING_PROFILE="" \
-                     IPHONEOS_DEPLOYMENT_TARGET=13.0
+                     IPHONEOS_DEPLOYMENT_TARGET=14.0
 
+          # تصدير ملف الـ IPA
           xcodebuild -exportArchive \
                      -archivePath build/Runner.xcarchive \
                      -exportPath build/ipa \
