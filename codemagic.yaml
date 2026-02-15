@@ -20,12 +20,14 @@ workflows:
           cd ios
           xcodebuild -list -project Runner.xcodeproj
           
-      - name: Flutter build IPA (باستخدام Configuration)
+      - name: Flutter build IPA (The Correct Way)
         script: |
-          # سنستخدم هنا --build-configuration. 
-          # تأكد من مطابقة الاسم لما سيظهر في السجل (غالباً Release-production)
-          flutter build ipa --release --build-configuration="Release-production" --export-method=ad-hoc --no-codesign
-          
+          # نستخدم --release العادية مع تمرير اسم الـ Configuration كمتغير بيئة لـ Xcode
+          flutter build ipa --release --export-method=ad-hoc --no-codesign --extra-gen-snapshot-options=--obfuscate --build-inputs=ios/Flutter/Release.xcconfig
+        environment:
+          # هذا السطر هو السحر الذي سيجعل Xcode يختار الإعداد الصحيح
+          FLUTTER_BUILD_MODE: release
+          XCODE_CONFIGURATION: Release-production
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
