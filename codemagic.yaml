@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Complete Bypass Fix)
+    name: iOS Ad Hoc Build (Absolute Deployment Fix)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -12,22 +12,27 @@ workflows:
           flutter precache --ios
           flutter pub get
         
-      - name: Force Generate Flutter Podspecs (The Trick)
+      - name: Force Project-Wide Deployment Target
         script: |
-          # 1. تغيير اسم الـ Configuration مؤقتاً لخداع Flutter CLI
+          # 1. إجبار كل ملفات Xcode (pbxproj) على إصدار 13.0
+          find . -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*;/IPHONEOS_DEPLOYMENT_TARGET = 13.0;/g' {} +
+          
+          # 2. تحديث ملفات الـ Plist لضمان توافق الحد الأدنى للنظام
+          find . -name "*.plist" -exec sed -i '' 's/MinimumOSVersion.*/MinimumOSVersion<\/key><string>13.0<\/string>/g' {} +
+
+          # 3. خدعة تغيير اسم الـ Configuration مؤقتاً لتجاوز قيود Flutter CLI
           sed -i '' 's/Release-production/Release/g' ios/Runner.xcodeproj/project.pbxproj
           
-          # 2. تشغيل أمر البناء الأولي لتوليد مجلد ios/Flutter والملفات الضرورية
+          # 4. توليد ملفات الربط (Podspecs/Frameworks)
           flutter build ios --release --no-codesign --pub
           
-          # 3. إعادة الاسم الأصلي لملف المشروع لضمان توافق الـ xcodebuild لاحقاً
+          # 5. إعادة الأسماء الأصلية للـ Configurations بعد انتهاء التوليد
           sed -i '' 's/Release/Release-production/g' ios/Runner.xcodeproj/project.pbxproj
 
       - name: Reconstruct Podfile
         script: |
           cd ios
           rm -f Podfile
-          # بناء ملف Podfile نظيف يدعم الـ SDK والـ Configurations المخصصة
           cat > Podfile <<EOF
           platform :ios, '13.0'
 
@@ -41,7 +46,7 @@ workflows:
             'Release' => :release,
           }
 
-          # استدعاء مساعد فلاتر من الـ SDK مباشرة لضمان الاستقرار
+          # تحميل المساعد من الـ SDK مباشرة لضمان المسارات الصحيحة
           load File.join('$FLUTTER_ROOT', 'packages', 'flutter_tools', 'bin', 'podhelper.rb')
 
           target 'Runner' do
@@ -57,19 +62,22 @@ workflows:
             installer.pods_project.targets.each do |target|
               flutter_additional_ios_build_settings(target)
               target.build_configurations.each do |config|
-                # إجبار كل المكتبات (بما فيها Firebase) على iOS 13
+                # إجبار جميع الـ Pods (مثل Firebase) على iOS 13.0
                 config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
                 config.build_settings['ENABLE_BITCODE'] = 'NO'
+                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET[sdk=iphoneos*]'] = '13.0'
               end
             end
           end
           EOF
 
-      - name: Update CocoaPods
+      - name: Update CocoaPods (Clean Install)
         script: |
           cd ios
+          # مسح الكاش والمجلدات لضمان عدم وجود تضارب في الإصدارات
           rm -rf Pods
           rm -rf Podfile.lock
+          rm -rf .symlinks
           pod install --repo-update
           
       - name: Create ExportOptions.plist
@@ -92,7 +100,7 @@ workflows:
       - name: Manual Xcode Build & Export
         script: |
           cd ios
-          # بناء الأرشيف يدوياً باستخدام المحرك الرسمي لآبل لتجاوز قيود فلاتر
+          # البناء النهائي للأرشيف باستخدام الإعداد المخصص
           xcodebuild archive \
                      -workspace Runner.xcworkspace \
                      -scheme Runner \
@@ -104,7 +112,7 @@ workflows:
                      PROVISIONING_PROFILE="" \
                      IPHONEOS_DEPLOYMENT_TARGET=13.0
 
-          # تصدير الـ IPA النهائي
+          # تصدير ملف الـ IPA إلى مجلد المخرجات
           xcodebuild -exportArchive \
                      -archivePath build/Runner.xcarchive \
                      -exportPath build/ipa \
