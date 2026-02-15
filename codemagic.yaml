@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Complete Environment Fix)
+    name: iOS Ad Hoc Build (No-Flavor Fix)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -16,7 +16,6 @@ workflows:
         script: |
           cd ios
           rm -f Podfile
-          # تحديد مسار الـ SDK بشكل ديناميكي
           cat > Podfile <<EOF
           platform :ios, '13.0'
 
@@ -30,14 +29,12 @@ workflows:
             'Release' => :release,
           }
 
-          # استخدام المساعد من الـ SDK مباشرة
           load File.join('$FLUTTER_ROOT', 'packages', 'flutter_tools', 'bin', 'podhelper.rb')
 
           target 'Runner' do
             use_frameworks!
             use_modular_headers!
             
-            # هنا التعديل: سنمرر المسار الحالي لمجلد الـ ios
             flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
             
             pod 'PhoneNumberKit', '~> 3.7.6'
@@ -54,17 +51,17 @@ workflows:
           end
           EOF
 
-      - name: Force Generate Flutter Podspecs
+      - name: Force Generate Flutter Podspecs (Corrected)
         script: |
-          # هذا هو السطر السحري الذي سينشئ ملف Flutter.podspec المفقود
-          flutter build ios --release --no-codesign --flavor production --pub
+          # حذفنا --flavor لنتجنب خطأ الـ Schemes
+          # هذا الأمر وظيفته فقط إنشاء مجلد ios/Flutter وملحقاته
+          flutter build ios --release --no-codesign --pub
 
       - name: Update CocoaPods
         script: |
           cd ios
           rm -rf Pods
           rm -rf Podfile.lock
-          # لا نحذف .symlinks هنا لأن الأمر السابق قام بإنشائها
           pod install --repo-update
           
       - name: Create ExportOptions.plist
@@ -87,6 +84,7 @@ workflows:
       - name: Manual Xcode Build
         script: |
           cd ios
+          # هنا نستخدم الإعداد المخصص Release-production مباشرة مع xcodebuild
           xcodebuild archive \
                      -workspace Runner.xcworkspace \
                      -scheme Runner \
