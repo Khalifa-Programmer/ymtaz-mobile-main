@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (No-Flavor Fix)
+    name: iOS Ad Hoc Build (Complete Bypass Fix)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -12,10 +12,22 @@ workflows:
           flutter precache --ios
           flutter pub get
         
+      - name: Force Generate Flutter Podspecs (The Trick)
+        script: |
+          # 1. تغيير اسم الـ Configuration مؤقتاً لخداع Flutter CLI
+          sed -i '' 's/Release-production/Release/g' ios/Runner.xcodeproj/project.pbxproj
+          
+          # 2. تشغيل أمر البناء الأولي لتوليد مجلد ios/Flutter والملفات الضرورية
+          flutter build ios --release --no-codesign --pub
+          
+          # 3. إعادة الاسم الأصلي لملف المشروع لضمان توافق الـ xcodebuild لاحقاً
+          sed -i '' 's/Release/Release-production/g' ios/Runner.xcodeproj/project.pbxproj
+
       - name: Reconstruct Podfile
         script: |
           cd ios
           rm -f Podfile
+          # بناء ملف Podfile نظيف يدعم الـ SDK والـ Configurations المخصصة
           cat > Podfile <<EOF
           platform :ios, '13.0'
 
@@ -29,6 +41,7 @@ workflows:
             'Release' => :release,
           }
 
+          # استدعاء مساعد فلاتر من الـ SDK مباشرة لضمان الاستقرار
           load File.join('$FLUTTER_ROOT', 'packages', 'flutter_tools', 'bin', 'podhelper.rb')
 
           target 'Runner' do
@@ -44,18 +57,13 @@ workflows:
             installer.pods_project.targets.each do |target|
               flutter_additional_ios_build_settings(target)
               target.build_configurations.each do |config|
+                # إجبار كل المكتبات (بما فيها Firebase) على iOS 13
                 config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
                 config.build_settings['ENABLE_BITCODE'] = 'NO'
               end
             end
           end
           EOF
-
-      - name: Force Generate Flutter Podspecs (Corrected)
-        script: |
-          # حذفنا --flavor لنتجنب خطأ الـ Schemes
-          # هذا الأمر وظيفته فقط إنشاء مجلد ios/Flutter وملحقاته
-          flutter build ios --release --no-codesign --pub
 
       - name: Update CocoaPods
         script: |
@@ -81,10 +89,10 @@ workflows:
           </plist>
           EOF
           
-      - name: Manual Xcode Build
+      - name: Manual Xcode Build & Export
         script: |
           cd ios
-          # هنا نستخدم الإعداد المخصص Release-production مباشرة مع xcodebuild
+          # بناء الأرشيف يدوياً باستخدام المحرك الرسمي لآبل لتجاوز قيود فلاتر
           xcodebuild archive \
                      -workspace Runner.xcworkspace \
                      -scheme Runner \
@@ -96,6 +104,7 @@ workflows:
                      PROVISIONING_PROFILE="" \
                      IPHONEOS_DEPLOYMENT_TARGET=13.0
 
+          # تصدير الـ IPA النهائي
           xcodebuild -exportArchive \
                      -archivePath build/Runner.xcarchive \
                      -exportPath build/ipa \
