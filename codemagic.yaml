@@ -1,19 +1,31 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build
+    name: iOS Ad Hoc Build (Direct Configuration)
+    max_build_duration: 60
     instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+      xcode: latest
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
-      - name: Update CocoaPods (حل المشكلة السابقة)
+        
+      - name: Update CocoaPods (حل مشكلة المكتبات)
         script: |
           cd ios
           pod repo update
-      - name: Flutter build IPA (حل مشكلة الـ Build Configurations)
+          
+      - name: List Xcode Configurations (لمعرفة الأسماء بدقة)
         script: |
-          # لاحظ أضفنا --flavor production
-          # تأكد من استبدال production بالاسم الصحيح لديك (مثلاً development)
-          flutter build ipa --release --flavor production --export-method=ad-hoc --no-codesign
+          cd ios
+          xcodebuild -list -project Runner.xcodeproj
+          
+      - name: Flutter build IPA (باستخدام Configuration)
+        script: |
+          # سنستخدم هنا --build-configuration. 
+          # تأكد من مطابقة الاسم لما سيظهر في السجل (غالباً Release-production)
+          flutter build ipa --release --build-configuration="Release-production" --export-method=ad-hoc --no-codesign
+          
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
