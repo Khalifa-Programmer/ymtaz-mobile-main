@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Path Resolution)
+    name: iOS Ad Hoc Build (Absolute Path Fix)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -10,15 +10,13 @@ workflows:
       - name: Get Flutter packages
         script: flutter pub get
         
-      - name: Initialize Flutter iOS
-        script: |
-          # توليد ملفات البيئة اللازمة
-          flutter build ios --release --no-codesign --flavor production || true
-
-      - name: Reconstruct Podfile
+      - name: Reconstruct Podfile (Absolute Path)
         script: |
           cd ios
           rm -f Podfile
+          # تحديد مسار فلاتر SDK في بيئة كود ماجيك
+          FLUTTER_SDK_PATH=$FLUTTER_ROOT
+          
           cat > Podfile <<EOF
           platform :ios, '13.0'
 
@@ -32,8 +30,8 @@ workflows:
             'Release' => :release,
           }
 
-          # تصحيح استدعاء podhelper باستخدام مسار نسبي مباشر
-          require_relative 'Flutter/podhelper.rb'
+          # استدعاء ملف podhelper مباشرة من الـ SDK لضمان وجوده
+          load File.join('$FLUTTER_SDK_PATH', 'packages', 'flutter_tools', 'bin', 'podhelper.rb')
 
           target 'Runner' do
             use_frameworks!
@@ -58,8 +56,10 @@ workflows:
       - name: Update CocoaPods
         script: |
           cd ios
+          # مسح أي ملفات قديمة قد تسبب تضارباً في المسارات
           rm -rf Pods
           rm -rf Podfile.lock
+          rm -rf .symlinks
           pod install --repo-update
           
       - name: Create ExportOptions.plist
@@ -81,6 +81,9 @@ workflows:
           
       - name: Manual Xcode Build
         script: |
+          # تجهيز المحتوى لـ Xcode
+          flutter build ios --release --no-codesign --flavor production
+          
           cd ios
           xcodebuild archive \
                      -workspace Runner.xcworkspace \
