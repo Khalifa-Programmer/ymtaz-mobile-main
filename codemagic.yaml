@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Final Strike)
+    name: iOS Ad Hoc Build (Path Fix)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -10,13 +10,16 @@ workflows:
       - name: Get Flutter packages
         script: flutter pub get
         
+      - name: Initialize Flutter iOS (To generate podhelper)
+        script: |
+          # هذا الأمر سيولد ملفات البيئة الضرورية في مجلد ios/Flutter
+          flutter build ios --release --no-codesign --flavor production || true
+          # أضفنا || true لأننا نعلم أنه سيفشل في البداية بسبب الـ Pods، لكنه سيولد الملف المطلوب
+
       - name: Reconstruct Podfile & Force Target
         script: |
           cd ios
-          # 1. مسح ملف Podfile القديم تماماً لإنهاء صراع التكرار
           rm -f Podfile
-          
-          # 2. إنشاء ملف Podfile جديد ونظيف جداً يدعم الـ Flavors
           cat > Podfile <<EOF
           platform :ios, '13.0'
 
@@ -30,17 +33,15 @@ workflows:
             'Release' => :release,
           }
 
-          # استدعاء ملف مساعد فلاتر
-          require_relative File.join('Flutter', 'podhelper.rb')
+          # استخدام المسار الكامل والمباشر للملف المولد
+          require File.expand_path(File.join('Flutter', 'podhelper.rb'), __FILE__)
 
           target 'Runner' do
             use_frameworks!
             use_modular_headers!
             
-            # تثبيت كافة مكتبات فلاتر
             flutter_install_all_ios_pods File.dirname(File.expand_path('..', __FILE__))
             
-            # إذا كان لديك مكتبات يدوية مثل PhoneNumberKit أضفها هنا
             pod 'PhoneNumberKit', '~> 3.7.6'
           end
 
@@ -48,21 +49,18 @@ workflows:
             installer.pods_project.targets.each do |target|
               flutter_additional_ios_build_settings(target)
               target.build_configurations.each do |config|
-                # إجبار كل شيء على 13.0
                 config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+                config.build_settings['ENABLE_BITCODE'] = 'NO'
               end
             end
           end
           EOF
 
-      - name: Update CocoaPods (Clean Install)
+      - name: Update CocoaPods (Final Attempt)
         script: |
           cd ios
-          # تنظيف شامل للمخلفات
           rm -rf Pods
           rm -rf Podfile.lock
-          rm -rf .symlinks
-          # تثبيت المكتبات مع تحديث المستودع
           pod install --repo-update
           
       - name: Create ExportOptions.plist
@@ -84,9 +82,7 @@ workflows:
           
       - name: Manual Xcode Build
         script: |
-          # تجهيز ملفات فلاتر
-          flutter build ios --release --no-codesign
-          
+          # الآن نبني بشكل فعلي بعد حل مشاكل الـ Pods
           cd ios
           xcodebuild archive \
                      -workspace Runner.xcworkspace \
