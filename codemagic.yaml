@@ -1,6 +1,6 @@
 workflows:
   ios-ad-hoc:
-    name: iOS Ad Hoc Build (Final Fix)
+    name: iOS Ad Hoc Build (Firebase Fix)
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
@@ -10,24 +10,36 @@ workflows:
       - name: Get Flutter packages
         script: flutter pub get
         
-      - name: Unified Deployment Target Fix
+      - name: Hard-Fix Deployment Target
         script: |
-          # 1. حذف أي سطر يحدد المنصة في الـ Podfile لتجنب التكرار
+          # 1. حذف أي تحديد قديم للمنصة في الـ Podfile
           sed -i '' '/platform :ios/d' ios/Podfile
+          # 2. إضافة المنصة iOS 13.0 في أول السطر
+          sed -i '' "1s|^|platform :ios, '13.0'\n|" ios/Podfile
           
-          # 2. إضافة المنصة في أول السطر بوضوح
-          sed -i '' "1s|^|platform :ios, '14.0'\n|" ios/Podfile
+          # 3. إجبار ملف مشروع Xcode على إصدار 13.0 في كل مكان (البحث والاستبدال الجذري)
+          find . -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*;/IPHONEOS_DEPLOYMENT_TARGET = 13.0;/g' {} +
           
-          # 3. توحيد الإصدار في ملف إعدادات Xcode (pbxproj)
-          find . -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = .*;/IPHONEOS_DEPLOYMENT_TARGET = 14.0;/g' {} +
+          # 4. تحديث الـ Deployment Target لجميع المكتبات داخل الـ Podfile عبر post_install
+          # هذا السكريبت سيضمن أن كل مكتبة Firebase سيتم إجبارها على 13.0
+          cat >> ios/Podfile <<EOF
+
+          post_install do |installer|
+            installer.pods_project.targets.each do |target|
+              flutter_additional_ios_build_settings(target)
+              target.build_configurations.each do |config|
+                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+              end
+            end
+          end
+          EOF
 
       - name: Update CocoaPods
         script: |
           cd ios
-          # تنظيف شامل للمجلدات المؤقتة
           rm -rf Pods
           rm -rf Podfile.lock
-          # تثبيت المكتبات
+          # تحديث المستودعات وتثبيت المكتبات
           pod install --repo-update
           
       - name: Create ExportOptions.plist
@@ -49,11 +61,9 @@ workflows:
           
       - name: Manual Xcode Build
         script: |
-          # تجهيز ملفات فلاتر
           flutter build ios --release --no-codesign
           
           cd ios
-          # بناء الأرشيف النهائي
           xcodebuild archive \
                      -workspace Runner.xcworkspace \
                      -scheme Runner \
@@ -63,9 +73,8 @@ workflows:
                      CODE_SIGNING_REQUIRED=NO \
                      CODE_SIGN_IDENTITY="" \
                      PROVISIONING_PROFILE="" \
-                     IPHONEOS_DEPLOYMENT_TARGET=14.0
+                     IPHONEOS_DEPLOYMENT_TARGET=13.0
 
-          # تصدير ملف الـ IPA
           xcodebuild -exportArchive \
                      -archivePath build/Runner.xcarchive \
                      -exportPath build/ipa \
