@@ -13,8 +13,10 @@ class MyPageRepo {
   MyPageRepo(this._apiService);
 
   Future<ApiResult<MyPageResponseModel>> getMyPageClient() async {
-    var token = CacheHelper.getData(key: 'token');
-    // var userType = CacheHelper.getData(key: 'userType');
+    final token = CacheHelper.getData(key: 'token');
+    if (token == null) {
+      return ApiResult.failure('سجل دخولك لمشاهدة البيانات');
+    }
 
     try {
       MyPageResponseModel response;
@@ -26,8 +28,10 @@ class MyPageRepo {
   }
 
   Future<ApiResult<LastAdded>> myLastAdded() async {
-    var token = CacheHelper.getData(key: 'token');
-    // var userType = CacheHelper.getData(key: 'userType');
+    final token = CacheHelper.getData(key: 'token');
+    if (token == null) {
+      return ApiResult.failure('سجل دخولك لمشاهدة البيانات');
+    }
 
     try {
       LastAdded response;
@@ -39,7 +43,11 @@ class MyPageRepo {
   }
 
   Future<ApiResult<MyLawyersResponse>> getMyLawyers() async {
-    var token = CacheHelper.getData(key: 'token');
+    final token = CacheHelper.getData(key: 'token');
+    if (token == null) {
+      return ApiResult.failure('سجل دخولك لمشاهدة البيانات');
+    }
+
     try {
       final response = await _apiService.myLawyers(token);
       return ApiResult.success(response);

@@ -20,46 +20,58 @@ class PushNotificationService {
     return token;
   }
 }
-
 Future<void> showNotification(
     RemoteMessage payload, GlobalKey<NavigatorState> navigatorKey) async {
+  
   var android = const AndroidInitializationSettings('logopng');
   var initiallizationSettingsIOS = const DarwinInitializationSettings();
   var initialSetting =
       InitializationSettings(android: android, iOS: initiallizationSettingsIOS);
+  
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  flutterLocalNotificationsPlugin.initialize(initialSetting);
 
+  // إعدادات تفاصيل الأندرويد لضمان ظهور النص من الأعلى
   const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-    'default_notification_channel_id',
-    'Notification',
-    importance: Importance.max,
-    priority: Priority.high,
+    'high_importance_channel', // معرف قناة جديد أو مميز
+    'High Importance Notifications', // اسم القناة
+    importance: Importance.max, // ضروري جداً لظهور الإشعار من الأعلى
+    priority: Priority.high, // ضروري جداً
     ticker: 'ticker',
     icon: "logopng",
-    playSound: true,
-    enableVibration: true,
+    fullScreenIntent:
+        true, // اختيارية: تساعد في بعض الإصدارات لإظهار المحتوى فوراً
+    enableVibration: true, // تفعيل التنبيه المرئي
+    channelShowBadge: true, // إظهار الرقم على أيقونة التطبيق
+    playSound: true, // تفعيل الصوت
   );
-  const iOSDetails = DarwinNotificationDetails();
+
+  const iOSDetails = DarwinNotificationDetails(
+    presentAlert: true, // ضروري لـ iOS لإظهار الإشعار أثناء فتح التطبيق
+    presentSound: true,
+    presentBadge: true,
+  );
+
   const NotificationDetails platformChannelSpecifics =
       NotificationDetails(android: androidDetails, iOS: iOSDetails);
 
-  await flutterLocalNotificationsPlugin.show(0, payload.notification!.title,
-      payload.notification!.body, platformChannelSpecifics);
+  // إظهار الإشعار باستخدام البيانات القادمة من RemoteMessage
+  await flutterLocalNotificationsPlugin.show(
+    DateTime.now()
+        .millisecond, // استخدام معرف فريد لكل إشعار لكي لا يختفي القديم
+    payload.notification?.title ?? "عنوان الإشعار",
+    payload.notification?.body ?? "محتوى الإشعار",
+    platformChannelSpecifics,
+  );
+
   getit<NotificationCubit>().getNotifications();
 
-  // Navigate to a new screen after showing the notification
-
+  // عملية الـ Initialize للضغط على الإشعار
   await flutterLocalNotificationsPlugin.initialize(initialSetting,
-      onDidReceiveNotificationResponse: (id) async {
+      onDidReceiveNotificationResponse: (details) async {
     navigatorKey.currentState
         ?.pushNamedAndRemoveUntil(Routes.homeLayout, (route) => false);
     navigatorKey.currentState
         ?.pushNamed(typeNotificationNavigation(payload.data['type']));
-  }, onDidReceiveBackgroundNotificationResponse: (id) async {
-    navigatorKey.currentState
-        ?.pushNamedAndRemoveUntil(Routes.homeLayout, (route) => false);
-    navigatorKey.currentState?.pushNamed(Routes.notifications);
   });
 }

@@ -21,10 +21,10 @@ class ThirdStepForm extends StatefulWidget {
   final Function(void Function()) setStateCallback;
 
   const ThirdStepForm({
-    Key? key,
+    super.key,
     required this.formKey,
     required this.setStateCallback,
-  }) : super(key: key);
+  });
 
   @override
   State<ThirdStepForm> createState() => _ThirdStepFormState();

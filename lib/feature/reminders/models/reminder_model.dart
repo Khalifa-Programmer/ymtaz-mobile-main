@@ -61,7 +61,7 @@ class ReminderModel {
     List<int>? repeatDays,
   }) {
     return ReminderModel(
-      id: this.id,
+      id: id,
       title: title ?? this.title,
       description: description ?? this.description,
       dateTime: dateTime ?? this.dateTime,

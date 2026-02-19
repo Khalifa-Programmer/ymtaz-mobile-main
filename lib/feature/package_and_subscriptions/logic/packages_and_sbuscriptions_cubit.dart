@@ -17,7 +17,7 @@ class PackagesAndSubscriptionsCubit
 
   bool isSubscribed = false;
 
-  getdata() async {
+  Future<void> getdata() async {
     isSubscribed = false;
     packagesModel = null;
     myPackageModel = null;

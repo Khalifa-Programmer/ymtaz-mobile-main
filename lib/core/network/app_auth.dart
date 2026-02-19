@@ -2,75 +2,38 @@ import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppServices {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
+  Future<Map<String, dynamic>?> signInWithGoogle(BuildContext context) async {
+  try {
+    await _googleSignIn.signOut();
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) return null;
 
-  Future<String?> signInWithGoogle(BuildContext context) async {
-    try {
-      // Initialize Google Sign In
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      
-      // Check if a previous sign-in is available
-      GoogleSignInAccount? currentUser = googleSignIn.currentUser;
-      if (currentUser == null) {
-        // Try silent sign-in first
-        currentUser = await googleSignIn.signInSilently();
-      }
-      
-      // If still null, prompt the user to sign in
-      final GoogleSignInAccount? gUser = currentUser ?? await googleSignIn.signIn();
-      if (gUser == null) {
-        debugPrint('Google Sign-In was canceled by the user.');
-        return null;
-      }
-      
-      // Get authentication tokens
-      final GoogleSignInAuthentication gAuth = await gUser.authentication;
-
-      if (gAuth.idToken == null || gAuth.accessToken == null) {
-        debugPrint('Failed to retrieve Google ID token or access token.');
-        return null;
-      }
-
-      // Create credential for Firebase
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: gAuth.accessToken,
-        idToken: gAuth.idToken,
-      );
-
-      try {
-        // Sign in to Firebase
-        final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-
-        if (userCredential.user != null) {
-          debugPrint('Signed in as: ${userCredential.user?.displayName}');
-          debugPrint('Email: ${userCredential.user?.email}');
-          debugPrint('User ID: ${userCredential.user?.uid}');
-          
-          // Return the ID token for backend authentication
-          return gAuth.idToken;
-        } else {
-          debugPrint('Failed to sign in with Google.');
-          return null;
-        }
-      } on FirebaseAuthException catch (e) {
-        debugPrint('Firebase Auth error during Google Sign In: ${e.code} - ${e.message}');
-        return null;
-      }
-    } catch (error) {
-      debugPrint('Error signing in with Google: $error');
-      return null;
-    }
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    
+    // هذا هو التوكن الذي يحتاجه الباك اند غالباً
+    final String? idToken = googleAuth.idToken; 
+    debugPrint('Google sign in info: $idToken');
+    return {
+      'token': idToken,
+      'email': googleUser.email,
+      'name': googleUser.displayName,
+      'image': googleUser.photoUrl,
+    };
+  } catch (e) {
+    return null;
   }
-
+}
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  // ... rest of the file ...
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  Future<String?> signInWithApple(BuildContext context) async {
+  Future<Map<String, dynamic>?> signInWithApple(BuildContext context) async {
     try {
       // Check if Apple Sign In is available on this device
       final isAvailable = await SignInWithApple.isAvailable();
@@ -85,16 +48,20 @@ class AppServices {
           AppleIDAuthorizationScopes.fullName,
         ],
       );
-      
+
       // Validate the identity token
       if (result.identityToken == null) {
         debugPrint('Failed to get identity token from Apple Sign In');
         return null;
       }
-      
-      // Return the identity token directly - this is what your backend needs
+
+      // Return the identity token and user info
       debugPrint('Got identity token from Apple: ${result.identityToken}');
-      return result.identityToken;
+      return {
+        'token': result.identityToken,
+        'email': result.email,
+        'name': '${result.givenName ?? ''} ${result.familyName ?? ''}'.trim(),
+      };
       
       /*
       // We're bypassing Firebase Auth since we're sending the token directly to our backend

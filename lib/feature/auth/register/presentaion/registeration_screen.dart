@@ -290,12 +290,17 @@ class _RegestirationScreenState extends State<RegestirationScreen> {
             );
           } else if (state is RegisterSuccess) {
             Navigator.of(context).pop();
+            
+            // Show success message
             AnimatedSnackBar.material(
               state.message,
               type: AnimatedSnackBarType.success,
             ).show(context);
+            
+            // Navigate to login after registration
+            // The accountType is available in state.accountType if needed for future routing logic
             Future.delayed(
-              const Duration(microseconds: 1),
+              const Duration(milliseconds: 500),
               () => Navigator.of(context).pushReplacementNamed(Routes.login),
             );
           } else if (state is RegisterFailure) {
@@ -320,10 +325,10 @@ class _RegestirationScreenState extends State<RegestirationScreen> {
 
           if (state is PhoneValidationSuccess) {
             Navigator.of(context).pop(); // Close OTP dialog on success
-            AnimatedSnackBar.material(
-              "تم تاكيد رقم الهاتف بنجاح",
-              type: AnimatedSnackBarType.success,
-            ).show(context);
+            // AnimatedSnackBar.material(
+            //   "تم تاكيد رقم الهاتف بنجاح",
+            //   type: AnimatedSnackBarType.success,
+            // ).show(context);
             isPhoneVerified = true;
             verfyiedPhone = phoneController.text;
           }
@@ -772,11 +777,11 @@ class _RegestirationScreenState extends State<RegestirationScreen> {
                                                               .text
                                                     });
                                                   }
-
+                                                  debugPrint("register map: $map");  
                                                   context
                                                       .read<RegisterCubit>()
                                                       .register(
-                                                        FormData.fromMap(map),
+                                                        FormData.fromMap(map)
                                                       );
                                                 } else {
                                                   Map<String, dynamic> map = {
@@ -828,11 +833,11 @@ class _RegestirationScreenState extends State<RegestirationScreen> {
                                                       .text.isEmpty) {
                                                     map.remove("third_name");
                                                   }
-
+                                                  debugPrint("register map: $map");  
                                                   context
                                                       .read<RegisterCubit>()
                                                       .register(
-                                                        FormData.fromMap(map),
+                                                        FormData.fromMap(map)
                                                       );
                                                 }
                                               }

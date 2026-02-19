@@ -303,7 +303,7 @@ class AdvisorySeviceAdjustScreen extends StatelessWidget {
     );
   }
 
-  _additionalSettings(BuildContext context) {
+  Column _additionalSettings(BuildContext context) {
     return Column(
       children: [
         SizedBox(height: 40.h),
@@ -400,7 +400,7 @@ class _PriceDataState extends State<PriceData> {
           scale: 0.7,
           child: CupertinoSwitch(
             value: widget.data[widget.index].isHidden == 0 ? true : false,
-            activeColor: appColors.primaryColorYellow,
+            activeTrackColor: appColors.primaryColorYellow,
             onChanged: (bool value) {
               setState(() {
                 widget.data[widget.index].isHidden = value ? 0 : 1;

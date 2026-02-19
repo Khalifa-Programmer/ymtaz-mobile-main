@@ -1,11 +1,11 @@
 import 'dart:ui';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/core/constants/colors.dart';
@@ -80,124 +80,33 @@ class _HomeScreenLawyerState extends State<HomeScreenLawyer> {
 
   @override
   Widget build(BuildContext context) {
+    final userType = CacheHelper.getData(key: 'userType');
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         // Add state listener if needed
       },
       builder: (context, state) {
         return Scaffold(
-          body: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              _buildPinnedHeader(context),
+          body: RefreshIndicator(
+            onRefresh: () async {
+              await context.read<HomeCubit>().getHomeData();
+              if (userType != 'guest') {
+                getit<NotificationCubit>().getNotifications();
+                await getit<MyAccountCubit>().refresh();
+              }
+            },
+            color: appColors.primaryColorYellow,
+            child: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                _buildPinnedHeader(context),
 
               // Add pinned header
-              SliverToBoxAdapter(child: _buildSearchField()),
+              //SliverToBoxAdapter(child: _buildSearchField()),
               // Search bar
               SliverToBoxAdapter(child: RecentJoinedLawyers()),
               // Recent Lawyers
               SliverToBoxAdapter(child: verticalSpace(20.h)),
-              SliverToBoxAdapter(child: AdsBanner()),
-              SliverToBoxAdapter(child: verticalSpace(20.h)),
-              // todo elite card
-              // SliverToBoxAdapter(
-              //   child: GestureDetector(
-              //     onTap: () {
-              //       Navigator.pushNamed(context, Routes.elite);
-              //     },
-              //     child: Container(
-              //         width: 350.w,
-              //         margin:
-              //         EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
-              //         padding: EdgeInsets.all(1.5.r),
-              //         decoration: BoxDecoration(
-              //           // gradient: LinearGradient(
-              //           //   colors: [
-              //           //     appColors.primaryColorYellow.withOpacity(0.5),
-              //           //     appColors.white,
-              //           //   ],
-              //           //   end: Alignment.bottomLeft,
-              //           //   begin: Alignment.topRight,
-              //           //   stops: [0.1, 0.3],
-              //           // ),
-              //           color: appColors.white,
-              //
-              //           borderRadius:
-              //           BorderRadius.circular(20.r), // تحديد الحواف
-              //         ),
-              //         child: Container(
-              //           width: 350.w,
-              //           padding: EdgeInsets.all(20.r),
-              //           decoration: BoxDecoration(
-              //             color: appColors.white,
-              //             // gradient: LinearGradient(
-              //             //   colors: [
-              //             //     appColors.lightYellow10,
-              //             //     appColors.lightYellow10,
-              //             //     appColors.primaryColorYellow.withOpacity(0.5),
-              //             //     appColors.lightYellow10,
-              //             //     appColors.lightYellow10,
-              //             //   ],
-              //             //   end: Alignment.bottomLeft,
-              //             //   begin: Alignment.topRight,
-              //             // ),
-              //             borderRadius: BorderRadius.circular(20.r),
-              //             boxShadow: [
-              //               BoxShadow(
-              //                 color: Colors.black12,
-              //                 blurRadius: 10.r,
-              //                 offset: Offset(0, 2.r),
-              //               ),
-              //             ],
-              //           ),
-              //           child: Column(
-              //             mainAxisAlignment: MainAxisAlignment.center,
-              //             crossAxisAlignment: CrossAxisAlignment.start,
-              //             children: [
-              //               Row(
-              //                 children: [
-              //                   SvgPicture.asset(
-              //                     AppAssets.crown,
-              //                     width: 30.w,
-              //                     height: 30.h,
-              //                   ),
-              //                   horizontalSpace(10.w),
-              //                   Text(
-              //                     'هيئة المستشارين',
-              //                     style: TextStyles.cairo_15_bold
-              //                         .copyWith(color: appColors.blue100),
-              //                   ),
-              //                 ],
-              //               ),
-              //               verticalSpace(5.h),
-              //               Text(
-              //                 "تقدیم حلول متنوعة وخطوات مدروسة لحل المشكلة بشكل شامل من قبل نخبة من المستشارین المتخصصین بأحدث التقنیات المتاحة",
-              //                 style: TextStyles.cairo_12_medium
-              //                     .copyWith(color: appColors.blue100),
-              //                 textAlign: TextAlign.right,
-              //               ),
-              //               verticalSpace(10.h),
-              //               Container(
-              //                 width: 350.w,
-              //                 padding: EdgeInsets.all(8.r),
-              //                 decoration: BoxDecoration(
-              //                   color: appColors.primaryColorYellow,
-              //                   borderRadius: BorderRadius.circular(8.r),
-              //                 ),
-              //                 child: Center(
-              //                   child: Text(
-              //                     'ابدأ الآن',
-              //                     style: TextStyles.cairo_12_bold
-              //                         .copyWith(color: appColors.white),
-              //                   ),
-              //                 ),
-              //               ),
-              //             ],
-              //           ),
-              //         )),
-              //   ),
-              // ),
-              // SliverToBoxAdapter(child: verticalSpace(20.h)),
 
               SliverToBoxAdapter(
                   child: GestureDetector(
@@ -265,20 +174,28 @@ class _HomeScreenLawyerState extends State<HomeScreenLawyer> {
                 ),
               )),
               SliverToBoxAdapter(child: verticalSpace(20.h)),
+
               _buildGridSection(context),
+              SliverToBoxAdapter(child: verticalSpace(20.h)),
+
+              // Slider
+              // SliverToBoxAdapter(child: AdsBanner()),
+              // SliverToBoxAdapter(child: verticalSpace(20.h)),
 
               // Grid Section
             ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
 
   Widget _buildPinnedHeader(BuildContext context) {
     final userType = CacheHelper.getData(key: 'userType');
 
     return SliverAppBar(
+      automaticallyImplyLeading: userType == 'guest',
       pinned: true,
       elevation: 0,
       backgroundColor: Colors.transparent,
@@ -385,7 +302,7 @@ class _HomeScreenLawyerState extends State<HomeScreenLawyer> {
 
   // User Profile Row
 
-  _buildUserProfileRow(BuildContext context) {
+  Column _buildUserProfileRow(BuildContext context) {
     var userType = CacheHelper.getData(key: 'userType');
     return Column(
       children: [

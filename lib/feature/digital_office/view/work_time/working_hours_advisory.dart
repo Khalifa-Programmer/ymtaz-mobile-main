@@ -123,7 +123,7 @@ class WorkingHoursAdvisory extends StatelessWidget {
     );
   }
 
-  getAppBarTitle() {
+  String getAppBarTitle() {
     switch (serviceId) {
       case 1:
         return "مواقيت العمل للمواعيد";
@@ -131,6 +131,8 @@ class WorkingHoursAdvisory extends StatelessWidget {
         return "مواقيت العمل للخدمات";
       case 3:
         return "مواقيت العمل للاستشارات";
+      default:
+        return "مواقيت العمل";
     }
   }
 }
@@ -422,12 +424,6 @@ class _AddTimeSlotState extends State<AddTimeSlot> {
                         )),
                     verticalSpace(10.sp),
                     CupertinoButton(
-                        child: Text(
-                          to ?? "اختر التوقيت",
-                          style: TextStyles.cairo_14_bold.copyWith(
-                            color: appColors.primaryColorYellow,
-                          ),
-                        ),
                         onPressed: from == null
                             ? null
                             : () async {
@@ -488,18 +484,19 @@ class _AddTimeSlotState extends State<AddTimeSlot> {
                                     );
                                   }
                                 }
-                              })
+                              },
+                        child: Text(
+                          to ?? "اختر التوقيت",
+                          style: TextStyles.cairo_14_bold.copyWith(
+                            color: appColors.primaryColorYellow,
+                          ),
+                        ))
                   ],
                 ),
                 verticalSpace(20.sp),
                 Center(
                   child: CupertinoButton(
                       color: appColors.primaryColorYellow,
-                      child: Text(
-                        "حفظ",
-                        style: TextStyles.cairo_10_bold
-                            .copyWith(color: Colors.white),
-                      ),
                       onPressed: isSaveButtonEnabled()
                           ? () {
                               final timeSlot = TimeSlot(from: from, to: to);
@@ -508,7 +505,12 @@ class _AddTimeSlotState extends State<AddTimeSlot> {
                               Navigator.of(context).pop();
                               widget.call();
                             }
-                          : null),
+                          : null,
+                      child: Text(
+                        "حفظ",
+                        style: TextStyles.cairo_10_bold
+                            .copyWith(color: Colors.white),
+                      )),
                 )
               ],
             ),

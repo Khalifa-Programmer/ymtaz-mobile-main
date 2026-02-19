@@ -5,7 +5,6 @@ import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.da
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/widgets/audio_player_widget.dart';
-import 'audio_player_widget.dart';
 
 class AttachmentItemWidget extends StatelessWidget {
   final FileElement file;

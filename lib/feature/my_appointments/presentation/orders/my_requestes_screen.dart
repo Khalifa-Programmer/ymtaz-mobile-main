@@ -1,5 +1,4 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yamtaz/config/themes/styles.dart';
@@ -81,7 +80,7 @@ class MyAppointmentsRequestsScreen extends StatelessWidget {
                       );
                     },
                     fallback: (BuildContext context) {
-                      return Container(
+                      return SizedBox(
                           height: 400, child: ShimmerServiceOfferCardPending());
                     },
                   ),

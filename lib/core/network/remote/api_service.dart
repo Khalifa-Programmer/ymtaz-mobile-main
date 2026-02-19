@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart' hide Headers;
-import 'package:dio/dio.dart';
-import 'package:retrofit/error_logger.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 import 'package:yamtaz/core/network/remote/api_constants.dart';
 import 'package:yamtaz/core/shared/models/accurate_speecialties.dart';
 import 'package:yamtaz/core/shared/models/degrees.dart';
@@ -101,9 +99,6 @@ import '../../../feature/layout/my_page/data/model/last_added.dart';
 import '../../../feature/layout/services/data/model/available_lawyers_for_service_model.dart';
 import '../../../feature/layout/services/data/model/respond_clinet_to_offer_response.dart';
 import '../../../feature/learning_path/data/models/book_details_response.dart';
-import '../../../feature/learning_path/data/models/book_guide_items_response.dart';
-import '../../../feature/learning_path/data/models/law_guide_items_response.dart';
-import '../../../feature/learning_path/data/models/learning_path_analytics_response.dart';
 import '../../../feature/learning_path/data/models/learning_path_items_response.dart';
 import '../../../feature/learning_path/data/models/learning_progress_response.dart';
 import '../../../feature/my_appointments/data/model/appointment_offers_client.dart';
@@ -119,7 +114,12 @@ import '../../../feature/ymtaz_elite/data/model/elite_category_model.dart';
 import '../../../feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
 import '../../../feature/ymtaz_elite/data/model/elite_request_model.dart';
 import '../../../feature/ymtaz_elite/data/model/elite_pricing_requests_model.dart';
+import '../../../feature/advisory_committees/data/model/advisory_committees_lawyers_response.dart';
+import '../../../feature/advisory_committees/data/model/advisory_committees_response.dart';
+import '../../../feature/digital_guide/data/model/digital_guide_response.dart';
+import '../../../feature/digital_guide/data/model/digital_search_response_model.dart';
 import '../../models/base_response.dart';
+
 import '../../shared/models/resend_code.dart';
 import 'package:yamtaz/feature/learning_path/data/models/favourite_items_response.dart';
 
@@ -132,12 +132,19 @@ abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
   // ====== AUTH new  ====== //
+  // في ملف api_service.dart
   @POST(ApiConstants.login)
-  Future<LoginProviderResponse> login(
-      @Body() LoginRequestBody loginRequestBody);
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<LoginProviderResponse> login(@Body() LoginRequestBody body);
 
   @POST(ApiConstants.register)
   Future<ResponseModel> register(@Body() FormData body);
+
+  @POST(ApiConstants.registerClient)
+  Future<ResponseModel> registerClientUnified(@Body() FormData body);
+
+  @POST(ApiConstants.registerProvider)
+  Future<ResponseModel> registerProviderUnified(@Body() FormData body);
 
   @POST(ApiConstants.verifyPhone)
   Future<ResponseModel> verifyPhone(
@@ -148,7 +155,7 @@ abstract class ApiService {
       @Field('phone') String phone, @Field('phone_code') String countryCode);
 
   // ====== AUTH Client  ====== //
-  @POST(ApiConstants.loginClient)
+  @POST(ApiConstants.login)
   Future<LoginResponse> loginClient(@Body() LoginRequestBody loginRequestBody);
 
   @POST(ApiConstants.registerClient)
@@ -218,7 +225,7 @@ abstract class ApiService {
       @Header('Authorization') String token, @Body() FormData body);
 
   // ====== AUTH Lawyer  ====== //
-  @POST(ApiConstants.loginProvider)
+  @POST(ApiConstants.login)
   Future<LoginProviderResponse> loginProvider(
       @Body() LoginRequestBody loginRequestBody);
 
@@ -359,7 +366,7 @@ abstract class ApiService {
 
   @POST(ApiConstants.packageSubscribe)
   Future<PackagesSubscribeModel> subscribePackage(
-      @Header('Authorization') String token, @Body() FormData body);
+      @Header('Authorization') String token, @Body() Map<String, dynamic> body);
 
   // @POST(ApiConstants.packagesProviderSubscripe)
   // Future<BuyPackageModel> buyPackage(
@@ -369,13 +376,13 @@ abstract class ApiService {
   // Future<SuccessFcmResponse> confirmPayment(
   //     @Header('Authorization') String token, @Path('id') String id);
 
-  // visitor login
-  @GET('${ApiConstants.visitorLogin}/{token}')
-  Future<VisitorLogin> visitorLogin(@Path('token') String token);
+  // Google Sign In endpoint
+  @POST(ApiConstants.googleLogin)
+  Future<VisitorLogin> googleLogin(@Field('id_token') String token);
 
   // Add Apple Sign In endpoint
-  @POST('${ApiConstants.appleLogin}')
-  Future<BaseResponse> appleLogin(@Field('identity_token') String token);
+  @POST(ApiConstants.appleLogin)
+  Future<VisitorLogin> appleLogin(@Field('identity_token') String token);
 
   // new Apiiiiiiiis >>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -701,6 +708,33 @@ abstract class ApiService {
   @GET(ApiConstants.myLawyers)
   Future<MyLawyersResponse> myLawyers(@Header('Authorization') String token);
 
+  // Digital Guide
+  @GET(ApiConstants.digitalGuideCategoriesClient)
+  Future<DigitalGuideResponse> getDigitalGuide(
+      @Header('Authorization') String token);
+
+  @POST(ApiConstants.digitalGuideSearchClient)
+  Future<DigitalSearchResponseModel> searchDigitalGuideClient(
+      @Header('Authorization') String token, @Body() FormData body);
+
+  // Advisory Committees
+  @GET(ApiConstants.advisoryCommitteesClient)
+  Future<AdvisoryCommitteesResponse> getAdvisoryCommittees(
+      @Header('Authorization') String token);
+
+  @GET("${ApiConstants.advisoryCommitteesLawyersById}{id}")
+  Future<AdvisoryCommitteesLawyersResponse> getAdvisoryCommitteesLawyersById(
+      @Header('Authorization') String token, @Path('id') String id);
+
+  @GET(ApiConstants.lawyerAdvisorServicesBase)
+  Future<dynamic> getLawyerAdvisors(
+      @Header('Authorization') String token, @Query('id') String id);
+
+  @GET(ApiConstants.lawyerServicesBase)
+  Future<dynamic> getServices(
+      @Header('Authorization') String token, @Query('id') String id);
+
+
   @GET(ApiConstants.myPage)
   Future<MyPageLawyerResponseModel> getMyPageDataProvider(
       @Header('Authorization') String token);
@@ -724,8 +758,6 @@ abstract class ApiService {
   @GET(ApiConstants.judicialGuide)
   Future<JudicialGuideResponseModel> getJudicialGuide(
       @Header('Authorization') String token);
-
-
 
   // law guide main subs laws search
 
@@ -809,8 +841,8 @@ abstract class ApiService {
 
   @GET(ApiConstants.learningPaths)
   Future<LearningPathsResponse> getLearningPaths(
-      @Header('Authorization') String token,
-      );
+    @Header('Authorization') String token,
+  );
 
   // @GET(ApiConstants.learningPathsAnalytics)
   // Future<LearningPathAnalyticsResponse> getLearningPathsAnalytics(
@@ -831,9 +863,9 @@ abstract class ApiService {
 
   @POST('v1/learning-paths')
   Future<LearningProgressResponse> updateLearningProgress(
-      @Header('Authorization') String token,
-      @Field('type') String type,
-      @Field('item_id') int itemId,
+    @Header('Authorization') String token,
+    @Field('type') String type,
+    @Field('item_id') int itemId,
   );
 
   @GET('v1/book-guide/sections/{sectionId}')

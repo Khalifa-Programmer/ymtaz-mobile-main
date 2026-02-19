@@ -33,12 +33,16 @@ class LoginProviderResponse {
 class Data {
   @JsonKey(name: "account")
   Account? account;
+  @JsonKey(name: "token")
+  String? token;
 
   Data({
     this.account,
+    this.token,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
+        token: json['token'] as String?,
         account: json['account'] != null
             ? Account.fromJson(json['account'] as Map<String, dynamic>)
             : (json['user'] != null
@@ -77,6 +81,9 @@ class Account {
   DateTime? birthday;
   @JsonKey(name: "image")
   String? photo;
+  @JsonKey(name: "photo")
+  String? image;
+
   @JsonKey(name: "nationality")
   UserNationality? nationality; // Add "User" prefix
   @JsonKey(name: "country")
@@ -210,7 +217,9 @@ class Account {
       this.about,
       this.birthday,
       this.photo,
+      this.image,
       this.isFavorite,
+
       this.officeRequestStatus,
       this.special,
       this.sections,

@@ -1,4 +1,3 @@
-import '../data/models/law_details_response.dart';
 
 abstract class LawDetailsState {}
 

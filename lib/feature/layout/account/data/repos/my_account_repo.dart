@@ -221,13 +221,14 @@ class MyAccountRepo {
   Future<ApiResult> deleteFcmToken(String token) async {
     var userType = CacheHelper.getData(key: 'userType');
     String? id = await _getId();
+    if (id == null) return ApiResult.failure("Device ID not found");
 
     try {
       final SuccessFcmResponse response;
       if (userType == 'client') {
-        response = await _apiService.deleteFcmToken(token, id!);
+        response = await _apiService.deleteFcmToken(token, id);
       } else {
-        response = await _apiService.deleteFcmTokenProvider(token, id!);
+        response = await _apiService.deleteFcmTokenProvider(token, id);
       }
       return ApiResult.success(response);
     } on DioException catch (error) {

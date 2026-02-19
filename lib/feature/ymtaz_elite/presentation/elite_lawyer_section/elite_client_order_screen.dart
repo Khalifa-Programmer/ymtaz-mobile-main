@@ -6,7 +6,6 @@ import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_lawyer_section/pri
 import '../../../../core/constants/colors.dart';
 import '../../../../core/widgets/audio_player_widget.dart';
 import '../../data/model/elite_pricing_requests_model.dart'; // Updated import
-import '../widgets/audio_player_widget.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../logic/ymtaz_elite_cubit.dart';
 import '../../../../core/widgets/app_bar.dart';

@@ -4,14 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/colors.dart';
-import 'package:yamtaz/core/di/dependency_injection.dart';
 import 'package:yamtaz/feature/learning_path/data/models/favourite_items_response.dart';
 import 'package:yamtaz/feature/learning_path/data/models/learning_path_items_response.dart';
-import 'package:yamtaz/feature/learning_path/data/repos/learning_path_repo.dart';
 import 'package:yamtaz/feature/learning_path/logic/favourite_items_cubit.dart';
 import 'package:yamtaz/feature/learning_path/logic/favourite_items_state.dart';
-import 'package:yamtaz/feature/learning_path/logic/law_details_cubit.dart';
-import 'package:yamtaz/feature/learning_path/presentation/pages/law_details_page.dart';
 import 'package:yamtaz/feature/learning_path/presentation/pages/book_details_page.dart';
 import 'package:yamtaz/feature/learning_path/presentation/pages/view_law_details.dart';
 

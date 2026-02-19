@@ -21,12 +21,12 @@ mixin _$LoginState<T> {
     required TResult Function() initial,
     required TResult Function() changeValues,
     required TResult Function() loading,
-    required TResult Function(LoginResponse data) success,
+    required TResult Function(LoginProviderResponse data) success,
     required TResult Function(LoginProviderResponse data) successProvider,
     required TResult Function(String error) error,
     required TResult Function() visitorLoading,
     required TResult Function(VisitorLogin data) visitorSuccess,
-    required TResult Function(BaseResponse data) appleSuccess,
+    required TResult Function(VisitorLogin data) appleSuccess,
     required TResult Function(String error) visitorError,
   }) =>
       throw _privateConstructorUsedError;
@@ -35,12 +35,12 @@ mixin _$LoginState<T> {
     TResult? Function()? initial,
     TResult? Function()? changeValues,
     TResult? Function()? loading,
-    TResult? Function(LoginResponse data)? success,
+    TResult? Function(LoginProviderResponse data)? success,
     TResult? Function(LoginProviderResponse data)? successProvider,
     TResult? Function(String error)? error,
     TResult? Function()? visitorLoading,
     TResult? Function(VisitorLogin data)? visitorSuccess,
-    TResult? Function(BaseResponse data)? appleSuccess,
+    TResult? Function(VisitorLogin data)? appleSuccess,
     TResult? Function(String error)? visitorError,
   }) =>
       throw _privateConstructorUsedError;
@@ -49,12 +49,12 @@ mixin _$LoginState<T> {
     TResult Function()? initial,
     TResult Function()? changeValues,
     TResult Function()? loading,
-    TResult Function(LoginResponse data)? success,
+    TResult Function(LoginProviderResponse data)? success,
     TResult Function(LoginProviderResponse data)? successProvider,
     TResult Function(String error)? error,
     TResult Function()? visitorLoading,
     TResult Function(VisitorLogin data)? visitorSuccess,
-    TResult Function(BaseResponse data)? appleSuccess,
+    TResult Function(VisitorLogin data)? appleSuccess,
     TResult Function(String error)? visitorError,
     required TResult orElse(),
   }) =>
@@ -120,9 +120,6 @@ class _$LoginStateCopyWithImpl<T, $Res, $Val extends LoginState<T>>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -139,9 +136,6 @@ class __$$InitialImplCopyWithImpl<T, $Res>
   __$$InitialImplCopyWithImpl(
       _$InitialImpl<T> _value, $Res Function(_$InitialImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -169,12 +163,12 @@ class _$InitialImpl<T> implements _Initial<T> {
     required TResult Function() initial,
     required TResult Function() changeValues,
     required TResult Function() loading,
-    required TResult Function(LoginResponse data) success,
+    required TResult Function(LoginProviderResponse data) success,
     required TResult Function(LoginProviderResponse data) successProvider,
     required TResult Function(String error) error,
     required TResult Function() visitorLoading,
     required TResult Function(VisitorLogin data) visitorSuccess,
-    required TResult Function(BaseResponse data) appleSuccess,
+    required TResult Function(VisitorLogin data) appleSuccess,
     required TResult Function(String error) visitorError,
   }) {
     return initial();
@@ -186,12 +180,12 @@ class _$InitialImpl<T> implements _Initial<T> {
     TResult? Function()? initial,
     TResult? Function()? changeValues,
     TResult? Function()? loading,
-    TResult? Function(LoginResponse data)? success,
+    TResult? Function(LoginProviderResponse data)? success,
     TResult? Function(LoginProviderResponse data)? successProvider,
     TResult? Function(String error)? error,
     TResult? Function()? visitorLoading,
     TResult? Function(VisitorLogin data)? visitorSuccess,
-    TResult? Function(BaseResponse data)? appleSuccess,
+    TResult? Function(VisitorLogin data)? appleSuccess,
     TResult? Function(String error)? visitorError,
   }) {
     return initial?.call();
@@ -203,12 +197,12 @@ class _$InitialImpl<T> implements _Initial<T> {
     TResult Function()? initial,
     TResult Function()? changeValues,
     TResult Function()? loading,
-    TResult Function(LoginResponse data)? success,
+    TResult Function(LoginProviderResponse data)? success,
     TResult Function(LoginProviderResponse data)? successProvider,
     TResult Function(String error)? error,
     TResult Function()? visitorLoading,
     TResult Function(VisitorLogin data)? visitorSuccess,
-    TResult Function(BaseResponse data)? appleSuccess,
+    TResult Function(VisitorLogin data)? appleSuccess,
     TResult Function(String error)? visitorError,
     required TResult orElse(),
   }) {
@@ -292,9 +286,6 @@ class __$$ChangeValuesImplCopyWithImpl<T, $Res>
   __$$ChangeValuesImplCopyWithImpl(
       _$ChangeValuesImpl<T> _value, $Res Function(_$ChangeValuesImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -322,12 +313,12 @@ class _$ChangeValuesImpl<T> implements ChangeValues<T> {
     required TResult Function() initial,
     required TResult Function() changeValues,
     required TResult Function() loading,
-    required TResult Function(LoginResponse data) success,
+    required TResult Function(LoginProviderResponse data) success,
     required TResult Function(LoginProviderResponse data) successProvider,
     required TResult Function(String error) error,
     required TResult Function() visitorLoading,
     required TResult Function(VisitorLogin data) visitorSuccess,
-    required TResult Function(BaseResponse data) appleSuccess,
+    required TResult Function(VisitorLogin data) appleSuccess,
     required TResult Function(String error) visitorError,
   }) {
     return changeValues();
@@ -339,12 +330,12 @@ class _$ChangeValuesImpl<T> implements ChangeValues<T> {
     TResult? Function()? initial,
     TResult? Function()? changeValues,
     TResult? Function()? loading,
-    TResult? Function(LoginResponse data)? success,
+    TResult? Function(LoginProviderResponse data)? success,
     TResult? Function(LoginProviderResponse data)? successProvider,
     TResult? Function(String error)? error,
     TResult? Function()? visitorLoading,
     TResult? Function(VisitorLogin data)? visitorSuccess,
-    TResult? Function(BaseResponse data)? appleSuccess,
+    TResult? Function(VisitorLogin data)? appleSuccess,
     TResult? Function(String error)? visitorError,
   }) {
     return changeValues?.call();
@@ -356,12 +347,12 @@ class _$ChangeValuesImpl<T> implements ChangeValues<T> {
     TResult Function()? initial,
     TResult Function()? changeValues,
     TResult Function()? loading,
-    TResult Function(LoginResponse data)? success,
+    TResult Function(LoginProviderResponse data)? success,
     TResult Function(LoginProviderResponse data)? successProvider,
     TResult Function(String error)? error,
     TResult Function()? visitorLoading,
     TResult Function(VisitorLogin data)? visitorSuccess,
-    TResult Function(BaseResponse data)? appleSuccess,
+    TResult Function(VisitorLogin data)? appleSuccess,
     TResult Function(String error)? visitorError,
     required TResult orElse(),
   }) {
@@ -445,9 +436,6 @@ class __$$LoadingImplCopyWithImpl<T, $Res>
   __$$LoadingImplCopyWithImpl(
       _$LoadingImpl<T> _value, $Res Function(_$LoadingImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -475,12 +463,12 @@ class _$LoadingImpl<T> implements Loading<T> {
     required TResult Function() initial,
     required TResult Function() changeValues,
     required TResult Function() loading,
-    required TResult Function(LoginResponse data) success,
+    required TResult Function(LoginProviderResponse data) success,
     required TResult Function(LoginProviderResponse data) successProvider,
     required TResult Function(String error) error,
     required TResult Function() visitorLoading,
     required TResult Function(VisitorLogin data) visitorSuccess,
-    required TResult Function(BaseResponse data) appleSuccess,
+    required TResult Function(VisitorLogin data) appleSuccess,
     required TResult Function(String error) visitorError,
   }) {
     return loading();
@@ -492,12 +480,12 @@ class _$LoadingImpl<T> implements Loading<T> {
     TResult? Function()? initial,
     TResult? Function()? changeValues,
     TResult? Function()? loading,
-    TResult? Function(LoginResponse data)? success,
+    TResult? Function(LoginProviderResponse data)? success,
     TResult? Function(LoginProviderResponse data)? successProvider,
     TResult? Function(String error)? error,
     TResult? Function()? visitorLoading,
     TResult? Function(VisitorLogin data)? visitorSuccess,
-    TResult? Function(BaseResponse data)? appleSuccess,
+    TResult? Function(VisitorLogin data)? appleSuccess,
     TResult? Function(String error)? visitorError,
   }) {
     return loading?.call();
@@ -509,12 +497,12 @@ class _$LoadingImpl<T> implements Loading<T> {
     TResult Function()? initial,
     TResult Function()? changeValues,
     TResult Function()? loading,
-    TResult Function(LoginResponse data)? success,
+    TResult Function(LoginProviderResponse data)? success,
     TResult Function(LoginProviderResponse data)? successProvider,
     TResult Function(String error)? error,
     TResult Function()? visitorLoading,
     TResult Function(VisitorLogin data)? visitorSuccess,
-    TResult Function(BaseResponse data)? appleSuccess,
+    TResult Function(VisitorLogin data)? appleSuccess,
     TResult Function(String error)? visitorError,
     required TResult orElse(),
   }) {
@@ -590,7 +578,7 @@ abstract class _$$SuccessImplCopyWith<T, $Res> {
           _$SuccessImpl<T> value, $Res Function(_$SuccessImpl<T>) then) =
       __$$SuccessImplCopyWithImpl<T, $Res>;
   @useResult
-  $Res call({LoginResponse data});
+  $Res call({LoginProviderResponse data});
 }
 
 /// @nodoc
@@ -601,8 +589,6 @@ class __$$SuccessImplCopyWithImpl<T, $Res>
       _$SuccessImpl<T> _value, $Res Function(_$SuccessImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -612,7 +598,7 @@ class __$$SuccessImplCopyWithImpl<T, $Res>
       null == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
-              as LoginResponse,
+              as LoginProviderResponse,
     ));
   }
 }
@@ -623,7 +609,7 @@ class _$SuccessImpl<T> implements Success<T> {
   const _$SuccessImpl(this.data);
 
   @override
-  final LoginResponse data;
+  final LoginProviderResponse data;
 
   @override
   String toString() {
@@ -641,9 +627,7 @@ class _$SuccessImpl<T> implements Success<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessImplCopyWith<T, _$SuccessImpl<T>> get copyWith =>
@@ -655,12 +639,12 @@ class _$SuccessImpl<T> implements Success<T> {
     required TResult Function() initial,
     required TResult Function() changeValues,
     required TResult Function() loading,
-    required TResult Function(LoginResponse data) success,
+    required TResult Function(LoginProviderResponse data) success,
     required TResult Function(LoginProviderResponse data) successProvider,
     required TResult Function(String error) error,
     required TResult Function() visitorLoading,
     required TResult Function(VisitorLogin data) visitorSuccess,
-    required TResult Function(BaseResponse data) appleSuccess,
+    required TResult Function(VisitorLogin data) appleSuccess,
     required TResult Function(String error) visitorError,
   }) {
     return success(data);
@@ -672,12 +656,12 @@ class _$SuccessImpl<T> implements Success<T> {
     TResult? Function()? initial,
     TResult? Function()? changeValues,
     TResult? Function()? loading,
-    TResult? Function(LoginResponse data)? success,
+    TResult? Function(LoginProviderResponse data)? success,
     TResult? Function(LoginProviderResponse data)? successProvider,
     TResult? Function(String error)? error,
     TResult? Function()? visitorLoading,
     TResult? Function(VisitorLogin data)? visitorSuccess,
-    TResult? Function(BaseResponse data)? appleSuccess,
+    TResult? Function(VisitorLogin data)? appleSuccess,
     TResult? Function(String error)? visitorError,
   }) {
     return success?.call(data);
@@ -689,12 +673,12 @@ class _$SuccessImpl<T> implements Success<T> {
     TResult Function()? initial,
     TResult Function()? changeValues,
     TResult Function()? loading,
-    TResult Function(LoginResponse data)? success,
+    TResult Function(LoginProviderResponse data)? success,
     TResult Function(LoginProviderResponse data)? successProvider,
     TResult Function(String error)? error,
     TResult Function()? visitorLoading,
     TResult Function(VisitorLogin data)? visitorSuccess,
-    TResult Function(BaseResponse data)? appleSuccess,
+    TResult Function(VisitorLogin data)? appleSuccess,
     TResult Function(String error)? visitorError,
     required TResult orElse(),
   }) {
@@ -761,13 +745,10 @@ class _$SuccessImpl<T> implements Success<T> {
 }
 
 abstract class Success<T> implements LoginState<T> {
-  const factory Success(final LoginResponse data) = _$SuccessImpl<T>;
+  const factory Success(final LoginProviderResponse data) = _$SuccessImpl<T>;
 
-  LoginResponse get data;
-
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  LoginProviderResponse get data;
+  @JsonKey(ignore: true)
   _$$SuccessImplCopyWith<T, _$SuccessImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -789,8 +770,6 @@ class __$$SuccessProviderImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessProviderImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -829,9 +808,7 @@ class _$SuccessProviderImpl<T> implements SuccessProvider<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessProviderImplCopyWith<T, _$SuccessProviderImpl<T>> get copyWith =>
@@ -844,12 +821,12 @@ class _$SuccessProviderImpl<T> implements SuccessProvider<T> {
     required TResult Function() initial,
     required TResult Function() changeValues,
     required TResult Function() loading,
-    required TResult Function(LoginResponse data) success,
+    required TResult Function(LoginProviderResponse data) success,
     required TResult Function(LoginProviderResponse data) successProvider,
     required TResult Function(String error) error,
     required TResult Function() visitorLoading,
     required TResult Function(VisitorLogin data) visitorSuccess,
-    required TResult Function(BaseResponse data) appleSuccess,
+    required TResult Function(VisitorLogin data) appleSuccess,
     required TResult Function(String error) visitorError,
   }) {
     return successProvider(data);
@@ -861,12 +838,12 @@ class _$SuccessProviderImpl<T> implements SuccessProvider<T> {
     TResult? Function()? initial,
     TResult? Function()? changeValues,
     TResult? Function()? loading,
-    TResult? Function(LoginResponse data)? success,
+    TResult? Function(LoginProviderResponse data)? success,
     TResult? Function(LoginProviderResponse data)? successProvider,
     TResult? Function(String error)? error,
     TResult? Function()? visitorLoading,
     TResult? Function(VisitorLogin data)? visitorSuccess,
-    TResult? Function(BaseResponse data)? appleSuccess,
+    TResult? Function(VisitorLogin data)? appleSuccess,
     TResult? Function(String error)? visitorError,
   }) {
     return successProvider?.call(data);
@@ -878,12 +855,12 @@ class _$SuccessProviderImpl<T> implements SuccessProvider<T> {
     TResult Function()? initial,
     TResult Function()? changeValues,
     TResult Function()? loading,
-    TResult Function(LoginResponse data)? success,
+    TResult Function(LoginProviderResponse data)? success,
     TResult Function(LoginProviderResponse data)? successProvider,
     TResult Function(String error)? error,
     TResult Function()? visitorLoading,
     TResult Function(VisitorLogin data)? visitorSuccess,
-    TResult Function(BaseResponse data)? appleSuccess,
+    TResult Function(VisitorLogin data)? appleSuccess,
     TResult Function(String error)? visitorError,
     required TResult orElse(),
   }) {
@@ -954,10 +931,7 @@ abstract class SuccessProvider<T> implements LoginState<T> {
       _$SuccessProviderImpl<T>;
 
   LoginProviderResponse get data;
-
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessProviderImplCopyWith<T, _$SuccessProviderImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -979,8 +953,6 @@ class __$$ErrorImplCopyWithImpl<T, $Res>
       _$ErrorImpl<T> _value, $Res Function(_$ErrorImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1019,9 +991,7 @@ class _$ErrorImpl<T> implements Error<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorImplCopyWith<T, _$ErrorImpl<T>> get copyWith =>
@@ -1033,12 +1003,12 @@ class _$ErrorImpl<T> implements Error<T> {
     required TResult Function() initial,
     required TResult Function() changeValues,
     required TResult Function() loading,
-    required TResult Function(LoginResponse data) success,
+    required TResult Function(LoginProviderResponse data) success,
     required TResult Function(LoginProviderResponse data) successProvider,
     required TResult Function(String error) error,
     required TResult Function() visitorLoading,
     required TResult Function(VisitorLogin data) visitorSuccess,
-    required TResult Function(BaseResponse data) appleSuccess,
+    required TResult Function(VisitorLogin data) appleSuccess,
     required TResult Function(String error) visitorError,
   }) {
     return error(this.error);
@@ -1050,12 +1020,12 @@ class _$ErrorImpl<T> implements Error<T> {
     TResult? Function()? initial,
     TResult? Function()? changeValues,
     TResult? Function()? loading,
-    TResult? Function(LoginResponse data)? success,
+    TResult? Function(LoginProviderResponse data)? success,
     TResult? Function(LoginProviderResponse data)? successProvider,
     TResult? Function(String error)? error,
     TResult? Function()? visitorLoading,
     TResult? Function(VisitorLogin data)? visitorSuccess,
-    TResult? Function(BaseResponse data)? appleSuccess,
+    TResult? Function(VisitorLogin data)? appleSuccess,
     TResult? Function(String error)? visitorError,
   }) {
     return error?.call(this.error);
@@ -1067,12 +1037,12 @@ class _$ErrorImpl<T> implements Error<T> {
     TResult Function()? initial,
     TResult Function()? changeValues,
     TResult Function()? loading,
-    TResult Function(LoginResponse data)? success,
+    TResult Function(LoginProviderResponse data)? success,
     TResult Function(LoginProviderResponse data)? successProvider,
     TResult Function(String error)? error,
     TResult Function()? visitorLoading,
     TResult Function(VisitorLogin data)? visitorSuccess,
-    TResult Function(BaseResponse data)? appleSuccess,
+    TResult Function(VisitorLogin data)? appleSuccess,
     TResult Function(String error)? visitorError,
     required TResult orElse(),
   }) {
@@ -1142,10 +1112,7 @@ abstract class Error<T> implements LoginState<T> {
   const factory Error({required final String error}) = _$ErrorImpl<T>;
 
   String get error;
-
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorImplCopyWith<T, _$ErrorImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1164,9 +1131,6 @@ class __$$VisitorLoadingImplCopyWithImpl<T, $Res>
   __$$VisitorLoadingImplCopyWithImpl(_$VisitorLoadingImpl<T> _value,
       $Res Function(_$VisitorLoadingImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1194,12 +1158,12 @@ class _$VisitorLoadingImpl<T> implements VisitorLoading<T> {
     required TResult Function() initial,
     required TResult Function() changeValues,
     required TResult Function() loading,
-    required TResult Function(LoginResponse data) success,
+    required TResult Function(LoginProviderResponse data) success,
     required TResult Function(LoginProviderResponse data) successProvider,
     required TResult Function(String error) error,
     required TResult Function() visitorLoading,
     required TResult Function(VisitorLogin data) visitorSuccess,
-    required TResult Function(BaseResponse data) appleSuccess,
+    required TResult Function(VisitorLogin data) appleSuccess,
     required TResult Function(String error) visitorError,
   }) {
     return visitorLoading();
@@ -1211,12 +1175,12 @@ class _$VisitorLoadingImpl<T> implements VisitorLoading<T> {
     TResult? Function()? initial,
     TResult? Function()? changeValues,
     TResult? Function()? loading,
-    TResult? Function(LoginResponse data)? success,
+    TResult? Function(LoginProviderResponse data)? success,
     TResult? Function(LoginProviderResponse data)? successProvider,
     TResult? Function(String error)? error,
     TResult? Function()? visitorLoading,
     TResult? Function(VisitorLogin data)? visitorSuccess,
-    TResult? Function(BaseResponse data)? appleSuccess,
+    TResult? Function(VisitorLogin data)? appleSuccess,
     TResult? Function(String error)? visitorError,
   }) {
     return visitorLoading?.call();
@@ -1228,12 +1192,12 @@ class _$VisitorLoadingImpl<T> implements VisitorLoading<T> {
     TResult Function()? initial,
     TResult Function()? changeValues,
     TResult Function()? loading,
-    TResult Function(LoginResponse data)? success,
+    TResult Function(LoginProviderResponse data)? success,
     TResult Function(LoginProviderResponse data)? successProvider,
     TResult Function(String error)? error,
     TResult Function()? visitorLoading,
     TResult Function(VisitorLogin data)? visitorSuccess,
-    TResult Function(BaseResponse data)? appleSuccess,
+    TResult Function(VisitorLogin data)? appleSuccess,
     TResult Function(String error)? visitorError,
     required TResult orElse(),
   }) {
@@ -1320,8 +1284,6 @@ class __$$VisitorSuccessImplCopyWithImpl<T, $Res>
       $Res Function(_$VisitorSuccessImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1360,9 +1322,7 @@ class _$VisitorSuccessImpl<T> implements VisitorSuccess<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$VisitorSuccessImplCopyWith<T, _$VisitorSuccessImpl<T>> get copyWith =>
@@ -1375,12 +1335,12 @@ class _$VisitorSuccessImpl<T> implements VisitorSuccess<T> {
     required TResult Function() initial,
     required TResult Function() changeValues,
     required TResult Function() loading,
-    required TResult Function(LoginResponse data) success,
+    required TResult Function(LoginProviderResponse data) success,
     required TResult Function(LoginProviderResponse data) successProvider,
     required TResult Function(String error) error,
     required TResult Function() visitorLoading,
     required TResult Function(VisitorLogin data) visitorSuccess,
-    required TResult Function(BaseResponse data) appleSuccess,
+    required TResult Function(VisitorLogin data) appleSuccess,
     required TResult Function(String error) visitorError,
   }) {
     return visitorSuccess(data);
@@ -1392,12 +1352,12 @@ class _$VisitorSuccessImpl<T> implements VisitorSuccess<T> {
     TResult? Function()? initial,
     TResult? Function()? changeValues,
     TResult? Function()? loading,
-    TResult? Function(LoginResponse data)? success,
+    TResult? Function(LoginProviderResponse data)? success,
     TResult? Function(LoginProviderResponse data)? successProvider,
     TResult? Function(String error)? error,
     TResult? Function()? visitorLoading,
     TResult? Function(VisitorLogin data)? visitorSuccess,
-    TResult? Function(BaseResponse data)? appleSuccess,
+    TResult? Function(VisitorLogin data)? appleSuccess,
     TResult? Function(String error)? visitorError,
   }) {
     return visitorSuccess?.call(data);
@@ -1409,12 +1369,12 @@ class _$VisitorSuccessImpl<T> implements VisitorSuccess<T> {
     TResult Function()? initial,
     TResult Function()? changeValues,
     TResult Function()? loading,
-    TResult Function(LoginResponse data)? success,
+    TResult Function(LoginProviderResponse data)? success,
     TResult Function(LoginProviderResponse data)? successProvider,
     TResult Function(String error)? error,
     TResult Function()? visitorLoading,
     TResult Function(VisitorLogin data)? visitorSuccess,
-    TResult Function(BaseResponse data)? appleSuccess,
+    TResult Function(VisitorLogin data)? appleSuccess,
     TResult Function(String error)? visitorError,
     required TResult orElse(),
   }) {
@@ -1485,10 +1445,7 @@ abstract class VisitorSuccess<T> implements LoginState<T> {
       _$VisitorSuccessImpl<T>;
 
   VisitorLogin get data;
-
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$VisitorSuccessImplCopyWith<T, _$VisitorSuccessImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1499,7 +1456,7 @@ abstract class _$$AppleSuccessImplCopyWith<T, $Res> {
           $Res Function(_$AppleSuccessImpl<T>) then) =
       __$$AppleSuccessImplCopyWithImpl<T, $Res>;
   @useResult
-  $Res call({BaseResponse data});
+  $Res call({VisitorLogin data});
 }
 
 /// @nodoc
@@ -1510,8 +1467,6 @@ class __$$AppleSuccessImplCopyWithImpl<T, $Res>
       _$AppleSuccessImpl<T> _value, $Res Function(_$AppleSuccessImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1521,7 +1476,7 @@ class __$$AppleSuccessImplCopyWithImpl<T, $Res>
       null == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
-              as BaseResponse,
+              as VisitorLogin,
     ));
   }
 }
@@ -1532,7 +1487,7 @@ class _$AppleSuccessImpl<T> implements AppleSuccess<T> {
   const _$AppleSuccessImpl(this.data);
 
   @override
-  final BaseResponse data;
+  final VisitorLogin data;
 
   @override
   String toString() {
@@ -1550,9 +1505,7 @@ class _$AppleSuccessImpl<T> implements AppleSuccess<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$AppleSuccessImplCopyWith<T, _$AppleSuccessImpl<T>> get copyWith =>
@@ -1565,12 +1518,12 @@ class _$AppleSuccessImpl<T> implements AppleSuccess<T> {
     required TResult Function() initial,
     required TResult Function() changeValues,
     required TResult Function() loading,
-    required TResult Function(LoginResponse data) success,
+    required TResult Function(LoginProviderResponse data) success,
     required TResult Function(LoginProviderResponse data) successProvider,
     required TResult Function(String error) error,
     required TResult Function() visitorLoading,
     required TResult Function(VisitorLogin data) visitorSuccess,
-    required TResult Function(BaseResponse data) appleSuccess,
+    required TResult Function(VisitorLogin data) appleSuccess,
     required TResult Function(String error) visitorError,
   }) {
     return appleSuccess(data);
@@ -1582,12 +1535,12 @@ class _$AppleSuccessImpl<T> implements AppleSuccess<T> {
     TResult? Function()? initial,
     TResult? Function()? changeValues,
     TResult? Function()? loading,
-    TResult? Function(LoginResponse data)? success,
+    TResult? Function(LoginProviderResponse data)? success,
     TResult? Function(LoginProviderResponse data)? successProvider,
     TResult? Function(String error)? error,
     TResult? Function()? visitorLoading,
     TResult? Function(VisitorLogin data)? visitorSuccess,
-    TResult? Function(BaseResponse data)? appleSuccess,
+    TResult? Function(VisitorLogin data)? appleSuccess,
     TResult? Function(String error)? visitorError,
   }) {
     return appleSuccess?.call(data);
@@ -1599,12 +1552,12 @@ class _$AppleSuccessImpl<T> implements AppleSuccess<T> {
     TResult Function()? initial,
     TResult Function()? changeValues,
     TResult Function()? loading,
-    TResult Function(LoginResponse data)? success,
+    TResult Function(LoginProviderResponse data)? success,
     TResult Function(LoginProviderResponse data)? successProvider,
     TResult Function(String error)? error,
     TResult Function()? visitorLoading,
     TResult Function(VisitorLogin data)? visitorSuccess,
-    TResult Function(BaseResponse data)? appleSuccess,
+    TResult Function(VisitorLogin data)? appleSuccess,
     TResult Function(String error)? visitorError,
     required TResult orElse(),
   }) {
@@ -1671,13 +1624,10 @@ class _$AppleSuccessImpl<T> implements AppleSuccess<T> {
 }
 
 abstract class AppleSuccess<T> implements LoginState<T> {
-  const factory AppleSuccess(final BaseResponse data) = _$AppleSuccessImpl<T>;
+  const factory AppleSuccess(final VisitorLogin data) = _$AppleSuccessImpl<T>;
 
-  BaseResponse get data;
-
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  VisitorLogin get data;
+  @JsonKey(ignore: true)
   _$$AppleSuccessImplCopyWith<T, _$AppleSuccessImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1699,8 +1649,6 @@ class __$$VisitorErrorImplCopyWithImpl<T, $Res>
       _$VisitorErrorImpl<T> _value, $Res Function(_$VisitorErrorImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1739,9 +1687,7 @@ class _$VisitorErrorImpl<T> implements VisitorError<T> {
   @override
   int get hashCode => Object.hash(runtimeType, error);
 
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$VisitorErrorImplCopyWith<T, _$VisitorErrorImpl<T>> get copyWith =>
@@ -1754,12 +1700,12 @@ class _$VisitorErrorImpl<T> implements VisitorError<T> {
     required TResult Function() initial,
     required TResult Function() changeValues,
     required TResult Function() loading,
-    required TResult Function(LoginResponse data) success,
+    required TResult Function(LoginProviderResponse data) success,
     required TResult Function(LoginProviderResponse data) successProvider,
     required TResult Function(String error) error,
     required TResult Function() visitorLoading,
     required TResult Function(VisitorLogin data) visitorSuccess,
-    required TResult Function(BaseResponse data) appleSuccess,
+    required TResult Function(VisitorLogin data) appleSuccess,
     required TResult Function(String error) visitorError,
   }) {
     return visitorError(this.error);
@@ -1771,12 +1717,12 @@ class _$VisitorErrorImpl<T> implements VisitorError<T> {
     TResult? Function()? initial,
     TResult? Function()? changeValues,
     TResult? Function()? loading,
-    TResult? Function(LoginResponse data)? success,
+    TResult? Function(LoginProviderResponse data)? success,
     TResult? Function(LoginProviderResponse data)? successProvider,
     TResult? Function(String error)? error,
     TResult? Function()? visitorLoading,
     TResult? Function(VisitorLogin data)? visitorSuccess,
-    TResult? Function(BaseResponse data)? appleSuccess,
+    TResult? Function(VisitorLogin data)? appleSuccess,
     TResult? Function(String error)? visitorError,
   }) {
     return visitorError?.call(this.error);
@@ -1788,12 +1734,12 @@ class _$VisitorErrorImpl<T> implements VisitorError<T> {
     TResult Function()? initial,
     TResult Function()? changeValues,
     TResult Function()? loading,
-    TResult Function(LoginResponse data)? success,
+    TResult Function(LoginProviderResponse data)? success,
     TResult Function(LoginProviderResponse data)? successProvider,
     TResult Function(String error)? error,
     TResult Function()? visitorLoading,
     TResult Function(VisitorLogin data)? visitorSuccess,
-    TResult Function(BaseResponse data)? appleSuccess,
+    TResult Function(VisitorLogin data)? appleSuccess,
     TResult Function(String error)? visitorError,
     required TResult orElse(),
   }) {
@@ -1864,10 +1810,7 @@ abstract class VisitorError<T> implements LoginState<T> {
       _$VisitorErrorImpl<T>;
 
   String get error;
-
-  /// Create a copy of LoginState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$VisitorErrorImplCopyWith<T, _$VisitorErrorImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }

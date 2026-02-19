@@ -10,10 +10,10 @@ class CountryPickerBottomSheet extends StatefulWidget {
   final String selectedCountryCode;
 
   const CountryPickerBottomSheet({
-    Key? key,
+    super.key,
     required this.onCountrySelected,
     required this.selectedCountryCode,
-  }) : super(key: key);
+  });
 
   @override
   State<CountryPickerBottomSheet> createState() => _CountryPickerBottomSheetState();

@@ -116,7 +116,7 @@ class MyPaymentsScreen extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  '${getDate(payment!.createdAt.toString())} - ${getTime(payment.createdAt.toString())}',
+                                  '${getDate(payment.createdAt.toString())} - ${getTime(payment.createdAt.toString())}',
                                   style: TextStyle(
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w500,

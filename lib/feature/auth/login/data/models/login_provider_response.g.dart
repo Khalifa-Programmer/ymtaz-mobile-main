@@ -30,10 +30,12 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
       account: json['account'] == null
           ? null
           : Account.fromJson(json['account'] as Map<String, dynamic>),
+      token: json['token'] as String?,
     );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
       'account': instance.account,
+      'token': instance.token,
     };
 
 Account _$AccountFromJson(Map<String, dynamic> json) => Account(
@@ -51,6 +53,7 @@ Account _$AccountFromJson(Map<String, dynamic> json) => Account(
           ? null
           : DateTime.parse(json['birth_date'] as String),
       photo: json['image'] as String?,
+      image: json['photo'] as String?,
       isFavorite: (json['is_favorite'] as num?)?.toInt(),
       officeRequestStatus: (json['office_request_status'] as num?)?.toInt(),
       special: (json['special'] as num?)?.toInt(),
@@ -155,6 +158,7 @@ Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
       'about': instance.about,
       'birth_date': instance.birthday?.toIso8601String(),
       'image': instance.photo,
+      'photo': instance.image,
       'nationality': instance.nationality,
       'country': instance.country,
       'region': instance.region,

@@ -13,7 +13,7 @@ class MyPageCubit extends Cubit<MyPageState> {
   MyPageResponseModel? myPageResponseModel;
   LastAdded? lastAddedModel;
 
-  getMyPageData() {
+  void getMyPageData() {
     getMyPageClient();
     lastAdded();
   }

@@ -14,6 +14,7 @@ import 'package:yamtaz/feature/layout/account/data/repos/my_account_repo.dart';
 
 import '../../../../core/router/routes.dart';
 import '../../../auth/login/data/models/login_provider_response.dart';
+import '../../../auth/register/data/model/response_model.dart';
 import 'my_account_state.dart';
 
 class MyAccountCubit extends Cubit<MyAccountState> {
@@ -159,7 +160,25 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       emit(MyAccountState.successSendInvite(data));
       getit<MyAccountCubit>().getInvitations();
     }, failure: (error) {
-      emit(MyAccountState.errorSendInvite(error: extractErrors(error['data'])));
+      final message = error['message']?.toString() ?? '';
+      if (message.contains("تم إنشاء دعوة مسبقاً") ||
+          message.contains("تم إرسال دعوة مسبقاً")) {
+        emit(MyAccountState.successSendInvite(ResponseModel.fromJson(error)));
+      } else if (extractErrors(error).contains("invalid_data") ||
+          message.contains("invalid_data")) {
+        // Handle invalid_data specifically to show validation errors
+        String errorMessage = "بيانات غير صالحة";
+        if (error['data'] != null && error['data']['errors'] != null) {
+          final errors = error['data']['errors'];
+          if (errors is Map && errors.isNotEmpty) {
+            // Extract the first error message
+            errorMessage = errors.values.first.first.toString();
+          }
+        }
+        emit(MyAccountState.errorSendInvite(error: errorMessage));
+      } else {
+        emit(MyAccountState.errorSendInvite(error: extractErrors(error)));
+      }
 
       getit<MyAccountCubit>().getInvitations();
     });
@@ -181,8 +200,8 @@ class MyAccountCubit extends Cubit<MyAccountState> {
 
     if (userType == 'provider') {
       await getProviderData();
-    } else if (userType == 'c') {
-      // await getClientData();
+    } else if (userType == 'client') {
+       await getClientData();
     }
   }
 
@@ -320,7 +339,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
   int selectedDistricts = -1;
   int selectedCountryPhoneCode = -1;
 
-  loadClientData() async {
+  Future<void> loadClientData() async {
     await loadApiData();
     clientProfile = getit<MyAccountCubit>().clientProfile;
 
@@ -413,31 +432,42 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     );
   }
 
-  String extractErrors(Map<String, dynamic> errorData) {
-    // Check if 'errors' exists and is a map
+  String extractErrors(dynamic errorData) {
+    if (errorData == null) return 'حدث خطأ ما مراجعة البيانات';
+
+    if (errorData is! Map<String, dynamic>) {
+      return errorData.toString();
+    }
+
+    // 1. Check if 'errors' exists and is a map (typical Laravel structure)
     final errorsMap = errorData['errors'] as Map<String, dynamic>?;
-    if (errorsMap == null || errorsMap.isEmpty) {
-      return 'حدث خطأ ما راجع البيانات';
-    }
+    if (errorsMap != null && errorsMap.isNotEmpty) {
+      final errorMessages = <String>[];
 
-    final errorMessages = <String>[];
+      // Iterate through each field and collect its error messages
+      errorsMap.forEach((field, messages) {
+        if (messages is List && messages.isNotEmpty) {
+          final formattedMessages =
+              messages.map((msg) => msg.toString()).join('\n');
+          errorMessages.add(formattedMessages);
+        } else if (messages is String) {
+          errorMessages.add(messages);
+        }
+      });
 
-    // Iterate through each field and collect its error messages
-    errorsMap.forEach((field, messages) {
-      if (messages is List && messages.isNotEmpty) {
-        final formattedMessages =
-            messages.map((msg) => msg.toString()).join('\n');
-        errorMessages.add(formattedMessages);
+      if (errorMessages.isNotEmpty) {
+        return errorMessages.join('\n');
       }
-    });
-
-    // If no error messages were extracted, return a generic error message
-    if (errorMessages.isEmpty) {
-      return 'حدث خطأ ما  راجع البيانات';
     }
 
-    // Join all extracted error messages into a single string
-    return errorMessages.join('\n');
+    // 2. Check for top-level 'message' field
+    if (errorData['message'] != null &&
+        errorData['message'].toString().isNotEmpty) {
+      return errorData['message'].toString();
+    }
+
+    // 3. Fallback to a generic error message
+    return 'حدث خطأ ما مراجعة البيانات';
   }
 
   void selectDistricts(int cityId) {
@@ -575,7 +605,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
         emit(const MyAccountState.successSendFcmToken());
       },
       failure: (error) {
-        emit(MyAccountState.errorSendFcmToken(error: error.toString()));
+        emit(MyAccountState.errorSendFcmToken(error: error?.toString() ?? 'Unknown error'));
       },
     );
   }

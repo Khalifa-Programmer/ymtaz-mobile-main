@@ -32,7 +32,6 @@ import 'package:yamtaz/feature/layout/my_page/view/my_page_screen.dart';
 import 'package:yamtaz/feature/layout/services/logic/services_cubit.dart';
 import 'package:yamtaz/feature/layout/services/presentation/my_requestes_screen.dart';
 import 'package:yamtaz/feature/layout/services/presentation/sevices_screen.dart';
-import 'package:yamtaz/feature/learning_path/presentation/pages/law_details_page.dart';
 import 'package:yamtaz/feature/library_guide/logic/library_cubit.dart';
 import 'package:yamtaz/feature/my_appointments/presentation/appointment_with_lawyer_screen.dart';
 import 'package:yamtaz/feature/notifications/data/model/notifications_resonse_model.dart';
@@ -42,7 +41,6 @@ import 'package:yamtaz/feature/package_and_subscriptions/logic/packages_and_sbus
 import 'package:yamtaz/feature/package_and_subscriptions/presentation/package_details.dart';
 import 'package:yamtaz/feature/training/presentation/training_video.dart';
 import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
-import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_request_model.dart';
 import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
 import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_request_details_screen.dart';
 import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_requests_screen.dart';
@@ -90,7 +88,6 @@ import '../../feature/layout/services/data/model/services_requirements_response.
 import '../../feature/layout/services/presentation/lawyers_selections.dart';
 import '../../feature/layout/services/presentation/service_details_screen.dart';
 import '../../feature/layout/services/presentation/servise_sub_type.dart';
-import '../../feature/learning_path/logic/law_details_cubit.dart';
 import '../../feature/learning_path/logic/learning_path_cubit.dart';
 import '../../feature/learning_path/presentation/pages/learning_path_page.dart';
 import '../../feature/learning_path/presentation/pages/learning_paths_page.dart';
@@ -107,9 +104,14 @@ import '../../feature/training/presentation/training_main_screen.dart';
 import '../../feature/ymtaz_elite/presentation/elite_lawyer_section/elite_clients_requests.dart';
 import '../../feature/ymtaz_elite/presentation/elite_main_screen.dart';
 import '../../feature/ymtaz_elite/presentation/elite_request_screen.dart';
+import 'package:yamtaz/feature/advisory_committees/data/model/advisory_committees_response.dart' as advisory;
+import 'package:yamtaz/feature/advisory_committees/presentation/advisory_committees_screen.dart';
+import 'package:yamtaz/feature/advisory_committees/presentation/advisory_commttee_search_screen.dart';
+import 'package:yamtaz/feature/digital_guide/data/model/digital_guide_response.dart' as digital;
+import 'package:yamtaz/feature/digital_guide/presentation/digetal_screen.dart';
+import 'package:yamtaz/feature/digital_guide/presentation/digital_guide_search.dart';
 import '../di/dependency_injection.dart';
-import 'package:yamtaz/feature/learning_path/presentation/pages/book_details_page.dart';
-import 'package:yamtaz/feature/learning_path/logic/book_details_cubit.dart';
+
 
 class AppRouter {
   static const int fadeDuration = 400;
@@ -556,6 +558,23 @@ class AppRouter {
           value: getit<DigitalGuideCubit>(),
           child: FastSearchScreen(),
         ));
+
+      case Routes.digitalGuide:
+        return _getFadeTransition(const DigetalScreen());
+
+      case Routes.digitalGuideSearch:
+        return _getFadeTransition(DigitalGuideSearch(
+          cat: settings.arguments as digital.Category,
+        ));
+
+      case Routes.advisoryCommitteesScreen:
+        return _getFadeTransition(const AdvisoryCommitteesScreen());
+
+      case Routes.advisoryCommitteeLawyersScreen:
+        return _getFadeTransition(AdvisoryCommitteeSearchScreen(
+          cat: settings.arguments as advisory.CategoryAdvisorCommitte,
+        ));
+
 
     // law guide
       case Routes.lawGuide:

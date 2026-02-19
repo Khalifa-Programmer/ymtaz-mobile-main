@@ -27,6 +27,8 @@ class AdvisorTimeSelection extends StatefulWidget {
   DateTime? _selectedDate;
   List<AvailableTime>? _selectedDateTimes;
 
+  AdvisorTimeSelection({super.key});
+
   @override
   State<AdvisorTimeSelection> createState() => _AdvisorTimeSelectionState();
 }
@@ -46,7 +48,7 @@ class _AdvisorTimeSelectionState extends State<AdvisorTimeSelection> {
     );
   }
 
-  selectAppointment() {
+  Center selectAppointment() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

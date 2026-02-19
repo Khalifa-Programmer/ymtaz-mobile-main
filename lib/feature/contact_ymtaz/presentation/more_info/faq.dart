@@ -37,28 +37,31 @@ class Faq extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final datum = faqData.data![index];
                         return Padding(
-                          padding: EdgeInsets.only(bottom: 10.h),
+                          padding: EdgeInsets.only(bottom: 12.h),
                           child: Container(
+                            clipBehavior: Clip.antiAlias,
                             decoration: BoxDecoration(
-                              color: appColors.white,
+                              color: Colors.white,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey.withOpacity(0.1),
-                                  spreadRadius: 4,
-                                  blurRadius: 9,
-                                  offset: const Offset(3, 3),
+                                  color: Colors.black.withOpacity(0.05),
+                                  spreadRadius: 2,
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
                                 ),
                               ],
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(12.r),
                             ),
                             child: ExpansionTile(
+                              collapsedBackgroundColor: appColors.primaryColorYellow,
+                              backgroundColor: Colors.white,
+                              textColor: Colors.black,
+                              collapsedTextColor: Colors.white,
+                              iconColor: appColors.primaryColorYellow,
+                              collapsedIconColor: Colors.white,
                               title: Text(
                                 datum.title ?? '',
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: appColors.black,
-                                ),
+                                style: TextStyles.cairo_14_bold,
                               ),
                               collapsedShape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.r),
@@ -66,24 +69,30 @@ class Faq extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
-                              tilePadding:
-                                  EdgeInsets.symmetric(horizontal: 16.sp),
-                              backgroundColor: Colors.white,
-                              expandedCrossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                              childrenPadding: EdgeInsets.all(10.sp),
+                              tilePadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+                              expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                              childrenPadding: EdgeInsets.zero,
                               trailing: const Icon(
                                 Icons.expand_more,
-                                color: appColors.black,
                               ),
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.all(10.sp),
+                                Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.all(16.sp),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border(
+                                      top: BorderSide(
+                                        color: appColors.primaryColorYellow.withOpacity(0.2),
+                                        width: 1,
+                                      ),
+                                    ),
+                                  ),
                                   child: Text(
                                     datum.data ?? '',
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: appColors.black,
+                                    style: TextStyles.cairo_14_regular.copyWith(
+                                      color: appColors.blue100,
+                                      height: 1.5,
                                     ),
                                   ),
                                 ),

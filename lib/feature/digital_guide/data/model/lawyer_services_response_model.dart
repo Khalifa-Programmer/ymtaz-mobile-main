@@ -109,7 +109,7 @@ class LawyerPrice {
 
   @override
   String toString() {
-    return '  ${importance!.title} - ${price } ريال';
+    return '  ${importance!.title} - $price  ريال';
   }
 
   LawyerPrice({

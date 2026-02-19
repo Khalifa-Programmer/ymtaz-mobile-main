@@ -69,4 +69,11 @@ class AppAssets {
   static const String digitalGuideNew = 'assets/svgs/lawyernew.svg';
   static const String appointmentOrder = 'assets/svgs/appointmentsnew.svg';
   static const String booksNew = 'assets/svgs/booknew.svg';
+
+  // Default avatars
+  static const String maleAvatar = 'assets/svgs/male_avatar.svg';
+  static const String femaleAvatar = 'assets/svgs/female_avatar.svg';
+
+  static const String Male = 'assets/svgs/Male.svg';
+  static const String Female = 'assets/svgs/Female.svg';
 }

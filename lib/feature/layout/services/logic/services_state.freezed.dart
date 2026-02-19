@@ -184,9 +184,6 @@ class _$ServicesStateCopyWithImpl<T, $Res, $Val extends ServicesState<T>>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -203,9 +200,6 @@ class __$$InitialImplCopyWithImpl<T, $Res>
   __$$InitialImplCopyWithImpl(
       _$InitialImpl<T> _value, $Res Function(_$InitialImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -420,9 +414,6 @@ class __$$LoadingServicesImplCopyWithImpl<T, $Res>
   __$$LoadingServicesImplCopyWithImpl(_$LoadingServicesImpl<T> _value,
       $Res Function(_$LoadingServicesImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -640,8 +631,6 @@ class __$$LoadedServicesImplCopyWithImpl<T, $Res>
       $Res Function(_$LoadedServicesImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -680,9 +669,7 @@ class _$LoadedServicesImpl<T> implements LoadedServices<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadedServicesImplCopyWith<T, _$LoadedServicesImpl<T>> get copyWith =>
@@ -869,10 +856,7 @@ abstract class LoadedServices<T> implements ServicesState<T> {
       _$LoadedServicesImpl<T>;
 
   ServicesRequirementsResponse get data;
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LoadedServicesImplCopyWith<T, _$LoadedServicesImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -894,8 +878,6 @@ class __$$ErrorServicesImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorServicesImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -934,9 +916,7 @@ class _$ErrorServicesImpl<T> implements ErrorServices<T> {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorServicesImplCopyWith<T, _$ErrorServicesImpl<T>> get copyWith =>
@@ -1122,10 +1102,7 @@ abstract class ErrorServices<T> implements ServicesState<T> {
   const factory ErrorServices(final String message) = _$ErrorServicesImpl<T>;
 
   String get message;
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorServicesImplCopyWith<T, _$ErrorServicesImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1144,9 +1121,6 @@ class __$$ChangeServicePriceImplCopyWithImpl<T, $Res>
   __$$ChangeServicePriceImplCopyWithImpl(_$ChangeServicePriceImpl<T> _value,
       $Res Function(_$ChangeServicePriceImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1362,9 +1336,6 @@ class __$$SelectedServiceItemImplCopyWithImpl<T, $Res>
   __$$SelectedServiceItemImplCopyWithImpl(_$SelectedServiceItemImpl<T> _value,
       $Res Function(_$SelectedServiceItemImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1580,9 +1551,6 @@ class __$$RequestServiceImplCopyWithImpl<T, $Res>
   __$$RequestServiceImplCopyWithImpl(_$RequestServiceImpl<T> _value,
       $Res Function(_$RequestServiceImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1802,8 +1770,6 @@ class __$$RequestServiceSuccessImplCopyWithImpl<T, $Res>
       $Res Function(_$RequestServiceSuccessImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1842,9 +1808,7 @@ class _$RequestServiceSuccessImpl<T> implements RequestServiceSuccess<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$RequestServiceSuccessImplCopyWith<T, _$RequestServiceSuccessImpl<T>>
@@ -2031,10 +1995,7 @@ abstract class RequestServiceSuccess<T> implements ServicesState<T> {
       _$RequestServiceSuccessImpl<T>;
 
   ServicesRequestResponse get data;
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$RequestServiceSuccessImplCopyWith<T, _$RequestServiceSuccessImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -2056,8 +2017,6 @@ class __$$RequestServiceErrorImplCopyWithImpl<T, $Res>
       $Res Function(_$RequestServiceErrorImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2096,9 +2055,7 @@ class _$RequestServiceErrorImpl<T> implements RequestServiceError<T> {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$RequestServiceErrorImplCopyWith<T, _$RequestServiceErrorImpl<T>>
@@ -2285,10 +2242,7 @@ abstract class RequestServiceError<T> implements ServicesState<T> {
       _$RequestServiceErrorImpl<T>;
 
   String get message;
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$RequestServiceErrorImplCopyWith<T, _$RequestServiceErrorImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -2307,9 +2261,6 @@ class __$$GetServicesImplCopyWithImpl<T, $Res>
   __$$GetServicesImplCopyWithImpl(
       _$GetServicesImpl<T> _value, $Res Function(_$GetServicesImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -2527,8 +2478,6 @@ class __$$GetServicesSuccessImplCopyWithImpl<T, $Res>
       $Res Function(_$GetServicesSuccessImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2567,9 +2516,7 @@ class _$GetServicesSuccessImpl<T> implements GetServicesSuccess<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$GetServicesSuccessImplCopyWith<T, _$GetServicesSuccessImpl<T>>
@@ -2756,10 +2703,7 @@ abstract class GetServicesSuccess<T> implements ServicesState<T> {
       _$GetServicesSuccessImpl<T>;
 
   MyServicesRequestsResponse get data;
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$GetServicesSuccessImplCopyWith<T, _$GetServicesSuccessImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -2781,8 +2725,6 @@ class __$$GetServicesErrorImplCopyWithImpl<T, $Res>
       $Res Function(_$GetServicesErrorImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2821,9 +2763,7 @@ class _$GetServicesErrorImpl<T> implements GetServicesError<T> {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$GetServicesErrorImplCopyWith<T, _$GetServicesErrorImpl<T>> get copyWith =>
@@ -3010,10 +2950,7 @@ abstract class GetServicesError<T> implements ServicesState<T> {
       _$GetServicesErrorImpl<T>;
 
   String get message;
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$GetServicesErrorImplCopyWith<T, _$GetServicesErrorImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -3035,9 +2972,6 @@ class __$$ServiceLawyersByIdLoadingImplCopyWithImpl<T, $Res>
       _$ServiceLawyersByIdLoadingImpl<T> _value,
       $Res Function(_$ServiceLawyersByIdLoadingImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -3261,8 +3195,6 @@ class __$$ServiceLawyersByIdSuccessImplCopyWithImpl<T, $Res>
       $Res Function(_$ServiceLawyersByIdSuccessImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -3302,9 +3234,7 @@ class _$ServiceLawyersByIdSuccessImpl<T>
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ServiceLawyersByIdSuccessImplCopyWith<T,
@@ -3493,10 +3423,7 @@ abstract class ServiceLawyersByIdSuccess<T> implements ServicesState<T> {
       _$ServiceLawyersByIdSuccessImpl<T>;
 
   AvailableLawyersForServiceModel get data;
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ServiceLawyersByIdSuccessImplCopyWith<T,
           _$ServiceLawyersByIdSuccessImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
@@ -3522,8 +3449,6 @@ class __$$ServiceLawyersByIdErrorImplCopyWithImpl<T, $Res>
       $Res Function(_$ServiceLawyersByIdErrorImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -3562,9 +3487,7 @@ class _$ServiceLawyersByIdErrorImpl<T> implements ServiceLawyersByIdError<T> {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ServiceLawyersByIdErrorImplCopyWith<T, _$ServiceLawyersByIdErrorImpl<T>>
@@ -3751,10 +3674,7 @@ abstract class ServiceLawyersByIdError<T> implements ServicesState<T> {
       _$ServiceLawyersByIdErrorImpl<T>;
 
   String get message;
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ServiceLawyersByIdErrorImplCopyWith<T, _$ServiceLawyersByIdErrorImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -3773,9 +3693,6 @@ class __$$RespondToOfferImplCopyWithImpl<T, $Res>
   __$$RespondToOfferImplCopyWithImpl(_$RespondToOfferImpl<T> _value,
       $Res Function(_$RespondToOfferImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -3995,8 +3912,6 @@ class __$$RespondToOfferSuccessImplCopyWithImpl<T, $Res>
       $Res Function(_$RespondToOfferSuccessImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -4035,9 +3950,7 @@ class _$RespondToOfferSuccessImpl<T> implements RespondToOfferSuccess<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$RespondToOfferSuccessImplCopyWith<T, _$RespondToOfferSuccessImpl<T>>
@@ -4224,10 +4137,7 @@ abstract class RespondToOfferSuccess<T> implements ServicesState<T> {
       _$RespondToOfferSuccessImpl<T>;
 
   RespondClinetToOfferResponse get data;
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$RespondToOfferSuccessImplCopyWith<T, _$RespondToOfferSuccessImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -4249,8 +4159,6 @@ class __$$RespondToOfferErrorImplCopyWithImpl<T, $Res>
       $Res Function(_$RespondToOfferErrorImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -4289,9 +4197,7 @@ class _$RespondToOfferErrorImpl<T> implements RespondToOfferError<T> {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$RespondToOfferErrorImplCopyWith<T, _$RespondToOfferErrorImpl<T>>
@@ -4478,10 +4384,7 @@ abstract class RespondToOfferError<T> implements ServicesState<T> {
       _$RespondToOfferErrorImpl<T>;
 
   String get message;
-
-  /// Create a copy of ServicesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$RespondToOfferErrorImplCopyWith<T, _$RespondToOfferErrorImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }

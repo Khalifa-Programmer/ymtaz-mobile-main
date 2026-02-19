@@ -22,7 +22,7 @@ import '../logic/ymtaz_elite_cubit.dart';
 import 'elite_request_success_screen.dart';
 
 class EliteRequestScreen extends StatefulWidget {
-  EliteRequestScreen({super.key});
+  const EliteRequestScreen({super.key});
 
   @override
   State<EliteRequestScreen> createState() => _EliteRequestScreenState();
@@ -30,7 +30,7 @@ class EliteRequestScreen extends StatefulWidget {
 
 class _EliteRequestScreenState extends State<EliteRequestScreen> {
   final TextEditingController externalController = TextEditingController();
-  List<PlatformFile> _files = [];
+  final List<PlatformFile> _files = [];
 
   final RecorderController _recorderController = RecorderController();
   final PlayerController _playerController = PlayerController();
@@ -270,7 +270,7 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
                               ..._files.map((file) {
                                 int index = _files.indexOf(file);
                                 return _buildFileListItem(file, index);
-                              }).toList(),
+                              }),
                               Container(
                                 color: appColors.white,
                                 width: double.infinity,
@@ -297,7 +297,7 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
                     playerController: _playerController,
                   ), // Use the custom component
                   verticalSpace(20.h),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: CupertinoButton(
                         padding: EdgeInsets.zero,

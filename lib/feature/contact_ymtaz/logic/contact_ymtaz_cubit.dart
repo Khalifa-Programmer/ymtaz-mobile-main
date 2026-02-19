@@ -5,9 +5,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart';
+import 'package:yamtaz/core/network/error/api_result.dart';
 import 'package:yamtaz/core/network/local/cache_helper.dart';
+import 'package:yamtaz/feature/contact_ymtaz/data/models/about_ymtaz.dart';
 import 'package:yamtaz/feature/contact_ymtaz/data/models/contact_us_types.dart';
+import 'package:yamtaz/feature/contact_ymtaz/data/models/contact_ymtaz_response.dart';
+import 'package:yamtaz/feature/contact_ymtaz/data/models/faq.dart';
 import 'package:yamtaz/feature/contact_ymtaz/data/models/my_contact_ymtaz_Response.dart';
+import 'package:yamtaz/feature/contact_ymtaz/data/models/privacy_policy.dart';
+import 'package:yamtaz/feature/contact_ymtaz/data/models/social_media.dart';
 import 'package:yamtaz/feature/contact_ymtaz/data/repos/contact_ymtaz.dart';
 import 'package:yamtaz/feature/contact_ymtaz/logic/contact_ymtaz_state.dart';
 
@@ -86,27 +92,33 @@ class ContactYmtazCubit extends Cubit<ContactYmtazState> {
   MyContactYmtazResponse? myContactYmtazResponse;
 
   Future<void> emitGetContactYmtazClient() async {
-    emit(const ContactYmtazState.loading());
-    var userType = CacheHelper.getData(key: 'userType');
-    var response;
-    if (userType == 'client') {
-      response = await _contactYmtazRepo.getContactYmtazClient();
-    } else if (userType == 'provider') {
-      response = await _contactYmtazRepo.getContactYmtazProvider();
-    }
-    response.when(success: (contactYmtazResponse) {
-      myContactYmtazResponse = contactYmtazResponse;
-      emit(ContactYmtazState.loaded(contactYmtazResponse));
-    }, failure: (fail) {
-      emit(ContactYmtazState.error(fail['message']));
-    });
+  emit(const ContactYmtazState.loading());
+  var userType = CacheHelper.getData(key: 'userType');
+  
+  // التحقق من وجود القيمة أولاً
+  if (userType == null) {
+    emit(const ContactYmtazState.error("نوع المستخدم غير معروف"));
+    return;
   }
+
+  final ApiResult<MyContactYmtazResponse> response = (userType == 'client') 
+      ? await _contactYmtazRepo.getContactYmtazClient()
+      : await _contactYmtazRepo.getContactYmtazProvider();
+
+  response.when(
+    success: (data) {
+      myContactYmtazResponse = data;
+      emit(ContactYmtazState.loaded(data));
+    },
+    failure: (fail) => emit(ContactYmtazState.error(fail['message'])),
+  );
+}
 
   ContactUsTypes? contactUsTypes;
 
   Future<void> getContactUsTypes() async {
     emit(const ContactYmtazState.loadingContactUsTypes());
-    var response;
+    ApiResult<ContactUsTypes> response;
     response = await _contactYmtazRepo.getContactUsTypes();
     response.when(success: (contactYmtazTypes) {
       contactUsTypes = contactYmtazTypes;
@@ -118,26 +130,32 @@ class ContactYmtazCubit extends Cubit<ContactYmtazState> {
   }
 
   Future<void> emitPostContactYmtazClient(FormData data) async {
-    emit(const ContactYmtazState.loadingSendMessage());
-    var userType = CacheHelper.getData(key: 'userType');
-    var response;
+  emit(const ContactYmtazState.loadingSendMessage());
+  
+  var userType = CacheHelper.getData(key: 'userType');
 
-    if (userType == 'client') {
-      response = await _contactYmtazRepo.postContactYmtazClient(data);
-    } else if (userType == 'provider') {
-      response = await _contactYmtazRepo.postContactYmtazProvider(data);
-    }
+if (userType == null) {
+  emit(const ContactYmtazState.errorSendMessage("خطأ في نوع المستخدم"));
+  return;
+}
+  // تعيين القيمة مباشرة باستخدام الشرط المختصر لضمان عدم بقاء المتغير فارغاً
+  final ApiResult<ContactYmtazResponse> response = (userType == 'client')
+      ? await _contactYmtazRepo.postContactYmtazClient(data)
+      : await _contactYmtazRepo.postContactYmtazProvider(data);
 
-    response.when(success: (contactYmtazResponse) {
+  response.when(
+    success: (contactYmtazResponse) {
       emit(ContactYmtazState.successSendMessage(contactYmtazResponse));
-    }, failure: (fail) {
+    },
+    failure: (fail) {
       emit(ContactYmtazState.errorSendMessage(fail['message']));
-    });
-  }
+    },
+  );
+}
 
   Future<void> getAboutUs() async {
     emit(const ContactYmtazState.loading());
-    var response;
+    ApiResult<AboutYmtaz> response;
     response = await _contactYmtazRepo.getAboutUs();
     response.when(success: (contactYmtazResponse) {
       emit(ContactYmtazState.loadedAboutUs(contactYmtazResponse));
@@ -148,7 +166,7 @@ class ContactYmtazCubit extends Cubit<ContactYmtazState> {
 
   Future<void> getFaq() async {
     emit(const ContactYmtazState.loading());
-    var response;
+    ApiResult<Faq> response;
     response = await _contactYmtazRepo.getFaq();
     response.when(success: (contactYmtazResponse) {
       emit(ContactYmtazState.loadedFaq(contactYmtazResponse));
@@ -159,7 +177,7 @@ class ContactYmtazCubit extends Cubit<ContactYmtazState> {
 
   Future<void> getPrivacyPolicy() async {
     emit(const ContactYmtazState.loading());
-    var response;
+    ApiResult<PrivacyPolicy> response;
     response = await _contactYmtazRepo.getPrivacyPolicy();
     response.when(success: (contactYmtazResponse) {
       emit(ContactYmtazState.loadedPrivacyPolicy(contactYmtazResponse));
@@ -170,7 +188,7 @@ class ContactYmtazCubit extends Cubit<ContactYmtazState> {
 
   Future<void> getSocial() async {
     emit(const ContactYmtazState.loading());
-    var response;
+    ApiResult<SocialMedia> response;
     response = await _contactYmtazRepo.getSocial();
     response.when(success: (contactYmtazResponse) {
       emit(ContactYmtazState.loadedSocialMedia(contactYmtazResponse));

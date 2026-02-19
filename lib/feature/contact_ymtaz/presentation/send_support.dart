@@ -8,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yamtaz/core/constants/validators.dart';
 import 'package:yamtaz/core/helpers/attachment_uploader.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
-import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/core/widgets/custom_button.dart';
 import 'package:yamtaz/core/widgets/primary/text_form_primary.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
@@ -144,6 +143,9 @@ class _SendSupportYmtazState extends State<SendSupportYmtaz> {
                                   .data!
                                   .contactTypes!,
                               onChanged: (value) {
+                                debugPrint("Selected Type: ${value?.name}");
+                                debugPrint("Selected Type: ${value?.id}");
+
                                 setState(() {
                                   context
                                       .read<ContactYmtazCubit>()

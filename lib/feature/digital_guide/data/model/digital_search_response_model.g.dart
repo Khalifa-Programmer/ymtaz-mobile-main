@@ -44,6 +44,7 @@ Lawyer _$LawyerFromJson(Map<String, dynamic> json) => Lawyer(
       phoneCode: (json['phone_code'] as num?)?.toInt(),
       type: (json['type'] as num?)?.toInt(),
       image: json['image'] as String?,
+      photo: json['photo'] as String?,
       nationality: json['nationality'] == null
           ? null
           : Country.fromJson(json['nationality'] as Map<String, dynamic>),
@@ -132,6 +133,7 @@ Map<String, dynamic> _$LawyerToJson(Lawyer instance) => <String, dynamic>{
       'phone_code': instance.phoneCode,
       'type': instance.type,
       'image': instance.image,
+      'photo': instance.photo,
       'nationality': instance.nationality,
       'country': instance.country,
       'region': instance.region,
@@ -189,7 +191,7 @@ Map<String, dynamic> _$LawyerToJson(Lawyer instance) => <String, dynamic>{
 
 AccurateSpecialty _$AccurateSpecialtyFromJson(Map<String, dynamic> json) =>
     AccurateSpecialty(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       title: json['title'] as String?,
     );
 
@@ -200,7 +202,7 @@ Map<String, dynamic> _$AccurateSpecialtyToJson(AccurateSpecialty instance) =>
     };
 
 Country _$CountryFromJson(Map<String, dynamic> json) => Country(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       name: json['name'] as String?,
     );
 
@@ -210,7 +212,7 @@ Map<String, dynamic> _$CountryToJson(Country instance) => <String, dynamic>{
     };
 
 CurrentRank _$CurrentRankFromJson(Map<String, dynamic> json) => CurrentRank(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       name: json['name'] as String?,
       borderColor: json['border_color'] as String?,
       image: json['image'] as String?,
@@ -225,7 +227,7 @@ Map<String, dynamic> _$CurrentRankToJson(CurrentRank instance) =>
     };
 
 Degree _$DegreeFromJson(Map<String, dynamic> json) => Degree(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       title: json['title'] as String?,
       isSpecial: (json['isSpecial'] as num?)?.toInt(),
       needCertificate: (json['need_certificate'] as num?)?.toInt(),
@@ -240,7 +242,7 @@ Map<String, dynamic> _$DegreeToJson(Degree instance) => <String, dynamic>{
 
 SectionElement _$SectionElementFromJson(Map<String, dynamic> json) =>
     SectionElement(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       section: json['section'] == null
           ? null
           : SectionSection.fromJson(json['section'] as Map<String, dynamic>),
@@ -258,7 +260,7 @@ Map<String, dynamic> _$SectionElementToJson(SectionElement instance) =>
 
 SectionSection _$SectionSectionFromJson(Map<String, dynamic> json) =>
     SectionSection(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       title: json['title'] as String?,
       image: json['image'] as String?,
       needLicense: (json['need_license'] as num?)?.toInt(),

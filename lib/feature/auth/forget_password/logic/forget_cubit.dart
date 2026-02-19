@@ -102,19 +102,19 @@ class ForgetCubit extends Cubit<ForgetState> {
 
   String extractErrors(Map<String, dynamic>? errorData) {
     if (errorData == null || !errorData.containsKey('data')) {
-      return 'حدث خطأ ما يرجى راجع البيانات';
+      return 'حدث خطأ ما يرجى مراجعة البيانات';
     }
 
     final data = errorData['data'] as Map<String, dynamic>?;
 
     if (data == null || !data.containsKey('errors')) {
-      return 'حدث خطأ ما يرجى راجع البيانات';
+      return 'حدث خطأ ما يرجى مراجعة البيانات';
     }
 
     final errorsMap = data['errors'] as Map<String, dynamic>?;
 
     if (errorsMap == null || errorsMap.isEmpty) {
-      return 'حدث خطأ ما يرجى راجع البيانات';
+      return 'حدث خطأ ما يرجى مراجعة البيانات';
     }
 
     final errorMessages = <String>[];

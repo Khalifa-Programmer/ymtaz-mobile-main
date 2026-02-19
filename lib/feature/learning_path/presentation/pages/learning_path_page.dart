@@ -5,7 +5,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/di/dependency_injection.dart';
-import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/feature/learning_path/data/models/learning_path_items_response.dart';
 import 'package:yamtaz/feature/learning_path/data/repos/learning_path_repo.dart';
 import 'package:yamtaz/feature/learning_path/logic/learning_path_cubit.dart';
@@ -542,10 +541,9 @@ class _LearningPathPageState extends State<LearningPathPage> {
       },
       child: CustomScrollView(
         slivers: [
-          if (analytics != null)
-            SliverToBoxAdapter(
-              child: _buildProgressCard(analytics: analytics),
-            ),
+          SliverToBoxAdapter(
+            child: _buildProgressCard(analytics: analytics),
+          ),
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             sliver: SliverList(
@@ -565,7 +563,7 @@ class _LearningPathPageState extends State<LearningPathPage> {
                       SizedBox(height: 16.h),
                     ],
                   );
-                }).toList(),
+                }),
               ]),
             ),
           ),
@@ -579,9 +577,9 @@ class RotatingArrowIcon extends StatefulWidget {
   final bool isExpanded;
 
   const RotatingArrowIcon({
-    Key? key,
+    super.key,
     required this.isExpanded,
-  }) : super(key: key);
+  });
 
   @override
   State<RotatingArrowIcon> createState() => _RotatingArrowIconState();

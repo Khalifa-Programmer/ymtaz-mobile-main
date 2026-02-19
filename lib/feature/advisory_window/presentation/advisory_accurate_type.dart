@@ -15,6 +15,8 @@ import '../logic/advisory_cubit.dart';
 import 'advisory_general_type_shimmer.dart';
 
 class AdvisoryAccurateType extends StatelessWidget {
+  const AdvisoryAccurateType({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AdvisoryCubit, AdvisoryState>(

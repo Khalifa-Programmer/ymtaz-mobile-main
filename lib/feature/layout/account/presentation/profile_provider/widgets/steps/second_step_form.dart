@@ -18,11 +18,11 @@ class SecondStepForm extends StatefulWidget {
   final bool locationLoading;
 
   const SecondStepForm({
-    Key? key,
+    super.key,
     required this.formKey,
     required this.onGetCurrentPosition,
     required this.locationLoading,
-  }) : super(key: key);
+  });
 
   @override
   State<SecondStepForm> createState() => _SecondStepFormState();

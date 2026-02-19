@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
 import 'package:yamtaz/core/router/routes.dart';
-import 'package:yamtaz/core/widgets/alerts.dart';
 import 'package:yamtaz/feature/layout/services/presentation/widgets/card_loading.dart';
 import 'package:yamtaz/feature/my_appointments/logic/appointments_cubit.dart';
 import 'package:yamtaz/feature/my_appointments/logic/appointments_state.dart';
@@ -21,7 +20,7 @@ import '../../../core/di/dependency_injection.dart';
 import '../../../feature/my_appointments/data/model/avaliable_appointment_lawyer_model.dart';
 
 class SelectLawyerScreen extends StatelessWidget {
-  SelectLawyerScreen({Key? key, required this.dataForm}) : super(key: key);
+  SelectLawyerScreen({super.key, required this.dataForm});
 
   FormData dataForm;
 

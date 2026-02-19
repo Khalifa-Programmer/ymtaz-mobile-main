@@ -13,8 +13,12 @@ class NotificationRepo {
 
   Future<ApiResult<NotificationsResponseModel>> getNotifications() async {
     try {
+      final token = CacheHelper.getData(key: 'token');
+      if (token == null) {
+        return ApiResult.failure('سجل دخولك لمشاهدة البيانات');
+      }
+
       NotificationsResponseModel response;
-      var token = CacheHelper.getData(key: 'token');
       response = await _apiService.getNotifications(token);
 
       return ApiResult.success(response);
@@ -26,8 +30,12 @@ class NotificationRepo {
   Future<ApiResult<MarkNotificationSeenResponse>> markNotificationAsSeen(
       Map<String, String> data) async {
     try {
+      final token = CacheHelper.getData(key: 'token');
+      if (token == null) {
+        return ApiResult.failure('سجل دخولك لمشاهدة البيانات');
+      }
+
       MarkNotificationSeenResponse response;
-      var token = CacheHelper.getData(key: 'token');
       response = await _apiService.notificationSeen(token, data);
 
       return ApiResult.success(response);

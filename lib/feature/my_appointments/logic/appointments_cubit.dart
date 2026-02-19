@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yamtaz/feature/auth/sign_up/data/models/countries_response.dart';
-import 'package:yamtaz/feature/my_appointments/data/model/my_reservations_response_model.dart';
 import 'package:yamtaz/feature/my_appointments/data/model/working_hours_response.dart';
 import 'package:yamtaz/feature/my_appointments/logic/appointments_state.dart';
 

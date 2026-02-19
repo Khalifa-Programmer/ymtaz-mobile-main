@@ -9,12 +9,27 @@ import 'package:yamtaz/core/di/dependency_injection.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/contact_ymtaz/logic/contact_ymtaz_cubit.dart';
 import 'package:yamtaz/feature/contact_ymtaz/logic/contact_ymtaz_state.dart';
+import '../../../core/helpers/fuctions_helpers/functions_helpers.dart';
 
 import '../../../core/widgets/webview_pdf.dart';
 
 class MyMessages extends StatelessWidget {
   const MyMessages({super.key});
 
+
+  // get name by iding type id
+  String getTypeNameById(int id) {
+      if (id == 1) {
+        return 'اقتراح';
+      }
+      else if (id == 2) {
+        return 'شكوى';
+      }
+      else if (id == 3) {
+        return 'اخرى';
+      }
+    return '';
+  }
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
@@ -27,6 +42,16 @@ class MyMessages extends StatelessWidget {
               child: ConditionalBuilder(
                   condition: state is LoadedContactYmtazState,
                   builder: (BuildContext context) {
+                  List<dynamic> allContactRequests = context.read<ContactYmtazCubit>().myContactYmtazResponse!.data!.contactRequests!;
+                    // افترض أن القائمة تسمى dataList
+allContactRequests.sort((a, b) {
+  // تحويل النصوص إلى DateTime للمقارنة
+  DateTime dateA = DateTime.parse(a.createdAt!);
+  DateTime dateB = DateTime.parse(b.createdAt!);
+  
+  // للمقارنة العكسية (الأحدث أولاً) نستخدم dateB قبل dateA
+  return dateB.compareTo(dateA);
+});
                     return ListView.separated(
                       itemBuilder: (context, index) => Container(
                         decoration: BoxDecoration(
@@ -48,15 +73,23 @@ class MyMessages extends StatelessWidget {
                           collapsedShape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.r),
                           ),
-                          backgroundColor: appColors.grey3,
+                          backgroundColor:  appColors.grey3,
                           collapsedBackgroundColor: appColors.white,
                           tilePadding: EdgeInsets.symmetric(horizontal: 16.sp),
                           expandedCrossAxisAlignment: CrossAxisAlignment.start,
                           childrenPadding: EdgeInsets.zero,
+                          leading: Icon(
+                            allContactRequests[index].replyDescription != null
+                                ? Icons.check_circle_outline
+                                : Icons.access_time,
+                            color: allContactRequests[index].replyDescription != null
+                                ? Colors.green
+                                : Colors.orange,
+                          ),
                           title: Text(
-                            " الموضوع :${context.read<ContactYmtazCubit>().myContactYmtazResponse!.data!.contactRequests![index].subject!}",
+                            "${getTypeNameById(allContactRequests[index].type!)} -  ${allContactRequests[index].subject} - ${getTimeDate(allContactRequests[index].createdAt.toString())}",
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.bold,
                               color: appColors.black,
                             ),

@@ -8,6 +8,7 @@ import 'package:yamtaz/core/widgets/custom_button.dart';
 import '../../../../../config/themes/styles.dart';
 import '../../../../../core/constants/colors.dart';
 import '../../../../../core/widgets/spacing.dart';
+import '../../../../../core/constants/assets.dart';
 import '../../../layout/account/presentation/widgets/user_profile_row.dart';
 
 class LawyerCardAdvisory extends StatelessWidget {
@@ -189,8 +190,8 @@ class LawyerCardAdvisory extends StatelessWidget {
             child: CircleAvatar(
               radius: 10.sp,
               backgroundColor: appColors.white,
-              child: SvgPicture.network(
-                "https://api.ymtaz.sa/uploads/ranks/BrownShield.svg",
+              child: SvgPicture.asset(
+                AppAssets.rank,
                 width: 12.0.w, // Adjust width according to your design
                 height: 12.0.h,
               ),

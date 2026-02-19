@@ -1,15 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:stream_video_flutter/stream_video_flutter.dart';
-import 'package:yamtaz/core/constants/colors.dart';
 
 class CallScreen extends StatefulWidget {
   const CallScreen({
-    Key? key,
+    super.key,
     required this.call,
     // required this.channel,
-  }) : super(key: key);
+  });
 
   final Call call;
 

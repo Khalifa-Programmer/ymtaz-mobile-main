@@ -273,7 +273,9 @@ List<PieChartSectionData> getSections(double sectionRadius, servicesData) {
         key != 'percentageChange' ||
         key != 'changeDirection' ||
         key != 'amounts' ||
-        key != 'late') return;
+        key != 'late') {
+      return;
+    }
     sections.add(PieChartSectionData(
       value: value.toDouble(),
       title: '$key: $value',

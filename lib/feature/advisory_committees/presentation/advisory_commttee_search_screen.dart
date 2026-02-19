@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yamtaz/config/themes/styles.dart';
@@ -14,6 +13,9 @@ import 'package:yamtaz/feature/advisory_committees/logic/advisory_committees_sta
 import 'package:yamtaz/feature/advisory_committees/presentation/advisor_screen.dart';
 import 'package:yamtaz/feature/layout/account/presentation/guest_screen.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:yamtaz/core/constants/assets.dart';
 import '../../../core/network/local/cache_helper.dart';
 
 class AdvisoryCommitteeSearchScreen extends StatelessWidget {
@@ -24,15 +26,22 @@ class AdvisoryCommitteeSearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(cat.title!,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        iconTheme: IconThemeData(color: appColors.black),
+
+        title: Text(cat.title ?? "",
+
             style: TextStyles.cairo_14_bold.copyWith(
               color: appColors.black,
             )),
       ),
       body: BlocProvider.value(
         value: getit<AdvisoryCommitteesCubit>()
-          ..loadLawyers(cat.id!.toString()),
+          ..loadLawyers(cat.id?.toString() ?? ""),
+
         child: BlocConsumer<AdvisoryCommitteesCubit, AdvisoryCommitteesState>(
           listener: (context, state) {
             // TODO: implement listener
@@ -89,42 +98,35 @@ class AdvisoryCommitteeSearchScreen extends StatelessWidget {
 
   Widget _buildCategoryItem(Advisor lawyer, BuildContext context, int index) {
     return GestureDetector(
-        onTap: ()
-    {
-      var userType = CacheHelper.getData(key: 'userType');
-      if (userType == "client" || userType == "provider") {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  AdvisorScreen(
-                    lawyer: lawyer,
-                  ),
-            ));
-      } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-              const GestScreen(
-              ),
-            ));
-        // context.pushNamed(Routes.advisoryScreen, arguments: lawyer);
-      }
-    },
-      child:
-      Row(
+      onTap: () {
+        var userType = CacheHelper.getData(key: 'userType');
+        if (userType == "client" || userType == "provider") {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdvisorScreen(
+                  lawyer: lawyer,
+                ),
+              ));
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const GestScreen(),
+              ));
+          // context.pushNamed(Routes.advisoryScreen, arguments: lawyer);
+        }
+      },
+      child: Row(
         children: [
           Container(
             width: 50.w,
             height: 50.h,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              image: DecorationImage(
-                image: NetworkImage(
-                    lawyer.photo ?? "https://api.ymtaz.sa/uploads/person.png"),
-                fit: BoxFit.cover,
-              ),
+            ),
+            child: ClipOval(
+              child: _buildLawyerImage(lawyer),
             ),
           ),
           SizedBox(width: 10.0.h),
@@ -132,18 +134,17 @@ class AdvisoryCommitteeSearchScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${lawyer.firstName} ${lawyer.secondName} ${lawyer
-                  .fourthName}",
+              Text(lawyer.name ?? "بدون اسم",
                   style: TextStyles.cairo_12_bold.copyWith(
                     color: appColors.blue100,
                   )),
               horizontalSpace(3.0.w),
               lawyer.digitalGuideSubscription == 1
                   ? const Icon(
-                Icons.verified,
-                color: CupertinoColors.activeBlue,
-                size: 15,
-              )
+                      Icons.verified,
+                      color: CupertinoColors.activeBlue,
+                      size: 15,
+                    )
                   : const SizedBox(),
               verticalSpace(4.h),
               Row(
@@ -154,7 +155,7 @@ class AdvisoryCommitteeSearchScreen extends StatelessWidget {
                     size: 20.sp,
                   ),
                   horizontalSpace(0.w),
-                  Text(lawyer.country!.name ?? "",
+                  Text(lawyer.country?.name ?? "",
                       style: TextStyles.cairo_12_semiBold),
                 ],
               )
@@ -186,8 +187,41 @@ class AdvisoryCommitteeSearchScreen extends StatelessWidget {
             ),
           ),
         ],
-      )
-    ,
+      ),
+    );
+  }
+
+  Widget _buildLawyerImage(Advisor lawyer) {
+    final imageUrl = lawyer.photo ?? lawyer.image ?? lawyer.logo;
+    final isFemale = lawyer.gender == 'female';
+    final defaultAvatar =
+        isFemale ? AppAssets.Female : AppAssets.Male;
+
+    if (imageUrl == null ||
+        imageUrl.isEmpty ||
+        imageUrl == "https://ymtaz.sa/uploads/person.png") {
+      return SvgPicture.asset(
+        defaultAvatar,
+        width: 50.w,
+        height: 50.h,
+      );
+    }
+
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      fit: BoxFit.cover,
+      width: 50.w,
+      height: 50.h,
+      placeholder: (context, url) => SvgPicture.asset(
+        defaultAvatar,
+        width: 50.w,
+        height: 50.h,
+      ),
+      errorWidget: (context, url, error) => SvgPicture.asset(
+        defaultAvatar,
+        width: 50.w,
+        height: 50.h,
+      ),
     );
   }
   }

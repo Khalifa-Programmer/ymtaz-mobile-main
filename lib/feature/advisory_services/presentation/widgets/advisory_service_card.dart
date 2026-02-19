@@ -18,7 +18,7 @@ class AdvisoryServiceCard extends StatelessWidget {
   final String providerImage;
 
   const AdvisoryServiceCard({
-    Key? key,
+    super.key,
     required this.serviceName,
     required this.servicePrice,
     required this.serviceDate,
@@ -27,7 +27,7 @@ class AdvisoryServiceCard extends StatelessWidget {
     required this.servicePiriorty,
     required this.providerName,
     required this.providerImage,
-  }) : super(key: key);
+  });
 
 
 
@@ -147,7 +147,7 @@ class AdvisoryServiceCard extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                servicePrice +"ريال",
+                "$servicePriceريال",
                 style: TextStyles.cairo_12_semiBold
                     .copyWith(
                     color: appColors.blue100),

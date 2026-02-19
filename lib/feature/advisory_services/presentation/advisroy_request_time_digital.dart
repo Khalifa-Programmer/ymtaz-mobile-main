@@ -77,7 +77,7 @@ class _AdvisoryRequestTimeState extends State<AdvisoryRequestTimeDigital> {
     );
   }
 
-  selectAppointment() {
+  Center selectAppointment() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

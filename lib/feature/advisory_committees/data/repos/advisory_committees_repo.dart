@@ -19,7 +19,8 @@ class AdvisoryCommitteesRepo {
       var response;
 
 
-        response = await _apiService.getAdvisoryCommitteesProvider(token ?? "");
+        response = await _apiService.getAdvisoryCommittees(token ?? "");
+
 
       return ApiResult.success(response);
     } on DioException catch (error) {
@@ -53,7 +54,9 @@ class AdvisoryCommitteesRepo {
       var advisoryFuture = _apiService.getLawyerAdvisors(token, id);
       var servicesFuture = _apiService.getServices(token, id);
 
-      var results = await Future.wait([advisoryFuture, servicesFuture]);
+      var results = await Future.wait<dynamic>(<Future<dynamic>>[advisoryFuture, servicesFuture]);
+
+
 
       return results.map((response) => ApiResult.success(response)).toList();
     } on DioException catch (error) {

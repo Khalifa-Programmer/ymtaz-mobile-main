@@ -9,6 +9,9 @@ import '../../../core/di/dependency_injection.dart';
 import '../../../core/widgets/spacing.dart';
 import '../logic/office_provider_cubit.dart';
 import '../logic/office_provider_state.dart';
+import 'client_profile_screen.dart';
+import '../../layout/services/presentation/widgets/no_data_services.dart';
+
 
 class MyClients extends StatelessWidget {
   const MyClients({super.key});
@@ -35,23 +38,25 @@ class MyClients extends StatelessWidget {
             return state is LoadingMyClients
                 ? const Center(child: CircularProgressIndicator())
                 : state is LoadedMyClients
-                    ? ListView.separated(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: state.data.data!.clients!.length,
-                        itemBuilder: (context, index) {
-                          return _buildCategoryItem(
-                              state.data.data!.clients!, context, index);
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5.h),
-                            child: const Divider(
-                              thickness: 0.5,
-                            ),
-                          );
-                        },
-                      )
+                    ? state.data.data!.clients!.isEmpty
+                        ? NoProducts(text: 'عملاء')
+                        : ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: state.data.data!.clients!.length,
+                            itemBuilder: (context, index) {
+                              return _buildCategoryItem(
+                                  state.data.data!.clients!, context, index);
+                            },
+                            separatorBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 5.h),
+                                child: const Divider(
+                                  thickness: 0.5,
+                                ),
+                              );
+                            },
+                          )
                     : const Center(child: Text('error'));
           },
         ),
@@ -61,28 +66,38 @@ class MyClients extends StatelessWidget {
 
   Widget _buildCategoryItem(
       List<Client> category, BuildContext context, int index) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-      margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 0.h),
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shadows: [
-          BoxShadow(
-            color: Colors.black12.withOpacity(0.04),
-            // Shadow color
-            spreadRadius: 3,
-            // Spread radius
-            blurRadius: 10,
-            // Blur radius
-            offset: const Offset(0, 3), // Offset in x and y direction
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ClientProfileScreen(client: category[index]),
           ),
-        ],
-        shape: RoundedRectangleBorder(
-          // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
-          borderRadius: BorderRadius.circular(10),
+        );
+      },
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+        margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 0.h),
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shadows: [
+            BoxShadow(
+              color: Colors.black12.withOpacity(0.04),
+              // Shadow color
+              spreadRadius: 3,
+              // Spread radius
+              blurRadius: 10,
+              // Blur radius
+              offset: const Offset(0, 3), // Offset in x and y direction
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
-      ),
-      child: Row(
+        child: Row(
         children: [
           Container(
             width: 50.w,
@@ -134,6 +149,7 @@ class MyClients extends StatelessWidget {
           //       )),
           // )
         ],
+      ),
       ),
     );
   }

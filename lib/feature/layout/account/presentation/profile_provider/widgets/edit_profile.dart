@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
-import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:dio/dio.dart';
@@ -9,23 +8,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
 import 'package:yamtaz/core/shared/models/section_type.dart';
 import 'package:yamtaz/core/widgets/alerts.dart';
 import 'package:yamtaz/core/widgets/custom_button.dart';
-import 'package:yamtaz/core/widgets/custom_container.dart';
-import 'package:yamtaz/core/widgets/primary/text_form_primary.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
-import 'package:yamtaz/feature/auth/sign_up/data/models/countries_response.dart';
 import 'package:yamtaz/feature/auth/sign_up/logic/sign_up_cubit.dart';
 import 'package:yamtaz/feature/auth/sign_up/logic/sign_up_state.dart';
 import 'package:yamtaz/feature/layout/account/presentation/profile_provider/services/profile_validation_service.dart';
@@ -37,13 +30,11 @@ import 'package:yamtaz/feature/layout/account/presentation/profile_provider/widg
 
 import '../../../../../../config/themes/styles.dart';
 import '../../../../../../core/di/dependency_injection.dart';
-import '../../../../../../core/helpers/attachment_uploader.dart';
 import '../../../../../../l10n/locale_keys.g.dart';
 import '../../../../../../main.dart';
 import '../../../../../../yamtaz.dart';
 import '../../../../../auth/sign_up/presentation/view/widgets/pin_code.dart';
 import '../../../logic/my_account_cubit.dart';
-import '../edit_provider.dart';
 
 class EditProileStepsProvider extends StatefulWidget {
   const EditProileStepsProvider({super.key, required this.data});
@@ -269,7 +260,7 @@ class _StepsSignUpState extends State<EditProileStepsProvider> {
     );
   }
 
-  tapped(int step) {
+  void tapped(int step) {
     _currentStepNotifier.value = step;
   }
 
@@ -372,7 +363,7 @@ class _StepsSignUpState extends State<EditProileStepsProvider> {
     );
   }
 
-  cancel() {
+  void cancel() {
     _currentStepNotifier.value > 0 ? _currentStepNotifier.value -= 1 : null;
   }
 
@@ -487,7 +478,7 @@ class _StepsSignUpState extends State<EditProileStepsProvider> {
     );
   }
 
-  zeroStep() {
+  StatefulBuilder zeroStep() {
     SignUpCubit signUpCubit = context.read<SignUpCubit>();
     oldPhone = signUpCubit.phoneController.text;
     oldPhoneCode = signUpCubit.providerphoneCode;
@@ -578,7 +569,7 @@ class _StepsSignUpState extends State<EditProileStepsProvider> {
     );
   }
 
-  firstStep() {
+  StatefulBuilder firstStep() {
     return StatefulBuilder(
       builder: (context, setState) {
         return FirstStepForm(
@@ -593,7 +584,7 @@ class _StepsSignUpState extends State<EditProileStepsProvider> {
     );
   }
 
-  secondStep() {
+  ValueListenableBuilder<bool> secondStep() {
     return ValueListenableBuilder(
       valueListenable: locationLoadingNotifier,
       builder: (context, locationLoading, child) {
@@ -608,7 +599,7 @@ class _StepsSignUpState extends State<EditProileStepsProvider> {
     );
   }
 
-  thirdStep() {
+  StatefulBuilder thirdStep() {
     return StatefulBuilder(
       builder: (context, setState) {
         return ThirdStepForm(
@@ -619,7 +610,7 @@ class _StepsSignUpState extends State<EditProileStepsProvider> {
     );
   }
 
-  fourthStep() {
+  StatefulBuilder fourthStep() {
     return StatefulBuilder(
       builder: (context, setState) {
         return FourthStepForm(
@@ -706,33 +697,76 @@ class _StepsSignUpState extends State<EditProileStepsProvider> {
   }
 
   Future<bool?> _showLocationServiceDialog() {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('خدمة الموقع معطلة'),
-          content: const Text('يرجى تفعيلها من خلال الإعدادات.'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('إلغاء'),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            TextButton(
-              child: const Text('فتح الإعدادات'),
-              onPressed: () async {
-                Navigator.of(context).pop(true);
-                if (Platform.isAndroid) {
-                  _openLocationSettings(); // فتح إعدادات الموقع
-                }
-              },
+  debugPrint("عرض حوار خدمة الموقع");
+  const Color navyBlue = Color(0xFF00262f);
+  const Color goldColor = Color(0xFFDDB762);
+  const Color whiteColor = Colors.white;
+
+  return showDialog<bool>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: whiteColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+          side: BorderSide(color: goldColor, width: 2),
+        ),
+        title: Row(
+          children: [
+            const Icon(Icons.location_off, color: goldColor),
+            const SizedBox(width: 10),
+            // الحل هنا: تغليف النص بـ Expanded لمنع الـ Overflow
+            Expanded(
+              child: Text(
+                'خدمة الموقع معطلة',
+                style: TextStyle(
+                  color: navyBlue, 
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18, // يمكنك تصغير الخط قليلاً إذا لزم الأمر
+                ),
+                softWrap: true, // السماح للنص بالنزول لسطر جديد
+                overflow: TextOverflow.visible, 
+              ),
             ),
           ],
-        );
-      },
-    );
-  }
+        ),
+        content: const Text(
+          'لتقديم أفضل خدمة، يرجى تفعيل الموقع من خلال الإعدادات.',
+          style: TextStyle(color: Colors.black87, fontSize: 16),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text(
+              'إلغاء',
+              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
+            ),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: navyBlue,
+              foregroundColor: goldColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            ),
+            onPressed: () async {
+              Navigator.of(context).pop(true);
+              if (Platform.isAndroid) {
+                _openLocationSettings();
+              }
+            },
+            child: const Text(
+              'فتح الإعدادات',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
 
   void _openLocationSettings() {
     // سيفتح إعدادات الموقع على الجهاز باستخدام android_intent_plus

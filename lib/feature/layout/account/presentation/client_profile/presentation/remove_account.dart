@@ -15,17 +15,30 @@ import 'package:yamtaz/l10n/locale_keys.g.dart';
 
 import '../../../../../../config/themes/styles.dart';
 
-class RemoveAccount extends StatelessWidget {
-  RemoveAccount({super.key});
+class RemoveAccount extends StatefulWidget {
+  const RemoveAccount({super.key});
 
-  var formKey = GlobalKey<FormState>();
+  @override
+  State<RemoveAccount> createState() => _RemoveAccountState();
+}
+
+class _RemoveAccountState extends State<RemoveAccount> {
+  final formKey = GlobalKey<FormState>();
+  String? selectedReason;
+  final List<String> reasons = [
+    "لم أعد بحاجة للخدمة",
+    "وجدت بديل أفضل",
+    "أسباب تتعلق بالخصوصية",
+    "الواجهة صعبة الاستخدام",
+    "أخرى"
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(LocaleKeys.personalInformation.tr(),
+        title: Text('إزالة الحساب',
             style: TextStyles.cairo_14_bold.copyWith(
               color: appColors.black,
             )),
@@ -76,22 +89,64 @@ class RemoveAccount extends StatelessWidget {
                 key: formKey,
                 child: Column(
                   children: [
-                    CustomTextFieldPrimary(
-                      hintText: LocaleKeys.deleteAccountReason.tr(),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'الرجاء إدخال سبب الحذف';
-                        }
-                        return null;
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: LocaleKeys.deleteAccountReason.tr(),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 10.w, vertical: 15.h),
+                      ),
+                      value: selectedReason,
+                      items: reasons
+                          .map((reason) => DropdownMenuItem(
+                                value: reason,
+                                child: Text(
+                                  reason,
+                                  style: TextStyles.cairo_14_medium,
+                                ),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedReason = value;
+                          if (value != "أخرى") {
+                            context
+                                .read<MyAccountCubit>()
+                                .removeAccountController
+                                .text = value!;
+                          } else {
+                            context
+                                .read<MyAccountCubit>()
+                                .removeAccountController
+                                .text = "";
+                          }
+                        });
                       },
-                      type: TextInputType.text,
-                      typeInputAction: TextInputAction.done,
-                      externalController: context
-                          .read<MyAccountCubit>()
-                          .removeAccountController,
-                      multiLine: true,
-                      title: LocaleKeys.deleteAccountReason.tr(),
+                      validator: (value) =>
+                          value == null ? 'الرجاء اختيار سبب الحذف' : null,
                     ),
+                    if (selectedReason == "أخرى") ...[
+                      SizedBox(height: 10.h),
+                      CustomTextFieldPrimary(
+                        hintText: LocaleKeys.deleteAccountReason.tr(),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'الرجاء إدخال سبب الحذف';
+                          }
+                          return null;
+                        },
+                        type: TextInputType.text,
+                        typeInputAction: TextInputAction.done,
+                        externalController: context
+                            .read<MyAccountCubit>()
+                            .removeAccountController,
+                        multiLine: true,
+                        title: LocaleKeys.deleteAccountReason.tr(),
+                      ),
+                    ],
+                    SizedBox(height: 10.h),
                     CustomTextFieldPrimary(
                       hintText: LocaleKeys.developmentProposal.tr(),
                       validator: (value) {
@@ -112,6 +167,8 @@ class RemoveAccount extends StatelessWidget {
                         title: LocaleKeys.deleteAccount.tr(),
                         onPress: () {
                           if (formKey.currentState!.validate()) {
+                            // If "Other" is NOT selected, the controller is already set in onChanged.
+                            // If "Other" IS selected, the controller is bound to the TextField.
                             context
                                 .read<MyAccountCubit>()
                                 .removeAccountProvider();

@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yamtaz/core/constants/colors.dart';
+import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/core/widgets/app_bar.dart';
 import 'package:yamtaz/feature/layout/account/presentation/client_profile/presentation/client_my_profile.dart';
 
@@ -148,12 +149,16 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
           Stack(
             children: [
               CircleAvatar(
-                backgroundColor: getColor(lawyer!.currentRank!.borderColor!),
+                backgroundColor: getColor(lawyer.currentRank?.borderColor ?? "FF0000"),
+
                 radius: 53.0.sp,
                 child: CachedNetworkImage(
-                  imageUrl: lawyer.image!.isEmpty
-                      ? "https://api.ymtaz.sa/uploads/person.png"
-                      : lawyer.image!,
+                  imageUrl: (lawyer.image != null && lawyer.image!.isNotEmpty)
+                      ? lawyer.image!
+                      : (lawyer.logo != null && lawyer.logo!.isNotEmpty)
+                          ? lawyer.logo!
+                          : "https://api.ymtaz.sa/uploads/person.png",
+
                   imageBuilder: (context, imageProvider) => Container(
                     width: 100.0.w,
                     height: 100.0.h,
@@ -177,11 +182,20 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
                   child: CircleAvatar(
                     radius: 10.sp,
                     backgroundColor: appColors.white,
-                    child: SvgPicture.network(
-                      lawyer.currentRank!.image!,
+                    child: CachedNetworkImage(
+                      imageUrl: lawyer.currentRank?.image ?? "",
+
                       width: 12.0.w,
-                      // Adjust width according to your design
                       height: 12.0.h,
+                      placeholder: (context, url) => SizedBox(
+                          width: 12.w,
+                          height: 12.h,
+                          child: const CircularProgressIndicator(strokeWidth: 2)),
+                      errorWidget: (context, url, error) => SvgPicture.asset(
+                        AppAssets.rank,
+                        width: 12.0.w,
+                        height: 12.0.h,
+                      ),
                     ),
                   ),
                 ),
@@ -198,7 +212,8 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      lawyer.name!,
+                      lawyer.name ?? "بدون اسم",
+
                       // Static name
                       style: const TextStyle(
                         fontSize: 18,
@@ -256,7 +271,8 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
                     ),
                     horizontalSpace(5.w),
                     Text(
-                      "آخر ظهور ${getTimeDate(lawyer.lastSeen!)}",
+                      "آخر ظهور ${getTimeDate(lawyer.lastSeen ?? "")}",
+
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.bold,
@@ -306,7 +322,11 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
               ),
               SizedBox(height: 8.h),
               Text(
-                "${lawyer.about}",
+                (lawyer.about == null ||
+                        lawyer.about.toString().toLowerCase() == 'null' ||
+                        lawyer.about!.isEmpty)
+                    ? "-"
+                    : lawyer.about!,
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -328,7 +348,7 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
                 // spacing between chips
                 runSpacing: 4.0,
                 // spacing between rows of chips
-                children: lawyer.sections!.map((section) {
+                children: (lawyer.sections ?? []).map((section) {
                   return Chip(
                     side: BorderSide(
                       color: appColors.primaryColorYellow.withOpacity(0.1),
@@ -338,7 +358,7 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
                         appColors.primaryColorYellow.withOpacity(0.1)),
 
                     label: Text(
-                      section.section!.title!,
+                      section.section?.title ?? "",
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -393,7 +413,12 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
                   ),
                   const Spacer(),
                   Text(
-                    lawyer.country!.name!,
+                    (lawyer.country?.name == null ||
+                            lawyer.country!.name.toString().toLowerCase() ==
+                                'null')
+                        ? "-"
+                        : (lawyer.country?.name ?? "-"),
+
                     style: TextStyles.cairo_12_semiBold
                         .copyWith(color: appColors.blue100),
                   ),
@@ -415,7 +440,12 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
                   ),
                   const Spacer(),
                   Text(
-                    lawyer.region!.name!,
+                    (lawyer.region?.name == null ||
+                            lawyer.region!.name.toString().toLowerCase() ==
+                                'null')
+                        ? "-"
+                        : (lawyer.region?.name ?? "-"),
+
                     style: TextStyles.cairo_12_semiBold
                         .copyWith(color: appColors.blue100),
                   ),
@@ -461,7 +491,12 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
                   ),
                   const Spacer(),
                   Text(
-                    lawyer.degree!.title!,
+                    (lawyer.degree?.title == null ||
+                            lawyer.degree!.title.toString().toLowerCase() ==
+                                'null')
+                        ? "-"
+                        : (lawyer.degree?.title ?? "-"),
+
                     style: TextStyles.cairo_12_semiBold
                         .copyWith(color: appColors.blue100),
                   ),

@@ -4,7 +4,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../constants/colors.dart';
 
-loadingWidget() {
+Padding loadingWidget() {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
     child: Shimmer.fromColors(

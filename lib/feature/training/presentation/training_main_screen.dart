@@ -33,6 +33,8 @@ class TrainingMainScreen extends StatelessWidget {
 }
 
 class SuggestedCourses extends StatelessWidget {
+  const SuggestedCourses({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -56,8 +58,8 @@ class SuggestedCourses extends StatelessWidget {
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +81,7 @@ class HomeHeader extends StatelessWidget {
 }
 
 class SearchField extends StatelessWidget {
-  const SearchField({Key? key}) : super(key: key);
+  const SearchField({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -114,11 +116,11 @@ class SearchField extends StatelessWidget {
 
 class IconBtnWithCounterIconData extends StatelessWidget {
   const IconBtnWithCounterIconData({
-    Key? key,
+    super.key,
     required this.svgSrc,
     this.numOfitem = 0,
     required this.press,
-  }) : super(key: key);
+  });
 
   final IconData svgSrc;
   final int numOfitem;
@@ -175,8 +177,8 @@ class IconBtnWithCounterIconData extends StatelessWidget {
 
 class DiscountBanner extends StatelessWidget {
   const DiscountBanner({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -249,11 +251,11 @@ class Categories extends StatelessWidget {
 
 class CategoryCard extends StatelessWidget {
   const CategoryCard({
-    Key? key,
+    super.key,
     required this.icon,
     required this.text,
     required this.press,
-  }) : super(key: key);
+  });
 
   final String icon, text;
   final GestureTapCallback press;
@@ -284,8 +286,8 @@ class CategoryCard extends StatelessWidget {
 
 class Lastet extends StatelessWidget {
   const Lastet({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -325,12 +327,12 @@ class Lastet extends StatelessWidget {
 
 class CourseCard extends StatelessWidget {
   const CourseCard({
-    Key? key,
+    super.key,
     required this.category,
     required this.image,
     required this.numOfBrands,
     required this.press,
-  }) : super(key: key);
+  });
 
   final String category, image;
   final int numOfBrands;
@@ -412,10 +414,10 @@ class CourseCard extends StatelessWidget {
 
 class SectionTitle extends StatelessWidget {
   const SectionTitle({
-    Key? key,
+    super.key,
     required this.title,
     required this.press,
-  }) : super(key: key);
+  });
 
   final String title;
   final GestureTapCallback press;
@@ -444,6 +446,8 @@ class SectionTitle extends StatelessWidget {
 }
 
 class ResponsiveListTile extends StatelessWidget {
+  const ResponsiveListTile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(

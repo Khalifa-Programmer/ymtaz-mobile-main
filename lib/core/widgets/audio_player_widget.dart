@@ -20,14 +20,14 @@ class AudioPlayerWidget extends StatefulWidget {
   final Color? indicatorColor;
 
   const AudioPlayerWidget({
-    Key? key,
+    super.key,
     required this.audioUrl,
     this.backgroundColor,
     this.activeWaveColor,
     this.inactiveWaveColor,
     this.playButtonColor,
     this.indicatorColor,
-  }) : super(key: key);
+  });
 
   @override
   State<AudioPlayerWidget> createState() => _AudioPlayerWidgetState();

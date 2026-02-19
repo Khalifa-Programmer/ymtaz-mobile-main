@@ -4,7 +4,7 @@ import 'package:yamtaz/feature/favorite/data/repo/favorite_repo.dart';
 import 'package:yamtaz/feature/favorite/logic/favorite_state.dart';
 
 class FavoriteCubit extends Cubit<FavoriteState> {
-  FavoriteRepo _favoriteRepo;
+  final FavoriteRepo _favoriteRepo;
 
   FavoriteCubit(this._favoriteRepo) : super(const FavoriteState.initial());
 

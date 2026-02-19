@@ -9,7 +9,7 @@ import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
 import 'package:yamtaz/feature/ymtaz_elite/presentation/widgets/item_card_widget.dart';
 
 class EliteMainScreen extends StatefulWidget {
-  EliteMainScreen({super.key});
+  const EliteMainScreen({super.key});
 
   @override
   State<EliteMainScreen> createState() => _EliteMainScreenState();

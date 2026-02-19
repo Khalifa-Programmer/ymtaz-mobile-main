@@ -1,7 +1,4 @@
-import 'package:audioplayers/audioplayers.dart';
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -115,7 +112,7 @@ class ViewAppointmentOfferScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           flex: 2,
-                          child: Container(
+                                child: SizedBox(
                             height: 35.h,
                             child: CupertinoButton(
                                 padding: EdgeInsets.symmetric(
@@ -136,7 +133,7 @@ class ViewAppointmentOfferScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           flex: 2,
-                          child: Container(
+                          child: SizedBox(
                             height: 35.h,
                             child: CupertinoButton(
                                 padding: EdgeInsets.symmetric(
@@ -205,7 +202,7 @@ class ViewAppointmentOfferScreen extends StatelessWidget {
         verticalSpace(10.h),
         Row(
           children: [
-            Text(offer.price.toString() + " ريال",
+            Text("${offer.price} ريال",
                 style: TextStyles.cairo_16_bold
                     .copyWith(color: appColors.blue100)),
           ],
@@ -221,7 +218,7 @@ class ViewAppointmentOfferScreen extends StatelessWidget {
           children: [
             Expanded(
               flex: 2,
-              child: Container(
+              child: SizedBox(
                 height: 35.h,
                 child: CupertinoButton(
                     padding:
@@ -242,7 +239,7 @@ class ViewAppointmentOfferScreen extends StatelessWidget {
           children: [
             Expanded(
               flex: 2,
-              child: Container(
+              child: SizedBox(
                 height: 35.h,
                 child: CupertinoButton(
                     padding:
@@ -264,7 +261,7 @@ class ViewAppointmentOfferScreen extends StatelessWidget {
             horizontalSpace(10.w),
             Expanded(
               flex: 2,
-              child: Container(
+              child: SizedBox(
                 height: 35.h,
                 child: CupertinoButton(
                     padding:
@@ -397,7 +394,7 @@ class ViewAppointmentOfferScreen extends StatelessWidget {
     );
   }
 
-  _viewAttendCodeDialog(BuildContext context, String code) {
+  Future<dynamic> _viewAttendCodeDialog(BuildContext context, String code) {
     return showDialog(
       context: context,
       builder: (context) {
@@ -416,7 +413,7 @@ class ViewAppointmentOfferScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     flex: 2,
-                    child: Container(
+                    child: SizedBox(
                       height: 35.h,
                       child: CupertinoButton(
                           padding: EdgeInsets.symmetric(

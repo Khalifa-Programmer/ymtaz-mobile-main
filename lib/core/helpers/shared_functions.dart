@@ -20,7 +20,7 @@ String removePlusSign(String phoneNumber) {
 //   }
 // }
 
-getCountryCodeFromDialingCode(String dialingCode) {
+String? getCountryCodeFromDialingCode(String dialingCode) {
   final Map<String, String> countryDialingCodes = {
     "93": "AF",
     "355": "AL",

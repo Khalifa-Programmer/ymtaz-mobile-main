@@ -27,7 +27,7 @@ Map<String, dynamic> _$AdvisoryCommitteesLawyersResponseToJson(
     };
 
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       title: json['title'] as String?,
       image: json['image'] as String?,
       advisorsAvailableCounts:
@@ -46,7 +46,7 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
     };
 
 Advisor _$AdvisorFromJson(Map<String, dynamic> json) => Advisor(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       firstName: json['first_name'] as String?,
       secondName: json['second_name'] as String?,
       thirdName: json['third_name'] as String?,
@@ -107,6 +107,7 @@ Advisor _$AdvisorFromJson(Map<String, dynamic> json) => Advisor(
       cv: json['cv'] as String?,
       degreeCertificate: json['degree_certificate'] as String?,
       photo: json['photo'] as String?,
+      image: json['image'] as String?,
       companyLisencesFile: json['company_lisences_file'],
       acceptRules: (json['accept_rules'] as num?)?.toInt(),
       sections: (json['sections'] as List<dynamic>?)
@@ -163,6 +164,7 @@ Map<String, dynamic> _$AdvisorToJson(Advisor instance) => <String, dynamic>{
       'cv': instance.cv,
       'degree_certificate': instance.degreeCertificate,
       'photo': instance.photo,
+      'image': instance.image,
       'company_lisences_file': instance.companyLisencesFile,
       'accept_rules': instance.acceptRules,
       'sections': instance.sections,
@@ -177,7 +179,7 @@ Map<String, dynamic> _$AdvisorToJson(Advisor instance) => <String, dynamic>{
 
 AccurateSpecialty _$AccurateSpecialtyFromJson(Map<String, dynamic> json) =>
     AccurateSpecialty(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       title: json['title'] as String?,
     );
 
@@ -188,7 +190,7 @@ Map<String, dynamic> _$AccurateSpecialtyToJson(AccurateSpecialty instance) =>
     };
 
 Country _$CountryFromJson(Map<String, dynamic> json) => Country(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       name: json['name'] as String?,
     );
 
@@ -198,7 +200,7 @@ Map<String, dynamic> _$CountryToJson(Country instance) => <String, dynamic>{
     };
 
 Degree _$DegreeFromJson(Map<String, dynamic> json) => Degree(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       title: json['title'] as String?,
       needCertificate: (json['need_certificate'] as num?)?.toInt(),
     );
@@ -211,7 +213,7 @@ Map<String, dynamic> _$DegreeToJson(Degree instance) => <String, dynamic>{
 
 SectionElement _$SectionElementFromJson(Map<String, dynamic> json) =>
     SectionElement(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       section: json['section'] == null
           ? null
           : SectionSection.fromJson(json['section'] as Map<String, dynamic>),
@@ -229,7 +231,7 @@ Map<String, dynamic> _$SectionElementToJson(SectionElement instance) =>
 
 SectionSection _$SectionSectionFromJson(Map<String, dynamic> json) =>
     SectionSection(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'],
       title: json['title'] as String?,
       image: json['image'] as String?,
       needLicense: (json['need_license'] as num?)?.toInt(),

@@ -65,7 +65,7 @@ class _EliteClientsRequestsState extends State<EliteClientsRequests> {
                       margin: EdgeInsets.only(bottom: 16.h),
                       child: ListTile(
                         title: Text(request.eliteServiceCategory?.name ?? '' , style: TextStyle(fontSize: 16.sp , fontWeight: FontWeight.bold),),
-                        subtitle: Text(getTimeDate(request.createdAt!) + ' - ' + getTime(request.createdAt! ?? '')),
+                        subtitle: Text('${getTimeDate(request.createdAt!)} - ${getTime(request.createdAt! ?? '')}'),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
                           _cubit.selectRequest(request);

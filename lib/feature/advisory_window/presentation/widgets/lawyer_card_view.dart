@@ -15,6 +15,7 @@ import '../../../digital_guide/presentation/digetal_providers_screen.dart';
 import '../../../layout/account/presentation/client_profile/presentation/client_my_profile.dart';
 import '../../../layout/account/presentation/widgets/user_profile_row.dart';
 import '../../data/model/available_lawyers_for_advisory_type_model.dart';
+import '../../../../../core/constants/assets.dart';
 
 class LawyerCardAdvisory extends StatelessWidget {
   const LawyerCardAdvisory(
@@ -94,7 +95,7 @@ class LawyerCardAdvisory extends StatelessWidget {
               ),
               Spacer(),
               Text(
-                "${price!} ريال",
+                "$price ريال",
                 style: TextStyles.cairo_14_bold.copyWith(
                   color: appColors.primaryColorYellow,
                 ),
@@ -103,7 +104,11 @@ class LawyerCardAdvisory extends StatelessWidget {
           ),
           verticalSpace(10.h),
           Text(
-            "${lawyer.about!}",
+            (lawyer.about == null ||
+                        lawyer.about.toString().toLowerCase() == "null" ||
+                        lawyer.about!.isEmpty)
+                    ? "-"
+                    : lawyer.about!,
             style: TextStyles.cairo_12_regular.copyWith(
               color: appColors.grey15,
             ),
@@ -191,7 +196,7 @@ class LawyerCardAdvisory extends StatelessWidget {
             ),
             horizontalSpace(5.w),
             Text(
-              "${lawyer.region!.name!} - ${lawyer.city!.title!}",
+              "${(lawyer.region?.name == null || lawyer.region!.name.toString().toLowerCase() == 'null') ? '-' : lawyer.region!.name!} - ${(lawyer.city?.title == null || lawyer.city!.title.toString().toLowerCase() == 'null') ? '-' : lawyer.city!.title!}",
               style:
                   TextStyles.cairo_12_regular.copyWith(color: appColors.grey15),
             ),
@@ -237,10 +242,19 @@ class LawyerCardAdvisory extends StatelessWidget {
             child: CircleAvatar(
               radius: 10.sp,
               backgroundColor: appColors.white,
-              child: SvgPicture.network(
-                lawyer.currentRank!.image!,
-                width: 12.0.w, // Adjust width according to your design
+              child: CachedNetworkImage(
+                imageUrl: lawyer.currentRank!.image!,
+                width: 12.0.w,
                 height: 12.0.h,
+                placeholder: (context, url) => SizedBox(
+                    width: 12.w,
+                    height: 12.h,
+                    child: const CircularProgressIndicator(strokeWidth: 2)),
+                errorWidget: (context, url, error) => SvgPicture.asset(
+                  AppAssets.rank,
+                  width: 12.0.w,
+                  height: 12.0.h,
+                ),
               ),
             ),
           ),
@@ -301,7 +315,7 @@ class LawyerCardAdvisory extends StatelessWidget {
               verticalSpace(10.h),
               const Divider(color: appColors.grey),
               verticalSpace(10.h),
-              _buildRow("المجموع الكلي", "${price} ريال"),
+              _buildRow("المجموع الكلي", "$price ريال"),
               verticalSpace(10.h),
               _buildRow('الضرائب', '15%'),
               verticalSpace(3.h),

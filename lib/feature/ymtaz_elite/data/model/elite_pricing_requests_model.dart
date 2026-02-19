@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'dart:convert';
 
 part 'elite_pricing_requests_model.g.dart';
 

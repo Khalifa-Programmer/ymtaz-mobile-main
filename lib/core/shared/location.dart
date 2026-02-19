@@ -11,7 +11,7 @@ class LocationService {
   Future<LocationData> getCurrentLocation() async {
     final serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {
-      final result = await location.requestService;
+      final result = location.requestService;
       if (result == true) {
       } else {
         throw Exception('GPS service not enabled');

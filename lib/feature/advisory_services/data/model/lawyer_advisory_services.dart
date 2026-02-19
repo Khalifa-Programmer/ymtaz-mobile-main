@@ -237,6 +237,7 @@ class AdvisoryServicesPrice {
   @JsonKey(name: "importance")
   Importance? importance;
 
+  @override
   toString() => "${importance?.title} - $price";
 
   AdvisoryServicesPrice({

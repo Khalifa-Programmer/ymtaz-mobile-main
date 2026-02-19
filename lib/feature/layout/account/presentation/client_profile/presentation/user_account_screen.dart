@@ -25,13 +25,15 @@ import '../../../../../../core/constants/assets.dart';
 import '../../../../../../core/constants/colors.dart';
 import '../../../../../../core/di/dependency_injection.dart';
 import '../../../../../../core/helpers/fuctions_helpers/functions_helpers.dart';
-import '../../../../../../core/widgets/spacing.dart';
-import '../../../../../reminders/screens/reminders_screen.dart';
-import '../../../../home/presentation/home_screen.dart';
-import '../../gamification/gamification.dart';
-import '../../profile_provider/my_account_main_screen.dart';
-import '../../widgets/custom_list_tile.dart';
-import '../../widgets/invite_and_share.dart';
+import 'package:yamtaz/core/widgets/spacing.dart';
+import 'package:yamtaz/feature/package_and_subscriptions/presentation/widgets/lawyer_package_card.dart';
+import 'package:yamtaz/feature/reminders/screens/reminders_screen.dart';
+import 'package:yamtaz/feature/layout/home/presentation/home_screen.dart';
+import 'package:yamtaz/feature/layout/account/presentation/gamification/gamification.dart';
+import 'package:yamtaz/feature/layout/account/presentation/profile_provider/my_account_main_screen.dart';
+import 'package:yamtaz/feature/layout/account/presentation/widgets/custom_list_tile.dart';
+import 'package:yamtaz/feature/layout/account/presentation/widgets/invite_and_share.dart';
+import 'package:yamtaz/feature/layout/account/presentation/app_rating_screen.dart';
 
 const String appWelcomeMessage = "🌟 أهلاً بك في تطبيق يمتاز\n"
     "دليلك القانوني وموقفك النظامي\n\n"
@@ -82,154 +84,85 @@ class ClientMyAccount extends StatelessWidget {
                                   child: ListView(
                                     shrinkWrap: true,
                                     children: [
-                                      context
-                                                  .read<MyAccountCubit>()
-                                                  .clientProfile ==
-                                              null
-                                          ? Container()
-                                          : UserProfileColumn(
-                                              imageUrl: getit<MyAccountCubit>()
-                                                      .clientProfile!
-                                                      .data!
-                                                      .account!
-                                                      .photo ??
-                                                  "https://api.ymtaz.sa/uploads/person.png",
-                                              name: getit<MyAccountCubit>()
-                                                  .clientProfile!
-                                                  .data!
-                                                  .account!
-                                                  .name!,
-                                              color: getColor(
-                                                  getit<MyAccountCubit>()
-                                                      .clientProfile!
-                                                      .data!
-                                                      .account!
-                                                      .currentRank!
-                                                      .borderColor!),
-                                              image: getit<MyAccountCubit>()
-                                                  .clientProfile!
-                                                  .data!
-                                                  .account!
-                                                  .currentRank!
-                                                  .image!,
-                                            ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          SizedBox(height: 5.h),
-                                          Text(
-                                            context
-                                                .read<MyAccountCubit>()
-                                                .clientProfile!
-                                                .data!
-                                                .account!
-                                                .email!,
-                                            style: TextStyles.cairo_14_semiBold
-                                                .copyWith(
-                                                    color: appColors.grey5),
+                                      ...() {
+                                        final profile = context.read<MyAccountCubit>().clientProfile;
+                                        if (profile == null) return <Widget>[];
+                                        return [
+                                          UserProfileColumn(
+                                            imageUrl: profile.data?.account?.photo ??
+                                                "https://api.ymtaz.sa/uploads/person.png",
+                                            name: profile.data?.account?.name ?? "",
+                                            color: getColor(
+                                                profile.data?.account?.currentRank?.borderColor ?? ""),
+                                            image: profile.data?.account?.currentRank?.image ?? "",
                                           ),
-                                          SizedBox(height: 10.h),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 5),
-                                            decoration: BoxDecoration(
-                                              color: Colors.greenAccent
-                                                  .withOpacity(0.2),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: const Text(
-                                              "طالب خدمة",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.green,
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              SizedBox(height: 5.h),
+                                              Text(
+                                                profile.data?.account?.email ?? "",
+                                                style: TextStyles.cairo_14_semiBold
+                                                    .copyWith(
+                                                        color: appColors.grey5),
                                               ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-
-                                      Gamification(
-                                        daysStreak: context
-                                                .read<MyAccountCubit>()
-                                                .clientProfile!
-                                                .data!
-                                                .account!
-                                                .daysStreak ??
-                                            0,
-                                        points: context
-                                            .read<MyAccountCubit>()
-                                            .clientProfile!
-                                            .data!
-                                            .account!
-                                            .points!,
-                                        xp: context
-                                            .read<MyAccountCubit>()
-                                            .clientProfile!
-                                            .data!
-                                            .account!
-                                            .xp!,
-                                        xpUntilNextLevel: context
-                                            .read<MyAccountCubit>()
-                                            .clientProfile!
-                                            .data!
-                                            .account!
-                                            .xpUntilNextLevel!,
-                                        currentLevel: context
-                                            .read<MyAccountCubit>()
-                                            .clientProfile!
-                                            .data!
-                                            .account!
-                                            .currentLevel!,
-                                        currentRank: context
-                                            .read<MyAccountCubit>()
-                                            .clientProfile!
-                                            .data!
-                                            .account!
-                                            .currentRank!
-                                            .name!,
-                                      ),
-                                      verticalSpace(10.h),
-                                      showCompletedFile(
-                                          context,
-                                          context
-                                                          .read<
-                                                              MyAccountCubit>()
-                                                          .clientProfile!
-                                                          .data!
-                                                          .account!
-                                                          .profileComplete ==
-                                                      0 ||
-                                                  context
-                                                          .read<
-                                                              MyAccountCubit>()
-                                                          .clientProfile!
-                                                          .data!
-                                                          .account!
-                                                          .profileComplete ==
-                                                      null
-                                              ? false
-                                              : true),
-                                      verticalSpace(10.h),
-                                      InviteShareButtons(
-                                        onInviteTap: () {
-                                          inviteUser(
-                                            context,
-                                          );
-                                        },
-                                        onShareTap: () {
-                                          shareText(
+                                              SizedBox(height: 10.h),
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                    horizontal: 10, vertical: 5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.greenAccent
+                                                      .withOpacity(0.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: const Text(
+                                                  "طالب خدمة",
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          Gamification(
+                                            daysStreak: profile.data?.account?.daysStreak ?? 0,
+                                            points: profile.data?.account?.points ?? 0,
+                                            xp: profile.data?.account?.xp ?? 0,
+                                            xpUntilNextLevel: profile.data?.account?.xpUntilNextLevel ?? 0,
+                                            currentLevel: profile.data?.account?.currentLevel ?? 0,
+                                            currentRank: profile.data?.account?.currentRank?.name ?? "",
+                                          ),
+                                          verticalSpace(10.h),
+                                          LawyerPackageCard(
+                                            package: profile.data?.account?.package,
+                                          ),
+                                          verticalSpace(10.h),
+                                          showCompletedFile(
                                               context,
-                                              appWelcomeMessage,
-                                              getit<MyAccountCubit>()
-                                                  .clientProfile!
-                                                  .data!
-                                                  .account!
-                                                  .referralCode!);
-                                        },
-                                      ),
+                                              profile.data?.account?.profileComplete == 0 ||
+                                                      profile.data?.account?.profileComplete == null
+                                                  ? false
+                                                  : true),
+                                          verticalSpace(10.h),
+                                          InviteShareButtons(
+                                            onInviteTap: () {
+                                              inviteUser(
+                                                context,
+                                              );
+                                            },
+                                            onShareTap: () {
+                                              shareText(
+                                                  context,
+                                                  appWelcomeMessage,
+                                                  profile.data?.account?.referralCode ?? "");
+                                            },
+                                          ),
+                                        ];
+                                      }(),
                                       verticalSpace(10.h),
                                       CustomListTile(
                                           title: LocaleKeys.profile.tr(),
@@ -276,25 +209,13 @@ class ClientMyAccount extends StatelessWidget {
                                       CustomListTile(
                                         title: "تقييم التطبيق",
                                         icon: Icons.rate_review,
-                                        onTap: () async {
-                                          // محاولة عرض نافذة التقييم المنبثقة داخل التطبيق
-                                          if (await _inAppReview.isAvailable()) {
-                                            // استخدام requestReview لعرض نافذة التقييم المنبثقة
-                                            await _inAppReview.requestReview();
-                                          } else {
-                                            // إذا لم تكن النافذة المنبثقة متاحة، ننتقل إلى المتجر
-                                            if (Platform.isAndroid) {
-                                              final Uri url = Uri.parse(
-                                                  'https://play.google.com/store/apps/details?id=com.ymtaz.ymtaz');
-                                              if (await canLaunchUrl(url)) {
-                                                await launchUrl(url);
-                                              }
-                                            } else if (Platform.isIOS) {
-                                              await _inAppReview.openStoreListing(
-                                                appStoreId: '6602893553',
-                                              );
-                                            }
-                                          }
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => AppRatingScreen(),
+                                            ),
+                                          );
                                         },
                                       ),
                                       CustomListTile(
@@ -376,7 +297,7 @@ class ClientMyAccount extends StatelessWidget {
     );
   }
 
-  _signOut(BuildContext context) {
+  void _signOut(BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) => CupertinoAlertDialog(

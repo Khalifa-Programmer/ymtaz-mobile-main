@@ -11,14 +11,14 @@ class CourseCard extends StatelessWidget {
   final bool isLoading;
 
   const CourseCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.instructor,
     required this.rating,
     required this.imageUrl,
     this.onTap,
     this.isLoading = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

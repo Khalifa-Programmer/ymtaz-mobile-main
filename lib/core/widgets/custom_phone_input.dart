@@ -16,14 +16,14 @@ class CustomPhoneInput extends StatefulWidget {
   final bool isVerified;
 
   const CustomPhoneInput({
-    Key? key,
+    super.key,
     required this.phoneController,
     required this.phoneCodeNotifier,
     required this.onPhoneValidChanged,
     this.validator,
     this.enabled = true,
     this.isVerified = false,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomPhoneInput> createState() => _CustomPhoneInputState();

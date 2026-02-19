@@ -288,7 +288,7 @@ class AppointmentsAdjustScreen extends StatelessWidget {
     );
   }
 
-  _additionalSettings(BuildContext context) {
+  Column _additionalSettings(BuildContext context) {
     return Column(
       children: [
         SizedBox(height: 40.h),
@@ -386,7 +386,7 @@ class _PriceDataState extends State<PriceData> {
           scale: 0.7,
           child: CupertinoSwitch(
             value: widget.data[widget.index].isHidden == 0 ? false : true,
-            activeColor: appColors.primaryColorYellow,
+            activeTrackColor: appColors.primaryColorYellow,
             onChanged: (bool value) {
               setState(() {
                 widget.data[widget.index].isHidden = value ? 1 : 0;
@@ -462,7 +462,7 @@ class _PriceDataYmtazState extends State<PriceDataYmtaz> {
           scale: 0.7,
           child: CupertinoSwitch(
             value: widget.data[widget.index].isHidden == 0 ? false : true,
-            activeColor: appColors.primaryColorYellow,
+            activeTrackColor: appColors.primaryColorYellow,
             onChanged: (bool value) {
               setState(() {
                 widget.data[widget.index].isHidden = value ? 1 : 0;

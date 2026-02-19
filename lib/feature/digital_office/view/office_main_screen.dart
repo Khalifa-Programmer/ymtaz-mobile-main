@@ -195,7 +195,7 @@ class OfficeScreen extends StatelessWidget {
 }
 
 class PolarChart extends StatelessWidget {
-  PolarChart(this.data);
+  const PolarChart(this.data, {super.key});
 
   final Map<String, dynamic> data;
 
@@ -261,7 +261,7 @@ List<PieChartSectionData> getSections(double sectionRadius, servicesData) {
     if (key == 'total') return;
     sections.add(PieChartSectionData(
       value: value.toDouble(),
-      title: '$key: ${value}',
+      title: '$key: $value',
       showTitle: false,
       color: getColorForKey(key),
       radius: sectionRadius,
@@ -289,7 +289,7 @@ Color getColorForKey(String key) {
 // total
 
 class PolarTotalChart extends StatelessWidget {
-  PolarTotalChart(this.data);
+  const PolarTotalChart(this.data, {super.key});
 
   final Map<String, dynamic> data;
 
@@ -355,7 +355,7 @@ List<PieChartSectionData> getTotalSections(double sectionRadius, servicesData) {
     if (key == 'total') return;
     sections.add(PieChartSectionData(
       value: value.toDouble(),
-      title: '$key: ${value}',
+      title: '$key: $value',
       showTitle: false,
       color: getColorForKey(key),
       radius: sectionRadius,

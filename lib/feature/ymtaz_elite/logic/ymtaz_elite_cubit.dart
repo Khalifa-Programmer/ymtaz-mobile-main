@@ -209,5 +209,5 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
 class YmtazEliteServicesUpdated extends YmtazEliteState {
   final Map<String, EliteServiceItem> services;
 
-  YmtazEliteServicesUpdated(this.services);
+  const YmtazEliteServicesUpdated(this.services);
 }

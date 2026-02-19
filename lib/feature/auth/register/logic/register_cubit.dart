@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
 import '../data/repo/register_repo.dart';
@@ -18,10 +19,26 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   Future<void> register(FormData loginRequestBody) async {
     emit(RegisterLoading());
+    debugPrint("register request: $loginRequestBody"); 
     final response = await _registerRepo.register(loginRequestBody);
+    debugPrint("register response: $response");
     response.when(success: (loginResponse) {
-      emit(RegisterSuccess(loginResponse.message!));
+      // Extract account_type from response data
+      String typeFromResponse = 'client'; // default
+      if (loginResponse.data != null && loginResponse.data is Map) {
+        debugPrint("register response data: ${loginResponse.data}"); 
+        final dataMap = loginResponse.data as Map<String, dynamic>;
+        debugPrint("register response data map: $dataMap");  
+        if (dataMap.containsKey('account') && dataMap['account'] is Map) {  
+          final accountMap = dataMap['account'] as Map<String, dynamic>;
+          debugPrint("register response account map: $accountMap");  
+          typeFromResponse = accountMap['account_type'] ?? 'client';
+          debugPrint("register response type from response: $typeFromResponse");   
+        }
+      }
+      emit(RegisterSuccess(loginResponse.message!, typeFromResponse));
     }, failure: (fail) {
+      debugPrint("register failure: $fail"); 
       emit(RegisterFailure(extractErrors(fail)));
     });
   }
@@ -49,19 +66,19 @@ class RegisterCubit extends Cubit<RegisterState> {
 
 String extractErrors(Map<String, dynamic>? errorData) {
   if (errorData == null || !errorData.containsKey('data')) {
-    return 'حدث خطأ ما يرجى راجع البيانات';
+    return 'حدث خطأ ما يرجى مراجعة البيانات';
   }
 
   final data = errorData['data'] as Map<String, dynamic>?;
 
   if (data == null || !data.containsKey('errors')) {
-    return 'حدث خطأ ما يرجى راجع البيانات';
+    return 'حدث خطأ ما يرجى مراجعة البيانات';
   }
 
   final errorsMap = data['errors'] as Map<String, dynamic>?;
 
   if (errorsMap == null || errorsMap.isEmpty) {
-    return 'حدث خطأ ما يرجى راجع البيانات';
+    return 'حدث خطأ ما يرجى مراجعة البيانات';
   }
 
   final errorMessages = <String>[];

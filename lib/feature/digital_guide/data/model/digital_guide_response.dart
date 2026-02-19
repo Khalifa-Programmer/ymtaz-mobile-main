@@ -43,7 +43,8 @@ class Data {
 @JsonSerializable()
 class Category {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "title")
   String? title;
   @JsonKey(name: "image")

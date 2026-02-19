@@ -19,6 +19,7 @@ import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/core/widgets/textform_auth_field.dart';
 import 'package:yamtaz/feature/auth/login/data/models/login_request_body.dart';
 import 'package:yamtaz/feature/auth/login/logic/login_cubit.dart';
+import 'package:yamtaz/feature/auth/login/logic/login_state.dart';
 import 'package:yamtaz/l10n/locale_keys.g.dart';
 
 import '../../../../../core/network/app_auth.dart';
@@ -174,7 +175,7 @@ class _LoginBodyState extends State<LoginBody> {
                                         // استدعاء عملية تسجيل الدخول
                                         await context
                                             .read<LoginCubit>()
-                                            .emitLoginProviderState(
+                                            .emitLoginState(
                                               LoginRequestBody(
                                                 context
                                                     .read<LoginCubit>()
@@ -273,18 +274,18 @@ class _LoginBodyState extends State<LoginBody> {
                                            loginCubit.isAppleLoading = true;
                                          });
                                          
-                                        String? token = await AppServices().signInWithApple(context);
+                                        Map<String, dynamic>? appleInfo = await AppServices().signInWithApple(context);
                                         
                                         // Reset loading state
                                         setState(() {
                                           loginCubit.isAppleLoading = false;
                                         });
                                         
-                                        if (token != null) {
-                                          context.read<LoginCubit>().emitAppleLoginState(context, token);
+                                        if (appleInfo != null) {
+                                          context.read<LoginCubit>().emitAppleLoginState(context, appleInfo);
                                          } else {
                                            ScaffoldMessenger.of(context).showSnackBar(
-                                             SnackBar(content: Text('فشل تسجيل الدخول باستخدام Apple'), backgroundColor: Colors.red)
+                                             const SnackBar(content: Text('فشل تسجيل الدخول باستخدام Apple'), backgroundColor: Colors.red)
                                            );
                                         }
                                       } catch (e) {
@@ -295,7 +296,7 @@ class _LoginBodyState extends State<LoginBody> {
                                         });
                                         
                                         ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text('حدث خطأ أثناء تسجيل الدخول'), backgroundColor: Colors.red)
+                                          const SnackBar(content: Text('حدث خطأ أثناء تسجيل الدخول'), backgroundColor: Colors.red)
                                         );
                                       }
                                     },
@@ -328,42 +329,33 @@ class _LoginBodyState extends State<LoginBody> {
                                     ),
                                   ) : SizedBox.shrink(),
                                   GestureDetector(
-                                    onTap: () async {
-                                      try {
-                                        // Show loading indicator in a more elegant way
-                                        final loginCubit = context.read<LoginCubit>();
-                                        
-                                        // Show loading state
-                                        setState(() {
-                                          loginCubit.isGoogleLoading = true;
-                                        });
-                                        
-                                        String? token = await AppServices().signInWithGoogle(context);
-                                        
-                                        // Reset loading state
-                                        setState(() {
-                                          loginCubit.isGoogleLoading = false;
-                                        });
-                                        
-                                        if (token != null) {
-                                          context.read<LoginCubit>().emitVisitorLoginState(context, token);
-                                        } else {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(content: Text('فشل تسجيل الدخول باستخدام Google'), backgroundColor: Colors.red)
-                                          );
-                                        }
-                                      } catch (e) {
-                                        debugPrint('Error during Google Sign In: $e');
-                                        // Reset loading state in case of error
-                                        setState(() {
-                                          context.read<LoginCubit>().isGoogleLoading = false;
-                                        });
-                                        
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text('حدث خطأ أثناء تسجيل الدخول'), backgroundColor: Colors.red)
-                                        );
-                                      }
-                                    },
+                                   // داخل GestureDetector الخاص بـ Google في ملف login_body.dart
+
+onTap: () async {
+  try {
+    final loginCubit = context.read<LoginCubit>();
+    
+    setState(() => loginCubit.isGoogleLoading = true);
+
+    // استدعاء خدمة جوجل (تأكد أن هذه الدالة تعيد الـ idToken)
+    Map<String, dynamic>? googleInfo = await AppServices().signInWithGoogle(context);
+    
+    setState(() => loginCubit.isGoogleLoading = false);
+
+    if (googleInfo != null && googleInfo['token'] != null) {
+      // إرسال البيانات للـ Cubit للتحقق منها مع الباك اند الخاص بك
+      await loginCubit.emitGoogleLoginState(context, googleInfo);
+    } else {
+      // إذا ألغى المستخدم العملية أو فشلت
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('تم إلغاء تسجيل الدخول')),
+      );
+    }
+  } catch (e) {
+    setState(() => context.read<LoginCubit>().isGoogleLoading = false);
+    debugPrint('Google Auth Error: $e');
+  }
+},
                                     child: Container(
                                       padding: EdgeInsets.all(8.0.w),
                                       margin: EdgeInsets.symmetric(horizontal: 10.w),

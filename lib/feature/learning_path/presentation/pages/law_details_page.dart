@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/di/dependency_injection.dart';
-import 'package:yamtaz/feature/learning_path/data/models/law_guide_items_response.dart';
 import 'package:yamtaz/feature/learning_path/logic/law_details_cubit.dart';
 import 'package:yamtaz/feature/learning_path/logic/law_details_state.dart';
 import 'package:yamtaz/feature/learning_path/logic/learning_path_cubit.dart';
-import 'package:yamtaz/feature/learning_path/logic/learning_path_state.dart' as lp_state;
 
-import '../../data/models/book_guide_items_response.dart';
 import '../../data/models/law_details_response.dart';
-import '../../data/models/learning_paths_response.dart';
-import '../../data/models/shared_models.dart';
 import '../../data/repos/learning_path_repo.dart';
-import 'package:get_it/get_it.dart';
 
 class LawDetailsPage extends StatefulWidget {
   final int lawId;

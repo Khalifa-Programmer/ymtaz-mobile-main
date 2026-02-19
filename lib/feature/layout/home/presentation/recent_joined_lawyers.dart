@@ -22,8 +22,9 @@ class RecentJoinedLawyers extends StatelessWidget {
         // TODO: implement listener
       },
       builder: (context, state) {
-        return getit<HomeCubit>().advisoriesNew != null
-            ? getit<HomeCubit>().advisoriesNew!.isEmpty
+        var advisories = getit<HomeCubit>().advisoriesNew;
+        return advisories != null
+            ? advisories.isEmpty
                 ? const SizedBox()
                 : Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -60,7 +61,7 @@ class RecentJoinedLawyers extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "${getit<HomeCubit>().advisoriesNew!.length}+",
+                                    "${advisories.length}+",
                                     style: TextStyle(
                                       fontSize: 25.sp,
                                       fontWeight: FontWeight.bold,
@@ -82,8 +83,7 @@ class RecentJoinedLawyers extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return RecentLawyers(
-                                        getit<HomeCubit>().advisoriesNew!);
+                                    return RecentLawyers(advisories);
                                   }));
                                 },
                                 child: Row(
@@ -114,14 +114,12 @@ class RecentJoinedLawyers extends StatelessWidget {
                           height: 40.h,
                           margin: EdgeInsets.symmetric(horizontal: 20.w),
                           child: UsersImagesWidget(
-                            imageList: getit<HomeCubit>()
-                                .advisoriesNew!
+                            imageList: advisories
                                 .map((lawyer) =>
                                     lawyer.photo ??
                                     "https://api.ymtaz.sa/Male.png")
                                 .toList(),
-                            totalCount:
-                                getit<HomeCubit>().advisoriesNew!.length,
+                            totalCount: advisories.length,
                             imageRadius: 12.w,
                             // يمكنك تعديل نصف القطر حسب الحاجة
                             imageCount: 9,
@@ -135,8 +133,8 @@ class RecentJoinedLawyers extends StatelessWidget {
                     ),
                   )
             : Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
-                highlightColor: Colors.grey[100]!,
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(

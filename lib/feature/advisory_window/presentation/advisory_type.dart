@@ -12,6 +12,8 @@ import '../../../core/constants/colors.dart';
 import '../logic/advisory_cubit.dart';
 
 class AdvisoryType extends StatelessWidget {
+  const AdvisoryType({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(

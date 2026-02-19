@@ -1,11 +1,7 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-// import 'package:uni_links/uni_links.dart';
 import 'package:yamtaz/config/themes/app_theme.dart';
 import 'package:yamtaz/core/router/app_router.dart';
 
@@ -17,11 +13,11 @@ class Yamtaz extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
 
   const Yamtaz({
-    Key? key,
+    super.key,
     required this.appRouter,
     required this.initialRoute,
     required this.navigatorKey,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

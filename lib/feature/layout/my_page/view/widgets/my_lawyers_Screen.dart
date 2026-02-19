@@ -10,6 +10,9 @@ import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../core/widgets/spacing.dart';
 import '../../logic/my_page_cubit.dart';
 import '../../logic/my_page_state.dart';
+import '../../../../layout/services/presentation/widgets/no_data_services.dart';
+
+
 
 class MyLawyers extends StatelessWidget {
   const MyLawyers({super.key});
@@ -36,23 +39,25 @@ class MyLawyers extends StatelessWidget {
             return state is LoadingMyClients
                 ? const Center(child: CircularProgressIndicator())
                 : state is LoadedMyClients
-                    ? ListView.separated(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: state.data.data!.clients!.length,
-                        itemBuilder: (context, index) {
-                          return _buildCategoryItem(
-                              state.data.data!.clients!, context, index);
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5.h),
-                            child: const Divider(
-                              thickness: 0.5,
-                            ),
-                          );
-                        },
-                      )
+                    ? state.data.data!.clients!.isEmpty
+                        ? NoProducts(text: 'عملاء')
+                        : ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: state.data.data!.clients!.length,
+                            itemBuilder: (context, index) {
+                              return _buildCategoryItem(
+                                  state.data.data!.clients!, context, index);
+                            },
+                            separatorBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 5.h),
+                                child: const Divider(
+                                  thickness: 0.5,
+                                ),
+                              );
+                            },
+                          )
                     : const Center(child: Text('error'));
           },
         ),

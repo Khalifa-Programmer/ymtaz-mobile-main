@@ -32,7 +32,9 @@ import '../../../../../core/constants/assets.dart';
 import '../../../../../core/helpers/fuctions_helpers/functions_helpers.dart';
 import '../../../../reminders/screens/reminders_screen.dart';
 import '../client_profile/presentation/user_account_screen.dart';
-import '../gamification/gamification.dart';
+import 'package:yamtaz/feature/layout/account/presentation/gamification/gamification.dart';
+import 'package:yamtaz/feature/package_and_subscriptions/presentation/widgets/lawyer_package_card.dart';
+import 'package:yamtaz/feature/layout/account/presentation/app_rating_screen.dart';
 
 class ProviderMyAccount extends StatelessWidget {
   ProviderMyAccount({super.key});
@@ -68,158 +70,83 @@ class ProviderMyAccount extends StatelessWidget {
                                   child: ListView(
                                     shrinkWrap: true,
                                     children: [
-                                      UserProfileColumn(
-                                          imageUrl: context
-                                              .read<MyAccountCubit>()
-                                              .userDataResponse!
-                                              .data!
-                                              .account!
-                                              .photo!,
-                                          name: context
-                                              .read<MyAccountCubit>()
-                                              .userDataResponse!
-                                              .data!
-                                              .account!
-                                              .name!,
-                                          isVerified: context
-                                              .read<MyAccountCubit>()
-                                              .userDataResponse!
-                                              .data!
-                                              .account!
-                                              .hasBadge,
-                                          image: context
-                                              .read<MyAccountCubit>()
-                                              .userDataResponse!
-                                              .data!
-                                              .account!
-                                              .currentRank!
-                                              .image!,
-                                          color: getColor(context
-                                              .read<MyAccountCubit>()
-                                              .userDataResponse!
-                                              .data!
-                                              .account!
-                                              .currentRank!
-                                              .borderColor!)),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          SizedBox(height: 5.h),
-                                          Text(
-                                            context
-                                                .read<MyAccountCubit>()
-                                                .userDataResponse!
-                                                .data!
-                                                .account!
-                                                .email!,
-                                            style: TextStyles.cairo_14_semiBold
-                                                .copyWith(
-                                                    color: appColors.grey5),
-                                          ),
-                                          SizedBox(height: 10.h),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 5),
-                                            decoration: BoxDecoration(
-                                              color: Colors.greenAccent
-                                                  .withOpacity(0.2),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: const Text(
-                                              "مقدم خدمة",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.green,
+                                      ...() {
+                                        final response = context.read<MyAccountCubit>().userDataResponse;
+                                        if (response == null) return <Widget>[];
+                                        return [
+                                          UserProfileColumn(
+                                              imageUrl: response.data?.account?.photo ?? "",
+                                              name: response.data?.account?.name ?? "",
+                                              isVerified: response.data?.account?.hasBadge,
+                                              image: response.data?.account?.currentRank?.image ?? "",
+                                              color: getColor(response.data?.account?.currentRank?.borderColor ?? "")),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              SizedBox(height: 5.h),
+                                              Text(
+                                                response.data?.account?.email ?? "",
+                                                style: TextStyles.cairo_14_semiBold
+                                                    .copyWith(
+                                                        color: appColors.grey5),
                                               ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-
-                                      Gamification(
-                                        daysStreak: context
-                                                .read<MyAccountCubit>()
-                                                .userDataResponse!
-                                                .data!
-                                                .account!
-                                                .daysStreak ??
-                                            0,
-                                        points: context
-                                            .read<MyAccountCubit>()
-                                            .userDataResponse!
-                                            .data!
-                                            .account!
-                                            .points!,
-                                        xp: context
-                                            .read<MyAccountCubit>()
-                                            .userDataResponse!
-                                            .data!
-                                            .account!
-                                            .xp!,
-                                        xpUntilNextLevel: context
-                                            .read<MyAccountCubit>()
-                                            .userDataResponse!
-                                            .data!
-                                            .account!
-                                            .xpUntilNextLevel!,
-                                        currentLevel: context
-                                            .read<MyAccountCubit>()
-                                            .userDataResponse!
-                                            .data!
-                                            .account!
-                                            .currentLevel!,
-                                        currentRank: context
-                                            .read<MyAccountCubit>()
-                                            .userDataResponse!
-                                            .data!
-                                            .account!
-                                            .currentRank!
-                                            .name!,
-                                      ),
-
-                                      showCompletedFile(
-                                          context,
-                                          context
-                                                          .read<
-                                                              MyAccountCubit>()
-                                                          .userDataResponse!
-                                                          .data!
-                                                          .account!
-                                                          .profileComplete ==
-                                                      0 ||
-                                                  context
-                                                          .read<
-                                                              MyAccountCubit>()
-                                                          .userDataResponse!
-                                                          .data!
-                                                          .account!
-                                                          .profileComplete ==
-                                                      null
-                                              ? false
-                                              : true),
-
-                                      verticalSpace(10.h),
-                                      InviteShareButtons(
-                                        onInviteTap: () {
-                                          inviteUser(
-                                            context,
-                                          );
-                                        },
-                                        onShareTap: () {
-                                          shareText(
+                                              SizedBox(height: 10.h),
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                    horizontal: 10, vertical: 5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.greenAccent
+                                                      .withOpacity(0.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: const Text(
+                                                  "مقدم خدمة",
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          Gamification(
+                                            daysStreak: response.data?.account?.daysStreak ?? 0,
+                                            points: response.data?.account?.points ?? 0,
+                                            xp: response.data?.account?.xp ?? 0,
+                                            xpUntilNextLevel: response.data?.account?.xpUntilNextLevel ?? 0,
+                                            currentLevel: response.data?.account?.currentLevel ?? 0,
+                                            currentRank: response.data?.account?.currentRank?.name ?? "",
+                                          ),
+                                          verticalSpace(10.h),
+                                          LawyerPackageCard(
+                                            package: response.data?.account?.package,
+                                          ),
+                                          verticalSpace(10.h),
+                                          showCompletedFile(
                                               context,
-                                              appWelcomeMessage,
-                                              context
-                                                  .read<MyAccountCubit>()
-                                                  .userDataResponse!
-                                                  .data!
-                                                  .account!
-                                                  .referralCode!);
-                                        },
-                                      ),
+                                              response.data?.account?.profileComplete == 0 ||
+                                                      response.data?.account?.profileComplete == null
+                                                  ? false
+                                                  : true),
+                                          verticalSpace(10.h),
+                                          InviteShareButtons(
+                                            onInviteTap: () {
+                                              inviteUser(
+                                                context,
+                                              );
+                                            },
+                                            onShareTap: () {
+                                              shareText(
+                                                  context,
+                                                  appWelcomeMessage,
+                                                  response.data?.account?.referralCode ?? "");
+                                            },
+                                          ),
+                                        ];
+                                      }(),
                                       verticalSpace(10.h),
 
                                       CustomListTile(
@@ -280,25 +207,13 @@ class ProviderMyAccount extends StatelessWidget {
                                       CustomListTile(
                                         title: "تقييم التطبيق",
                                         icon: Icons.rate_review,
-                                        onTap: () async {
-                                          // محاولة عرض نافذة التقييم المنبثقة داخل التطبيق
-                                          if (await _inAppReview.isAvailable()) {
-                                            // استخدام requestReview لعرض نافذة التقييم المنبثقة
-                                            await _inAppReview.requestReview();
-                                          } else {
-                                            // إذا لم تكن النافذة المنبثقة متاحة، ننتقل إلى المتجر
-                                            if (Platform.isAndroid) {
-                                              final Uri url = Uri.parse(
-                                                  'https://play.google.com/store/apps/details?id=com.ymtaz.ymtaz');
-                                              if (await canLaunchUrl(url)) {
-                                                await launchUrl(url);
-                                              }
-                                            } else if (Platform.isIOS) {
-                                              await _inAppReview.openStoreListing(
-                                                appStoreId: '6602893553',
-                                              );
-                                            }
-                                          }
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => AppRatingScreen(),
+                                            ),
+                                          );
                                         },
                                       ),
 
@@ -381,7 +296,7 @@ class ProviderMyAccount extends StatelessWidget {
     );
   }
 
-  _signOut(BuildContext context) {
+  void _signOut(BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) => CupertinoAlertDialog(

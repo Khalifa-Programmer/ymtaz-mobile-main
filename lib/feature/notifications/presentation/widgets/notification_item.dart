@@ -27,17 +27,19 @@ class NotificationItemWidget extends StatelessWidget {
       color: appColors.white,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16.w),
-        padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 16.w),
+        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w), // تحسين المسافات
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildNotificationIcon(),
-            SizedBox(width: 10.w),
+            SizedBox(width: 12.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildTitle(),
+                  _buildDescription(), // تأكدت من إضافة الوصف هنا لأنه كان مفقوداً في build السابق
+                  SizedBox(height: 5.h),
                   _buildFooter(context),
                 ],
               ),
@@ -50,31 +52,20 @@ class NotificationItemWidget extends StatelessWidget {
 
   Widget _buildNotificationIcon() {
     return Container(
-      width: 25.w,
-      height: 25.h,
+      width: 32.w, // تكبير بسيط لتناسب الأيقونة بشكل أفضل
+      height: 32.w,
       decoration: BoxDecoration(
-        color: isSeen ? appColors.grey20 : appColors.primaryColorYellow,
-        borderRadius: BorderRadius.circular(100.r),
+        // لون رمادي للمقروء ولون التطبيق للأصفر لغير المقروء
+        color: isSeen ? appColors.grey20.withOpacity(0.5) : appColors.primaryColorYellow,
+        shape: BoxShape.circle,
       ),
-      child: isSeen
-          ? Center(
-              child: Icon(
-                Icons.notifications,
-                size: 18.sp,
-                color: appColors.white,
-              ),
-            )
-          : Badge(
-              smallSize: 10,
-              alignment: Alignment.topRight,
-              child: Center(
-                child: Icon(
-                  Icons.notifications,
-                  size: 18.sp,
-                  color: appColors.white,
-                ),
-              ),
-            ),
+      child: Center(
+        child: Icon(
+          Icons.notifications_none_outlined, // تغيير لشكل أخف بدون النقطة
+          size: 18.sp,
+          color: appColors.white,
+        ),
+      ),
     );
   }
 
@@ -82,7 +73,7 @@ class NotificationItemWidget extends StatelessWidget {
     return Text(
       title,
       style: TextStyles.cairo_14_bold.copyWith(
-        color: appColors.black,
+        color: isSeen ? appColors.grey20 : appColors.black, // تمييز النص أيضاً
       ),
     );
   }
@@ -90,6 +81,8 @@ class NotificationItemWidget extends StatelessWidget {
   Widget _buildDescription() {
     return Text(
       description,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
       style: TextStyles.cairo_12_semiBold.copyWith(
         color: appColors.grey20,
       ),
@@ -106,12 +99,12 @@ class NotificationItemWidget extends StatelessWidget {
             color: appColors.grey20,
           ),
         ),
-        Spacer(),
+        const Spacer(),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
           decoration: BoxDecoration(
             color: appColors.primaryColorYellow.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           child: Text(
             getTypeNotificationText(type),

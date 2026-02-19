@@ -14,7 +14,7 @@ class RecorderPlayerWidget extends StatefulWidget {
   final RecorderController recorderController;
   final PlayerController playerController;
 
-  RecorderPlayerWidget({
+  const RecorderPlayerWidget({super.key, 
     required this.onRecordingComplete,
     required this.recorderController,
     required this.playerController,

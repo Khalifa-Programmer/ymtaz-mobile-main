@@ -14,7 +14,7 @@ import '../logic/services_cubit.dart';
 class SendRequestScreen extends StatelessWidget {
   final List<Lawyer> selectedLawyers;
 
-  SendRequestScreen({required this.selectedLawyers});
+  const SendRequestScreen({super.key, required this.selectedLawyers});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class SendRequestScreen extends StatelessWidget {
                     .copyWith(color: appColors.grey15),
               ),
               verticalSpace(40.h),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: CupertinoButton(
                   color: appColors.primaryColorYellow,

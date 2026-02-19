@@ -5,6 +5,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/network/local/cache_helper.dart';
 import 'package:yamtaz/feature/layout/layout/logic/layout_cubit.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 
 import '../../../../../../core/di/dependency_injection.dart';
 import '../../../../../../l10n/locale_keys.g.dart';
@@ -52,12 +55,51 @@ Widget CustomBottomAppBar(BuildContext context) {
       ),
       _buildShadowWithRippleDestination(
         context,
-        icon: null,
+        icon: CupertinoIcons.person_alt_circle, // Fallback icon
         label: LocaleKeys.myAccount.tr(),
         isSelected: LayoutCubit.get(context).currentIndex == 3,
-        customIcon: CircleAvatar(
-          radius: 15,
-          backgroundImage: NetworkImage(getProfileImage()),
+        customIcon: ConditionalBuilder(
+          condition: userType == 'guest',
+          builder: (BuildContext context) => Container(
+            width: 30.w,
+            height: 30.w,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: LayoutCubit.get(context).currentIndex == 3
+                    ? appColors.primaryColorYellow
+                    : Colors.transparent,
+                width: 1,
+              ),
+            ),
+            child: ClipOval(
+              child: Icon(CupertinoIcons.person_alt_circle, color: appColors.grey5),
+            ),
+          ),
+          fallback: (BuildContext context) {
+            final imageUrl = getProfileImage();
+            return Container(
+              width: 30.w,
+              height: 30.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: LayoutCubit.get(context).currentIndex == 3
+                      ? appColors.primaryColorYellow
+                      : Colors.transparent,
+                  width: 1,
+                ),
+              ),
+              child: ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Icon(CupertinoIcons.person_alt_circle, color: appColors.grey5),
+                  errorWidget: (context, url, error) => Icon(CupertinoIcons.person_alt_circle, color: appColors.grey5),
+                ),
+              ),
+            );
+          },
         ),
       ),
     ],
@@ -117,13 +159,12 @@ int _getDestinationIndex(String label) {
 
 String getProfileImage() {
   var userType = CacheHelper.getData(key: 'userType');
+  // Return empty string if not found to trigger errorWidget/placeholder in CachedNetworkImage
   if (userType == "client") {
-    return getit<MyAccountCubit>().clientProfile?.data?.account?.photo ??
-        "https://api.ymtaz.sa/uploads/person.png";
+    return getit<MyAccountCubit>().clientProfile?.data?.account?.photo ?? "";
   } else if (userType == "provider") {
-    return getit<MyAccountCubit>().userDataResponse?.data?.account?.photo ??
-        "https://api.ymtaz.sa/uploads/person.png";
+    return getit<MyAccountCubit>().userDataResponse?.data?.account?.photo ?? "";
   } else {
-    return "https://api.ymtaz.sa/uploads/person.png";
+    return "";
   }
 }

@@ -181,7 +181,7 @@ class PaymentDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "${getTime(payment.createdAt.toString())}",
+                    getTime(payment.createdAt.toString()),
                     style: TextStyle(
                       color: appColors.black,
                       fontWeight: FontWeight.bold,

@@ -52,89 +52,220 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             );
           },
-          successProvider: (loginResponse) async {
-            if (loginResponse.data!.account!.accountType == 'lawyer') {
-              context.pop();
+          success: (loginResponse) {
+            final userData = loginResponse.data?.account;
+            final isLawyer = userData?.accountType == 'lawyer';
+            final accountStatus = userData?.status ?? 0;
+            final serverMessage = loginResponse.message ?? '';
+            
+            context.pop(); // Close loading dialog
 
-              if (loginResponse.data!.account!.status == 3) {
-                CacheHelper.saveData(
-                    key: "token",
-                    value: "Bearer ${loginResponse.data!.account!.token}");
-                CacheHelper.saveData(key: "userType", value: "provider");
-                getit<MyAccountCubit>().getProviderData();
-                await getit<NotificationCubit>().getNotifications();
+            print('🔐 Login Success - Account Type: ${isLawyer ? "Provider" : "Client"}');
+            print('📊 Account Status: $accountStatus');
+            print('💬 Server Message: $serverMessage');
+
+            // Check email confirmation first
+            if (userData?.emailConfirmation == 0) {
+              showEmailDialog(context, serverMessage.isNotEmpty ? serverMessage : 'الرجاء تأكيد بريدك الإلكتروني');
+              return;
+            }
+
+            // Handle different account statuses
+            if (isLawyer) {
+              // Provider (Lawyer) Status Handling
+              switch (accountStatus) {
+                case 0: // New account - جديد
+                  AppAlerts.showAlert(
+                      context: context,
+                      message: serverMessage.isNotEmpty ? serverMessage : 'حسابك جديد وفي انتظار المراجعة',
+                      buttonText: LocaleKeys.continueNext.tr(),
+                      type: AlertType.warning);
+                  break;
+                  
+                case 1: // Accepted - مقبول
+                  AppAlerts.showAlert(
+                      context: context,
+                      message: serverMessage.isNotEmpty ? serverMessage : LocaleKeys.registrationSuccess.tr(),
+                      route: Routes.homeLayout,
+                      buttonText: LocaleKeys.continueNext.tr(),
+                      type: AlertType.success);
+                  break;
+                  
+                case 2: // Waiting - في الانتظار
+                  AppAlerts.showAlert(
+                      context: context,
+                      message: serverMessage.isNotEmpty ? serverMessage : 'حسابك في انتظار الموافقة',
+                      buttonText: LocaleKeys.continueNext.tr(),
+                      type: AlertType.warning);
+                  break;
+                  
+                case 3: // Needs update - يحتاج تحديث
+                  AppAlerts.showAlert(
+                      context: context,
+                      message: serverMessage.isNotEmpty ? serverMessage : 'يرجى تحديث بياناتك',
+                      buttonText: "تحديث البيانات",
+                      route: Routes.editProviderInstruction,
+                      isForceRouting: false,
+                      type: AlertType.success);
+                  break;
+                  
+                case 4: // Banned - محظور
+                  AppAlerts.showAlert(
+                      context: context,
+                      message: serverMessage.isNotEmpty ? serverMessage : 'حسابك محظور. الرجاء التواصل مع الدعم الفني',
+                      buttonText: LocaleKeys.continueNext.tr(),
+                      type: AlertType.error);
+                  break;
+                  
+                default: // Any other status
+                  AppAlerts.showAlert(
+                      context: context,
+                      message: serverMessage.isNotEmpty ? serverMessage : LocaleKeys.registrationSuccess.tr(),
+                      route: Routes.homeLayout,
+                      buttonText: LocaleKeys.continueNext.tr(),
+                      type: AlertType.success);
+              }
+            } else {
+              // Client Status Handling
+              switch (accountStatus) {
+                case 1: // New account - جديد
+                  AppAlerts.showAlert(
+                      context: context,
+                      message: serverMessage.isNotEmpty ? serverMessage : 'مرحباً بك! حسابك جديد',
+                      route: Routes.homeLayout,
+                      buttonText: LocaleKeys.continueNext.tr(),
+                      type: AlertType.success);
+                  break;
+                  
+                case 2: // Accepted - مقبول
+                  AppAlerts.showAlert(
+                      context: context,
+                      message: serverMessage.isNotEmpty ? serverMessage : LocaleKeys.registrationSuccess.tr(),
+                      route: Routes.homeLayout,
+                      buttonText: LocaleKeys.continueNext.tr(),
+                      type: AlertType.success);
+                  break;
+                  
+                case 3: // Waiting - في الانتظار
+                  AppAlerts.showAlert(
+                      context: context,
+                      message: serverMessage.isNotEmpty ? serverMessage : 'حسابك في انتظار الموافقة',
+                      route: Routes.homeLayout,
+                      buttonText: LocaleKeys.continueNext.tr(),
+                      type: AlertType.warning);
+                  break;
+                  
+                case 4: // Needs update - يحتاج تحديث
+                  AppAlerts.showAlert(
+                      context: context,
+                      message: serverMessage.isNotEmpty ? serverMessage : 'يرجى تحديث بياناتك',
+                      buttonText: "تحديث البيانات",
+                      route: Routes.editClient,
+                      isForceRouting: false,
+                      type: AlertType.success);
+                  break;
+                  
+                case 5: // Banned - محظور
+                  AppAlerts.showAlert(
+                      context: context,
+                      message: serverMessage.isNotEmpty ? serverMessage : 'حسابك محظور. الرجاء التواصل مع الدعم الفني',
+                      buttonText: LocaleKeys.continueNext.tr(),
+                      type: AlertType.error);
+                  break;
+                  
+                default: // Any other status
+                  AppAlerts.showAlert(
+                      context: context,
+                      message: serverMessage.isNotEmpty ? serverMessage : LocaleKeys.registrationSuccess.tr(),
+                      route: Routes.homeLayout,
+                      buttonText: LocaleKeys.continueNext.tr(),
+                      type: AlertType.success);
+              }
+            }
+
+            // Sync settings
+            if (context.read<LoginCubit>().rememberMe) {
+              CacheHelper.saveData(key: "rememberMe", value: "true");
+            }
+          },
+          successProvider: (loginResponse) {
+            // Handle provider login with the same logic as success
+            // This ensures messages are displayed for providers too
+            final userData = loginResponse.data?.account;
+            final accountStatus = userData?.status ?? 0;
+            final serverMessage = loginResponse.message ?? '';
+            
+            context.pop(); // Close loading dialog
+
+            print('🔐 Provider Login Success - Account Type: Provider');
+            print('📊 Account Status: $accountStatus');
+            print('💬 Server Message: $serverMessage');
+
+            // Check email confirmation first
+            if (userData?.emailConfirmation == 0) {
+              showEmailDialog(context, serverMessage.isNotEmpty ? serverMessage : 'الرجاء تأكيد بريدك الإلكتروني');
+              return;
+            }
+
+            // Provider (Lawyer) Status Handling
+            switch (accountStatus) {
+              case 0: // New account - جديد
                 AppAlerts.showAlert(
                     context: context,
-                    message: loginResponse.message!,
+                    message: serverMessage.isNotEmpty ? serverMessage : 'حسابك جديد وفي انتظار المراجعة',
+                    route: Routes.homeLayout,
+                    buttonText: LocaleKeys.continueNext.tr(),
+                    type: AlertType.warning);
+                break;
+                
+              case 1: // Accepted - مقبول
+                AppAlerts.showAlert(
+                    context: context,
+                    message: serverMessage.isNotEmpty ? serverMessage : LocaleKeys.registrationSuccess.tr(),
+                    route: Routes.homeLayout,
+                    buttonText: LocaleKeys.continueNext.tr(),
+                    type: AlertType.success);
+                break;
+                
+              case 2: // Waiting - في الانتظار
+                AppAlerts.showAlert(
+                    context: context,
+                    message: serverMessage.isNotEmpty ? serverMessage : 'حسابك في انتظار الموافقة',
+                    route: Routes.homeLayout,
+                    buttonText: LocaleKeys.continueNext.tr(),
+                    type: AlertType.warning);
+                break;
+                
+              case 3: // Needs update - يحتاج تحديث
+                AppAlerts.showAlert(
+                    context: context,
+                    message: serverMessage.isNotEmpty ? serverMessage : 'يرجى تحديث بياناتك',
                     buttonText: "تحديث البيانات",
                     route: Routes.editProviderInstruction,
                     isForceRouting: false,
                     type: AlertType.success);
-              } else if (loginResponse.data!.account!.emailConfirmation == 0) {
-                showEmailDialog(context, loginResponse.message!);
-              } else if (loginResponse.data!.account!.status == 0) {
+                break;
+                
+              case 4: // Banned - محظور
                 AppAlerts.showAlert(
                     context: context,
-                    message: loginResponse.message!,
+                    message: serverMessage.isNotEmpty ? serverMessage : 'حسابك محظور. الرجاء التواصل مع الدعم الفني',
                     buttonText: LocaleKeys.continueNext.tr(),
                     type: AlertType.error);
-              } else {
+                break;
+                
+              default: // Any other status
                 AppAlerts.showAlert(
                     context: context,
-                    message: loginResponse.message!,
+                    message: serverMessage.isNotEmpty ? serverMessage : LocaleKeys.registrationSuccess.tr(),
                     route: Routes.homeLayout,
                     buttonText: LocaleKeys.continueNext.tr(),
                     type: AlertType.success);
-                CacheHelper.saveData(
-                    key: "token",
-                    value: "Bearer ${loginResponse.data!.account!.token}");
-                CacheHelper.saveData(key: "userType", value: "provider");
-                getit<MyAccountCubit>().getProviderData();
-                await getit<NotificationCubit>().getNotifications();
-                if (getit<LoginCubit>().rememberMe == true) {
-                  CacheHelper.saveData(key: "rememberMe", value: "true");
-                  print(CacheHelper.getData(key: "rememberMe") + "rembmerKey");
-                }
-              }
-            } else {
-              context.pop();
+            }
 
-              if (loginResponse.data!.account!.status == 3) {
-                getit<MyAccountCubit>().sendFcmToken();
-                getit<NotificationCubit>().getNotifications();
-                CacheHelper.saveData(
-                    key: "token",
-                    value: "Bearer ${loginResponse.data!.account!.token}");
-                CacheHelper.saveData(key: "userType", value: "client");
-                getit<MyAccountCubit>().getClientData();
-                await getit<NotificationCubit>().getNotifications();
-                AppAlerts.showAlert(
-                    context: context,
-                    message: loginResponse.message!,
-                    buttonText: "تحديث البيانات",
-                    route: Routes.editClient,
-                    isForceRouting: false,
-                    type: AlertType.success);
-              } else if (loginResponse.data!.account!.emailConfirmation == 0) {
-                showEmailDialog(context, loginResponse.message!);
-              } else {
-                AppAlerts.showAlert(
-                    context: context,
-                    message: LocaleKeys.registrationSuccess.tr(),
-                    route: Routes.homeLayout,
-                    buttonText: LocaleKeys.continueNext.tr(),
-                    type: AlertType.success);
-                CacheHelper.saveData(
-                    key: "token",
-                    value: "Bearer ${loginResponse.data!.account!.token}");
-                CacheHelper.saveData(key: "userType", value: "client");
-                getit<MyAccountCubit>().getClientData();
-                await getit<NotificationCubit>().getNotifications();
-                if (context.read<LoginCubit>().rememberMe == true) {
-                  CacheHelper.saveData(key: "rememberMe", value: "true");
-                  print(CacheHelper.getData(key: "rememberMe") + "rembmerKey");
-                }
-              }
+            // Sync settings
+            if (context.read<LoginCubit>().rememberMe) {
+              CacheHelper.saveData(key: "rememberMe", value: "true");
             }
           },
           error: (error) {
@@ -173,13 +304,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 route: Routes.homeLayout,
                 buttonText: LocaleKeys.continueNext.tr(),
                 type: AlertType.success);
-            CacheHelper.saveData(
-                key: "tokenVisitor",
-                value: "Bearer ${visitorLogin.data!.visitor!.token}");
-            CacheHelper.saveData(key: "userType", value: "guest");
-            //getit<MyAccountCubit>().getVisitorData();
+            
+            // Cubit already saves data to cache, so we just handle navigation/alerts here
+            print('🔐 Google Login Success - Token: ${visitorLogin.data?.visitor?.token}');
           },
-          appleSuccess: (visitorLogin) async {
+          appleSuccess: (appleResponse) async {
             context.pop();
             AppAlerts.showAlert(
                 context: context,
@@ -187,11 +316,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 route: Routes.homeLayout,
                 buttonText: LocaleKeys.continueNext.tr(),
                 type: AlertType.success);
-            // CacheHelper.saveData(
-            //     key: "tokenVisitor",
-            //     value: "Bearer ${visitorLogin.data!.visitor!.token}");
-            CacheHelper.saveData(key: "userType", value: "guest");
-            //getit<MyAccountCubit>().getVisitorData();
+                
+            print('🔐 Apple Login Success');
           },
           visitorError: (error) {
             context.pop();
@@ -247,68 +373,69 @@ void showEmailDialog(BuildContext context, String message) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
         ),
-        child: Container(
-          padding: EdgeInsets.all(16.sp),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            // استخدام mainAxisSize.min لتقليل المساحة البيضاء
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        CupertinoIcons.xmark_circle_fill,
-                        color: appColors.grey.withOpacity(0.5),
-                        size: 30.sp,
-                      ))
-                ],
-              ),
-              Image.asset(
-                AppAssets.compeleteDataPNG,
-                height: 150.h, // تحقق من أن الأبعاد مناسبة
-                fit: BoxFit.contain, // اجعل الصورة تتناسب مع الحاوية
-              ),
-              SizedBox(height: 16.h),
-              // Title Text
-              Text(
-                'بريدك الإلكتروني غير مؤكد',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.sp,
+        child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.all(16.sp),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          CupertinoIcons.xmark_circle_fill,
+                          color: appColors.grey.withOpacity(0.5),
+                          size: 30.sp,
+                        ))
+                  ],
                 ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 8.h),
-
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey),
-              ),
-              SizedBox(height: 25.h),
-
-              // Button at the bottom
-              SizedBox(
-                width: double.infinity,
-                child: CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  color: appColors.primaryColorYellow,
-                  onPressed: () {
-                    context.pop();
-                  },
-                  child: Text('حسناً',
-                      style: TextStyles.cairo_12_bold
-                          .copyWith(color: Colors.white)),
+                Image.asset(
+                  AppAssets.compeleteDataPNG,
+                  height: 120.h, 
+                  fit: BoxFit.contain, 
                 ),
-              ),
-              SizedBox(height: 15.h),
-            ],
+                SizedBox(height: 16.h),
+                // Title Text
+                Text(
+                  'بريدك الإلكتروني غير مؤكد',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.sp,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 8.h),
+
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey),
+                ),
+                SizedBox(height: 25.h),
+
+                // Button at the bottom
+                SizedBox(
+                  width: double.infinity,
+                  child: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    color: appColors.primaryColorYellow,
+                    onPressed: () {
+                      context.pop();
+                    },
+                    child: Text('حسناً',
+                        style: TextStyles.cairo_12_bold
+                            .copyWith(color: Colors.white)),
+                  ),
+                ),
+                SizedBox(height: 15.h),
+              ],
+            ),
           ),
         ),
       );

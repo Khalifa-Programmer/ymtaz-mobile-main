@@ -39,7 +39,7 @@ class AdvisoryOrders extends StatelessWidget {
                       labelStyle: TextStyles.cairo_14_bold,
                       indicatorSize: TabBarIndicatorSize.tab,
                       overlayColor:
-                          MaterialStateProperty.all(Colors.transparent),
+                          WidgetStateProperty.all(Colors.transparent),
                       unselectedLabelColor: const Color(0xFF808D9E),
                       unselectedLabelStyle: TextStyles.cairo_14_semiBold,
                       tabs: const [

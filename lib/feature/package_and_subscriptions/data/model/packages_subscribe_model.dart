@@ -48,7 +48,7 @@ class Data {
 @JsonSerializable()
 class Subscription {
   @JsonKey(name: "package_id")
-  String? packageId;
+  int? packageId;
   @JsonKey(name: "account_id")
   String? accountId;
   @JsonKey(name: "transaction_id")

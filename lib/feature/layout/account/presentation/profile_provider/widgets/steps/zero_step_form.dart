@@ -25,13 +25,13 @@ class ZeroStepForm extends StatefulWidget {
   final Function(String) onPhoneChanged;
 
   const ZeroStepForm({
-    Key? key,
+    super.key,
     required this.formKey,
     required this.oldPhone,
     required this.oldPhoneCode,
     required this.onConfirmPhone,
     required this.onPhoneChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<ZeroStepForm> createState() => _ZeroStepFormState();
@@ -171,8 +171,8 @@ class _ZeroStepFormState extends State<ZeroStepForm> {
               ),
               const Spacer(),
               CupertinoButton(
-                child: const Text("تأكيد"),
                 onPressed: widget.onConfirmPhone,
+                child: const Text("تأكيد"),
               )
             ],
           )

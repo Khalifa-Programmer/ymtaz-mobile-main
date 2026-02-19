@@ -275,7 +275,7 @@ class ServiceOfferCardPending extends StatelessWidget {
 // }
 
 class ShimmerServiceOfferCardPending extends StatelessWidget {
-  const ShimmerServiceOfferCardPending({Key? key}) : super(key: key);
+  const ShimmerServiceOfferCardPending({super.key});
 
   @override
   Widget build(BuildContext context) {

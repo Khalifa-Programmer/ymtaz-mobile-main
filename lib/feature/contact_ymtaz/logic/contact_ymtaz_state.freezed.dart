@@ -147,9 +147,6 @@ class _$ContactYmtazStateCopyWithImpl<T, $Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -166,9 +163,6 @@ class __$$InitialImplCopyWithImpl<T, $Res>
   __$$InitialImplCopyWithImpl(
       _$InitialImpl<T> _value, $Res Function(_$InitialImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -348,9 +342,6 @@ class __$$LoadingContactYmtazStateImplCopyWithImpl<T, $Res>
       _$LoadingContactYmtazStateImpl<T> _value,
       $Res Function(_$LoadingContactYmtazStateImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -534,8 +525,6 @@ class __$$LoadedContactYmtazStateImplCopyWithImpl<T, $Res>
       $Res Function(_$LoadedContactYmtazStateImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -575,9 +564,7 @@ class _$LoadedContactYmtazStateImpl<T> implements LoadedContactYmtazState<T> {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(data));
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadedContactYmtazStateImplCopyWith<T, _$LoadedContactYmtazStateImpl<T>>
@@ -726,10 +713,7 @@ abstract class LoadedContactYmtazState<T> implements ContactYmtazState<T> {
       _$LoadedContactYmtazStateImpl<T>;
 
   T get data;
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LoadedContactYmtazStateImplCopyWith<T, _$LoadedContactYmtazStateImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -754,8 +738,6 @@ class __$$ErrorContactYmtazStateImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorContactYmtazStateImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -794,9 +776,7 @@ class _$ErrorContactYmtazStateImpl<T> implements ErrorContactYmtazState<T> {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorContactYmtazStateImplCopyWith<T, _$ErrorContactYmtazStateImpl<T>>
@@ -945,10 +925,7 @@ abstract class ErrorContactYmtazState<T> implements ContactYmtazState<T> {
       _$ErrorContactYmtazStateImpl<T>;
 
   String get message;
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorContactYmtazStateImplCopyWith<T, _$ErrorContactYmtazStateImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -968,9 +945,6 @@ class __$$LoadingSendMessageImplCopyWithImpl<T, $Res>
   __$$LoadingSendMessageImplCopyWithImpl(_$LoadingSendMessageImpl<T> _value,
       $Res Function(_$LoadingSendMessageImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1152,8 +1126,6 @@ class __$$SuccessSendMessageImplCopyWithImpl<T, $Res>
       $Res Function(_$SuccessSendMessageImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1193,9 +1165,7 @@ class _$SuccessSendMessageImpl<T> implements SuccessSendMessage<T> {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(data));
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessSendMessageImplCopyWith<T, _$SuccessSendMessageImpl<T>>
@@ -1343,10 +1313,7 @@ abstract class SuccessSendMessage<T> implements ContactYmtazState<T> {
   const factory SuccessSendMessage(final T data) = _$SuccessSendMessageImpl<T>;
 
   T get data;
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SuccessSendMessageImplCopyWith<T, _$SuccessSendMessageImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1368,8 +1335,6 @@ class __$$ErrorSendMessageImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorSendMessageImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1408,9 +1373,7 @@ class _$ErrorSendMessageImpl<T> implements ErrorSendMessage<T> {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorSendMessageImplCopyWith<T, _$ErrorSendMessageImpl<T>> get copyWith =>
@@ -1559,10 +1522,7 @@ abstract class ErrorSendMessage<T> implements ContactYmtazState<T> {
       _$ErrorSendMessageImpl<T>;
 
   String get message;
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorSendMessageImplCopyWith<T, _$ErrorSendMessageImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1584,9 +1544,6 @@ class __$$LoadingContactUsTypesImplCopyWithImpl<T, $Res>
       _$LoadingContactUsTypesImpl<T> _value,
       $Res Function(_$LoadingContactUsTypesImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1766,9 +1723,6 @@ class __$$LoadedContactUsTypesImplCopyWithImpl<T, $Res>
   __$$LoadedContactUsTypesImplCopyWithImpl(_$LoadedContactUsTypesImpl<T> _value,
       $Res Function(_$LoadedContactUsTypesImpl<T>) _then)
       : super(_value, _then);
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -1950,8 +1904,6 @@ class __$$ErrorContactUsTypesImplCopyWithImpl<T, $Res>
       $Res Function(_$ErrorContactUsTypesImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1990,9 +1942,7 @@ class _$ErrorContactUsTypesImpl<T> implements ErrorContactUsTypes<T> {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ErrorContactUsTypesImplCopyWith<T, _$ErrorContactUsTypesImpl<T>>
@@ -2141,10 +2091,7 @@ abstract class ErrorContactUsTypes<T> implements ContactYmtazState<T> {
       _$ErrorContactUsTypesImpl<T>;
 
   String get message;
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ErrorContactUsTypesImplCopyWith<T, _$ErrorContactUsTypesImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -2166,8 +2113,6 @@ class __$$LoadedAboutUsImplCopyWithImpl<T, $Res>
       $Res Function(_$LoadedAboutUsImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2206,9 +2151,7 @@ class _$LoadedAboutUsImpl<T> implements LoadedAboutUs<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadedAboutUsImplCopyWith<T, _$LoadedAboutUsImpl<T>> get copyWith =>
@@ -2356,10 +2299,7 @@ abstract class LoadedAboutUs<T> implements ContactYmtazState<T> {
   const factory LoadedAboutUs(final AboutYmtaz data) = _$LoadedAboutUsImpl<T>;
 
   AboutYmtaz get data;
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LoadedAboutUsImplCopyWith<T, _$LoadedAboutUsImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -2381,8 +2321,6 @@ class __$$LoadedFaqImplCopyWithImpl<T, $Res>
       _$LoadedFaqImpl<T> _value, $Res Function(_$LoadedFaqImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2421,9 +2359,7 @@ class _$LoadedFaqImpl<T> implements LoadedFaq<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadedFaqImplCopyWith<T, _$LoadedFaqImpl<T>> get copyWith =>
@@ -2570,10 +2506,7 @@ abstract class LoadedFaq<T> implements ContactYmtazState<T> {
   const factory LoadedFaq(final Faq data) = _$LoadedFaqImpl<T>;
 
   Faq get data;
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LoadedFaqImplCopyWith<T, _$LoadedFaqImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -2596,8 +2529,6 @@ class __$$LoadedPrivacyPolicyImplCopyWithImpl<T, $Res>
       $Res Function(_$LoadedPrivacyPolicyImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2636,9 +2567,7 @@ class _$LoadedPrivacyPolicyImpl<T> implements LoadedPrivacyPolicy<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadedPrivacyPolicyImplCopyWith<T, _$LoadedPrivacyPolicyImpl<T>>
@@ -2787,10 +2716,7 @@ abstract class LoadedPrivacyPolicy<T> implements ContactYmtazState<T> {
       _$LoadedPrivacyPolicyImpl<T>;
 
   PrivacyPolicy get data;
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LoadedPrivacyPolicyImplCopyWith<T, _$LoadedPrivacyPolicyImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -2812,8 +2738,6 @@ class __$$LoadedSocialMediaImplCopyWithImpl<T, $Res>
       $Res Function(_$LoadedSocialMediaImpl<T>) _then)
       : super(_value, _then);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2852,9 +2776,7 @@ class _$LoadedSocialMediaImpl<T> implements LoadedSocialMedia<T> {
   @override
   int get hashCode => Object.hash(runtimeType, data);
 
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadedSocialMediaImplCopyWith<T, _$LoadedSocialMediaImpl<T>>
@@ -3004,10 +2926,7 @@ abstract class LoadedSocialMedia<T> implements ContactYmtazState<T> {
       _$LoadedSocialMediaImpl<T>;
 
   SocialMedia get data;
-
-  /// Create a copy of ContactYmtazState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LoadedSocialMediaImplCopyWith<T, _$LoadedSocialMediaImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
 }

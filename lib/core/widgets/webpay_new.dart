@@ -102,15 +102,30 @@ class WebPaymentScreenState extends State<WebPaymentScreen> {
             )),
       ),
       body: PopScope(
-        onPopInvoked: (didPop) {
-          // show alert "الخروج من عملية الدفع سيؤدي الي غلق طلبك"
-          AppAlerts.showAlert(
-              context: context,
-              message: "الخروج من عملية الدفع سيؤدي الي غلق طلبك",
-              buttonText: "موافق , خروج",
-              isForceRouting: true,
-              type: AlertType.warning,
-              route: Routes.homeLayout);
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (didPop) return;
+          
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text("تنبيه", textAlign: TextAlign.right),
+              content: const Text("الخروج من عملية الدفع سيؤدي الي إلغاء طلبك، هل تريد الاستمرار؟", textAlign: TextAlign.right),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("إلغاء"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close dialog
+                    Navigator.pop(context); // Close payment screen
+                  },
+                  child: const Text("موافق , خروج"),
+                ),
+              ],
+            ),
+          );
         },
         child: Column(children: <Widget>[
           Container(

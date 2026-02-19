@@ -28,7 +28,8 @@ class AdvisoryCommitteesLawyersResponse {
 @JsonSerializable()
 class Data {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "title")
   String? title;
   @JsonKey(name: "image")
@@ -54,7 +55,8 @@ class Data {
 @JsonSerializable()
 class Advisor {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "first_name")
   String? firstName;
   @JsonKey(name: "second_name")
@@ -133,6 +135,9 @@ class Advisor {
   String? degreeCertificate;
   @JsonKey(name: "photo")
   String? photo;
+  @JsonKey(name: "image")
+  String? image;
+
   @JsonKey(name: "company_lisences_file")
   dynamic companyLisencesFile;
   @JsonKey(name: "accept_rules")
@@ -193,7 +198,9 @@ class Advisor {
     this.cv,
     this.degreeCertificate,
     this.photo,
+    this.image,
     this.companyLisencesFile,
+
     this.acceptRules,
     this.sections,
     this.workTimes,
@@ -212,7 +219,8 @@ class Advisor {
 @JsonSerializable()
 class AccurateSpecialty {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "title")
   String? title;
 
@@ -229,7 +237,8 @@ class AccurateSpecialty {
 @JsonSerializable()
 class Country {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "name")
   String? name;
 
@@ -246,7 +255,8 @@ class Country {
 @JsonSerializable()
 class Degree {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "title")
   String? title;
   @JsonKey(name: "need_certificate")
@@ -266,7 +276,8 @@ class Degree {
 @JsonSerializable()
 class SectionElement {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "section")
   SectionSection? section;
   @JsonKey(name: "lawyer_license_no")
@@ -289,7 +300,8 @@ class SectionElement {
 @JsonSerializable()
 class SectionSection {
   @JsonKey(name: "id")
-  int? id;
+  dynamic id;
+
   @JsonKey(name: "title")
   String? title;
   @JsonKey(name: "image")

@@ -57,7 +57,7 @@ class ForensicGuideCategoryDetailsScreen extends StatelessWidget {
         ));
   }
 
-  _buildHeader(BuildContext context) {
+  Padding _buildHeader(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -250,7 +250,7 @@ class ForensicGuideCategoryDetailsScreen extends StatelessWidget {
     );
   }
 
-  _judicialGuideDetails(SubCateogry data) {
+  Container _judicialGuideDetails(SubCateogry data) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0.w, vertical: 20.0.h),
       margin: EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 0.0.h),

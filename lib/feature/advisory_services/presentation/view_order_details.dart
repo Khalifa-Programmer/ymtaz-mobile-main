@@ -294,7 +294,7 @@ class ViewOrderDetails extends StatelessWidget {
                                     CacheHelper.getData(key: 'userType');
                                 if (userType == 'client') {
                                   StreamVideo.reset();
-                                  await StreamVideo(
+                                  StreamVideo(
                                     'd3cgunkh7jrg',
                                     user: User.regular(
                                         userId: getit<MyAccountCubit>()
@@ -316,7 +316,7 @@ class ViewOrderDetails extends StatelessWidget {
                                   );
                                 } else {
                                   StreamVideo.reset();
-                                  await StreamVideo(
+                                  StreamVideo(
                                     'd3cgunkh7jrg',
                                     user: User.regular(
                                         userId: getit<MyAccountCubit>()

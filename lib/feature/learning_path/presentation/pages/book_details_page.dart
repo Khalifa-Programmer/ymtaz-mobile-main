@@ -8,7 +8,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/core/constants/colors.dart';
-import 'package:yamtaz/core/helpers/fuctions_helpers/functions_helpers.dart';
 import 'package:yamtaz/feature/learning_path/data/models/book_details_response.dart';
 import 'package:yamtaz/feature/learning_path/data/models/learning_path_items_response.dart';
 import 'package:yamtaz/feature/learning_path/logic/learning_path_cubit.dart';

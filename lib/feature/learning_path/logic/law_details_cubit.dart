@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yamtaz/core/network/local/cache_helper.dart';
 import 'package:yamtaz/feature/learning_path/data/repos/learning_path_repo.dart';
-import 'package:yamtaz/feature/learning_path/data/models/learning_path_items_response.dart';
 import 'package:yamtaz/feature/learning_path/data/models/law_details_response.dart';
 
 import 'law_details_state.dart';

@@ -3,7 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:yamtaz/core/constants/colors.dart';
+import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/digital_guide/data/model/digital_guide_response.dart';
 import 'package:yamtaz/feature/digital_guide/data/model/digital_search_response_model.dart';
@@ -18,15 +21,20 @@ import '../../layout/account/presentation/guest_screen.dart';
 import '../../layout/services/presentation/widgets/no_data_services.dart';
 
 class DigitalGuideSearch extends StatelessWidget {
-  DigitalGuideSearch({super.key, required this.cat});
+  const DigitalGuideSearch({super.key, required this.cat});
 
   final Category cat;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
         centerTitle: true,
+        iconTheme: IconThemeData(color: appColors.black),
+
         title: Text(cat.title!,
             style: TextStyles.cairo_14_bold.copyWith(
               color: appColors.black,
@@ -56,7 +64,8 @@ class DigitalGuideSearch extends StatelessWidget {
         return RefreshIndicator(
           color: appColors.primaryColorYellow,
           onRefresh: () async {
-            getit<DigitalGuideCubit>().getDigitalGuide();
+            getit<DigitalGuideCubit>().getSearchDigitalGuide(
+                FormData.fromMap({'category_id': cat.id!}));
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.0.w),
@@ -115,14 +124,11 @@ class DigitalGuideSearch extends StatelessWidget {
           Container(
             width: 50.w,
             height: 50.h,
-            decoration: BoxDecoration(
+            clipBehavior: Clip.antiAlias,
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              image: DecorationImage(
-                image: NetworkImage(
-                    lawyer.photo ?? "https://api.ymtaz.sa/uploads/person.png"),
-                fit: BoxFit.cover,
-              ),
             ),
+            child: _buildLawyerImage(lawyer),
           ),
           SizedBox(width: 10.0.h),
           Column(
@@ -132,7 +138,8 @@ class DigitalGuideSearch extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    "${lawyer.firstName} ${lawyer.secondName} ${lawyer.fourthName}",
+                    lawyer.name ?? "بدون اسم",
+
                     style: TextStyles.cairo_12_bold.copyWith(
                       color: appColors.blue100,
                     ),
@@ -156,39 +163,71 @@ class DigitalGuideSearch extends StatelessWidget {
                     size: 20.sp,
                   ),
                   horizontalSpace(0.w),
-                  Text(lawyer.city!.title ?? "",
+                  Text(lawyer.city?.title ?? "",
                       style: TextStyles.cairo_12_semiBold),
                 ],
               )
             ],
           ),
           const Spacer(),
-          Container(
-            height: 30.h,
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
-            decoration: BoxDecoration(
-              color: appColors.lightYellow10,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    lawyer.ratesAvg ?? "0",
-                    style: TextStyles.cairo_12_bold.copyWith(),
-                  ),
-                  horizontalSpace(4.w),
-                  Icon(
-                    CupertinoIcons.star_fill,
-                    color: appColors.primaryColorYellow,
-                    size: 15.sp,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // Container(
+          //   height: 30.h,
+          //   padding: EdgeInsets.symmetric(horizontal: 10.w),
+          //   decoration: BoxDecoration(
+          //     color: appColors.lightYellow10,
+          //     borderRadius: BorderRadius.circular(4),
+          //   ),
+          //   child: Center(
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         Text(
+          //           "0",
+          //           style: TextStyles.cairo_12_bold.copyWith(),
+          //         ),
+          //         horizontalSpace(4.w),
+          //         Icon(
+          //           CupertinoIcons.star_fill,
+          //           color: appColors.primaryColorYellow,
+          //           size: 15.sp,
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
+      ),
+    );
+
+  }
+
+  Widget _buildLawyerImage(Lawyer lawyer) {
+    final imageUrl = lawyer.image ?? lawyer.photo ?? lawyer.logo;
+    final isFemale = lawyer.gender == 'female';
+    final defaultAvatar = isFemale ? AppAssets.Female : AppAssets.Male;
+
+    if (imageUrl == null || imageUrl.isEmpty || imageUrl == "https://api.ymtaz.sa/uploads/person.png") {
+      return SvgPicture.asset(
+        defaultAvatar,
+        width: 50.w,
+        height: 50.h,
+      );
+    }
+
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      fit: BoxFit.cover,
+      width: 50.w,
+      height: 50.h,
+      placeholder: (context, url) => SvgPicture.asset(
+        defaultAvatar,
+        width: 50.w,
+        height: 50.h,
+      ),
+      errorWidget: (context, url, error) => SvgPicture.asset(
+        defaultAvatar,
+        width: 50.w,
+        height: 50.h,
       ),
     );
   }

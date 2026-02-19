@@ -16,10 +16,10 @@ class AppointmentForm extends StatefulWidget {
   final Function(BaseServiceRequest) onSuccess;
 
   const AppointmentForm({
-    Key? key,
+    super.key,
     required this.priceController,
     required this.onSuccess,
-  }) : super(key: key);
+  });
 
   @override
   State<AppointmentForm> createState() => _AppointmentFormState();

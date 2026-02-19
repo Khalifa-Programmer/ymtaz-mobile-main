@@ -3,12 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 import 'package:yamtaz/config/themes/styles.dart';
-import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/di/dependency_injection.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
@@ -17,17 +15,16 @@ import 'package:yamtaz/core/network/local/cache_helper.dart';
 import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/core/widgets/custom_button.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
-import 'package:yamtaz/core/widgets/ticket_ui.dart';
 import 'package:yamtaz/feature/advisory_services/data/model/advisory_request_response.dart';
 import 'package:yamtaz/feature/layout/account/logic/my_account_cubit.dart';
 
 class SuccessPaymentInvoice extends StatelessWidget {
-  const SuccessPaymentInvoice({Key? key, required this.data});
+  const SuccessPaymentInvoice({super.key, Key? key, required this.data});
 
   final AdvisoryRequestResponse data;
 
   Future<void> _generateAndSharePdf(BuildContext context) async {
-    String _logo = await rootBundle.loadString('assets/svgs/logo.svg');
+    String logo = await rootBundle.loadString('assets/svgs/logo.svg');
     String userType = CacheHelper.getData(key: 'userType');
 
     final pdf = pw.Document();
@@ -45,7 +42,7 @@ class SuccessPaymentInvoice extends StatelessWidget {
                 alignment: pw.Alignment.topRight,
                 height: 72.h,
                 width: 150.w,
-                child: pw.SvgImage(svg: _logo),
+                child: pw.SvgImage(svg: logo),
               ),
               pw.Text('تمت عملية الدفع بنجاح',
                   style: const pw.TextStyle(fontSize: 20),

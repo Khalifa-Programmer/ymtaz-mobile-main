@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:yamtaz/core/network/local/cache_helper.dart';
 import 'package:yamtaz/feature/layout/account/presentation/client_profile/presentation/user_account_screen.dart';
 import 'package:yamtaz/feature/layout/account/presentation/profile_provider/my_account_main_screen.dart';
+import 'package:yamtaz/feature/layout/account/presentation/visitor_account_screen.dart';
+
 
 import 'guest_screen.dart';
 
@@ -16,6 +18,9 @@ class MyAccountScreen extends StatelessWidget {
         ? ProviderMyAccount()
         : userType == 'client'
             ? ClientMyAccount()
-            : const GestScreen();
+            : userType == 'visitor'
+                ? const VisitorAccountScreen()
+                : const GestScreen();
+
   }
 }

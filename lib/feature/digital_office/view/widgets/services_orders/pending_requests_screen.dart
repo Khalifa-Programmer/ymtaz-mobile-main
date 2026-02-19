@@ -11,7 +11,7 @@ import '../../../logic/office_provider_cubit.dart';
 import '../../../logic/office_provider_state.dart';
 
 class PendingRequestsScreen extends StatelessWidget {
-  PendingRequestsScreen({super.key, required this.offers});
+  const PendingRequestsScreen({super.key, required this.offers});
 
   final List<Declined> offers;
 

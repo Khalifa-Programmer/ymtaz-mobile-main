@@ -13,7 +13,7 @@ class DailyProgressWidget extends StatefulWidget {
 
 class _DailyProgressWidgetState extends State<DailyProgressWidget> {
   String _selectedTab = 'يومي';
-  int _goalProgress = 0;
+  final int _goalProgress = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +174,7 @@ class _DailyProgressWidgetState extends State<DailyProgressWidget> {
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        '${_goalProgress}/1',
+                        '$_goalProgress/1',
                         style: TextStyles.cairo_12_semiBold.copyWith(
                           color: appColors.blue100,
                         ),
@@ -191,7 +191,7 @@ class _DailyProgressWidgetState extends State<DailyProgressWidget> {
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        '${_goalProgress}/2',
+                        '$_goalProgress/2',
                         style: TextStyles.cairo_12_semiBold.copyWith(
                           color: appColors.blue100,
                         ),

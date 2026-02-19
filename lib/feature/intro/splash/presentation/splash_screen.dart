@@ -86,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         // Navigate after animation completes
-        // _actualNavigation();
+        _actualNavigation();
       }
     });
   }
@@ -124,26 +124,24 @@ class _SplashScreenState extends State<SplashScreen>
     if (_isAnimating || _hasNavigated) return; // Check if already navigating
     _isAnimating = true;
 
-    var rememberMe = CacheHelper.getData(key: 'token');
-    Widget nextScreen =
-        const OnboardingScreen(); // Initialize with a default value
+    var token = CacheHelper.getData(key: 'token');
+    var userType = CacheHelper.getData(key: 'userType');
+    Widget nextScreen = const OnboardingScreen(); 
 
-    if (rememberMe == null) {
-      // Prepare OnBoard screen
-      nextScreen =
-          const OnboardingScreen(); // Replace with your actual OnBoard screen widget
+    if (userType == 'visitor') {
+      nextScreen = const LayoutScreen();
+    } else if (token == null) {
+      nextScreen = const OnboardingScreen(); 
     } else {
       final response = await profile();
       await response.when(
         success: (loginResponse) async {
           getit<MyAccountCubit>().sendFcmToken();
           // await getit<NotificationCubit>().getNotifications();
-          nextScreen =
-              const LayoutScreen(); // Replace with your actual Home layout widget
+          nextScreen = const LayoutScreen(); 
         },
         failure: (fail) {
-          nextScreen =
-              const OnboardingScreen(); // Replace with your actual Login screen widget
+          nextScreen = const OnboardingScreen(); 
         },
       );
     }
@@ -177,10 +175,11 @@ class _SplashScreenState extends State<SplashScreen>
     var userType = CacheHelper.getData(key: 'userType');
     try {
       final SplashResponse response;
-      if (userType == "client") {
-        response = await apiService.checkClient(token);
-      } else {
+      if (userType == "provider") {
         response = await apiService.checkProvider(token);
+      } else {
+        // Both 'client' and 'visitor' use the same check endpoint
+        response = await apiService.checkClient(token);
       }
       return ApiResult.success(response);
     } catch (error) {

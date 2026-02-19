@@ -20,16 +20,15 @@ class PackageSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ترتيب الباقات: المشترك بها أولاً، ثم البقية مرتبة حسب السعر
     List<Package> sortedPackages = [
       ...packages.where((package) => package.subscribed!),
-      // Add subscribed packages at the top
       ...packages
-          .where((package) => !package
-              .subscribed!) // Add non-subscribed packages, sorted by price
+          .where((package) => !package.subscribed!)
           .toList()
-        ..sort(
-            (a, b) => a.priceAfterDiscount!.compareTo(b.priceAfterDiscount!)),
+        ..sort((a, b) => a.priceAfterDiscount!.compareTo(b.priceAfterDiscount!)),
     ];
+
     return ListView.separated(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         itemBuilder: (context, index) {
@@ -40,7 +39,7 @@ class PackageSlider extends StatelessWidget {
         },
         itemCount: packages.length,
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics());
+        physics: const NeverScrollableScrollPhysics());
   }
 }
 
@@ -75,31 +74,30 @@ class PackageCard extends StatelessWidget {
                 SvgPicture.asset(AppAssets.services,
                     width: 24.w,
                     height: 24.h,
-                    colorFilter:
-                        ColorFilter.mode(appColors.grey20, BlendMode.srcIn)),
+                    colorFilter: ColorFilter.mode(appColors.grey20, BlendMode.srcIn)),
                 horizontalSpace(5.w),
                 Text(
                   package.name ?? 'اسم الباقة',
-                  style: TextStyles.cairo_16_bold
-                      .copyWith(color: appColors.blue100),
+                  style: TextStyles.cairo_16_bold.copyWith(color: appColors.blue100),
                 ),
-                Spacer(),
-                Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                  decoration: BoxDecoration(
-                    color: appColors.primaryColorYellow.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Text(
-                    "مقترح لك",
-                    style: TextStyle(
-                      color: appColors.primaryColorYellow,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
+                const Spacer(),
+                // التعديل: إظهار "مقترح لك" فقط إذا كان المستخدم غير مشترك
+                if (package.subscribed == false)
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                    decoration: BoxDecoration(
+                      color: appColors.primaryColorYellow.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20.r),
                     ),
-                  ),
-                )
+                    child: Text(
+                      "مقترح لك",
+                      style: TextStyle(
+                        color: appColors.primaryColorYellow,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  )
               ],
             ),
             SizedBox(height: 18.h),
@@ -108,8 +106,7 @@ class PackageCard extends StatelessWidget {
               children: [
                 Text(
                   "${package.instructions}",
-                  style: TextStyles.cairo_14_medium
-                      .copyWith(color: appColors.blue100),
+                  style: TextStyles.cairo_14_medium.copyWith(color: appColors.blue100),
                 ),
                 SizedBox(height: 16.h),
                 if (package.numberOfServices != 0 ||
@@ -117,21 +114,13 @@ class PackageCard extends StatelessWidget {
                     package.numberOfReservations != 0)
                   CustomExpansionTile(
                     title: 'مميزات الباقة',
-                    initialGradient: LinearGradient(
-                      colors: [
-                        Color.fromRGBO(20, 69, 82, 1),
-                        // التدرج الأول عند الإغلاق
-                        Color.fromRGBO(0, 38, 46, 1),
-                        // التدرج الثاني عند الإغلاق
-                      ],
+                    initialGradient: const LinearGradient(
+                      colors: [Color.fromRGBO(20, 69, 82, 1), Color.fromRGBO(0, 38, 46, 1)],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
-                    expandedGradient: LinearGradient(
-                      colors: [
-                        Color.fromRGBO(0, 38, 46, 1), // التدرج الثاني عند الفتح
-                        Color.fromRGBO(20, 69, 82, 1), // التدرج الأول عند الفتح
-                      ],
+                    expandedGradient: const LinearGradient(
+                      colors: [Color.fromRGBO(0, 38, 46, 1), Color.fromRGBO(20, 69, 82, 1)],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
@@ -143,22 +132,14 @@ class PackageCard extends StatelessWidget {
                   ),
                 if (package.permissions!.isNotEmpty)
                   CustomExpansionTile(
-                    title: 'مميزات الباقة',
-                    initialGradient: LinearGradient(
-                      colors: [
-                        Color.fromRGBO(20, 69, 82, 1),
-                        // التدرج الأول عند الإغلاق
-                        Color.fromRGBO(0, 38, 46, 1),
-                        // التدرج الثاني عند الإغلاق
-                      ],
+                    title: 'صلاحيات الباقة',
+                    initialGradient: const LinearGradient(
+                      colors: [Color.fromRGBO(20, 69, 82, 1), Color.fromRGBO(0, 38, 46, 1)],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
-                    expandedGradient: LinearGradient(
-                      colors: [
-                        Color.fromRGBO(0, 38, 46, 1), // التدرج الثاني عند الفتح
-                        Color.fromRGBO(20, 69, 82, 1), // التدرج الأول عند الفتح
-                      ],
+                    expandedGradient: const LinearGradient(
+                      colors: [Color.fromRGBO(0, 38, 46, 1), Color.fromRGBO(20, 69, 82, 1)],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
@@ -166,10 +147,8 @@ class PackageCard extends StatelessWidget {
                       verticalSpace(10.h),
                       ...package.permissions!.map((permission) {
                         return Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 4.h, horizontal: 16.w),
-                          child: getFeatureRowById(
-                              permission.id!, permission.name!),
+                          padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 16.w),
+                          child: getFeatureRowById(permission.id!, permission.name!),
                         );
                       }),
                       verticalSpace(10.h),
@@ -178,52 +157,30 @@ class PackageCard extends StatelessWidget {
                 SizedBox(height: 24.h),
                 RichText(
                   text: TextSpan(
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      color: appColors.blue100,
-                    ),
+                    style: TextStyle(fontSize: 20.sp, color: appColors.blue100),
                     children: [
-                      // عرض السعر قبل الخصم إذا كان هناك خصم
                       if (package.priceBeforeDiscount != null &&
-                          package.priceBeforeDiscount! >
-                              package.priceAfterDiscount!)
+                          package.priceBeforeDiscount! > package.priceAfterDiscount!)
                         TextSpan(
                           text: '${package.priceBeforeDiscount} ر.س ',
                           style: TextStyles.cairo_20_semiBold.copyWith(
                             color: Colors.grey,
-                            decoration: TextDecoration
-                                .lineThrough, // خط وسط السعر قبل الخصم
+                            decoration: TextDecoration.lineThrough,
                           ),
                         ),
-                      if (package.priceBeforeDiscount != null &&
-                          package.priceBeforeDiscount! >
-                              package.priceAfterDiscount!)
-                        TextSpan(
-                          text: ' ',
-                        ),
-
-                      // عرض السعر بعد الخصم
                       TextSpan(
                         text: '${package.priceAfterDiscount} ر.س ',
-                        style: TextStyles.cairo_24_bold.copyWith(
-                          color: appColors.blue100,
-                        ),
+                        style: TextStyles.cairo_24_bold.copyWith(color: appColors.blue100),
                       ),
                       TextSpan(
                         text: '/ شهر',
-                        style: TextStyles.cairo_12_semiBold.copyWith(
-                          color: Colors.grey,
-                        ),
+                        style: TextStyles.cairo_12_semiBold.copyWith(color: Colors.grey),
                       ),
-                      // عرض كونتينر "خصم" إذا كان هناك فرق بين السعرين
-
                       if (package.priceBeforeDiscount != null &&
-                          package.priceBeforeDiscount! >
-                              package.priceAfterDiscount!)
+                          package.priceBeforeDiscount! > package.priceAfterDiscount!)
                         WidgetSpan(
                           child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                             margin: EdgeInsets.symmetric(horizontal: 8.w),
                             decoration: BoxDecoration(
                               color: Colors.red,
@@ -231,9 +188,7 @@ class PackageCard extends StatelessWidget {
                             ),
                             child: Text(
                               'خصم',
-                              style: TextStyles.cairo_12_semiBold.copyWith(
-                                color: Colors.white,
-                              ),
+                              style: TextStyles.cairo_12_semiBold.copyWith(color: Colors.white),
                             ),
                           ),
                         ),
@@ -243,6 +198,7 @@ class PackageCard extends StatelessWidget {
                 SizedBox(height: 24.h),
               ],
             ),
+            // عرض حالة زر الاشتراك
             package.subscribed!
                 ? CustomButton(
                     title: 'تم الاشتراك',
@@ -251,18 +207,12 @@ class PackageCard extends StatelessWidget {
                     titleColor: appColors.grey15,
                     bgColor: appColors.grey2,
                   )
-
-                // onPress: () {
-                //       context.pushNamed(Routes.packageDetails,
-                //           arguments: package);
-                //     })
                 : CustomButton(
                     title: 'اشترك الآن',
                     borderRadius: 25.r,
                     onPress: () {
-                      context.pushNamed(Routes.packageDetails,
-                          arguments: package);
-                    })
+                      context.pushNamed(Routes.packageDetails, arguments: package);
+                    }),
           ],
         ),
       ),
@@ -272,85 +222,59 @@ class PackageCard extends StatelessWidget {
 
 class PackageFeatures extends StatefulWidget {
   final Package package;
-
-  const PackageFeatures({
-    required this.package,
-    super.key,
-  });
+  const PackageFeatures({required this.package, super.key});
 
   @override
   State<PackageFeatures> createState() => _PackageFeaturesState();
 }
 
 class _PackageFeaturesState extends State<PackageFeatures> {
-  bool isExpanded = false;
-
   @override
   Widget build(BuildContext context) {
     List<Widget> featureWidgets = [];
 
-    // Build all feature widgets
     if (widget.package.numberOfAdvisoryServices! > 0) {
-      featureWidgets.add(buildFeatureRow(
-        2,'${widget.package.numberOfAdvisoryServices} استشارة شهرية',
-      ));
+      featureWidgets.add(buildFeatureRow(2, '${widget.package.numberOfAdvisoryServices} استشارة شهرية'));
       featureWidgets.add(SizedBox(height: 10.h));
     }
-
     if (widget.package.numberOfServices! > 0) {
-      featureWidgets.add(buildFeatureRow(
-        1,'${widget.package.numberOfServices} خدمة شهرية',
-      ));
+      featureWidgets.add(buildFeatureRow(1, '${widget.package.numberOfServices} خدمة شهرية'));
       featureWidgets.add(SizedBox(height: 10.h));
     }
-
     if (widget.package.numberOfReservations! > 0) {
-      featureWidgets.add(buildFeatureRow(
-        3,'${widget.package.numberOfReservations} موعد شهري',
-      ));
+      featureWidgets.add(buildFeatureRow(3, '${widget.package.numberOfReservations} موعد شهري'));
       featureWidgets.add(SizedBox(height: 10.h));
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Show first two features or all features when expanded
-        ...featureWidgets,
-      ],
+      children: featureWidgets,
     );
   }
 }
 
-
-
+// قائمة الخدمات والأيقونات
 List<Map<String, dynamic>> services = [
-  { 'id': 1, 'name': 'خدمة', 'icon': AppAssets.services },
-  { 'id': 2, 'name': 'استشارة', 'icon': AppAssets.advisories },
-  { 'id': 3, 'name': 'موعد', 'icon': AppAssets.appointments },
-
+  {'id': 1, 'name': 'خدمة', 'icon': AppAssets.services},
+  {'id': 2, 'name': 'استشارة', 'icon': AppAssets.advisories},
+  {'id': 3, 'name': 'موعد', 'icon': AppAssets.appointments},
 ];
 
-Widget buildFeatureRow(int id , String name) {
-  // البحث عن الميزة بناءً على الـ id
+Widget buildFeatureRow(int id, String name) {
   var feature = services.firstWhere(
-        (service) => service['id'] == id,
-    orElse: () => {'id': 0, 'name': 'ميزة غير موجودة', 'icon': 'assets/icons/default_icon.svg'},
+    (service) => service['id'] == id,
+    orElse: () => {'id': 0, 'name': 'ميزة', 'icon': AppAssets.services},
   );
 
-  // إرجاع Row يحتوي على الأيقونة والاسم
   return Padding(
-    padding:  EdgeInsets.symmetric(
-      horizontal: 16.w),
+    padding: EdgeInsets.symmetric(horizontal: 16.w),
     child: Row(
       children: [
-        SvgPicture.asset(
-          feature['icon'],
-          width: 20,
-          height: 20,
-          placeholderBuilder: (context) => CircularProgressIndicator(), // عرض مؤشر التحميل إذا كانت الأيقونة قيد التحميل
+        SvgPicture.asset(feature['icon'], width: 20, height: 20),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(name, style: TextStyles.cairo_12_semiBold.copyWith(color: appColors.blue100)),
         ),
-        SizedBox(width: 8),
-        Expanded(child: Text(name, style: TextStyles.cairo_12_semiBold.copyWith(color: appColors.blue100))),
       ],
     ),
   );
