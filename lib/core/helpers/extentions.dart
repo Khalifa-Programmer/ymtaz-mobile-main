@@ -28,3 +28,19 @@ extension CountryCode on String {
       .map(String.fromCharCode)
       .join();
 }
+
+extension ArabicPlural on int {
+  String get hourNoun {
+    if (this >= 3 && this <= 10) {
+      return 'ساعات';
+    }
+    return 'ساعة';
+  }
+
+  String get dayNoun {
+    if (this >= 3 && this <= 10) {
+      return 'أيام';
+    }
+    return 'يوم';
+  }
+}

@@ -16,6 +16,8 @@ import 'package:yamtaz/feature/digital_guide/logic/digital_guide_state.dart';
 import 'package:yamtaz/feature/auth/login/presentation/view/login_body.dart';
 
 import 'package:yamtaz/core/network/local/cache_helper.dart';
+import 'package:yamtaz/core/constants/assets.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../forensic_guide/data/model/judicial_guide_response_model.dart';
 import '../data/model/digital_search_response_model.dart';
 import 'digetal_providers_screen.dart';
@@ -718,13 +720,38 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
                   },
                   child: Row(
                     children: [
-                      CircleAvatar(
-                        radius: 25.r,
-                        backgroundColor: appColors.grey15,
-                        backgroundImage: NetworkImage(
-                            lawyers[index].image ?? lawyers[index].photo ?? lawyers[index].logo ?? "https://api.ymtaz.sa/uploads/person.png"
-                        ),
-
+                      Container(
+                        width: 50.r,
+                        height: 50.r,
+                        decoration: const BoxDecoration(shape: BoxShape.circle),
+                        clipBehavior: Clip.antiAlias,
+                        child: (lawyers[index].image == null ||
+                                lawyers[index].image!.isEmpty ||
+                                lawyers[index].image == "https://api.ymtaz.sa/uploads/person.png" ||
+                                lawyers[index].image == "https://ymtaz.sa/uploads/person.png")
+                            ? SvgPicture.asset(
+                                lawyers[index].gender == 'female'
+                                    ? AppAssets.Female
+                                    : AppAssets.Male,
+                                fit: BoxFit.cover,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: lawyers[index].image!,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => SvgPicture.asset(
+                                  lawyers[index].gender == 'female'
+                                      ? AppAssets.Female
+                                      : AppAssets.Male,
+                                  fit: BoxFit.cover,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    SvgPicture.asset(
+                                  lawyers[index].gender == 'female'
+                                      ? AppAssets.Female
+                                      : AppAssets.Male,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                       ),
                       horizontalSpace(16.w),
                       Column(

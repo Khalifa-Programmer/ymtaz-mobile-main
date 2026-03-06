@@ -313,9 +313,13 @@ class _HomeScreenLawyerState extends State<HomeScreenLawyer> {
           condition: getit<MyAccountCubit>().clientProfile != null &&
               userType == 'client',
           builder: (BuildContext context) => UserProfileRow(
-            imageUrl:
-                getit<MyAccountCubit>().clientProfile!.data!.account!.photo ??
-                    "https://api.ymtaz.sa/uploads/person.png",
+            imageUrl: (getit<MyAccountCubit>().clientProfile?.data?.account?.photo == null ||
+                        getit<MyAccountCubit>().clientProfile!.data!.account!.photo!.isEmpty ||
+                        getit<MyAccountCubit>().clientProfile!.data!.account!.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                        getit<MyAccountCubit>().clientProfile!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png")
+                    ? "default"
+                    : getit<MyAccountCubit>().clientProfile!.data!.account!.photo!,
+            gender: getit<MyAccountCubit>().clientProfile?.data?.account?.gender,
             name: getit<MyAccountCubit>().clientProfile!.data!.account!.name!,
             color: getColor(getit<MyAccountCubit>()
                 .clientProfile!
@@ -341,12 +345,13 @@ class _HomeScreenLawyerState extends State<HomeScreenLawyer> {
                 .data!
                 .account!
                 .hasBadge,
-            imageUrl: getit<MyAccountCubit>()
-                    .userDataResponse!
-                    .data!
-                    .account!
-                    .photo ??
-                "https://api.ymtaz.sa/uploads/person.png",
+            imageUrl: (getit<MyAccountCubit>().userDataResponse?.data?.account?.photo == null ||
+                        getit<MyAccountCubit>().userDataResponse!.data!.account!.photo!.isEmpty ||
+                        getit<MyAccountCubit>().userDataResponse!.data!.account!.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                        getit<MyAccountCubit>().userDataResponse!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png")
+                    ? "default"
+                    : getit<MyAccountCubit>().userDataResponse!.data!.account!.photo!,
+            gender: getit<MyAccountCubit>().userDataResponse?.data?.account?.gender,
             name:
                 '${getit<MyAccountCubit>().userDataResponse!.data!.account!.name}',
             color: getColor(getit<MyAccountCubit>()
@@ -367,8 +372,7 @@ class _HomeScreenLawyerState extends State<HomeScreenLawyer> {
         ConditionalBuilder(
           condition: userType == 'guest',
           builder: (BuildContext context) => const UserProfileRow(
-            imageUrl:
-                "https://e7.pngegg.com/pngimages/141/425/png-clipart-user-profile-computer-icons-avatar-profile-s-free-angle-rectangle-thumbnail.png",
+            imageUrl: "default",
             name: "ضيفنا الكريم",
             color: appColors.primaryColorYellow,
             image: "https://api.ymtaz.sa/uploads/ranks/BrownShield.svg",
@@ -520,6 +524,8 @@ class _HomeScreenLawyerState extends State<HomeScreenLawyer> {
                 item.icon,
                 Text(
                   item.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: appColors.blue100,
                     fontSize: 12.sp,

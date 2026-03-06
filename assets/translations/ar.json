@@ -241,7 +241,6 @@
     "message": "الرسالة",
     "send": "إرسال",
     "appointments": "مفكرة المواعيد",
-    "changePassword": "تعديل كلمة المرور",
     "serviceDetails": "تفاصيل الخدمة",
     "pending": "قيد الانتظار",
     "underStudy": "قيد الدراسة",
@@ -266,5 +265,6 @@
     "notificatiom" : "الإشعارات",
     "selectAccountTypeRecover": "يرجى اختيار نوع الحساب الذي ترغب في استرجاعه",
     "verifyCode": "التحقق من الرمز",
-    "codeSent": "تم إرسال الرمز على البريد الإلكتروني"
+    "codeSent": "تم إرسال الرمز على البريد الإلكتروني",
+    "trainingTracks": "مسارات التدريب"
 }

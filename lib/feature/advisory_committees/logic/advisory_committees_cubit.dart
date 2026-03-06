@@ -54,27 +54,45 @@ class AdvisoryCommitteesCubit extends Cubit<AdvisoryCommitteesState> {
   LawyerAdvisoryServicesResponseModel? lawyerAdvisoryServicesResponseModel;
   LawyerServicesResponseModel? lawyerServicesResponseModel;
   void getLawyerdatabtid(String id) async {
+    // Reset old data
+    lawyerAdvisoryServicesResponseModel = null;
+    lawyerServicesResponseModel = null;
+    
     emit(const AdvisoryCommitteesState.loadingGetLawyerAdvisory());
 
     try {
       final result = await _advisoryCommitteesRepo.getLawyerData(id);
 
+      bool hasData = false;
       for (var apiResult in result) {
         apiResult.when(
           success: (data) {
             if (data is LawyerAdvisoryServicesResponseModel) {
               lawyerAdvisoryServicesResponseModel = data;
+              hasData = true;
             } else if (data is LawyerServicesResponseModel) {
               lawyerServicesResponseModel = data;
+              hasData = true;
             }
           },
           failure: (error) {
-            emit(AdvisoryCommitteesState.errorGetLawyerAdvisory(error));
+            // Log or handle individual failure if needed
           },
         );
       }
 
-      emit(AdvisoryCommitteesState.loadedGetLawyerAdvisory(lawyerAdvisoryServicesResponseModel!));
+      // Even if one failed, if we have some data, we consider it loaded
+      if (hasData) {
+        // We emit the loaded state. Since the state only takes one model, 
+        // we pass the advisory one if available, otherwise we use a dummy or handle in UI.
+        // The UI in AdvisorScreen accesses the models directly from the cubit via getit,
+        // so the specific object passed to the state doesn't matter as much as triggering the rebuild.
+        emit(AdvisoryCommitteesState.loadedGetLawyerAdvisory(
+            lawyerAdvisoryServicesResponseModel ?? lawyerAdvisoryServicesResponseModel ?? LawyerAdvisoryServicesResponseModel()
+        ));
+      } else {
+        emit(const AdvisoryCommitteesState.errorGetLawyerAdvisory("Failed to load lawyer data"));
+      }
     } catch (error) {
       emit(AdvisoryCommitteesState.errorGetLawyerAdvisory(error.toString()));
     }

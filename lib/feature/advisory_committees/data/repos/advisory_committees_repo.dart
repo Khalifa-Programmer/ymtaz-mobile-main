@@ -50,17 +50,24 @@ class AdvisoryCommitteesRepo {
 
   Future<List<ApiResult>> getLawyerData(String id) async {
     var token = CacheHelper.getData(key: 'token');
+    List<ApiResult> results = [];
+
+    // Fetch Advisory Services
     try {
-      var advisoryFuture = _apiService.getLawyerAdvisors(token, id);
-      var servicesFuture = _apiService.getServices(token, id);
-
-      var results = await Future.wait<dynamic>(<Future<dynamic>>[advisoryFuture, servicesFuture]);
-
-
-
-      return results.map((response) => ApiResult.success(response)).toList();
-    } on DioException catch (error) {
-      return [ApiResult.failure(error.response?.data)];
+      var advisoryData = await _apiService.getLawyerAdvisors(token ?? '', id);
+      results.add(ApiResult.success(advisoryData));
+    } catch (e) {
+      results.add(ApiResult.failure(e.toString()));
     }
+
+    // Fetch Regular Services
+    try {
+      var servicesData = await _apiService.getServices(token ?? '', id);
+      results.add(ApiResult.success(servicesData));
+    } catch (e) {
+      results.add(ApiResult.failure(e.toString()));
+    }
+
+    return results;
   }
 }

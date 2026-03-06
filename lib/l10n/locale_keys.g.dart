@@ -268,4 +268,5 @@ abstract class LocaleKeys {
   static const selectAccountTypeRecover = 'selectAccountTypeRecover';
   static const verifyCode = 'verifyCode';
   static const codeSent = 'codeSent';
+  static const trainingTracks = 'trainingTracks';
 }

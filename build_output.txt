@@ -1,0 +1,37 @@
+Running Gradle task 'assembleDebug'...                          
+lib/core/network/remote/api_service.g.dart:3969:19: Error: The return type of the method '_ApiService.getLawyerAdvisors' is 'Future<dynamic>', which does not match the return type, 'Future<LawyerAdvisoryServicesResponseModel>', of the overridden method, 'ApiService.getLawyerAdvisors'.
+ - 'Future' is from 'dart:async'.
+ - 'LawyerAdvisoryServicesResponseModel' is from 'package:yamtaz/feature/advisory_services/data/model/lawyer_advisory_services.dart' ('lib/feature/advisory_services/data/model/lawyer_advisory_services.dart').
+Change to a subtype of 'Future<LawyerAdvisoryServicesResponseModel>'.
+  Future<dynamic> getLawyerAdvisors(
+                  ^
+lib/core/network/remote/api_service.dart:732:47: Context: This is the overridden method ('getLawyerAdvisors').
+  Future<LawyerAdvisoryServicesResponseModel> getLawyerAdvisors(
+                                              ^
+lib/core/network/remote/api_service.g.dart:3999:19: Error: The return type of the method '_ApiService.getServices' is 'Future<dynamic>', which does not match the return type, 'Future<LawyerServicesResponseModel>', of the overridden method, 'ApiService.getServices'.
+ - 'Future' is from 'dart:async'.
+ - 'LawyerServicesResponseModel' is from 'package:yamtaz/feature/digital_guide/data/model/lawyer_services_response_model.dart' ('lib/feature/digital_guide/data/model/lawyer_services_response_model.dart').
+Change to a subtype of 'Future<LawyerServicesResponseModel>'.
+  Future<dynamic> getServices(
+                  ^
+lib/core/network/remote/api_service.dart:736:39: Context: This is the overridden method ('getServices').
+  Future<LawyerServicesResponseModel> getServices(
+                                      ^
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildDevelopmentDebug'.
+> Process 'command 'C:\src\flutter\bin\flutter.bat'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to generate a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1m 27s
+Running Gradle task 'assembleDebug'...                             89.0s
+Gradle task assembleDebug failed with exit code 1

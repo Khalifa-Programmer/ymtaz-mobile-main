@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
@@ -115,10 +116,29 @@ class _ServiceScreenSetailsClientState
                       children: [
                         CircleAvatar(
                           radius: 15.r,
-                          backgroundImage: NetworkImage(
-                              widget.offer.account?.image == null
+                          backgroundColor: Colors.transparent,
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: widget.offer.account?.image == null
                                   ? 'https://api.ymtaz.sa/uploads/person.png'
-                                  : widget.offer.account!.image!),
+                                  : widget.offer.account!.image!,
+                              width: 30.r,
+                              height: 30.r,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Container(
+                                width: 30.r,
+                                height: 30.r,
+                                color: appColors.grey.withOpacity(0.3),
+                                child: Icon(Icons.person, size: 20.r, color: appColors.grey),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                width: 30.r,
+                                height: 30.r,
+                                color: appColors.grey.withOpacity(0.3),
+                                child: Icon(Icons.person, size: 20.r, color: appColors.grey),
+                              ),
+                            ),
+                          ),
                         ),
                         horizontalSpace(10.w),
                         Text(

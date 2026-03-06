@@ -78,7 +78,7 @@ class LawyersSelections extends StatelessWidget {
               child: LawyerCardLoading(),
             );
           }, serviceLawyersByIdSuccess: (data) {
-            final lawyers = data.data!.map((e) => e.lawyer!).toList();
+            final validData = (data.data ?? []).where((datum) => datum.lawyer != null).toList();
             return Stack(
               children: [
                 Animate(
@@ -90,12 +90,16 @@ class LawyersSelections extends StatelessWidget {
                     child: ValueListenableBuilder(
                       valueListenable: searchQuery,
                       builder: (context, query, _) {
-                        final filteredLawyers = lawyers.where((lawyer) {
-                          final matchesQuery = lawyer.name!.contains(query);
+                        final filteredData = validData.where((datum) {
+                          final lawyer = datum.lawyer!;
+                          final name = lawyer.name ?? '';
+                          final matchesQuery = name.contains(query);
+                          final regionName = lawyer.region?.name ?? '';
                           final matchesFilter = selectedFilter.value == 'All' ||
-                              lawyer.region!.name == selectedFilter.value;
+                              regionName == selectedFilter.value;
                           return matchesQuery && matchesFilter;
                         }).toList();
+                        final filteredLawyers = filteredData.map((e) => e.lawyer!).toList();
                         return ListView(
                           children: [
                             _buildSearchAndFilter(),
@@ -146,12 +150,13 @@ class LawyersSelections extends StatelessWidget {
                                       physics:
                                           const NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, index) {
-                                        final lawyer = filteredLawyers[index];
+                                        final datum = filteredData[index];
+                                        final lawyer = datum.lawyer!;
                                         return LawyerCard(
                                           lawyer,
-                                          data.data![index].service!,
-                                          data.data![index].price!.toString(),
-                                          data.data![index].importance!,
+                                          datum.service ?? Service(),
+                                          datum.price?.toString() ?? "0",
+                                          datum.importance ?? Importance(),
                                           selected.contains(lawyer),
                                           toggleLawyerSelection,
                                         ).animate().fadeIn(

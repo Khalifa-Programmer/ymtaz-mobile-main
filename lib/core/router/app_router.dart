@@ -195,7 +195,7 @@ class AppRouter {
             )));
 
       case Routes.trainingScreen:
-        return _getFadeTransition(TrainingMainScreen());
+        return _getFadeTransition(const TrainingMainScreen(key: ValueKey('training_main_screen')));
       case Routes.trainingClips:
         return _getFadeTransition(const TrainingView());
       case Routes.notifications:
@@ -623,18 +623,10 @@ class AppRouter {
         return _getFadeTransition(const LearningPathHomePage());
 
       case Routes.learningPath:
-        return _getFadeTransition(BlocProvider.value(
-          value: getit<LearningPathCubit>(),
-          child: LearningPathPage(pathId: settings.arguments as int),
-        ),
-        );
+        return _getFadeTransition(LearningPathPage(pathId: settings.arguments as int));
 
       case Routes.learningPaths:
-        return _getFadeTransition(BlocProvider.value(
-          value: getit<LearningPathCubit>(),
-          child: LearningPathsPage(),
-        ),
-        );
+        return _getFadeTransition(const LearningPathsPage());
 
       // case Routes.bookDetails:
       //   final args = settings.arguments as Map<String, dynamic>;

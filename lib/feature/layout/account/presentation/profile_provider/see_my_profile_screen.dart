@@ -87,34 +87,48 @@ class SeeMyProfileProvider extends StatelessWidget {
                                             .currentRank!
                                             .borderColor!),
                                         radius: 53.0.sp,
-                                        child: CachedNetworkImage(
-                                          imageUrl: myAccountCubit
-                                                  .userDataResponse!
-                                                  .data!
-                                                  .account!
-                                                  .photo!
-                                                  .isEmpty
-                                              ? "https://api.ymtaz.sa/uploads/person.png"
-                                              : myAccountCubit.userDataResponse!
-                                                  .data!.account!.photo!,
-                                          imageBuilder:
-                                              (context, imageProvider) =>
-                                                  Container(
-                                            width: 100.0.w,
-                                            height: 100.0.h,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover),
-                                            ),
-                                          ),
-                                          progressIndicatorBuilder: (context,
-                                                  url, downloadProgress) =>
-                                              imageShimmer(),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
-                                        ),
+                                        child: (myAccountCubit.userDataResponse!.data!.account!.photo == null ||
+                                                myAccountCubit.userDataResponse!.data!.account!.photo!.isEmpty ||
+                                                myAccountCubit.userDataResponse!.data!.account!.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                                                myAccountCubit.userDataResponse!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png")
+                                            ? SvgPicture.asset(
+                                                myAccountCubit.userDataResponse!.data!.account!.gender == 'female'
+                                                    ? AppAssets.Female
+                                                    : AppAssets.Male,
+                                                width: 100.0.w,
+                                                height: 100.0.h,
+                                              )
+                                            : CachedNetworkImage(
+                                                imageUrl: myAccountCubit
+                                                    .userDataResponse!
+                                                    .data!
+                                                    .account!
+                                                    .photo!,
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        Container(
+                                                  width: 100.0.w,
+                                                  height: 100.0.h,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover),
+                                                  ),
+                                                ),
+                                                progressIndicatorBuilder: (context,
+                                                        url, downloadProgress) =>
+                                                    imageShimmer(),
+                                                errorWidget: (context, url,
+                                                        error) =>
+                                                    SvgPicture.asset(
+                                                    myAccountCubit.userDataResponse!.data!.account!.gender == 'female'
+                                                        ? AppAssets.Female
+                                                        : AppAssets.Male,
+                                                  width: 100.0.w,
+                                                  height: 100.0.h,
+                                                ),
+                                              ),
                                       ),
                                       Positioned(
                                         bottom: 0.0.h,

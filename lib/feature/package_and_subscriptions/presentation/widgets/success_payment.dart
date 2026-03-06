@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -363,11 +364,29 @@ class SuccessPayment extends StatelessWidget {
               fontSize: 12.sp,
               title: 'الذهاب للباقات',
               onPress: () {
+                context.read<MyAccountCubit>().getPayments(); // Refresh invoices
                 context.pushNamedAndRemoveUntil(Routes.homeLayout,
                     predicate: (Route<dynamic> route) {
                       return false;
                     });
                 context.pushNamed(Routes.packages);
+              },
+            ),
+            verticalSpace(10.h),
+            CustomButton(
+              bgColor: appColors.green,
+              borderColor: appColors.green,
+              fontWeight: FontWeight.bold,
+              height: 40.h,
+              fontSize: 12.sp,
+              title: 'الذهاب للفواتير',
+              onPress: () {
+                context.read<MyAccountCubit>().getPayments(); // Refresh invoices
+                context.pushNamedAndRemoveUntil(Routes.homeLayout,
+                    predicate: (Route<dynamic> route) {
+                      return false;
+                    });
+                context.pushNamed(Routes.myPaymentsScreen);
               },
             ),
 

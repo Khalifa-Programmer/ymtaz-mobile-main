@@ -10,6 +10,7 @@ import '../../../core/constants/colors.dart';
 import '../../../core/di/dependency_injection.dart';
 import '../../../core/widgets/spacing.dart';
 import '../../layout/services/presentation/widgets/card_loading.dart';
+import '../data/model/available_lawyers_for_advisory_type_model.dart';
 import '../logic/advisory_cubit.dart';
 
 class SelectLawyerScreen extends StatelessWidget {
@@ -32,6 +33,7 @@ class SelectLawyerScreen extends StatelessWidget {
                 final cubit = context.read<AdvisoryCubit>();
                 if (state is AdvisoryTypeLawyersLoaded) {
                   final data = state.data;
+                  final validData = (data.data ?? []).where((item) => item.lawyer != null).toList();
                   return Animate(
                     effects: [
                       FadeEffect(duration: 200.ms),
@@ -45,7 +47,7 @@ class SelectLawyerScreen extends StatelessWidget {
                                   style: TextStyles.cairo_14_bold.copyWith(
                                     color: appColors.blue100,
                                   )),
-                              Text("(${state.data.data!.length}) ",
+                              Text("(${validData.length}) ",
                                   style: TextStyles.cairo_12_bold.copyWith(
                                     color: appColors.grey15,
                                   )),
@@ -56,20 +58,18 @@ class SelectLawyerScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
+                                final item = validData[index];
                                 return LawyerCardAdvisory(
-                                  lawyer: data.data![index].lawyer!,
-                                  service: data.data![index].subCategory!,
-                                  price: data.data![index].price!,
-                                  typeId: data.data![index].subCategory!.id!
-                                      .toString(),
-                                  importance: data.data![index].importance!,
-                                  description: data.data![index].subCategory!
-                                          .description ??
-                                      "",
+                                  lawyer: item.lawyer!,
+                                  service: item.subCategory ?? SubCategory(),
+                                  price: item.price ?? "0",
+                                  typeId: item.subCategory?.id?.toString() ?? "",
+                                  importance: item.importance ?? Importance(title: ""),
+                                  description: (item.subCategory?.description ?? "").toString(),
                                   needAppointment:
                                       cubit.isNeedAppointment ? 1 : 0,
                                   onPress: () {
-                                    cubit.selectedLawyer = data.data![index];
+                                    cubit.selectedLawyer = item;
                                     cubit.nextStep();
                                   },
                                 );
@@ -77,7 +77,7 @@ class SelectLawyerScreen extends StatelessWidget {
                               separatorBuilder: (context, index) {
                                 return verticalSpace(16.sp);
                               },
-                              itemCount: data.data!.length),
+                              itemCount: validData.length),
                         ])),
                   );
                 } else {

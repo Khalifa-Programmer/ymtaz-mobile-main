@@ -1,0 +1,2 @@
+Running Gradle task 'assembleDebug'...                            722.3s
+Gradle build failed to produce an .apk file. It's likely that this file was generated under C:\ymtaz\ymtaz-mobile-final\ymtaz-mobile-final\build, but the tool couldn't find it.

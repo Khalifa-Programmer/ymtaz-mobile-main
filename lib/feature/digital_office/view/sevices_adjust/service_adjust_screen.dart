@@ -153,14 +153,12 @@ class SeviceAdjustScreen extends StatelessWidget {
                               ),
                             ),
                             const Spacer(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            Wrap(
+                              spacing: 8.w,
                               children: [
                                 Container(
-                                  width: 75.w,
-                                  height: 40.h,
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 12.w, vertical: 8.h),
+                                      horizontal: 10.w, vertical: 8.h),
                                   decoration: BoxDecoration(
                                     color: appColors.white,
                                     border: Border.all(
@@ -168,25 +166,18 @@ class SeviceAdjustScreen extends StatelessWidget {
                                     ),
                                     borderRadius: BorderRadius.circular(8.r),
                                   ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text(
-                                        "${serviceData.minPrice} ر.س ",
-                                        style:
-                                            TextStyles.cairo_12_bold.copyWith(
-                                          color: appColors.primaryColorYellow,
-                                        ),
+                                  child: Center(
+                                    child: Text(
+                                      "${serviceData.minPrice} ر.س ",
+                                      style: TextStyles.cairo_12_bold.copyWith(
+                                        color: appColors.primaryColorYellow,
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(width: 16),
                                 Container(
-                                  height: 40.h,
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 12.w, vertical: 8.h),
+                                      horizontal: 10.w, vertical: 8.h),
                                   decoration: BoxDecoration(
                                     color: appColors.white,
                                     border: Border.all(
@@ -194,18 +185,13 @@ class SeviceAdjustScreen extends StatelessWidget {
                                     ),
                                     borderRadius: BorderRadius.circular(8.r),
                                   ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text(
-                                        "${serviceData.maxPrice} ر.س ",
-                                        style:
-                                            TextStyles.cairo_12_bold.copyWith(
-                                          color: appColors.primaryColorYellow,
-                                        ),
+                                  child: Center(
+                                    child: Text(
+                                      "${serviceData.maxPrice} ر.س ",
+                                      style: TextStyles.cairo_12_bold.copyWith(
+                                        color: appColors.primaryColorYellow,
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
                               ],
@@ -418,39 +404,36 @@ class _PriceDataState extends State<PriceData> {
             ),
           ),
         ),
-        SizedBox(width: 20.w),
+        horizontalSpace(10.w),
         Expanded(
           flex: 2,
-          child: SizedBox(
-            width: 156.w,
-            child: CupertinoTextField(
-              placeholder: 'السعر',
-              suffix: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "ر.س",
-                  style: TextStyles.cairo_12_semiBold.copyWith(
-                    color: appColors.grey15,
-                  ),
+          child: CupertinoTextField(
+            placeholder: 'السعر',
+            suffix: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "ر.س",
+                style: TextStyles.cairo_12_semiBold.copyWith(
+                  color: appColors.grey15,
                 ),
               ),
-              placeholderStyle: TextStyles.cairo_12_semiBold.copyWith(
-                color: appColors.grey15,
-              ),
-              style: TextStyles.cairo_12_semiBold.copyWith(
-                color: appColors.black,
-              ),
-              decoration: BoxDecoration(
-                color: appColors.white,
-                border: Border.all(
-                  color: appColors.grey5,
-                ),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              controller: context
-                  .read<OfficeProviderCubit>()
-                  .textEditingControllers[widget.index],
             ),
+            placeholderStyle: TextStyles.cairo_12_semiBold.copyWith(
+              color: appColors.grey15,
+            ),
+            style: TextStyles.cairo_12_semiBold.copyWith(
+              color: appColors.black,
+            ),
+            decoration: BoxDecoration(
+              color: appColors.white,
+              border: Border.all(
+                color: appColors.grey5,
+              ),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            controller: context
+                .read<OfficeProviderCubit>()
+                .textEditingControllers[widget.index],
           ),
         ),
       ],

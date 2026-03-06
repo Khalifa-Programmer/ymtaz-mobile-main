@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/colors.dart';
+import 'package:yamtaz/config/enviroment.dart';
 import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/core/widgets/alerts.dart';
 
@@ -23,16 +24,18 @@ class WebPaymentScreenState extends State<WebPaymentScreen> {
   InAppWebViewController? webViewController;
 
   WebPaymentScreenState(this.url);
-
   String url = "";
   bool success = false;
   int progress = 0;
   bool convertFlag = false;
+  bool _hasNavigated = false;
+  String? _publishableKey;
 
   @override
   void initState() {
     super.initState();
-
+    _loadKey();
+    
     pullToRefreshController = kIsWeb ||
             ![TargetPlatform.iOS, TargetPlatform.android]
                 .contains(defaultTargetPlatform)
@@ -59,29 +62,36 @@ class WebPaymentScreenState extends State<WebPaymentScreen> {
       pullToRefreshController: pullToRefreshController,
       onWebViewCreated: (controller) {
         webViewController = controller;
-
-        const snackBar = SnackBar(
-          content: Text('HeadlessInAppWebView created!'),
-          duration: Duration(seconds: 1),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        if (!mounted) return;
       },
       onLoadStart: (controller, url) async {
+        if (!mounted) return;
         setState(() {
           this.url = url?.toString() ?? '';
         });
       },
       onProgressChanged: (controller, progress) {
+        if (!mounted) return;
         setState(() {
           this.progress = progress;
         });
       },
       onLoadStop: (controller, url) async {
+        if (!mounted) return;
         setState(() {
           this.url = url?.toString() ?? '';
         });
       },
     );
+  }
+
+  Future<void> _loadKey() async {
+    final env = await Environment.current();
+    if (mounted) {
+      setState(() {
+        _publishableKey = env.moyasarPublishableKey;
+      });
+    }
   }
 
   @override
@@ -138,33 +148,69 @@ class WebPaymentScreenState extends State<WebPaymentScreen> {
           Expanded(
             child: InAppWebView(
               // Authorization : token
-              initialUrlRequest: URLRequest(url: WebUri(url)),
-              initialOptions: InAppWebViewGroupOptions(
-                android: AndroidInAppWebViewOptions(
-                  forceDark: AndroidForceDark.FORCE_DARK_OFF,
-                ),
+              initialUrlRequest: URLRequest(url: WebUri(url.toString().trim())),
+              pullToRefreshController: pullToRefreshController,
+              initialSettings: InAppWebViewSettings(
+                javaScriptEnabled: true,
+                useShouldOverrideUrlLoading: true,
+                javaScriptCanOpenWindowsAutomatically: true,
+                mediaPlaybackRequiresUserGesture: false,
+                verticalScrollBarEnabled: false,
+                horizontalScrollBarEnabled: false,
+                cacheEnabled: true,
+                domStorageEnabled: true,
               ),
 
               onWebViewCreated: (controller) {
                 headlessWebView = null;
-
                 webViewController = controller;
-                const snackBar = SnackBar(
-                  content: Text(
-                      'يرجى عدم الخروج من الصفحة حتي يتم الانتهاء من عملية الدفع'),
-                  duration: Duration(seconds: 1),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              },
+                
+                // Set up JS Handlers to receive Intercepted data (Console only)
+                controller.addJavaScriptHandler(handlerName: 'onNetworkData', callback: (args) {
+                  var type = args[0]; // 'request' or 'response'
+                  var dataStr = args[1].toString();
+                  
+                  // Filter out debugbar noise
+                  if (dataStr.contains('_debugbar')) return;
+                  
+                  print('🌐 Network Intercept [$type]: $dataStr');
+                  
+                  // Detect the specific Backend Error seen in Terminal for logging
+                  if (type == 'response' && (dataStr.contains('withBasicAuth') || dataStr.contains('Argument #1'))) {
+                    print('❌ BACKEND ERROR DETECTED: Moyasar API Key likely missing on server.');
+                  }
+                });
 
+                if (!mounted) return;
+              },
               onLoadStart: (controller, url) {
+                if (!mounted) return;
+                print('🚀 Loading started: $url');
                 setState(() {
                   this.url = url?.toString() ?? "";
                 });
               },
-              onProgressChanged: (controller, progress) {
+              onProgressChanged: (controller, progress) async {
+                if (!mounted) return;
                 if (progress == 100) {
                   pullToRefreshController?.endRefreshing();
+                  
+                  // حقن الـ publishableKey وتصحيح روابط الـ Fetch
+                  if (_publishableKey != null) {
+                    await controller.evaluateJavascript(source: """
+                      window.moyasar_publishable_key = '$_publishableKey';
+                      
+                      var originalFetch = window.fetch;
+                      window.fetch = function(url, options) {
+                          if (typeof url === 'string' && url.startsWith('/api/')) {
+                              url = 'https://ymtaz.sa' + url;
+                          }
+                          return originalFetch(url, options);
+                      };
+                      console.log('🔑 Key & Fetch Ready');
+                    """);
+                  }
+                  
                   if (kDebugMode) {
                     injectVisaData();
                   }
@@ -173,33 +219,100 @@ class WebPaymentScreenState extends State<WebPaymentScreen> {
                   this.progress = progress;
                 });
               },
-              onLoadStop: (controller, url) {
+              onLoadStop: (controller, url) async {
+                if (!mounted) return;
                 pullToRefreshController?.endRefreshing();
-                setState(() {
-                  this.url = url?.toString() ?? "";
-                });
+                print('🏁 URL Changed: $url');
+                
+                if (url != null && !_hasNavigated) {
+                  String urlStr = url.toString();
+                  var params = url.queryParameters;
+                  
+                  // فحص حالة الدفع بناءً على الموثق في ميسر
+                  String? status = params['status']?.toLowerCase();
+                  String? message = params['message'];
 
-                if (url != null &&
-                    url.toString().contains('status=paid') &&
-                    url
-                        .toString()
-                        .contains('https://api.ymtaz.sa/api/payments') &&
-                    success == true) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NewSuccessPayment()));
+                  if (status == 'paid' || status == 'authorized' || urlStr.contains('success')) {
+                      _hasNavigated = true;
+                      print('✅ نجاح عملية الدفع - الحالة: $status');
+                      Navigator.pop(context, 'success');
+                      return;
+                  }
+                  
+                  if (status == 'failed' || status == 'declined' || urlStr.contains('failed')) {
+                      _hasNavigated = true;
+                      String errorMsg = message ?? 'فشلت عملية الدفع، يرجى التأكد من بيانات البطاقة';
+                      print('❌ فشل الدفع - الرسالة: $errorMsg');
+                      Navigator.pop(context, {'status': 'failed', 'message': errorMsg});
+                      return;
+                  }
+                }
+              },
+              onUpdateVisitedHistory: (controller, url, isReload) {
+                if (!mounted || _hasNavigated || url == null) return;
+                
+                String urlStr = url.toString();
+                var params = url.queryParameters;
+                String? status = params['status']?.toLowerCase();
+
+                // التقاط النجاح حتى لو حدث تغيير في التاريخ (Redirect فوري)
+                if (status == 'paid' || status == 'authorized') {
+                    _hasNavigated = true;
+                    Navigator.pop(context, 'success');
                 }
               },
               onTitleChanged: (controller, title) {
+                if (!mounted || _hasNavigated) return;
+                print('🏷️ WebView Title: $title');
                 setState(() {
-                  if (title == "عملية دفع ناجحة") {
+                  // Common success titles in various languages/gateways
+                  if (title == "عملية دفع ناجحة" || 
+                      title?.toLowerCase().contains("success") == true ||
+                      title?.toLowerCase().contains("completed") == true ||
+                      title == "تمت العملية بنجاح") {
                     success = true;
+                    print('🎉 Success Title detected! success flag = true');
                   }
                 });
+                
+                if (success && !_hasNavigated) {
+                  _hasNavigated = true;
+                  print('🎯 Success flag is true, returning to PackageDetails...');
+                  Navigator.pop(context, 'success');
+                }
+              },
+              onReceivedServerTrustAuthRequest: (controller, challenge) async {
+                // السماح للمواقع بالتحميل حتى لو كانت شهادة الـ SSL غير صالحة (مفيد في التيست)
+                return ServerTrustAuthResponse(action: ServerTrustAuthResponseAction.PROCEED);
               },
               onReceivedError: (controller, request, error) {
                 pullToRefreshController?.endRefreshing();
+                print('❌ WebView Error: ${error.description}');
+                print('🔗 Failed URL: ${request.url}');
+                
+                // تنبيه عام عند حدوث خطأ في الاتصال
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('فشل تحميل الصفحة: ${error.description}'))
+                );
+              },
+              onConsoleMessage: (controller, consoleMessage) {
+                print('🖥️ JS Console: [${consoleMessage.messageLevel}] ${consoleMessage.message}');
+              },
+              onJsAlert: (controller, jsAlertRequest) async {
+                print('📢 Page Alert: ${jsAlertRequest.message}');
+                if (context.mounted) {
+                  await showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text("رسالة من الصفحة"),
+                      content: Text(jsAlertRequest.message ?? ""),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(context), child: const Text("موافق")),
+                      ],
+                    ),
+                  );
+                }
+                return JsAlertResponse(handledByClient: true);
               },
             ),
           )
@@ -217,15 +330,33 @@ class WebPaymentScreenState extends State<WebPaymentScreen> {
       'bill_phone': '1234567890',
     };
 
-    // Construct JavaScript code to set initial data
+    // Construct JavaScript code to set initial data with existence checks
     String script = '''
-      document.getElementById('creditCardNumber').value = '${initialData['creditCardNumber']}';
-      document.getElementById('creditCardExp').value = '${initialData['creditCardExp']}';
-      document.getElementById('cardCVV').value = '${initialData['cardCVV']}';
-      document.getElementById('bill_phone').value = '${initialData['bill_phone']}';
+      (function() {
+        function setValue(id, value) {
+          var el = document.getElementById(id);
+          if (el) {
+            el.value = value;
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        }
+        setValue('creditCardNumber', '${initialData['creditCardNumber']}');
+        setValue('creditCardExp', '${initialData['creditCardExp']}');
+        setValue('cardCVV', '${initialData['cardCVV']}');
+        setValue('bill_phone', '${initialData['bill_phone']}');
+        
+        // Some gateways use different IDs
+        setValue('card_number', '${initialData['creditCardNumber']}');
+        setValue('cc-number', '${initialData['creditCardNumber']}');
+        setValue('expiry_date', '${initialData['creditCardExp']}');
+        setValue('cvv', '${initialData['cardCVV']}');
+      })();
     ''';
 
     // Execute the JavaScript code in the web view
-    await webViewController?.evaluateJavascript(source: script);
+    if (mounted) {
+      await webViewController?.evaluateJavascript(source: script);
+    }
   }
 }

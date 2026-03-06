@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yamtaz/core/constants/colors.dart';
+import 'package:yamtaz/core/helpers/extentions.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/layout/services/data/model/services_requirements_response.dart';
 
@@ -101,7 +102,7 @@ class _CustomCheckSelectLevelServicesState
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        '${item.id!} يوم للرد على الخدمه',
+                        '${item.id!} ${item.id!.hourNoun} للرد على الخدمه',
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: Colors.grey.shade600,

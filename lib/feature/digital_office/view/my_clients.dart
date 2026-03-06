@@ -11,6 +11,7 @@ import '../logic/office_provider_cubit.dart';
 import '../logic/office_provider_state.dart';
 import 'client_profile_screen.dart';
 import '../../layout/services/presentation/widgets/no_data_services.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 class MyClients extends StatelessWidget {
@@ -99,19 +100,27 @@ class MyClients extends StatelessWidget {
         ),
         child: Row(
         children: [
-          Container(
-            width: 50.w,
-            height: 50.h,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: NetworkImage(category[index].image ??
-                    "https://api.ymtaz.sa/uploads/person.png"),
-                fit: BoxFit.cover,
+          ClipOval(
+            child: CachedNetworkImage(
+              imageUrl: category[index].image ?? "https://api.ymtaz.sa/uploads/person.png",
+              width: 50.w,
+              height: 50.h,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                width: 50.w,
+                height: 50.h,
+                color: appColors.grey.withOpacity(0.3),
+                child: Icon(Icons.person, size: 25.w, color: appColors.grey),
+              ),
+              errorWidget: (context, url, error) => Container(
+                width: 50.w,
+                height: 50.h,
+                color: appColors.grey.withOpacity(0.3),
+                child: Icon(Icons.person, size: 25.w, color: appColors.grey),
               ),
             ),
           ),
-          SizedBox(width: 10.0.h),
+          SizedBox(width: 10.0.w),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

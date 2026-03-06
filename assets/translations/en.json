@@ -239,7 +239,6 @@
   "message": "Message",
   "send": "Send",
   "appointments": "Appointments Calendar",
-  "changePassword": "Change Password",
   "serviceDetails": "Service Details",
   "pending": "Pending",
   "underStudy": "Under Study",
@@ -264,5 +263,6 @@
   "notificatiom" : "Notification",
   "selectAccountTypeRecover": "Please select the account type you wish to recover.",
   "verifyCode": "Verify Code",
-  "codeSent": "Code sent to email"
+  "codeSent": "Code sent to email",
+  "trainingTracks": "Training Tracks"
 }

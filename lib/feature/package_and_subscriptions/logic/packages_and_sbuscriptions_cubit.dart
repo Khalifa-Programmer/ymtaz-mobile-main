@@ -4,6 +4,9 @@ import 'package:yamtaz/feature/package_and_subscriptions/logic/packages_and_sbus
 
 import '../data/model/my_package_model.dart';
 import '../data/repo/packages_and_subscription_repo.dart';
+import 'package:yamtaz/feature/layout/account/data/models/success_fcm_response.dart';
+import 'package:yamtaz/core/di/dependency_injection.dart';
+import 'package:yamtaz/feature/layout/account/logic/my_account_cubit.dart';
 
 class PackagesAndSubscriptionsCubit
     extends Cubit<PackagesAndSbuscriptionsState> {
@@ -21,10 +24,9 @@ class PackagesAndSubscriptionsCubit
     isSubscribed = false;
     packagesModel = null;
     myPackageModel = null;
+    emit(Loading());
     await myPackage();
     await getPackages();
-    emit(Loading());
-
   }
 
 
@@ -89,17 +91,27 @@ class PackagesAndSubscriptionsCubit
 //   );
 // }
 //
-// // Confirm payment
-// Future<void> confirmPaymentPackage(String id) async {
-//   emit(LoadingConfirm());
-//   final response = await _packageRepo.confirmPaymentPackage(id);
-//   response.when(
-//     success: (res) {
-//       emit(LoadedConfirm(res));
-//     },
-//     failure: (fail) {
-//       emit(ErrorConfirm(fail['message']));
-//     },
-//   );
-// }
+  // Confirm payment
+  Future<void> confirmPaymentPackage(String id) async {
+    emit(LoadingConfirm());
+    final response = await _packageRepo.confirmPaymentPackage(id);
+    response.when(
+      success: (res) {
+        emit(LoadedConfirm(res));
+        getdata(); // Refresh package info
+        getit<MyAccountCubit>().getPayments(); // Refresh invoices
+        getit<MyAccountCubit>().refresh(); // Refresh profile/account info
+      },
+      failure: (fail) {
+        String message = 'فشل تأكيد الدفع';
+        if (fail is Map && fail.containsKey('message')) {
+          message = fail['message'];
+        } else if (fail is String) {
+          message = fail;
+        }
+        emit(ErrorConfirm(message));
+        getdata(); // Refresh anyway to see if webhook worked
+      },
+    );
+  }
 }

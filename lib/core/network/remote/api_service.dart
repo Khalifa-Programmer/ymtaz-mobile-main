@@ -18,6 +18,7 @@ import 'package:yamtaz/feature/auth/forget_password/data/model/forget_request_bo
 import 'package:yamtaz/feature/auth/login/data/models/login_request_body.dart';
 import 'package:yamtaz/feature/auth/login/data/models/login_response.dart';
 import 'package:yamtaz/feature/auth/login/data/models/visitor_login.dart';
+import 'package:yamtaz/feature/layout/account/data/models/success_fcm_response.dart';
 import 'package:yamtaz/feature/auth/sign_up/data/models/sign_up_provider_response_body.dart';
 import 'package:yamtaz/feature/auth/sign_up/data/models/sign_up_request_body.dart';
 import 'package:yamtaz/feature/auth/sign_up/data/models/sign_up_response_body.dart';
@@ -118,6 +119,8 @@ import '../../../feature/advisory_committees/data/model/advisory_committees_lawy
 import '../../../feature/advisory_committees/data/model/advisory_committees_response.dart';
 import '../../../feature/digital_guide/data/model/digital_guide_response.dart';
 import '../../../feature/digital_guide/data/model/digital_search_response_model.dart';
+import '../../../feature/digital_guide/data/model/lawyer_services_response_model.dart';
+import '../../../feature/advisory_services/data/model/lawyer_advisory_services.dart';
 import '../../models/base_response.dart';
 
 import '../../shared/models/resend_code.dart';
@@ -372,9 +375,9 @@ abstract class ApiService {
   // Future<BuyPackageModel> buyPackage(
   //     @Header('Authorization') String token, @Body() FormData body);
 
-  // @GET('${ApiConstants.packagesRequest}/{id}')
-  // Future<SuccessFcmResponse> confirmPayment(
-  //     @Header('Authorization') String token, @Path('id') String id);
+  @GET('${ApiConstants.packagesRequest}/{id}')
+  Future<SuccessFcmResponse> confirmPayment(
+      @Header('Authorization') String token, @Path('id') String id);
 
   // Google Sign In endpoint
   @POST(ApiConstants.googleLogin)
@@ -727,11 +730,11 @@ abstract class ApiService {
       @Header('Authorization') String token, @Path('id') String id);
 
   @GET(ApiConstants.lawyerAdvisorServicesBase)
-  Future<dynamic> getLawyerAdvisors(
+  Future<LawyerAdvisoryServicesResponseModel> getLawyerAdvisors(
       @Header('Authorization') String token, @Query('id') String id);
 
   @GET(ApiConstants.lawyerServicesBase)
-  Future<dynamic> getServices(
+  Future<LawyerServicesResponseModel> getServices(
       @Header('Authorization') String token, @Query('id') String id);
 
 

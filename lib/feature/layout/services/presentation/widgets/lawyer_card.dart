@@ -185,28 +185,44 @@ class LawyerCard extends StatelessWidget {
   }
 
   Widget lawyerImage() {
+    final imageUrl = lawyer.image ?? lawyer.logo;
+    final isFemale = lawyer.gender == 'female';
+    final defaultAvatar = isFemale ? AppAssets.Female : AppAssets.Male;
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
         CircleAvatar(
           backgroundColor: getColor(lawyer.currentRank!.borderColor!),
           radius: 26.0.sp,
-          child: CachedNetworkImage(
-            imageUrl: lawyer.image!.isEmpty
-                ? "https://api.ymtaz.sa/uploads/person.png"
-                : lawyer.image!,
-            imageBuilder: (context, imageProvider) => Container(
-              width: 48.0.w,
-              height: 48.0.h,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
-              ),
-            ),
-            progressIndicatorBuilder: (context, url, downloadProgress) =>
-                imageShimmer(),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-          ),
+          child: (imageUrl == null ||
+                  imageUrl.isEmpty ||
+                  imageUrl == "https://api.ymtaz.sa/uploads/person.png" ||
+                  imageUrl == "https://ymtaz.sa/uploads/person.png")
+              ? SvgPicture.asset(
+                  defaultAvatar,
+                  width: 48.0.w,
+                  height: 48.0.h,
+                )
+              : CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 48.0.w,
+                    height: 48.0.h,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.cover),
+                    ),
+                  ),
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      imageShimmer(),
+                  errorWidget: (context, url, error) => SvgPicture.asset(
+                    defaultAvatar,
+                    width: 48.0.w,
+                    height: 48.0.h,
+                  ),
+                ),
         ),
 
         // SVG positioned at the bottom center, half outside the CircleAvatar

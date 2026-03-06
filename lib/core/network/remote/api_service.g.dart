@@ -1664,6 +1664,37 @@ class _ApiService implements ApiService {
   }
 
   @override
+  Future<SuccessFcmResponse> confirmPayment(
+    String token,
+    String id,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<SuccessFcmResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'v1/packages/subscribe/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = SuccessFcmResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<VisitorLogin> googleLogin(String token) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -1677,7 +1708,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'auth/google/callback',
+              'v1/auth/google/callback',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -1704,7 +1735,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'auth/apple/callback',
+              'v1/auth/apple/callback',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -3966,7 +3997,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<dynamic> getLawyerAdvisors(
+  Future<LawyerAdvisoryServicesResponseModel> getLawyerAdvisors(
     String token,
     String id,
   ) async {
@@ -3975,28 +4006,29 @@ class _ApiService implements ApiService {
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<LawyerAdvisoryServicesResponseModel>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-        .compose(
-          _dio.options,
-          'v1/lawyer',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
-    final value = _result.data;
+            .compose(
+              _dio.options,
+              'v1/lawyer',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = LawyerAdvisoryServicesResponseModel.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<dynamic> getServices(
+  Future<LawyerServicesResponseModel> getServices(
     String token,
     String id,
   ) async {
@@ -4005,23 +4037,24 @@ class _ApiService implements ApiService {
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<LawyerServicesResponseModel>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-        .compose(
-          _dio.options,
-          'v1/lawyer/',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
-    final value = _result.data;
+            .compose(
+              _dio.options,
+              'v1/lawyer/',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = LawyerServicesResponseModel.fromJson(_result.data!);
     return value;
   }
 

@@ -111,6 +111,25 @@ class HomeCubit extends Cubit<HomeState> {
     //       height: 30.sp,
     //     )),
     /*HomeModel(
+        title: LocaleKeys.trainingPlatform.tr(),
+        description: LocaleKeys.trainingPlatform.tr(),
+        route: Routes.trainingScreen,
+        icon: SvgPicture.asset(
+          AppAssets.video,
+          width: 30.sp,
+          height: 30.sp,
+        )),
+
+    HomeModel(
+        title: LocaleKeys.trainingTracks.tr(),
+        description: LocaleKeys.trainingTracks.tr(),
+        route: Routes.learningPaths,
+        icon: SvgPicture.asset(
+          AppAssets.booksNew,
+          width: 30.sp,
+          height: 30.sp,
+        )),*/
+    /*HomeModel(
         title: "المساعد الذكي",
         description: LocaleKeys.libraryAndSystems.tr(),
         route: Routes.aiAssistant,
@@ -169,25 +188,24 @@ class HomeCubit extends Cubit<HomeState> {
           height: 30.sp,
         )),
     /*HomeModel(
-        title: "المساعد الذكي",
-        description: LocaleKeys.libraryAndSystems.tr(),
-        route: Routes.aiAssistant,
+        title: LocaleKeys.trainingPlatform.tr(),
+        description: LocaleKeys.trainingPlatform.tr(),
+        route: Routes.trainingScreen,
         icon: SvgPicture.asset(
-          AppAssets.logo,
+          AppAssets.video,
+          width: 30.sp,
+          height: 30.sp,
+        )),
+
+    HomeModel(
+        title: "مسارات التدريب",
+        description: "مسارات التدريب",
+        route: Routes.learningPaths,
+        icon: SvgPicture.asset(
+          AppAssets.booksNew,
           width: 30.sp,
           height: 30.sp,
         )),*/
-    //todo learning card
-
-    // HomeModel(
-    //     title: "مسارات القراءة",
-    //     description: "",
-    //     route: Routes.learningPaths,
-    //     icon: SvgPicture.asset(
-    //       AppAssets.booksNew,
-    //       width: 30.sp,
-    //       height: 30.sp,
-    //     )),
   ];
   List<NewAdvisory>? advisoriesNew;
 

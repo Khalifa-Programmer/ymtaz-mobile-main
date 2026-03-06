@@ -29,24 +29,44 @@ class WorkingHoursAppointments extends StatelessWidget {
         listener: (context, state) {
           state.whenOrNull(
             loadingPostWorkingHours: () {
-              return Dialog(
-                surfaceTintColor: Colors.transparent,
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: Container(
-                  padding: EdgeInsets.all(16.sp),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const CircularProgressIndicator(
-                        color: appColors.primaryColorYellow,
-                      ),
-                      horizontalSpace(16.sp),
-                      const Text("جاري حفظ مواعيد العمل"),
-                    ],
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => Dialog(
+                  surfaceTintColor: Colors.transparent,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  child: Container(
+                    padding: EdgeInsets.all(16.sp),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CircularProgressIndicator(
+                          color: appColors.primaryColorYellow,
+                        ),
+                        horizontalSpace(16.sp),
+                        const Text("جاري حفظ مواعيد العمل"),
+                      ],
+                    ),
                   ),
                 ),
               );
+            },
+            loadedPostWorkingHours: () {
+              Navigator.pop(context); // Close loading dialog
+              AppAlerts.showAlert(
+                  context: context,
+                  message: "تم حفظ مواعيد العمل بنجاح",
+                  buttonText: "حسنا",
+                  type: AlertType.success);
+            },
+            errorPostWorkingHours: (message) {
+              Navigator.pop(context); // Close loading dialog
+              AppAlerts.showAlert(
+                  context: context,
+                  message: message,
+                  buttonText: "حسنا",
+                  type: AlertType.error);
             },
           );
         },

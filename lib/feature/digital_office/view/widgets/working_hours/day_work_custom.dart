@@ -28,9 +28,9 @@ class DayWorkCustom extends StatelessWidget {
       buildWhen: (previous, current) => current is! ChangeDayIndexSelected,
       builder: (context, state) {
         return Container(
-          width: 60.w,
-          padding: const EdgeInsets.all(8),
-          margin: const EdgeInsets.all(8),
+          width: 65.w,
+          padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 2.w),
+          margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),

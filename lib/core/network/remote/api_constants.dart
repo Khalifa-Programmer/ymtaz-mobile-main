@@ -187,6 +187,7 @@ class ApiConstants {
   static const packages = "v1/packages";
   static const myPackage = "v1/profile/package";
   static const packageSubscribe = "v1/packages/subscribe";
+  static const packagesRequest = "v1/packages/subscribe";
 
   // visitor
   static const googleLogin = "v1/auth/google/callback";

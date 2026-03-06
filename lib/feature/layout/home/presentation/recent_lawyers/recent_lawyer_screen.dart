@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yamtaz/core/network/local/cache_helper.dart';
 import 'package:yamtaz/feature/layout/home/data/models/recent_joined_lawyers_model.dart';
 
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../../core/constants/assets.dart';
 import '../../../../../config/themes/styles.dart';
 import '../../../../../core/constants/colors.dart';
 import '../../../../../core/widgets/spacing.dart';
@@ -74,14 +77,29 @@ class RecentLawyers extends StatelessWidget {
                       Container(
                         width: 50.w,
                         height: 50.h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: NetworkImage(lawyer.photo ??
-                                "https://api.ymtaz.sa/uploads/person.png"),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                        decoration: const BoxDecoration(shape: BoxShape.circle),
+                        clipBehavior: Clip.antiAlias,
+                        child: (lawyer.photo == null ||
+                                lawyer.photo!.isEmpty ||
+                                lawyer.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                                lawyer.photo == "https://ymtaz.sa/uploads/person.png")
+                            ? SvgPicture.asset(
+                                AppAssets.Male,
+                                fit: BoxFit.cover,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: lawyer.photo!,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => SvgPicture.asset(
+                                  AppAssets.Male,
+                                  fit: BoxFit.cover,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    SvgPicture.asset(
+                                  AppAssets.Male,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                       ),
                       SizedBox(width: 10.0.h),
                       Column(

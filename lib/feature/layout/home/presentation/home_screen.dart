@@ -261,11 +261,13 @@ class _HomeScreenState extends State<HomeScreen> {
               userType == 'client',
           builder: (BuildContext context) =>
               UserProfileRow(
-                imageUrl:
-                getit<MyAccountCubit>().clientProfile?.data?.account?.photo ??
-                    getit<MyAccountCubit>().clientProfile?.data?.account?.image ??
-                    getit<MyAccountCubit>().clientProfile?.data?.account?.logo ??
-                    "https://api.ymtaz.sa/uploads/person.png",
+                imageUrl: (getit<MyAccountCubit>().clientProfile?.data?.account?.photo == null ||
+                            getit<MyAccountCubit>().clientProfile!.data!.account!.photo!.isEmpty ||
+                            getit<MyAccountCubit>().clientProfile!.data!.account!.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                            getit<MyAccountCubit>().clientProfile!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png")
+                        ? "default"
+                        : getit<MyAccountCubit>().clientProfile!.data!.account!.photo!,
+                gender: getit<MyAccountCubit>().clientProfile?.data?.account?.gender,
 
                 name: getit<MyAccountCubit>().clientProfile?.data?.account?.name ?? "بدون اسم",
                 color: getColor(getit<MyAccountCubit>()
@@ -287,10 +289,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     .data!
                     .account!
                     .hasBadge,
-                imageUrl: getit<MyAccountCubit>().userDataResponse?.data?.account?.photo ??
-                    getit<MyAccountCubit>().userDataResponse?.data?.account?.image ??
-                    getit<MyAccountCubit>().userDataResponse?.data?.account?.logo ??
-                    "https://api.ymtaz.sa/uploads/person.png",
+                imageUrl: (getit<MyAccountCubit>().userDataResponse?.data?.account?.photo == null ||
+                            getit<MyAccountCubit>().userDataResponse!.data!.account!.photo!.isEmpty ||
+                            getit<MyAccountCubit>().userDataResponse!.data!.account!.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                            getit<MyAccountCubit>().userDataResponse!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png")
+                        ? "default"
+                        : getit<MyAccountCubit>().userDataResponse!.data!.account!.photo!,
+                gender: getit<MyAccountCubit>().userDataResponse?.data?.account?.gender,
 
                 name:
                 '${getit<MyAccountCubit>().userDataResponse?.data?.account?.name ?? "بدون اسم"}',
@@ -307,9 +312,16 @@ class _HomeScreenState extends State<HomeScreen> {
           condition: userType == 'visitor',
           builder: (BuildContext context) {
             String? userName = CacheHelper.getData(key: 'userName');
+            String? userGender = CacheHelper.getData(key: 'userGender');
             String? userImage = CacheHelper.getData(key: 'userImage');
             return UserProfileRow(
-              imageUrl: userImage ?? "https://api.ymtaz.sa/uploads/person.png",
+              imageUrl: (userImage == null || 
+                          userImage.isEmpty || 
+                          userImage == "https://api.ymtaz.sa/uploads/person.png" || 
+                          userImage == "https://ymtaz.sa/uploads/person.png")
+                  ? "default"
+                  : userImage,
+              gender: userGender,
               name: userName ?? "زائر",
               color: appColors.primaryColorYellow,
               image: "https://api.ymtaz.sa/uploads/ranks/BrownShield.svg",
@@ -477,6 +489,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 item.icon,
                 Text(
                   item.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: appColors.blue100,
                     fontSize: 12.sp,

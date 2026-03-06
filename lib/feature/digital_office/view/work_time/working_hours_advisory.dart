@@ -88,7 +88,7 @@ class WorkingHoursAdvisory extends StatelessWidget {
                 : Animate(
                     effects: [FadeEffect(delay: 200.ms)],
                     child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
+                      physics: const AlwaysScrollableScrollPhysics(),
                       child: Column(
                         children: [
                           DaysWorkingHours(serviceId),
@@ -99,7 +99,7 @@ class WorkingHoursAdvisory extends StatelessWidget {
                               ? Center(
                                   child: Column(
                                     children: [
-                                      verticalSpace(150.h),
+                                      verticalSpace(100.h),
                                       SvgPicture.asset(
                                         AppAssets.nodatanew,
                                         height: 100.h,
@@ -362,7 +362,6 @@ class _AddTimeSlotState extends State<AddTimeSlot> {
         },
         builder: (context, state) {
           return Container(
-            height: 300.h,
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
@@ -370,99 +369,118 @@ class _AddTimeSlotState extends State<AddTimeSlot> {
                 topRight: Radius.circular(20),
               ),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 8.sp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CupertinoButton(
-                    child: const Icon(CupertinoIcons.xmark,
-                        color: appColors.grey5),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    }),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("بداية الفترة من",
-                        style: TextStyles.cairo_14_semiBold.copyWith(
-                          color: appColors.black,
-                        )),
-                    CupertinoButton(
-                        child: Text(
-                          from ?? "اختر التوقيت",
-                          style: TextStyles.cairo_14_bold.copyWith(
-                            color: appColors.primaryColorYellow,
+            padding: EdgeInsets.only(
+              left: 25.sp,
+              right: 25.sp,
+              top: 8.sp,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 8.sp,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CupertinoButton(
+                      child: const Icon(CupertinoIcons.xmark,
+                          color: appColors.grey5),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("بداية الفترة من",
+                          style: TextStyles.cairo_14_semiBold.copyWith(
+                            color: appColors.black,
+                          )),
+                      CupertinoButton(
+                          child: Text(
+                            from ?? "اختر التوقيت",
+                            style: TextStyles.cairo_14_bold.copyWith(
+                              color: appColors.primaryColorYellow,
+                            ),
                           ),
-                        ),
-                        onPressed: () async {
-                          final selectedTime = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.now(),
-                            builder: (BuildContext context, Widget? child) {
-                              return MediaQuery(
-                                data: MediaQuery.of(context)
-                                    .copyWith(alwaysUse24HourFormat: false),
-                                child: child!,
-                              );
-                            },
-                          );
-                          if (selectedTime != null) {
-                            from = formatTime24Hour(selectedTime);
-                            to = null; // Reset 'to' time when 'from' is changed
-                            setState(() {});
-                          }
-                        })
-                  ],
-                ),
-                verticalSpace(20.sp),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("نهاية الفترة ",
-                        style: TextStyles.cairo_14_semiBold.copyWith(
-                          color: appColors.black,
-                        )),
-                    verticalSpace(10.sp),
-                    CupertinoButton(
-                        onPressed: from == null
-                            ? null
-                            : () async {
-                                final selectedTime = await showTimePicker(
-                                  context: context,
-                                  initialTime: TimeOfDay.now(),
-                                  builder:
-                                      (BuildContext context, Widget? child) {
-                                    return MediaQuery(
-                                      data: MediaQuery.of(context).copyWith(
-                                          alwaysUse24HourFormat: false),
-                                      child: child!,
-                                    );
-                                  },
+                          onPressed: () async {
+                            final selectedTime = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                              builder: (BuildContext context, Widget? child) {
+                                return MediaQuery(
+                                  data: MediaQuery.of(context)
+                                      .copyWith(alwaysUse24HourFormat: false),
+                                  child: child!,
                                 );
-                                if (selectedTime != null) {
-                                  final selectedTimeStr =
-                                      formatTime24Hour(selectedTime);
-                                  if (selectedTimeStr.compareTo(from!) > 0) {
-                                    final fromTime = TimeOfDay(
-                                      hour: int.parse(from!.split(":")[0]),
-                                      minute: int.parse(from!.split(":")[1]),
-                                    );
-                                    final toTime = TimeOfDay(
-                                      hour: int.parse(
-                                          selectedTimeStr.split(":")[0]),
-                                      minute: int.parse(
-                                          selectedTimeStr.split(":")[1]),
-                                    );
-                                    final difference = toTime.hour * 60 +
-                                        toTime.minute -
-                                        (fromTime.hour * 60 + fromTime.minute);
-                                    if (difference >= 15) {
-                                      to = selectedTimeStr;
-                                      setState(() {});
+                              },
+                            );
+                            if (selectedTime != null) {
+                              from = formatTime24Hour(selectedTime);
+                              to = null; // Reset 'to' time when 'from' is changed
+                              setState(() {});
+                            }
+                          })
+                    ],
+                  ),
+                  verticalSpace(20.sp),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("نهاية الفترة ",
+                          style: TextStyles.cairo_14_semiBold.copyWith(
+                            color: appColors.black,
+                          )),
+                      horizontalSpace(10.sp),
+                      CupertinoButton(
+                          onPressed: from == null
+                              ? null
+                              : () async {
+                                  final selectedTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: TimeOfDay.now(),
+                                    builder:
+                                        (BuildContext context, Widget? child) {
+                                      return MediaQuery(
+                                        data: MediaQuery.of(context).copyWith(
+                                            alwaysUse24HourFormat: false),
+                                        child: child!,
+                                      );
+                                    },
+                                  );
+                                  if (selectedTime != null) {
+                                    final selectedTimeStr =
+                                        formatTime24Hour(selectedTime);
+                                    if (selectedTimeStr.compareTo(from!) > 0) {
+                                      final fromTime = TimeOfDay(
+                                        hour: int.parse(from!.split(":")[0]),
+                                        minute: int.parse(from!.split(":")[1]),
+                                      );
+                                      final toTime = TimeOfDay(
+                                        hour: int.parse(
+                                            selectedTimeStr.split(":")[0]),
+                                        minute: int.parse(
+                                            selectedTimeStr.split(":")[1]),
+                                      );
+                                      final difference = toTime.hour * 60 +
+                                          toTime.minute -
+                                          (fromTime.hour * 60 + fromTime.minute);
+                                      if (difference >= 15) {
+                                        to = selectedTimeStr;
+                                        setState(() {});
+                                      } else {
+                                        Fluttertoast.showToast(
+                                          msg:
+                                              'يجب أن يكون الفرق بين وقت البداية والنهاية 15 دقيقة على الأقل',
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.red,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0,
+                                        );
+                                      }
                                     } else {
                                       Fluttertoast.showToast(
                                         msg:
-                                            'يجب أن يكون الفرق بين وقت البداية والنهاية 15 دقيقة على الأقل',
+                                            'يجب أن يكون وقت النهاية بعد وقت البداية',
                                         toastLength: Toast.LENGTH_SHORT,
                                         gravity: ToastGravity.BOTTOM,
                                         timeInSecForIosWeb: 1,
@@ -471,48 +489,37 @@ class _AddTimeSlotState extends State<AddTimeSlot> {
                                         fontSize: 16.0,
                                       );
                                     }
-                                  } else {
-                                    Fluttertoast.showToast(
-                                      msg:
-                                          'يجب أن يكون وقت النهاية بعد وقت البداية',
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0,
-                                    );
                                   }
-                                }
-                              },
+                                },
+                          child: Text(
+                            to ?? "اختر التوقيت",
+                            style: TextStyles.cairo_14_bold.copyWith(
+                              color: appColors.primaryColorYellow,
+                            ),
+                          ))
+                    ],
+                  ),
+                  verticalSpace(20.sp),
+                  Center(
+                    child: CupertinoButton(
+                        color: appColors.primaryColorYellow,
+                        onPressed: isSaveButtonEnabled()
+                            ? () {
+                                final timeSlot = TimeSlot(from: from, to: to);
+                                getit<OfficeProviderCubit>().addTimeSlot(
+                                    timeSlot, widget.dayIndex, widget.serviceId);
+                                Navigator.of(context).pop();
+                                widget.call();
+                              }
+                            : null,
                         child: Text(
-                          to ?? "اختر التوقيت",
-                          style: TextStyles.cairo_14_bold.copyWith(
-                            color: appColors.primaryColorYellow,
-                          ),
-                        ))
-                  ],
-                ),
-                verticalSpace(20.sp),
-                Center(
-                  child: CupertinoButton(
-                      color: appColors.primaryColorYellow,
-                      onPressed: isSaveButtonEnabled()
-                          ? () {
-                              final timeSlot = TimeSlot(from: from, to: to);
-                              getit<OfficeProviderCubit>().addTimeSlot(
-                                  timeSlot, widget.dayIndex, widget.serviceId);
-                              Navigator.of(context).pop();
-                              widget.call();
-                            }
-                          : null,
-                      child: Text(
-                        "حفظ",
-                        style: TextStyles.cairo_10_bold
-                            .copyWith(color: Colors.white),
-                      )),
-                )
-              ],
+                          "حفظ",
+                          style: TextStyles.cairo_10_bold
+                              .copyWith(color: Colors.white),
+                        )),
+                  )
+                ],
+              ),
             ),
           );
         },

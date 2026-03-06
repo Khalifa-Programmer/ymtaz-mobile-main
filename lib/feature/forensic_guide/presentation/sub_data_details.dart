@@ -7,12 +7,16 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart' as UL;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
-import 'package:yamtaz/core/router/routes.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:yamtaz/core/constants/assets.dart';
+import 'package:yamtaz/feature/forensic_guide/data/model/judicial_guide_response_model.dart';
 
+import 'package:yamtaz/core/router/routes.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../core/helpers/fuctions_helpers/functions_helpers.dart';
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/widgets/spacing.dart';
-import '../data/model/judicial_guide_response_model.dart';
 
 class SubDataDetails extends StatelessWidget {
   const SubDataDetails({super.key, required this.data});
@@ -57,7 +61,11 @@ class SubDataDetails extends StatelessWidget {
     );
   }
 
-  Padding _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context) {
+    bool hasAbout = data.about != null &&
+        data.about!.isNotEmpty &&
+        data.about?.toLowerCase() != "null";
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -78,13 +86,40 @@ class SubDataDetails extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Image.network(
-                    data.image ?? "https://api.ymtaz.sa/uploads/person.png",
-                    width: MediaQuery.of(context).size.width,
-                    height: 200.h,
-                    fit: BoxFit.cover,
+                Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: (data.image == null ||
+                            data.image.toString() == "null" ||
+                            data.image.toString().isEmpty ||
+                            data.image.toString() ==
+                                "https://api.ymtaz.sa/uploads/person.png" ||
+                            data.image.toString() ==
+                                "https://ymtaz.sa/uploads/person.png")
+                        ? SvgPicture.asset(
+                            AppAssets.judgeJuide,
+                            width: MediaQuery.of(context).size.width,
+                            height: 200.h,
+                            fit: BoxFit.contain,
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: data.image!,
+                            width: MediaQuery.of(context).size.width,
+                            height: 200.h,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => SvgPicture.asset(
+                              AppAssets.judgeJuide,
+                              width: MediaQuery.of(context).size.width,
+                              height: 200.h,
+                              fit: BoxFit.contain,
+                            ),
+                            errorWidget: (context, url, error) => SvgPicture.asset(
+                              AppAssets.judgeJuide,
+                              width: MediaQuery.of(context).size.width,
+                              height: 200.h,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                   ),
                 ),
                 verticalSpace(20),
@@ -105,7 +140,49 @@ class SubDataDetails extends StatelessWidget {
                   ],
                 ),
                 verticalSpace(10),
-                if (data.address != null && data.address!.isNotEmpty)
+                if (hasAbout)
+                  Text(
+                    data.about!,
+                    style: TextStyles.cairo_12_medium.copyWith(
+                      color: appColors.black,
+                    ),
+                  )
+                else
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                        vertical: 12.h, horizontal: 16.w),
+                    decoration: BoxDecoration(
+                      color: appColors.primaryColorYellow.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color:
+                            appColors.primaryColorYellow.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: appColors.primaryColorYellow,
+                          size: 20.sp,
+                        ),
+                        horizontalSpace(10.w),
+                        Expanded(
+                          child: Text(
+                            "عذراً، لا توجد تفاصيل إضافية أو وصف متاح لهذه المحكمة في الوقت الحالي.",
+                            style: TextStyles.cairo_12_semiBold.copyWith(
+                              color: appColors.black,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (data.address != null && data.address!.isNotEmpty) ...[
+                  verticalSpace(10),
                   Row(
                     children: [
                       Icon(
@@ -125,6 +202,7 @@ class SubDataDetails extends StatelessWidget {
                       ),
                     ],
                   ),
+                ],
               ],
             ),
           ),
@@ -144,6 +222,40 @@ class SubDataDetails extends StatelessWidget {
             ),
             child: Column(
               children: [
+                if ((data.emails == null || data.emails!.isEmpty) &&
+                    (data.numbers == null || data.numbers!.isEmpty) &&
+                    (data.workingHoursFrom == null || data.workingHoursFrom!.isEmpty))
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+                    decoration: BoxDecoration(
+                      color: appColors.primaryColorYellow.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: appColors.primaryColorYellow.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: appColors.primaryColorYellow,
+                          size: 20.sp,
+                        ),
+                        horizontalSpace(10.w),
+                        Expanded(
+                          child: Text(
+                            "عذراً، لا توجد بيانات إضافية مسجلة لهذه المحكمة حالياً.",
+                            style: TextStyles.cairo_12_semiBold.copyWith(
+                              color: appColors.black,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 // if (data.region != null &&
                 //     data.region!.name != null &&
                 //     data.region!.name!.isNotEmpty)

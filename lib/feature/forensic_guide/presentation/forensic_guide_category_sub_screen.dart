@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
 import 'package:yamtaz/feature/forensic_guide/data/model/judicial_guide_response_model.dart';
 import 'package:yamtaz/feature/layout/services/presentation/widgets/no_data_services.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../core/helpers/fuctions_helpers/functions_helpers.dart';
 
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/assets.dart';
@@ -28,7 +30,9 @@ class ForensicGuideSubCategoryScreen extends StatelessWidget {
               color: appColors.black,
             )),
       ),
-      body: data.judicialGuides!.isEmpty ? const NodataFound() : _buildBody(),
+      body: data.judicialGuides!.isEmpty
+          ? const NodataFound(text: "لا يوجد بيانات أو معلومات لهذه الدائرة")
+          : _buildBody(),
     );
   }
 
@@ -103,12 +107,37 @@ class ForensicGuideSubCategoryScreen extends StatelessWidget {
               ),
             ),
             horizontalSpace(20.w),
-            SvgPicture.asset(
-              AppAssets.guide ?? '',
-              width: 24.sp,
-              height: 24.sp,
-              placeholderBuilder: (context) =>
-                  const CircularProgressIndicator(),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(5.r),
+              child: (data.judicialGuides![index].image == null ||
+                      data.judicialGuides![index].image!.isEmpty ||
+                      data.judicialGuides![index].image ==
+                          "https://api.ymtaz.sa/uploads/person.png" ||
+                      data.judicialGuides![index].image ==
+                          "https://ymtaz.sa/uploads/person.png")
+                  ? SvgPicture.asset(
+                      AppAssets.guide,
+                      width: 24.sp,
+                      height: 24.sp,
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: data.judicialGuides![index].image!,
+                      width: 24.sp,
+                      height: 24.sp,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => SvgPicture.asset(
+                        AppAssets.guide,
+                        width: 24.sp,
+                        height: 24.sp,
+                        fit: BoxFit.contain,
+                      ),
+                      errorWidget: (context, url, error) => SvgPicture.asset(
+                        AppAssets.guide,
+                        width: 24.sp,
+                        height: 24.sp,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
             ),
             horizontalSpace(15.w),
             Expanded(

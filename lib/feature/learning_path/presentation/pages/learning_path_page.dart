@@ -31,60 +31,68 @@ class _LearningPathPageState extends State<LearningPathPage> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    Future.microtask(() {
+      if (mounted) {
+        _loadData();
+      }
+    });
   }
 
   void _loadData() {
-    context.read<LearningPathCubit>().getPathItems(widget.pathId);
+    getit<LearningPathCubit>().getPathItems(widget.pathId);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('مسار التعلم', style: TextStyles.cairo_15_bold),
-        centerTitle: true,
-        backgroundColor: appColors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.favorite, color: appColors.primaryColorYellow),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (context) => FavouriteItemsCubit(getit<LearningPathRepo>()),
-                    child: FavouritesPage(pathId: widget.pathId),
+    final cubit = getit<LearningPathCubit>();
+    return BlocProvider.value(
+      value: cubit,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('مسار التعلم', style: TextStyles.cairo_15_bold),
+          centerTitle: true,
+          backgroundColor: appColors.white,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.favorite, color: appColors.primaryColorYellow),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => FavouriteItemsCubit(getit<LearningPathRepo>()),
+                      child: FavouritesPage(pathId: widget.pathId),
+                    ),
                   ),
-                ),
-              ).then((value) {
-                if (value == true) {
-                  _loadData();
-                }
-              });
-            },
-          ),
-        ],
-      ),
-      body: BlocBuilder<LearningPathCubit, LearningPathState>(
-        buildWhen: (previous, current) => 
-          current is LearningPathItemsLoading || 
-          current is LearningPathItemsLoaded,
-        builder: (context, state) {
-          if (state is LearningPathItemsLoading) {
-            return _buildLoadingShimmer();
-          }
-
-          if (state is LearningPathItemsLoaded) {
-            if (state.error != null) {
-              return _buildErrorState(state.error!);
+                ).then((value) {
+                  if (value == true) {
+                    _loadData();
+                  }
+                });
+              },
+            ),
+          ],
+        ),
+        body: BlocBuilder<LearningPathCubit, LearningPathState>(
+          buildWhen: (previous, current) => 
+            current is LearningPathItemsLoading || 
+            current is LearningPathItemsLoaded,
+          builder: (context, state) {
+            if (state is LearningPathItemsLoading) {
+              return _buildLoadingShimmer();
             }
-            return _buildContent(state.items, state.analytics);
-          }
 
-          return const SizedBox();
-        },
+            if (state is LearningPathItemsLoaded) {
+              if (state.error != null) {
+                return _buildErrorState(state.error!);
+              }
+              return _buildContent(state.items, state.analytics);
+            }
+
+            return const SizedBox();
+          },
+        ),
       ),
     );
   }
@@ -526,6 +534,7 @@ class _LearningPathPageState extends State<LearningPathPage> {
   }
 
   Widget _buildContent(List<PathItem> items, PathAnalytics analytics) {
+    final cubit = getit<LearningPathCubit>();
     final groupedItems = <String, List<PathItem>>{};
     for (var item in items) {
       final categoryName = item.subcategory.name;
@@ -537,7 +546,7 @@ class _LearningPathPageState extends State<LearningPathPage> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        await context.read<LearningPathCubit>().getPathItems(widget.pathId);
+        await cubit.getPathItems(widget.pathId);
       },
       child: CustomScrollView(
         slivers: [

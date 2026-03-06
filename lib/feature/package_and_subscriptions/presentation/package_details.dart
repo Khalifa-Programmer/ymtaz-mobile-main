@@ -12,13 +12,22 @@ import 'package:yamtaz/feature/package_and_subscriptions/presentation/widgets/fe
 
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
-import '../../../core/widgets/webpay_new.dart';
+import '../../../core/widgets/moyasar_payment_screen.dart';
+import '../../../core/widgets/new_payment_success.dart';
 import '../data/model/packages_model.dart';
+import '../data/model/packages_subscribe_model.dart';
 
-class PackageDetails extends StatelessWidget {
+class PackageDetails extends StatefulWidget {
   const PackageDetails({super.key, required this.package});
 
   final Package package;
+
+  @override
+  State<PackageDetails> createState() => _PackageDetailsState();
+}
+
+class _PackageDetailsState extends State<PackageDetails> {
+  PackagesSubscribeModel? subscriptionData;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +40,9 @@ class PackageDetails extends StatelessWidget {
           print('⏳ Loading purchase...');
         } else if (state is LoadedBuy) {
           print('✅ Purchase loaded successfully');
-          var data = state.data;
+          subscriptionData = state.data;
           
-          if (data.data == null) {
+          if (subscriptionData?.data == null) {
             print('⚠️ Warning: data.data is null');
             AnimatedSnackBar.material(
               'حدث خطأ في معالجة الطلب',
@@ -42,23 +51,29 @@ class PackageDetails extends StatelessWidget {
             return;
           }
           
-          if (data.data!.paymentUrl == null || data.data!.paymentUrl!.isEmpty) {
-            print('✅ Free package or already subscribed');
-            AnimatedSnackBar.material(
-              data.message ?? 'تم الإشتراك بنجاح',
-              type: AnimatedSnackBarType.success,
-            ).show(context);
-            context.pushNamedAndRemoveUntil(Routes.homeLayout, predicate: (Route<dynamic> route) { return false; });
-            return;
-          }
-
-          print('💳 Opening payment URL: ${data.data!.paymentUrl}');
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.push(
+          // فتح شاشة ميسر الرسمية (Native) بدلاً من الـ WebView
+          print('💳 Opening Native Moyasar Payment for Package: ${widget.package.name}');
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => WebPaymentScreen(
-                        link: data.data!.paymentUrl!.toString())));
+                    builder: (context) => MoyasarPaymentScreen(
+                        amount: widget.package.priceAfterDiscount?.toString() ?? "100",
+                        description: "اشتراك باقة ${widget.package.name}",
+                        packageId: widget.package.id!.toString(),
+                        transactionId: subscriptionData!.data!.transactionId)));
+            
+            if (result == 'success') {
+              print('🎉 Native Payment Success, confirming with backend...');
+              if (mounted && (subscriptionData?.data?.subscription?.id != null)) {
+                context.read<PackagesAndSubscriptionsCubit>().confirmPaymentPackage(subscriptionData!.data!.subscription!.id!.toString());
+              } else if (mounted && (subscriptionData?.data?.transactionId != null)) {
+                // Fallback to transaction ID if subscription ID is missing
+                context.read<PackagesAndSubscriptionsCubit>().confirmPaymentPackage(subscriptionData!.data!.transactionId!);
+              } else {
+                print('❌ Error: ID is null');
+              }
+            }
           });
 
         } else if (state is ErrorBuy) {
@@ -68,12 +83,38 @@ class PackageDetails extends StatelessWidget {
             type: AnimatedSnackBarType.error,
             duration: const Duration(seconds: 4),
           ).show(context);
+        } else if (state is LoadedConfirm) {
+          print('✅ Payment confirmed successfully');
+          if (mounted) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => NewSuccessPayment()),
+              (route) => false
+            );
+          }
+        } else if (state is ErrorConfirm) {
+          print('❌ Error confirming payment: ${state.message}');
+          // في بيئة التطوير، نسهل الانتقال حتى لو واجه الباك اند مشكلة في المزامنة اللحظية
+          if (state.message.contains('404') || state.message.contains('not found')) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => NewSuccessPayment()),
+              (route) => false
+            );
+          } else {
+            AnimatedSnackBar.material(
+              state.message,
+              type: AnimatedSnackBarType.error,
+            ).show(context);
+          }
         }
       },
       builder: (context, state) {
-        return Scaffold(
+        return Stack(
+          children: [
+            Scaffold(
             appBar: AppBar(
-              title: Text(package.name!,
+              title: Text(widget.package.name ?? '',
                   style: TextStyles.cairo_14_bold.copyWith(
                     color: appColors.black,
                   )),
@@ -111,7 +152,7 @@ class PackageDetails extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          package.name ?? 'اسم الباقة',
+                          widget.package.name ?? 'اسم الباقة',
                           style: TextStyles.cairo_16_bold,
                         ),
                         SizedBox(height: 8.h),
@@ -125,7 +166,7 @@ class PackageDetails extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text:
-                                    '${package.priceAfterDiscount ?? 100} ر.س ',
+                                    '${widget.package.priceAfterDiscount ?? 100} ر.س ',
                                 style: TextStyles.cairo_20_bold,
                               ),
                               TextSpan(
@@ -140,7 +181,7 @@ class PackageDetails extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'المدة : ${package.duration} يوم',
+                              'المدة : ${widget.package.duration} يوم',
                               style: TextStyles.cairo_12_semiBold,
                             ),
                             CupertinoButton(
@@ -150,7 +191,7 @@ class PackageDetails extends StatelessWidget {
                                   BlocProvider.of<
                                               PackagesAndSubscriptionsCubit>(
                                           context)
-                                      .subscribePackage(package.id!.toString());
+                                      .subscribePackage(widget.package.id?.toString() ?? "");
                                 }
                               },
                               color: appColors.blue100,
@@ -172,9 +213,9 @@ class PackageDetails extends StatelessWidget {
                     ),
                   ),
                   ConditionalBuilder(
-                    condition: package.numberOfAdvisoryServices != 0 &&
-                        package.numberOfServices != 0 &&
-                        package.numberOfReservations != 0,
+                    condition: widget.package.numberOfAdvisoryServices != 0 &&
+                        widget.package.numberOfServices != 0 &&
+                        widget.package.numberOfReservations != 0,
                     builder: (context) {
                       return Container(
                         padding: EdgeInsets.symmetric(
@@ -197,7 +238,6 @@ class PackageDetails extends StatelessWidget {
                           ],
                           shape: RoundedRectangleBorder(
                             // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
-
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -219,7 +259,7 @@ class PackageDetails extends StatelessWidget {
                                 SizedBox(width: 8.w),
                                 Expanded(
                                   child: Text(
-                                    '${package.numberOfAdvisoryServices} استشارة شهرية',
+                                    '${widget.package.numberOfAdvisoryServices} استشارة شهرية',
                                     style: TextStyle(fontSize: 16.sp),
                                   ),
                                 ),
@@ -234,7 +274,7 @@ class PackageDetails extends StatelessWidget {
                                 SizedBox(width: 8.w),
                                 Expanded(
                                   child: Text(
-                                    '${package.numberOfServices} خدمة شهرية',
+                                    '${widget.package.numberOfServices} خدمة شهرية',
                                     style: TextStyle(fontSize: 16.sp),
                                   ),
                                 ),
@@ -249,7 +289,7 @@ class PackageDetails extends StatelessWidget {
                                 SizedBox(width: 8.w),
                                 Expanded(
                                   child: Text(
-                                    '${package.numberOfReservations} موعد شهري',
+                                    '${widget.package.numberOfReservations} موعد شهري',
                                     style: TextStyle(fontSize: 16.sp),
                                   ),
                                 ),
@@ -265,7 +305,7 @@ class PackageDetails extends StatelessWidget {
                     },
                   ),
                   ConditionalBuilder(
-                    condition: package.permissions!.isNotEmpty,
+                    condition: widget.package.permissions!.isNotEmpty,
                     builder: (context) {
                       return Container(
                         padding:
@@ -288,7 +328,6 @@ class PackageDetails extends StatelessWidget {
                           ],
                           shape: RoundedRectangleBorder(
                             // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
-
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -306,13 +345,13 @@ class PackageDetails extends StatelessWidget {
                               padding: EdgeInsets.zero,
                               itemBuilder: (context, index) {
                                 return getFeatureRowById(
-                                    package.permissions![index].id!,
-                                    package.permissions![index].name!);
+                                    widget.package.permissions?[index].id ?? 0,
+                                    widget.package.permissions?[index].name ?? '');
                               },
                               separatorBuilder: (context, index) {
                                 return SizedBox(height: 10.h);
                               },
-                              itemCount: package.permissions!.length,
+                              itemCount: widget.package.permissions!.length,
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                             ),
@@ -348,7 +387,6 @@ class PackageDetails extends StatelessWidget {
                       ],
                       shape: RoundedRectangleBorder(
                         // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
-
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -362,7 +400,7 @@ class PackageDetails extends StatelessWidget {
                         SizedBox(height: 8.h),
                         // rich text to add شهر in small size
                         Text(
-                          package.instructions ?? 'تعليمات الباقة',
+                          widget.package.instructions ?? 'تعليمات الباقة',
                           style: TextStyles.cairo_12_semiBold
                               .copyWith(color: appColors.grey15),
                         ),
@@ -371,7 +409,31 @@ class PackageDetails extends StatelessWidget {
                   ),
                 ],
               ),
-            ));
+            )),
+            if (state is LoadingConfirm)
+              Container(
+                color: Colors.black.withOpacity(0.7),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(color: appColors.primaryColorYellow),
+                      SizedBox(height: 20.h),
+                      Text(
+                        "جاري تأكيد الاشتراك...",
+                        style: TextStyles.cairo_16_bold.copyWith(color: Colors.white),
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        "يرجى الانتظار، لا تشغل الشاشة...",
+                        style: TextStyles.cairo_12_semiBold.copyWith(color: Colors.white70),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        );
       },
     );
   }

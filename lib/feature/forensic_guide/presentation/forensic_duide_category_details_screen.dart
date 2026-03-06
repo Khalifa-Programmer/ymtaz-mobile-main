@@ -6,8 +6,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart' as UL;
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/feature/forensic_guide/data/model/judicial_guide_response_model.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../core/helpers/fuctions_helpers/functions_helpers.dart';
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/widgets/spacing.dart';
@@ -50,14 +53,26 @@ class ForensicGuideCategoryDetailsScreen extends StatelessWidget {
             children: [
               _buildHeader(context),
               verticalSpace(10.h),
-              _judicialGuideDetails(data.subCateogry!),
+              if (data.subCateogry != null) _judicialGuideDetails(data.subCateogry!),
               // _buildBody(),
             ],
           ),
         ));
   }
 
-  Padding _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context) {
+    bool hasAbout = data.about != null &&
+        data.about!.isNotEmpty &&
+        data.about?.toLowerCase() != "null";
+    bool hasEmails = data.emails != null && data.emails!.isNotEmpty;
+    bool hasNumbers = data.numbers != null && data.numbers!.isNotEmpty;
+    bool hasWorkingHours = data.workingHoursFrom != null &&
+        data.workingHoursTo != null &&
+        data.workingHoursFrom!.isNotEmpty;
+    bool hasUrl = data.url != null && data.url!.isNotEmpty;
+    bool hasAnyContactData =
+        hasEmails || hasNumbers || hasWorkingHours || hasUrl;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -78,13 +93,39 @@ class ForensicGuideCategoryDetailsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Image.network(
-                    data.image ?? "https://api.ymtaz.sa/uploads/person.png",
-                    width: MediaQuery.of(context).size.width,
-                    height: 200.h,
-                    fit: BoxFit.cover,
+                Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: (data.image == null ||
+                            data.image!.isEmpty ||
+                            data.image ==
+                                "https://api.ymtaz.sa/uploads/person.png" ||
+                            data.image == "https://ymtaz.sa/uploads/person.png")
+                        ? SvgPicture.asset(
+                            AppAssets.guide,
+                            width: MediaQuery.of(context).size.width,
+                            height: 200.h,
+                            fit: BoxFit.contain,
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: data.image!,
+                            width: MediaQuery.of(context).size.width,
+                            height: 200.h,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => SvgPicture.asset(
+                              AppAssets.guide,
+                              width: MediaQuery.of(context).size.width,
+                              height: 200.h,
+                              fit: BoxFit.contain,
+                            ),
+                            errorWidget: (context, url, error) =>
+                                SvgPicture.asset(
+                              AppAssets.guide,
+                              width: MediaQuery.of(context).size.width,
+                              height: 200.h,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                   ),
                 ),
                 verticalSpace(20),
@@ -105,146 +146,177 @@ class ForensicGuideCategoryDetailsScreen extends StatelessWidget {
                   ],
                 ),
                 verticalSpace(10),
-                Text(
-                  data.about ?? "الوصف",
-                  style: TextStyles.cairo_12_medium.copyWith(
-                    color: appColors.black,
+                if (hasAbout)
+                  Text(
+                    data.about!,
+                    style: TextStyles.cairo_12_medium.copyWith(
+                      color: appColors.black,
+                    ),
+                  )
+                else
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                        vertical: 12.h, horizontal: 16.w),
+                    decoration: BoxDecoration(
+                      color: appColors.primaryColorYellow.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color:
+                            appColors.primaryColorYellow.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: appColors.primaryColorYellow,
+                          size: 20.sp,
+                        ),
+                        horizontalSpace(10.w),
+                        Expanded(
+                          child: Text(
+                            "عذراً، لا توجد تفاصيل إضافية أو وصف متاح في الوقت الحالي.",
+                            style: TextStyles.cairo_12_semiBold.copyWith(
+                              color: appColors.black,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
           ),
           verticalSpace(12),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.0.w, vertical: 20.0.h),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12.withOpacity(0.04),
-                  blurRadius: 10,
-                  spreadRadius: 10,
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (data.emails != null && data.emails!.isNotEmpty) ...[
-                  ListView.separated(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: data.emails!.length,
-                    itemBuilder: (context, index) => Row(
+          if (hasAnyContactData)
+            Container(
+              padding:
+                  EdgeInsets.symmetric(horizontal: 20.0.w, vertical: 20.0.h),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12.withOpacity(0.04),
+                    blurRadius: 10,
+                    spreadRadius: 10,
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (hasEmails) ...[
+                    ListView.separated(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: data.emails!.length,
+                      itemBuilder: (context, index) => Row(
+                        children: [
+                          Text(
+                            "البريد الإلكتروني",
+                            style: TextStyles.cairo_12_semiBold
+                                .copyWith(color: appColors.grey15),
+                          ),
+                          const Spacer(),
+                          InkWell(
+                            onTap: () {
+                              Clipboard.setData(
+                                  ClipboardData(text: data.emails![index]));
+                            },
+                            child: Text(
+                              data.emails![index],
+                              style: TextStyles.cairo_12_semiBold
+                                  .copyWith(color: appColors.blue100),
+                            ),
+                          ),
+                        ],
+                      ),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return verticalSpace(20.h);
+                      },
+                    ),
+                    if (hasNumbers || hasWorkingHours || hasUrl)
+                      verticalSpace(20.h),
+                  ],
+                  if (hasNumbers) ...[
+                    ListView.separated(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: data.numbers!.length,
+                      itemBuilder: (context, index) => Row(
+                        children: [
+                          Text(
+                            "الهاتف ${index + 1} ",
+                            style: TextStyles.cairo_12_semiBold
+                                .copyWith(color: appColors.grey15),
+                          ),
+                          const Spacer(),
+                          InkWell(
+                            onTap: () {
+                              Utils.makePhoneCall(data.numbers![index]);
+                            },
+                            child: Text(
+                              data.numbers![index],
+                              style: TextStyles.cairo_12_semiBold
+                                  .copyWith(color: appColors.blue100),
+                            ),
+                          ),
+                        ],
+                      ),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return verticalSpace(20.h);
+                      },
+                    ),
+                    if (hasWorkingHours || hasUrl) verticalSpace(20.h),
+                  ],
+                  if (hasWorkingHours) ...[
+                    Row(
                       children: [
                         Text(
-                          "البريد الإلكتروني",
+                          "مواعيد العمل",
                           style: TextStyles.cairo_12_semiBold
                               .copyWith(color: appColors.grey15),
                         ),
                         const Spacer(),
-                        InkWell(
-                          onTap: () {
-                            // Copy the email to the clipboard
-                            Clipboard.setData(
-                                ClipboardData(text: data.emails![index]));
-
-                            // Show the green toast message
-
-                            // Launch the email submission utility if needed
-                            // Utils.launchSubmission(data.emails![index]);
-                          },
-                          child: Text(
-                            data.emails![index],
-                            style: TextStyles.cairo_12_semiBold
-                                .copyWith(color: appColors.blue100),
-                          ),
-                        ),
-                      ],
-                    ),
-                    separatorBuilder: (BuildContext context, int index) {
-                      return verticalSpace(20.h);
-                    },
-                  ),
-                  verticalSpace(20.h),
-                ],
-                if (data.numbers != null && data.numbers!.isNotEmpty) ...[
-                  ListView.separated(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: data.numbers!.length,
-                    itemBuilder: (context, index) => Row(
-                      children: [
                         Text(
-                          "الهاتف ${index + 1} ",
-                          style: TextStyles.cairo_12_semiBold
-                              .copyWith(color: appColors.grey15),
-                        ),
-                        const Spacer(),
-                        InkWell(
-                          onTap: () {
-                            Utils.makePhoneCall(data.numbers![index]);
-                          },
-                          child: Text(
-                            data.numbers![index],
-                            style: TextStyles.cairo_12_semiBold
-                                .copyWith(color: appColors.blue100),
-                          ),
-                        ),
-                      ],
-                    ),
-                    separatorBuilder: (BuildContext context, int index) {
-                      return verticalSpace(20.h);
-                    },
-                  ),
-                  verticalSpace(20.h),
-                ],
-                if (data.workingHoursFrom != null &&
-                    data.workingHoursTo != null) ...[
-                  Row(
-                    children: [
-                      Text(
-                        "مواعيد العمل",
-                        style: TextStyles.cairo_12_semiBold
-                            .copyWith(color: appColors.grey15),
-                      ),
-                      const Spacer(),
-                      Text(
-                        "${data.workingHoursFrom} - ${data.workingHoursTo}",
-                        style: TextStyles.cairo_12_semiBold
-                            .copyWith(color: appColors.blue100),
-                      ),
-                    ],
-                  ),
-                  verticalSpace(20.h),
-                ],
-                if (data.url != null && data.url!.isNotEmpty)
-                  Row(
-                    children: [
-                      Text(
-                        "الموقع الإلكتروني",
-                        style: TextStyles.cairo_12_semiBold
-                            .copyWith(color: appColors.grey15),
-                      ),
-                      const Spacer(),
-                      InkWell(
-                        onTap: () {
-                          Utils.launchSubmission(data.url!);
-                        },
-                        child: Text(
-                          data.url!,
+                          "${data.workingHoursFrom} - ${data.workingHoursTo}",
                           style: TextStyles.cairo_12_semiBold
                               .copyWith(color: appColors.blue100),
                         ),
-                      ),
-                    ],
-                  ),
-              ],
+                      ],
+                    ),
+                    if (hasUrl) verticalSpace(20.h),
+                  ],
+                  if (hasUrl)
+                    Row(
+                      children: [
+                        Text(
+                          "الموقع الإلكتروني",
+                          style: TextStyles.cairo_12_semiBold
+                              .copyWith(color: appColors.grey15),
+                        ),
+                        const Spacer(),
+                        InkWell(
+                          onTap: () {
+                            Utils.launchSubmission(data.url!);
+                          },
+                          child: Text(
+                            data.url!,
+                            style: TextStyles.cairo_12_semiBold
+                                .copyWith(color: appColors.blue100),
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -272,23 +344,56 @@ class ForensicGuideCategoryDetailsScreen extends StatelessWidget {
               style: TextStyles.cairo_14_bold
                   .copyWith(color: appColors.primaryColorYellow)),
           verticalSpace(10.h),
-          Row(
-            children: [
-              Text(
-                "اسم المحكمة",
-                style: TextStyles.cairo_12_semiBold
-                    .copyWith(color: appColors.grey15),
+          if (data.name == null || data.name!.isEmpty)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+              decoration: BoxDecoration(
+                color: appColors.primaryColorYellow.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: appColors.primaryColorYellow.withOpacity(0.3),
+                ),
               ),
-              Spacer(),
-              Text(
-                data.name!,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyles.cairo_12_semiBold
-                    .copyWith(color: appColors.blue100),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    color: appColors.primaryColorYellow,
+                    size: 20.sp,
+                  ),
+                  horizontalSpace(10.w),
+                  Expanded(
+                    child: Text(
+                      "عذراً، لا توجد بيانات مسجلة للمحكمة حالياً.",
+                      style: TextStyles.cairo_12_semiBold.copyWith(
+                        color: appColors.black,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            )
+          else
+            Row(
+              children: [
+                Text(
+                  "اسم المحكمة",
+                  style: TextStyles.cairo_12_semiBold
+                      .copyWith(color: appColors.grey15),
+                ),
+                Spacer(),
+                Text(
+                  data.name!,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyles.cairo_12_semiBold
+                      .copyWith(color: appColors.blue100),
+                ),
+              ],
+            ),
           verticalSpace(10.h),
           // if (data.region != null &&
           //     data.region!.name != null &&

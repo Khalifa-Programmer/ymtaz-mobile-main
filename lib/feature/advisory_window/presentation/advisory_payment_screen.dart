@@ -10,6 +10,8 @@ import 'package:yamtaz/core/di/dependency_injection.dart';
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/widgets/spacing.dart';
+import '../../../core/widgets/moyasar_payment_screen.dart';
+import '../../../core/widgets/new_payment_success.dart';
 import '../../../core/widgets/webpay_new.dart';
 import '../../../core/constants/assets.dart';
 import '../../layout/account/presentation/client_profile/presentation/client_my_profile.dart';
@@ -26,17 +28,34 @@ class AdvisoryPaymentScreen extends StatelessWidget {
     return BlocConsumer<AdvisoryCubit, AdvisoryState>(
       listener: (context, state) {
         if (state is AdvisorReservationLoading) {
-          showLoadingDialog(context);
+          // جاري رفع البيانات ... (لا نفعل شيئاً هنا لأن الزر نفسه سيعرض علامة التحميل)
         } else if (state is AdvisorReservationLoaded) {
-          Navigator.pop(context);
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => WebPaymentScreen(
-                      link: state.data.data!.paymentUrl!)));
+            context,
+            MaterialPageRoute(
+              builder: (context) => MoyasarPaymentScreen(
+                amount: state.data.data?.reservation?.price?.toString() ?? "0",
+                description: "استشارة ${state.data.data?.reservation?.advisoryServicesSub?.name ?? ''}",
+                transactionId: state.data.data?.transactionId,
+                metadata: {
+                  'reservation_id': state.data.data?.reservation?.id?.toString() ?? '',
+                  'type': 'advisory',
+                },
+              ),
+            ),
+          ).then((result) {
+            if (result == 'success' && context.mounted) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const NewSuccessPayment()),
+                (route) => false,
+              );
+            }
+          });
         } else if (state is AdvisorReservationError) {
-          Navigator.pop(context);
-          showSnackBar(context, state.error);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.error), backgroundColor: Colors.red),
+          );
         }
       },
       builder: (context, state) {
@@ -78,47 +97,54 @@ class AdvisoryPaymentScreen extends StatelessWidget {
               child: CupertinoButton(
                   padding: EdgeInsets.zero,
                   color: appColors.primaryColorYellow,
-                  child: Text(
-                    "إرسال الطلب",
-                    style: TextStyles.cairo_14_bold
-                        .copyWith(color: appColors.white),
-                  ),
-                  onPressed: () {
-                    Map<String, Object?> map = {
-                      "sub_price_id": cubit.selectedLevel!.id,
-                      "description": cubit.description,
-                      "lawyer_id": cubit.selectedLawyer!.lawyer!.id,
-                    };
-                    FormData newRequestData = FormData.fromMap(map);
+                  onPressed: state is AdvisorReservationLoading
+                      ? null
+                      : () {
+                          Map<String, Object?> map = {
+                            "sub_price_id": cubit.selectedLevel!.id,
+                            "description": cubit.description,
+                            "lawyer_id": cubit.selectedLawyer!.lawyer!.id,
+                          };
+                          FormData newRequestData = FormData.fromMap(map);
 
-                    if ( cubit.isNeedAppointment) {
-                      newRequestData.fields.add(MapEntry("date", cubit.selectedDate!));
-                      newRequestData.fields.add(MapEntry("from", cubit.selectedFrom!));
-                      newRequestData.fields.add(MapEntry("to", cubit.selectedTo!));
-                    }
+                          if (cubit.isNeedAppointment) {
+                            newRequestData.fields
+                                .add(MapEntry("date", cubit.selectedDate!));
+                            newRequestData.fields
+                                .add(MapEntry("from", cubit.selectedFrom!));
+                            newRequestData.fields
+                                .add(MapEntry("to", cubit.selectedTo!));
+                          }
 
-                    if ( cubit.imagesDocs.isNotEmpty) {
-                      for (int i = 0; i < cubit.imagesDocs.length; i++) {
-                        newRequestData.files.add(MapEntry(
-                          "files[$i]",
-                          MultipartFile.fromFileSync(cubit.imagesDocs[i].path!),
-                        ));
-                      }
-                    }
+                          if (cubit.imagesDocs.isNotEmpty) {
+                            for (int i = 0; i < cubit.imagesDocs.length; i++) {
+                              newRequestData.files.add(MapEntry(
+                                "files[$i]",
+                                MultipartFile.fromFileSync(
+                                    cubit.imagesDocs[i].path!),
+                              ));
+                            }
+                          }
 
-                    if ( cubit.recordPath != null && cubit.recordPath!.isNotEmpty) {
-                      print(cubit.recordPath);
-                      newRequestData.files.add(MapEntry(
-                        "voice_file",
-                        MultipartFile.fromFileSync(cubit.recordPath!),
-                      ));
-                    }
+                          if (cubit.recordPath != null &&
+                              cubit.recordPath!.isNotEmpty) {
+                            newRequestData.files.add(MapEntry(
+                              "voice_file",
+                              MultipartFile.fromFileSync(cubit.recordPath!),
+                            ));
+                          }
 
-
-
-
-                    context.read<AdvisoryCubit>().createAdvisoryRequest(newRequestData);
-                  }),
+                          context
+                              .read<AdvisoryCubit>()
+                              .createAdvisoryRequest(newRequestData);
+                        },
+                  child: state is AdvisorReservationLoading
+                      ? const CupertinoActivityIndicator(color: Colors.white)
+                      : Text(
+                          "إرسال الطلب",
+                          style: TextStyles.cairo_14_bold
+                              .copyWith(color: appColors.white),
+                        )),
             ),
           ],
         );
@@ -246,7 +272,7 @@ class AdvisoryPaymentScreen extends StatelessWidget {
     );
   }
 
-  RenderObjectWidget advisoryData() {
+  Widget advisoryData() {
     var cubit = getit<AdvisoryCubit>();
     if (cubit.selectedLawyer == null || cubit.selectedLawyer!.subCategory == null) {
       return SizedBox.shrink(); // Return an empty widget if data is null

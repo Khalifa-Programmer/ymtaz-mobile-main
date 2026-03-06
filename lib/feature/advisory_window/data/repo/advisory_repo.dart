@@ -34,7 +34,7 @@ class AdvisoryRepo {
     var userType = CacheHelper.getData(key: 'userType');
     try {
       var response =
-          await _apiService.advisoryLawyersById(token, importanceId, serviceId);
+          await _apiService.advisoryLawyersById(token ?? '', importanceId, serviceId);
 
       return ApiResult.success(response);
     } on DioException catch (error) {
@@ -95,11 +95,11 @@ class AdvisoryRepo {
     try {
       if (lawyerId == null) {
         var response = await _apiService.getAdvisoryWorkHours(
-            token, fromDate, toDate, requiredTime.toString());
+            token ?? '', fromDate, toDate, requiredTime.toString());
         return ApiResult.success(response);
       } else {
         var response = await _apiService.getAdvisoryWorkHoursToLawyer(
-          token,
+          token ?? '',
           fromDate,
           toDate,
           lawyerId,
@@ -123,9 +123,9 @@ class AdvisoryRepo {
     final AllAdvisoryResponse response;
 
     if (userType == 'client') {
-      response = await _apiService.getMyAdvisorClientFromYmtaz(token);
+      response = await _apiService.getMyAdvisorClientFromYmtaz(token ?? '');
     } else if (userType == 'provider') {
-      response = await _apiService.getMyAdvisorProviderFromYmtaz(token);
+      response = await _apiService.getMyAdvisorProviderFromYmtaz(token ?? '');
     } else {
       // التعامل مع حالة الزائر أو نوع مستخدم غير معروف
       return const ApiResult.failure({"message": "يجب تسجيل الدخول لعرض الاستشارات"});
@@ -151,8 +151,8 @@ class AdvisoryRepo {
 
     // تعيين القيمة مباشرة باستخدام final لضمان الأمان البرمجي
     final AllAdvisoryResponse response = (userType == 'client')
-        ? await _apiService.getMyAdvisorClientFromDigital(token)
-        : await _apiService.getMyAdvisorProviderFromDigital(token);
+        ? await _apiService.getMyAdvisorClientFromDigital(token ?? '')
+        : await _apiService.getMyAdvisorProviderFromDigital(token ?? '');
 
     return ApiResult.success(response);
   } on DioException catch (error) {

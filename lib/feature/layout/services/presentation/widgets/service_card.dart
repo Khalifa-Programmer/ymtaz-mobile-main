@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yamtaz/core/constants/colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../../../config/themes/styles.dart';
 import '../../../../../core/helpers/fuctions_helpers/functions_helpers.dart';
@@ -54,9 +55,15 @@ class ServiceCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 15.r,
-                backgroundImage: NetworkImage(providerImage),
+              ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: providerImage,
+                  width: 30.r,
+                  height: 30.r,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => Container(width: 30.r, height: 30.r, color: appColors.grey.withOpacity(0.3), child: Icon(Icons.person, size: 20.r, color: appColors.grey)),
+                  placeholder: (context, url) => Container(width: 30.r, height: 30.r, color: appColors.grey.withOpacity(0.3), child: Icon(Icons.person, size: 20.r, color: appColors.grey)),
+                ),
               ),
               horizontalSpace(10.w),
               Text(
@@ -214,9 +221,15 @@ class AdvisoryServiceCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 15.r,
-                backgroundImage: NetworkImage(providerImage),
+              ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: providerImage,
+                  width: 30.r,
+                  height: 30.r,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => Container(width: 30.r, height: 30.r, color: appColors.grey.withOpacity(0.3), child: Icon(Icons.person, size: 20.r, color: appColors.grey)),
+                  placeholder: (context, url) => Container(width: 30.r, height: 30.r, color: appColors.grey.withOpacity(0.3), child: Icon(Icons.person, size: 20.r, color: appColors.grey)),
+                ),
               ),
               horizontalSpace(10.w),
               Text(
@@ -391,9 +404,15 @@ class ServiceOfferCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 15.r,
-                backgroundImage: NetworkImage(providerImage),
+              ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: providerImage,
+                  width: 30.r,
+                  height: 30.r,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => Container(width: 30.r, height: 30.r, color: appColors.grey.withOpacity(0.3), child: Icon(Icons.person, size: 20.r, color: appColors.grey)),
+                  placeholder: (context, url) => Container(width: 30.r, height: 30.r, color: appColors.grey.withOpacity(0.3), child: Icon(Icons.person, size: 20.r, color: appColors.grey)),
+                ),
               ),
               horizontalSpace(10.w),
               Text(

@@ -134,7 +134,7 @@ class AdvisoryCommitteeSearchScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(lawyer.name ?? "بدون اسم",
+              Text((lawyer.name == null || lawyer.name.toString().toLowerCase() == 'null') ? "بدون اسم" : lawyer.name!,
                   style: TextStyles.cairo_12_bold.copyWith(
                     color: appColors.blue100,
                   )),
@@ -155,7 +155,7 @@ class AdvisoryCommitteeSearchScreen extends StatelessWidget {
                     size: 20.sp,
                   ),
                   horizontalSpace(0.w),
-                  Text(lawyer.country?.name ?? "",
+                  Text((lawyer.country?.name == null || lawyer.country!.name.toString().toLowerCase() == 'null') ? "" : lawyer.country!.name!,
                       style: TextStyles.cairo_12_semiBold),
                 ],
               )
@@ -199,7 +199,8 @@ class AdvisoryCommitteeSearchScreen extends StatelessWidget {
 
     if (imageUrl == null ||
         imageUrl.isEmpty ||
-        imageUrl == "https://ymtaz.sa/uploads/person.png") {
+        imageUrl == "https://ymtaz.sa/uploads/person.png" ||
+        imageUrl == "https://api.ymtaz.sa/uploads/person.png") {
       return SvgPicture.asset(
         defaultAvatar,
         width: 50.w,

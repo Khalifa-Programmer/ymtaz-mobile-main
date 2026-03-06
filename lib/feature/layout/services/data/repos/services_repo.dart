@@ -25,9 +25,9 @@ Future<ApiResult<ServicesRequestResponse>> servicesRequest(FormData data) async 
     final ServicesRequestResponse response;
 
     if (userType == 'client') {
-      response = await _apiService.servicesRequestClient(token, data);
+      response = await _apiService.servicesRequestClient(token ?? '', data);
     } else if (userType == 'provider') {
-      response = await _apiService.servicesRequestProvider(token, data);
+      response = await _apiService.servicesRequestProvider(token ?? '', data);
     } else {
       // حالة أمان: إذا لم يكن المستخدم أحد النوعين، نرجع خطأ مخصص
       return const ApiResult.failure({"message": "نوع المستخدم غير صالح"});
@@ -47,7 +47,7 @@ Future<ApiResult<ServicesRequestResponse>> servicesRequest(FormData data) async 
     var userType = CacheHelper.getData(key: 'userType');
     try {
       var response =
-          await _apiService.serviceLawyersById(token, importanceId, serviceId);
+          await _apiService.serviceLawyersById(token ?? '', importanceId, serviceId);
 
       return ApiResult.success(response);
     } on DioException catch (error) {
@@ -66,7 +66,7 @@ Future<ApiResult<ServicesRequestResponse>> servicesRequest(FormData data) async 
     if (userType == 'client' || userType == 'guest') {
       response = await _apiService.getServicesClient(token ?? "");
     } else if (userType == 'provider') {
-      response = await _apiService.ggetServicesProvider(token);
+      response = await _apiService.ggetServicesProvider(token ?? '');
     } else {
       // 2. معالجة حالة إذا كان نوع المستخدم غير معروف (أمان إضافي)
       return const ApiResult.failure({"message": "نوع المستخدم غير معروف"});
@@ -86,7 +86,7 @@ Future<ApiResult<ServicesRequestResponse>> servicesRequest(FormData data) async 
       getMyServicesRequestOffers() async {
     var token = CacheHelper.getData(key: 'token');
     try {
-      var response = await _apiService.getMyServicesRequestOffers(token);
+      var response = await _apiService.getMyServicesRequestOffers(token ?? '');
       return ApiResult.success(response);
     } on DioException catch (error) {
       return ApiResult.failure(error.response?.data);
@@ -98,7 +98,7 @@ Future<ApiResult<ServicesRequestResponse>> servicesRequest(FormData data) async 
     var token = CacheHelper.getData(key: 'token');
     try {
       var response =
-          await _apiService.myServicesClientOffersRespond(token, data);
+          await _apiService.myServicesClientOffersRespond(token ?? '', data);
       return ApiResult.success(response);
     } on DioException catch (error) {
       return ApiResult.failure(error.response?.data);

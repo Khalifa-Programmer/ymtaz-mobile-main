@@ -20,7 +20,7 @@ class DigitalGuideRepo {
     var token = CacheHelper.getData(key: 'token');
     try {
       FastSearchResponseModel response;
-      response = await _apiService.fastSearch(token, name);
+      response = await _apiService.fastSearch(token ?? '', name);
       return ApiResult.success(response);
     } on DioException catch (error) {
       return ApiResult.failure(error.response?.data);
@@ -31,7 +31,7 @@ class DigitalGuideRepo {
     var token = CacheHelper.getData(key: 'token');
     try {
       LawyerModel response;
-      response = await _apiService.getLawyerDataById(token, id);
+      response = await _apiService.getLawyerDataById(token ?? '', id);
       return ApiResult.success(response);
     } on DioException catch (error) {
       return ApiResult.failure(error.response?.data);
@@ -65,7 +65,7 @@ class DigitalGuideRepo {
 
     var token = CacheHelper.getData(key: 'token');
     try {
-      var lawyerData = _apiService.getLawyerDataById(token, id);
+      var lawyerData = _apiService.getLawyerDataById(token ?? '', id);
 
       var results = await Future.wait([lawyerData]);
 

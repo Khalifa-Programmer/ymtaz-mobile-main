@@ -37,10 +37,10 @@ class _DaysWorkingHoursState extends State<DaysWorkingHours> {
     return Column(
       children: [
         SizedBox(
-          height: 85.h,
+          height: 100.h,
           width: double.infinity,
           child: ListView.builder(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.symmetric(vertical: 8.h),
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemCount: days.length,

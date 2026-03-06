@@ -61,20 +61,20 @@ class MyServicesLawyerScreen extends StatelessWidget {
                       getit<OfficeProviderCubit>().pendingServicesRequest !=
                           null,
                   builder: (BuildContext context) {
+                    final offersList = getit<OfficeProviderCubit>().pendingServicesRequest?.data?.offers?.pendingOffer ?? [];
                     return PendingRequestsScreen(
-                        offers: getit<OfficeProviderCubit>()
-                            .pendingServicesRequest!
-                            .data!
-                            .offers!
-                            .pendingOffer!);
+                        offers: offersList);
                   },
                   fallback: (BuildContext context) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CupertinoActivityIndicator(),
-                        ],
+                    return state.maybeWhen(
+                      errorServicesRequestFromClients: (msg) => Center(
+                        child: Text(
+                          "عذراً، لا توجد بيانات مسجلة حالياً",
+                          style: TextStyles.cairo_14_semiBold.copyWith(color: appColors.grey15),
+                        ),
+                      ),
+                      orElse: () => const Center(
+                        child: CupertinoActivityIndicator(),
                       ),
                     );
                   },
@@ -84,21 +84,21 @@ class MyServicesLawyerScreen extends StatelessWidget {
                       getit<OfficeProviderCubit>().pendingServicesRequest !=
                           null,
                   builder: (BuildContext context) {
+                    final pendingAcceptanceList = getit<OfficeProviderCubit>().pendingServicesRequest?.data?.offers?.pendingAcceptance ?? [];
                     return PendingRequestsScreen(
-                      offers: getit<OfficeProviderCubit>()
-                          .pendingServicesRequest!
-                          .data!
-                          .offers!
-                          .pendingAcceptance!,
+                      offers: pendingAcceptanceList,
                     );
                   },
                   fallback: (BuildContext context) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CupertinoActivityIndicator(),
-                        ],
+                    return state.maybeWhen(
+                      errorServicesRequestFromClients: (msg) => Center(
+                        child: Text(
+                          "عذراً، لا توجد بيانات مسجلة حالياً",
+                          style: TextStyles.cairo_14_semiBold.copyWith(color: appColors.grey15),
+                        ),
+                      ),
+                      orElse: () => const Center(
+                        child: CupertinoActivityIndicator(),
                       ),
                     );
                   },

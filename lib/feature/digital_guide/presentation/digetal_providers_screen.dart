@@ -149,29 +149,42 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
           Stack(
             children: [
               CircleAvatar(
-                backgroundColor: getColor(lawyer.currentRank?.borderColor ?? "FF0000"),
-
+                backgroundColor:
+                    getColor(lawyer.currentRank?.borderColor ?? "FF0000"),
                 radius: 53.0.sp,
-                child: CachedNetworkImage(
-                  imageUrl: (lawyer.image != null && lawyer.image!.isNotEmpty)
-                      ? lawyer.image!
-                      : (lawyer.logo != null && lawyer.logo!.isNotEmpty)
-                          ? lawyer.logo!
-                          : "https://api.ymtaz.sa/uploads/person.png",
-
-                  imageBuilder: (context, imageProvider) => Container(
-                    width: 100.0.w,
-                    height: 100.0.h,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: imageProvider, fit: BoxFit.cover),
-                    ),
-                  ),
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      imageShimmer(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
+                child: (lawyer.image == null ||
+                        lawyer.image!.isEmpty ||
+                        lawyer.image == "https://api.ymtaz.sa/uploads/person.png" ||
+                        lawyer.image == "https://ymtaz.sa/uploads/person.png")
+                    ? SvgPicture.asset(
+                        lawyer.gender == 'female'
+                            ? AppAssets.Female
+                            : AppAssets.Male,
+                        width: 100.0.w,
+                        height: 100.0.h,
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: lawyer.image!,
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 100.0.w,
+                          height: 100.0.h,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
+                          ),
+                        ),
+                        progressIndicatorBuilder: (context, url,
+                                downloadProgress) =>
+                            imageShimmer(),
+                        errorWidget: (context, url, error) => SvgPicture.asset(
+                          lawyer.gender == 'female'
+                              ? AppAssets.Female
+                              : AppAssets.Male,
+                          width: 100.0.w,
+                          height: 100.0.h,
+                        ),
+                      ),
               ),
               Positioned(
                 bottom: 0.0.h,

@@ -155,13 +155,16 @@ class CustomServiceCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(
-                    serviceData.title!,
-                    style: TextStyles.cairo_14_bold.copyWith(
-                      color: appColors.blue100,
+                  Expanded(
+                    child: Text(
+                      serviceData.title!,
+                      style: TextStyles.cairo_14_bold.copyWith(
+                        color: appColors.blue100,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const Spacer(),
+                  horizontalSpace(10.w),
                   Transform.scale(
                     scale: 0.7,
                     child: CupertinoSwitch(
@@ -200,21 +203,24 @@ class CustomServiceCard extends StatelessWidget {
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemBuilder: (context, index) => Row(
-                                  children: [
+                                   children: [
                                     const Icon(
                                       CupertinoIcons.money_dollar_circle_fill,
                                       color: appColors.primaryColorYellow,
                                     ),
                                     horizontalSpace(5.w),
-                                    Text(
-                                      serviceData.ymtazLevelsPrices![index]
-                                          .level!.name!,
-                                      style:
-                                          TextStyles.cairo_14_semiBold.copyWith(
-                                        color: appColors.blue100,
+                                    Expanded(
+                                      child: Text(
+                                        serviceData.ymtazLevelsPrices![index]
+                                            .level!.name!,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyles.cairo_14_semiBold
+                                            .copyWith(
+                                          color: appColors.blue100,
+                                        ),
                                       ),
                                     ),
-                                    const Spacer(),
+                                    horizontalSpace(10.w),
                                     Text(
                                       serviceData.isActivated == true &&
                                               serviceData.lawyerPrices != null

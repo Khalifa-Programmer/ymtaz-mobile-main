@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../config/themes/styles.dart';
 import '../../../../../core/constants/assets.dart';
@@ -36,7 +36,9 @@ class Nodata extends StatelessWidget {
 }
 
 class NodataFound extends StatelessWidget {
-  const NodataFound({super.key});
+  const NodataFound({super.key, this.text});
+
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,8 @@ class NodataFound extends StatelessWidget {
         ),
         verticalSpace(20.h),
         Text(
-          'لا يوجد بيانات',
+          text ?? 'لا يوجد بيانات',
+          textAlign: TextAlign.center,
           style: TextStyles.cairo_12_medium.copyWith(
             color: appColors.black,
           ),

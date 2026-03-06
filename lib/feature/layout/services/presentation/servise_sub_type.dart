@@ -14,6 +14,8 @@ import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/router/routes.dart';
 import '../../../../core/widgets/alerts.dart';
 import '../../../../core/widgets/app_bar.dart';
+import '../../../../core/widgets/moyasar_payment_screen.dart';
+import '../../../../core/widgets/new_payment_success.dart';
 import '../../../../core/widgets/spacing.dart';
 import '../../../../core/widgets/webpay_new.dart';
 import '../logic/services_cubit.dart';
@@ -41,11 +43,27 @@ class _ServicesSubTypeScreenState extends State<ServicesSubTypeScreen> {
             },
             requestServiceSuccess: (data) {
               Navigator.of(context).pop();
-              Navigator.pushReplacement(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          WebPaymentScreen(link: data.data!.paymentUrl!)));
+                      builder: (context) => MoyasarPaymentScreen(
+                            amount: data.data!.serviceRequest!.price?.toString() ?? "0",
+                            description: "طلب خدمة ${data.data!.serviceRequest!.service?.title ?? ''}",
+                            transactionId: data.data!.transactionId,
+                            metadata: {
+                              'service_request_id': data.data!.serviceRequest!.id!.toString(),
+                              'type': 'service_request',
+                            },
+                          ))).then((result) {
+                if (result == 'success' && context.mounted) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const NewSuccessPayment()),
+                    (route) => false,
+                  );
+                }
+              });
             },
             errorServices: (error) {
               Navigator.of(context).pop();

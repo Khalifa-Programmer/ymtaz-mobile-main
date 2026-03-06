@@ -10,6 +10,9 @@ import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/core/widgets/custom_button.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/feature/advisory_committees/data/model/advisory_committees_lawyers_response.dart';
 
 import '../../../core/di/dependency_injection.dart';
@@ -96,21 +99,7 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                               ),
                               child: Column(
                                 children: [
-                                  Container(
-                                    width: 100.w,
-                                    height: 100.h,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                            widget.lawyer.photo ?? widget.lawyer.image ?? widget.lawyer.logo ??
-                                                "https://api.ymtaz.sa/uploads/person.png",
-
-                                            scale: 1.0),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
+                                  _buildLawyerProfileImage(widget.lawyer),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 14),
                                     child: Column(
@@ -210,7 +199,11 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                   ),
                                   SizedBox(height: 8.h),
                                   Text(
-                                    "${widget.lawyer.about}",
+                                    (widget.lawyer.about == null ||
+                                            widget.lawyer.about.toString().toLowerCase() == 'null' ||
+                                            widget.lawyer.about!.isEmpty)
+                                        ? ""
+                                        : widget.lawyer.about!,
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
@@ -305,7 +298,10 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                       ),
                                       const Spacer(),
                                       Text(
-                                        widget.lawyer.country?.name ?? "",
+                                        (widget.lawyer.country?.name == null ||
+                                                widget.lawyer.country!.name.toString().toLowerCase() == 'null')
+                                            ? ""
+                                            : widget.lawyer.country!.name!,
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(
                                                 color: appColors.blue100),
@@ -331,7 +327,10 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                       ),
                                       const Spacer(),
                                       Text(
-                                        widget.lawyer.region?.name ?? "",
+                                        (widget.lawyer.region?.name == null ||
+                                                widget.lawyer.region!.name.toString().toLowerCase() == 'null')
+                                            ? ""
+                                            : widget.lawyer.region!.name!,
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(
                                                 color: appColors.blue100),
@@ -357,7 +356,10 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                       ),
                                       const Spacer(),
                                       Text(
-                                        widget.lawyer.nationality?.name ?? "",
+                                        (widget.lawyer.nationality?.name == null ||
+                                                widget.lawyer.nationality!.name.toString().toLowerCase() == 'null')
+                                            ? ""
+                                            : widget.lawyer.nationality!.name!,
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(
                                                 color: appColors.blue100),
@@ -383,7 +385,10 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                       ),
                                       const Spacer(),
                                       Text(
-                                        widget.lawyer.degree?.title ?? "",
+                                        (widget.lawyer.degree?.title == null ||
+                                                widget.lawyer.degree!.title.toString().toLowerCase() == 'null')
+                                            ? ""
+                                            : widget.lawyer.degree!.title!,
                                         style: TextStyles.cairo_12_semiBold
                                             .copyWith(
                                                 color: appColors.blue100),
@@ -560,13 +565,9 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.2),
-                          // Shadow color
                           spreadRadius: 1,
-                          // Spread radius
                           blurRadius: 9,
-                          // Blur radius
-                          offset: const Offset(
-                              3, 3), // Offset in x and y directions
+                          offset: const Offset(3, 3), 
                         ),
                       ],
                     ),
@@ -579,7 +580,7 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                               getit<AdvisoryCommitteesCubit>()
                                   .lawyerServicesResponseModel!
                                   .data!
-                                  .lawyerServices![index].title!,
+                                  .lawyerServices![index].title ?? "",
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -588,10 +589,7 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                             ),
                             const Spacer(),
                             Text(
-                              "${getit<AdvisoryCommitteesCubit>()
-                                  .lawyerServicesResponseModel!
-                                  .data!
-                                  .lawyerServices![index].lawyerPrices!.first.price.toString()} ريال",
+                              "${getit<AdvisoryCommitteesCubit>().lawyerServicesResponseModel!.data!.lawyerServices![index].lawyerPrices!.first.price.toString()} ريال",
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -602,10 +600,11 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                         ),
                         verticalSpace(10.h),
                         Text(
-                          getit<AdvisoryCommitteesCubit>()
-                              .lawyerServicesResponseModel!
-                              .data!
-                              .lawyerServices![index].intro!,
+                          (getit<AdvisoryCommitteesCubit>().lawyerServicesResponseModel!.data!.lawyerServices![index].intro == null ||
+                                  getit<AdvisoryCommitteesCubit>().lawyerServicesResponseModel!.data!.lawyerServices![index].intro.toString().toLowerCase() == 'null' ||
+                                  getit<AdvisoryCommitteesCubit>().lawyerServicesResponseModel!.data!.lawyerServices![index].intro!.isEmpty)
+                              ? ""
+                              : getit<AdvisoryCommitteesCubit>().lawyerServicesResponseModel!.data!.lawyerServices![index].intro!,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: TextStyle(
@@ -682,18 +681,14 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                     padding:
                         EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                     decoration: BoxDecoration(
-                      color: Colors.white, //
+                      color: Colors.white, 
                       borderRadius: BorderRadius.circular(12.r),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.2),
-                          // Shadow color
                           spreadRadius: 1,
-                          // Spread radius
                           blurRadius: 9,
-                          // Blur radius
-                          offset: const Offset(
-                              3, 3), // Offset in x and y directions
+                          offset: const Offset(3, 3), 
                         ),
                       ],
                     ),
@@ -709,7 +704,7 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                   .lawyerServices![index]
                                   .types!
                                   .first
-                                  .title!,
+                                  .title ?? "",
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -729,11 +724,11 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                         ),
                         verticalSpace(10.h),
                         Text(
-                          getit<AdvisoryCommitteesCubit>()
-                              .lawyerAdvisoryServicesResponseModel!
-                              .data!
-                              .lawyerServices![index]
-                              .instructions!,
+                          (getit<AdvisoryCommitteesCubit>().lawyerAdvisoryServicesResponseModel!.data!.lawyerServices![index].instructions == null ||
+                                  getit<AdvisoryCommitteesCubit>().lawyerAdvisoryServicesResponseModel!.data!.lawyerServices![index].instructions.toString().toLowerCase() == 'null' ||
+                                  getit<AdvisoryCommitteesCubit>().lawyerAdvisoryServicesResponseModel!.data!.lawyerServices![index].instructions!.isEmpty)
+                              ? ""
+                              : getit<AdvisoryCommitteesCubit>().lawyerAdvisoryServicesResponseModel!.data!.lawyerServices![index].instructions!,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: TextStyle(
@@ -744,24 +739,6 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                           ),
                         ),
                         verticalSpace(10.h),
-                        // CustomButton(
-                        //   title: "طلب الخدمة",
-                        //   onPress: () {
-                        //     Map args = {
-                        //       "lawyer": widget.lawyer,
-                        //       "service": widget.lawyer.services![index]
-                        //     };
-                        //     Navigator.of(context).pushNamed(
-                        //         Routes.servicesReservationLawyerScreen,
-                        //         arguments: args);
-                        //   },
-                        //   height: 40.h,
-                        //   fontWeight: FontWeight.w600,
-                        //   fontSize: 14,
-                        //   borderColor: ColorsPalletes.primaryColorYellow,
-                        //   bgColor: Colors.white,
-                        //   titleColor: ColorsPalletes.primaryColorYellow,
-                        // ),
                       ],
                     ),
                   ),
@@ -781,4 +758,40 @@ class _AdvisorScreenState extends State<AdvisorScreen>
       ),
     );
   }
+  Widget _buildLawyerProfileImage(Advisor lawyer) {
+    final imageUrl = lawyer.photo ?? lawyer.image ?? lawyer.logo;
+    final isFemale = lawyer.gender == 'female';
+    final defaultAvatar = isFemale ? AppAssets.Female : AppAssets.Male;
+
+    return Container(
+      width: 100.w,
+      height: 100.h,
+      clipBehavior: Clip.antiAlias,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+      ),
+      child: (imageUrl == null ||
+              imageUrl.isEmpty ||
+              imageUrl == "https://api.ymtaz.sa/uploads/person.png" ||
+              imageUrl == "https://ymtaz.sa/uploads/person.png")
+          ? SvgPicture.asset(
+              defaultAvatar,
+              fit: BoxFit.cover,
+            )
+          : CachedNetworkImage(
+              imageUrl: imageUrl,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => SvgPicture.asset(
+                defaultAvatar,
+                fit: BoxFit.cover,
+              ),
+              errorWidget: (context, url, error) => SvgPicture.asset(
+                defaultAvatar,
+                fit: BoxFit.cover,
+              ),
+            ),
+    );
+  }
 }
+
+

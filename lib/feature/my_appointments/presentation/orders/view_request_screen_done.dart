@@ -14,6 +14,8 @@ import 'package:yamtaz/feature/my_appointments/logic/appointments_state.dart';
 import '../../../../config/themes/styles.dart';
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/helpers/fuctions_helpers/functions_helpers.dart';
+import '../../../../core/widgets/moyasar_payment_screen.dart';
+import '../../../../core/widgets/new_payment_success.dart';
 import '../../../../core/widgets/webpay_new.dart';
 import '../../../advisory_window/presentation/advisor_time_selection.dart';
 
@@ -44,9 +46,24 @@ class ViewAppointmentDoneScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => WebPaymentScreen(
-                              link: data.data!.paymentUrl!,
-                            )));
+                        builder: (context) => MoyasarPaymentScreen(
+                              amount: offer.price ?? "0",
+                              description: "دفع عرض موعد ${offer.description ?? ''}",
+                              transactionId: data.data!.transactionId,
+                              metadata: {
+                                'reservation_id': offer.id!.toString(),
+                                'type': 'appointment_offer',
+                              },
+                            ))).then((result) {
+                  if (result == 'success' && context.mounted) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NewSuccessPayment()),
+                      (route) => false,
+                    );
+                  }
+                });
               },
               requestServiceError: (error) {
                 showSnackBar(context, error);

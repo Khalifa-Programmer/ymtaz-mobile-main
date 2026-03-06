@@ -41,9 +41,12 @@ class UserProfileColumn extends StatelessWidget {
               CircleAvatar(
                 backgroundColor: color,
                 radius: 53.0.sp,
-                child: imageUrl.isEmpty || imageUrl == "https://api.ymtaz.sa/uploads/person.png"
+                child: imageUrl.isEmpty ||
+                        imageUrl == "default" ||
+                        imageUrl == "https://api.ymtaz.sa/uploads/person.png" ||
+                        imageUrl == "https://ymtaz.sa/uploads/person.png"
                     ? SvgPicture.asset(
-                        gender == 'female' ? AppAssets.femaleAvatar : AppAssets.maleAvatar,
+                        gender == 'female' ? AppAssets.Female : AppAssets.Male,
                         width: 100.0.w,
                         height: 100.0.h,
                       )
@@ -76,22 +79,36 @@ class UserProfileColumn extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 10.sp,
                     backgroundColor: appColors.white,
-                    child: CachedNetworkImage(
-                      imageUrl: image,
-                      width: 12.0.w,
-                      height: 12.0.h,
-                      placeholder: (context, url) => SizedBox(
-                          width: 12.w,
-                          height: 12.h,
-                          child:
-                              const CircularProgressIndicator(strokeWidth: 2)),
-                      errorWidget: (context, url, error) =>
-                          SvgPicture.asset(
-                        AppAssets.rank,
-                        width: 12.0.w,
-                        height: 12.0.h,
-                      ),
-                    ),
+                    child: image.endsWith('.svg')
+                        ? SvgPicture.network(
+                            image,
+                            width: 12.0.w,
+                            height: 12.0.h,
+                            placeholderBuilder: (context) => SizedBox(
+                                width: 12.w,
+                                height: 12.h,
+                                child: const CircularProgressIndicator(strokeWidth: 2)),
+                            errorBuilder: (context, error, stackTrace) =>
+                                SvgPicture.asset(
+                              AppAssets.rank,
+                              width: 12.0.w,
+                              height: 12.0.h,
+                            ),
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: image,
+                            width: 12.0.w,
+                            height: 12.0.h,
+                            placeholder: (context, url) => SizedBox(
+                                width: 12.w,
+                                height: 12.h,
+                                child: const CircularProgressIndicator(strokeWidth: 2)),
+                            errorWidget: (context, url, error) => SvgPicture.asset(
+                              AppAssets.rank,
+                              width: 12.0.w,
+                              height: 12.0.h,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -178,9 +195,12 @@ class UserProfileRow extends StatelessWidget {
               CircleAvatar(
                 backgroundColor: color,
                 radius: 26.0.sp,
-                child: imageUrl.isEmpty || imageUrl == "https://api.ymtaz.sa/uploads/person.png"
+                child: imageUrl.isEmpty ||
+                        imageUrl == "default" ||
+                        imageUrl == "https://api.ymtaz.sa/uploads/person.png" ||
+                        imageUrl == "https://ymtaz.sa/uploads/person.png"
                     ? SvgPicture.asset(
-                        gender == 'female' ? AppAssets.femaleAvatar : AppAssets.maleAvatar,
+                        gender == 'female' ? AppAssets.Female : AppAssets.Male,
                         width: 48.0.w,
                         height: 48.0.h,
                       )
@@ -216,22 +236,36 @@ class UserProfileRow extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 10.sp,
                     backgroundColor: appColors.white,
-                    child: CachedNetworkImage(
-                      imageUrl: image,
-                      width: 12.0.w,
-                      height: 12.0.h,
-                      placeholder: (context, url) => SizedBox(
-                          width: 12.w,
-                          height: 12.h,
-                          child:
-                              const CircularProgressIndicator(strokeWidth: 2)),
-                      errorWidget: (context, url, error) =>
-                          SvgPicture.asset(
-                        AppAssets.rank,
-                        width: 12.0.w,
-                        height: 12.0.h,
-                      ),
-                    ),
+                    child: image.endsWith('.svg')
+                        ? SvgPicture.network(
+                            image,
+                            width: 12.0.w,
+                            height: 12.0.h,
+                            placeholderBuilder: (context) => SizedBox(
+                                width: 12.w,
+                                height: 12.h,
+                                child: const CircularProgressIndicator(strokeWidth: 2)),
+                            errorBuilder: (context, error, stackTrace) =>
+                                SvgPicture.asset(
+                              AppAssets.rank,
+                              width: 12.0.w,
+                              height: 12.0.h,
+                            ),
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: image,
+                            width: 12.0.w,
+                            height: 12.0.h,
+                            placeholder: (context, url) => SizedBox(
+                                width: 12.w,
+                                height: 12.h,
+                                child: const CircularProgressIndicator(strokeWidth: 2)),
+                            errorWidget: (context, url, error) => SvgPicture.asset(
+                              AppAssets.rank,
+                              width: 12.0.w,
+                              height: 12.0.h,
+                            ),
+                          ),
                   ),
                 ),
               ),

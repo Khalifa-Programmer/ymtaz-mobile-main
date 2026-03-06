@@ -8,6 +8,9 @@ import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/feature/learning_path/logic/learning_path_cubit.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'package:easy_localization/easy_localization.dart';
+import 'package:yamtaz/l10n/locale_keys.g.dart';
+import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/router/routes.dart';
 import '../../data/models/learning_paths_response.dart';
 import '../../logic/learning_path_state.dart';
@@ -25,43 +28,48 @@ class _LearningPathsPageState extends State<LearningPathsPage> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    Future.microtask(() {
+      if (mounted) {
+        _loadData();
+      }
+    });
   }
 
   void _loadData() {
     if (_isFirstLoad) {
-      context.read<LearningPathCubit>().getLearningPaths();
+      getit<LearningPathCubit>().getLearningPaths();
       _isFirstLoad = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // حفظ البيانات عند الخروج من التطبيق
-        return true;
-      },
+    final cubit = getit<LearningPathCubit>();
+    return BlocProvider.value(
+      value: cubit,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('مسارات القراءة', style: TextStyles.cairo_15_bold),
+          title: Text(LocaleKeys.trainingTracks.tr(), style: TextStyles.cairo_15_bold),
           centerTitle: true,
           backgroundColor: appColors.white,
           elevation: 0,
         ),
         body: BlocBuilder<LearningPathCubit, LearningPathState>(
-          buildWhen: (previous, current) => 
-            current is LearningPathsLoading || 
-            current is LearningPathsLoaded,
           builder: (context, state) {
             if (state is LearningPathsLoading) {
               return _buildLoadingShimmer();
-            }
-
-            if (state is LearningPathsLoaded) {
+            } else if (state is LearningPathsLoaded) {
+              if (state.paths.isEmpty) {
+                return Center(
+                  child: Text('لا توجد مسارات تعلم حالياً', style: TextStyles.cairo_14_regular),
+                );
+              }
               return _buildContent(state.paths);
+            } else if (state is LearningPathError) {
+              return Center(
+                child: Text('حدث خطأ: ${state.message}', style: TextStyles.cairo_14_regular),
+              );
             }
-
             return const SizedBox();
           },
         ),

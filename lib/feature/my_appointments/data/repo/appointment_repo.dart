@@ -59,7 +59,7 @@ class AppointmentRepo {
   Future<ApiResult<AppointmentOffersClient>> getAppointmentsoffersClient() async {
     var token = CacheHelper.getData(key: 'token');
     try {
-      var response =  await _apiService.getAppointmentsoffersClient(token);
+      var response =  await _apiService.getAppointmentsoffersClient(token ?? '');
 
       return ApiResult.success(response);
     } on DioException catch (error) {
@@ -76,7 +76,7 @@ class AppointmentRepo {
     var token = CacheHelper.getData(key: 'token');
     try {
       var response = await _apiService.getAppointmentLawyers(
-          token, importanceId, cityId, regionId, id);
+          token ?? '', importanceId, cityId, regionId, id);
 
       return ApiResult.success(response);
     } on DioException catch (error) {
@@ -100,7 +100,7 @@ Future<ApiResult<AppontmentRequestResponse>> requestAppointment(FormData data) a
     final AppontmentRequestResponse response;
 
     if (userType == 'client' || userType == 'provider') {
-      response = await _apiService.appointmentsRequest(token, data);
+      response = await _apiService.appointmentsRequest(token ?? '', data);
     } else {
       return const ApiResult.failure({"message": "عذراً، هذه الخدمة غير متاحة لنوع حسابك"});
     }
@@ -116,7 +116,7 @@ Future<ApiResult<AppontmentRequestResponse>> requestAppointment(FormData data) a
       FormData data) async {
     var token = CacheHelper.getData(key: 'token');
     try {
-      var response = await _apiService.respondToAppointmentOffer(token, data);
+      var response = await _apiService.respondToAppointmentOffer(token ?? '', data);
 
       return ApiResult.success(response);
     } on DioException catch (error) {
@@ -128,7 +128,7 @@ Future<ApiResult<AppontmentRequestResponse>> requestAppointment(FormData data) a
   Future<ApiResult<MyReservationsResponseModel>> getMyAppointments() async {
     var token = CacheHelper.getData(key: 'token');
     try {
-      var response = await _apiService.getMyAppointments(token);
+      var response = await _apiService.getMyAppointments(token ?? '');
       return ApiResult.success(response);
     } on DioException catch (error) {
       return ApiResult.failure(error.response?.data);
@@ -146,7 +146,7 @@ Future<ApiResult<AppontmentRequestResponse>> requestAppointment(FormData data) a
     var token = CacheHelper.getData(key: 'token');
     try {
       var response = await _apiService.getAppointmentsWorkHours(
-          token, fromDate, toDate, requiredTime.toString());
+          token ?? '', fromDate, toDate, requiredTime.toString());
       return ApiResult.success(response);
     } on DioException catch (error) {
       return ApiResult.failure(error.response?.data);

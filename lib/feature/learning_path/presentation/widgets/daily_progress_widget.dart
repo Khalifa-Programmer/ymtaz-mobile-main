@@ -106,10 +106,13 @@ class _DailyProgressWidgetState extends State<DailyProgressWidget> {
                   ),
                 ),
               ),
-              Text(
-                'اقرأ وتدرب كل يوم لتحقيق أهدافك.',
-                style: TextStyles.cairo_12_medium.copyWith(
-                  color: appColors.blue100,
+              Expanded(
+                child: Text(
+                  'اقرأ وتدرب كل يوم لتحقيق أهدافك.',
+                  style: TextStyles.cairo_12_medium.copyWith(
+                    color: appColors.blue100,
+                  ),
+                  textAlign: TextAlign.start,
                 ),
               ),
             ],
