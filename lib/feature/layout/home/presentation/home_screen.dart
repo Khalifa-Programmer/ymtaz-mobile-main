@@ -116,7 +116,8 @@ class _HomeScreenState extends State<HomeScreen> {
               SliverToBoxAdapter(child: verticalSpace(20.h)),
 
               _buildGridSection(context),
-              SliverToBoxAdapter(
+                              // Removed preview button
+                SliverToBoxAdapter(child: SizedBox.shrink()),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                   child: CupertinoButton(
