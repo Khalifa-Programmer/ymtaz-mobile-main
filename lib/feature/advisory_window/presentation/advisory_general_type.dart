@@ -18,28 +18,33 @@ class AdvisoryGeneralType extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AdvisoryCubit, AdvisoryState>(
       builder: (context, state) {
-        if (state is AdvisoryGeneralTypesLoading) {
-          return AdvisoryGeneralTypeShimmer();
-        } else if (context
-                .read<AdvisoryCubit>()
-                .advisoriesGeneralSpecialization !=
+        if (state is AdvisoryGeneralTypesLoading ||
+            (state is AdvisoryStepChanged && state.step == 1)) {
+          return const AdvisoryGeneralTypeShimmer();
+        } else if (context.read<AdvisoryCubit>().advisoriesGeneralSpecialization !=
             null) {
-          var state = context
-              .read<AdvisoryCubit>()
-              .advisoriesGeneralSpecialization!
-              .data;
-          if (state!.isEmpty) {
+          var data =
+              context.read<AdvisoryCubit>().advisoriesGeneralSpecialization!.data;
+          
+          if (data == null || data.isEmpty) {
             return Animate(
               effects: [FadeEffect(duration: 500.ms)],
               child: Center(
-                child: NodataFound(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    NodataFound(),
+                    verticalSpace(10.h),
+                    Text("لا توجد تخصصات متاحة حالياً لهذا النوع", style: TextStyles.cairo_12_semiBold),
+                  ],
+                ),
               ),
             );
           }
           return Animate(
             effects: [FadeEffect(duration: 500.ms)],
             child: SingleChildScrollView(
-              key: ValueKey<int>(state.length),
+              key: ValueKey<int>(data.length),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -57,9 +62,9 @@ class AdvisoryGeneralType extends StatelessWidget {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: state.length,
+                    itemCount: data.length,
                     itemBuilder: (context, index) {
-                      final specialization = state[index];
+                      final specialization = data[index];
                       return ItemCardWidget(
                         description: specialization.description,
                         onPressed: () {

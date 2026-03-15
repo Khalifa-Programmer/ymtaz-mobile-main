@@ -141,6 +141,7 @@ class _EliteRepricingRequestScreenState extends State<EliteRepricingRequestScree
                                   requestId: widget.request.id!,
                                   offerId: widget.offer.id!,
                                   comment: _commentController.text,
+                                  categoryId: widget.request.eliteServiceCategory?.id,
                                   voicePath: _recordingPath,
                                 );
                               },
@@ -173,7 +174,6 @@ class _EliteRepricingRequestScreenState extends State<EliteRepricingRequestScree
             ),
           );
         },
-      ),
-    );
+      );
   }
 }

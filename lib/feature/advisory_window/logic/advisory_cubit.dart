@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_lawyer_section/models/service_request.dart';
 
@@ -20,6 +21,8 @@ class AdvisoryCubit extends Cubit<AdvisoryState> {
   int currentStep = 0;
   int selectedAdvisoryType = 0;
   bool isNeedAppointment = true;
+  bool isInstant = false;
+  bool showVisualOptions = false;
   int selectedGeneralType = 0;
   int selectedAccurateType = 0;
   SubCategory? selectedAccurateData;
@@ -45,6 +48,7 @@ class AdvisoryCubit extends Cubit<AdvisoryState> {
         _accurateTypesLoaded = false;
       } else if (currentStep == 1) {
         _generalTypesLoaded = false;
+        isInstant = false;
       } else if (currentStep == 3) {
         selectedLevel = null;
         selectedAccurateData = null;
@@ -59,6 +63,8 @@ class AdvisoryCubit extends Cubit<AdvisoryState> {
     currentStep = 0;
     selectedAdvisoryType = 0;
     isNeedAppointment = true;
+    isInstant = false;
+    showVisualOptions = false;
     selectedGeneralType = 0;
     selectedAccurateType = 0;
     selectedAccurateData = null;
@@ -80,6 +86,15 @@ class AdvisoryCubit extends Cubit<AdvisoryState> {
     _generalTypesLoaded = false;
     _accurateTypesLoaded = false;
     emit(AdvisoryStepChanged(currentStep));
+  }
+
+  void updateState() {
+    emit(AdvisoryStateUpdated());
+  }
+
+  void toggleVisualOptions(bool value) {
+    showVisualOptions = value;
+    emit(AdvisoryStateUpdated());
   }
 
   AdvisoriesCategoriesTypes? advisoriesCategoriesTypes;
@@ -116,20 +131,26 @@ class AdvisoryCubit extends Cubit<AdvisoryState> {
 
   void getGeneralTypesByAdvisoryId(String advisoryTypeId) async {
     emit(AdvisoryGeneralTypesLoading());
-    
+    debugPrint("[Advisory] Fetching General Types for ID: $advisoryTypeId");
+
     try {
-      final result = await _advisoryRepo.getGeneralTypesByAdvisoryId(advisoryTypeId);
+      final result =
+          await _advisoryRepo.getGeneralTypesByAdvisoryId(advisoryTypeId);
       result.when(
         success: (data) {
+          debugPrint(
+              "[Advisory] Successfully fetched ${data.data?.length ?? 0} general types");
           advisoriesGeneralSpecialization = data;
           emit(AdvisoryGeneralTypesLoaded(data));
         },
         failure: (error) {
+          debugPrint("[Advisory] Failed to fetch general types: $error");
           emit(AdvisoryGeneralTypesError(error));
         },
       );
     } catch (e) {
-      emit(AdvisoryGeneralTypesError(e));
+      debugPrint("[Advisory] Error in getGeneralTypesByAdvisoryId: $e");
+      emit(AdvisoryGeneralTypesError(e.toString()));
     }
   }
 

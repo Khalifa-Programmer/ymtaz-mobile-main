@@ -156,7 +156,7 @@ class _MainAdvisoryScreenState extends State<MainAdvisoryScreen>
               });
               _advisoryCubit.previousStep();
             } else if (_advisoryCubit.currentStep == 5 &&
-                _advisoryCubit.isNeedAppointment) {
+                _advisoryCubit.isNeedAppointment && !_advisoryCubit.isInstant) {
               getit<AdvisoryCubit>().availableDatesResponse = null;
               setState(() {
                 _steps[5] = StepItem(
@@ -176,7 +176,7 @@ class _MainAdvisoryScreenState extends State<MainAdvisoryScreen>
         builder: (context, state) {
           int currentStep = context.watch<AdvisoryCubit>().currentStep;
           print(_steps.length);
-          if (_advisoryCubit.isNeedAppointment && _steps.length == 6) {
+          if (_advisoryCubit.isNeedAppointment && !_advisoryCubit.isInstant && _steps.length == 6) {
             _steps.insert(
                 5,
                 StepItem(
@@ -185,7 +185,7 @@ class _MainAdvisoryScreenState extends State<MainAdvisoryScreen>
                   isActive: true,
                 ));
           }
-          if (_advisoryCubit.isNeedAppointment == false && _steps.length == 7) {
+          if ((_advisoryCubit.isNeedAppointment == false || _advisoryCubit.isInstant) && _steps.length == 7) {
             _steps.removeAt(5);
           }
 
@@ -203,7 +203,7 @@ class _MainAdvisoryScreenState extends State<MainAdvisoryScreen>
                 getit<AdvisoryCubit>().selectedAccurateData!.id.toString(),
                 getit<AdvisoryCubit>().selectedLevel!.level!.id.toString(),
               );
-            } else if (currentStep == 5 && _advisoryCubit.isNeedAppointment) {
+            } else if (currentStep == 5 && _advisoryCubit.isNeedAppointment && !_advisoryCubit.isInstant) {
               _advisoryCubit.getAvailableTimes(
                   getit<AdvisoryCubit>().selectedLawyer!.lawyer!.id.toString());
             }

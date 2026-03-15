@@ -18,6 +18,8 @@ import '../../layout/account/presentation/client_profile/presentation/client_my_
 import '../../layout/account/presentation/widgets/user_profile_row.dart';
 import '../logic/advisory_cubit.dart';
 import 'advisor_time_selection.dart';
+import 'orders/view_order_details.dart';
+import '../data/model/all_advirsory_response.dart' as all_advisory;
 
 class AdvisoryPaymentScreen extends StatelessWidget {
   const AdvisoryPaymentScreen({super.key});
@@ -45,11 +47,25 @@ class AdvisoryPaymentScreen extends StatelessWidget {
             ),
           ).then((result) {
             if (result == 'success' && context.mounted) {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const NewSuccessPayment()),
-                (route) => false,
-              );
+              if (cubit.isInstant) {
+                // If instant, we might want to go directly to details or a special success page
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewOrderDetails(
+                      servicesRequirementsResponse:
+                          all_advisory.Reservation.fromJson(state.data.data!.reservation!.toJson()),
+                    ),
+                  ),
+                  (route) => false,
+                );
+              } else {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NewSuccessPayment()),
+                  (route) => false,
+                );
+              }
             }
           });
         } else if (state is AdvisorReservationError) {
@@ -112,13 +128,17 @@ class AdvisoryPaymentScreen extends StatelessWidget {
                           FormData newRequestData = FormData.fromMap(map);
 
 
-                          if (cubit.isNeedAppointment) {
+                          if (cubit.isNeedAppointment && !cubit.isInstant) {
                             newRequestData.fields
                                 .add(MapEntry("date", cubit.selectedDate!));
                             newRequestData.fields
                                 .add(MapEntry("from", cubit.selectedFrom!));
                             newRequestData.fields
                                 .add(MapEntry("to", cubit.selectedTo!));
+                          }
+
+                          if (cubit.isInstant) {
+                            newRequestData.fields.add(MapEntry("is_instant", "1"));
                           }
 
                           if (cubit.imagesDocs.isNotEmpty) {
@@ -306,7 +326,9 @@ class AdvisoryPaymentScreen extends StatelessWidget {
           ),
           verticalSpace(5.h),
           Text(
-            cubit.isNeedAppointment ? "موعد مرئية" : "استشارة مكتوبة",
+            cubit.isNeedAppointment
+                ? (cubit.isInstant ? "استشارة مرئية فورية" : "موعد مرئية")
+                : "استشارة مكتوبة",
             style: TextStyles.cairo_12_bold.copyWith(color: appColors.blue100),
           ),
           verticalSpace(10.h),

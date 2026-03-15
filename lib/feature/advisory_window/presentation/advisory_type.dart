@@ -9,6 +9,7 @@ import 'package:yamtaz/feature/advisory_window/presentation/widgets/tool_selecti
 
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
+import '../../../core/constants/assets.dart';
 import '../logic/advisory_cubit.dart';
 
 class AdvisoryType extends StatelessWidget {
@@ -20,6 +21,8 @@ class AdvisoryType extends StatelessWidget {
       value: getit<AdvisoryCubit>(),
       child: BlocBuilder<AdvisoryCubit, AdvisoryState>(
         builder: (context, state) {
+          final cubit = context.read<AdvisoryCubit>();
+          
           if (state is AdvisoryTypesLoading) {
             return Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
@@ -62,42 +65,108 @@ class AdvisoryType extends StatelessWidget {
               ),
             );
           }
-          if (getit<AdvisoryCubit>().advisoriesCategoriesTypes != null) {
-            var data =
-                getit<AdvisoryCubit>().advisoriesCategoriesTypes!.data!.items;
+          if (cubit.advisoriesCategoriesTypes != null) {
+            final data = cubit.advisoriesCategoriesTypes!.data!.items ?? [];
+            if (data.isEmpty) return const SizedBox();
+
+            final writtenItem = data.firstWhere(
+              (element) => element.requiresAppointment == 0,
+              orElse: () => data.first,
+            );
+
+            final allVisualItems = data.where((element) => element.requiresAppointment == 1).toList();
+            final baseVisualItem = allVisualItems.isNotEmpty ? allVisualItems.first : data.first;
+
+            final instantVisualItem = allVisualItems.firstWhere(
+              (element) => (element.name?.contains("فورية") ?? false),
+              orElse: () => baseVisualItem,
+            );
+
+            final scheduledVisualItem = allVisualItems.firstWhere(
+              (element) => (element.name?.contains("مجدولة") ?? false) || (allVisualItems.length > 1 && element != instantVisualItem),
+              orElse: () => allVisualItems.length > 1 ? allVisualItems[1] : baseVisualItem,
+            );
+
             return Animate(
               effects: [FadeEffect(duration: 500.ms)],
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "وسيلة الاستشارة",
-                    style: TextStyles.cairo_14_bold,
+                  Row(
+                    children: [
+                      if (cubit.showVisualOptions)
+                        IconButton(
+                          icon: Icon(Icons.arrow_back_ios, size: 18.sp),
+                          onPressed: () {
+                            cubit.toggleVisualOptions(false);
+                          },
+                        ),
+                      Text(
+                        cubit.showVisualOptions ? "نوع الاستشارة المرئية" : "وسيلة الاستشارة",
+                        style: TextStyles.cairo_14_bold,
+                      ),
+                    ],
                   ),
                   verticalSpace(5.h),
-                  Text(
-                    "اختر وسيلة الاستشارة المناسبة لك",
-                    style: TextStyles.cairo_12_semiBold
-                        .copyWith(color: appColors.grey15),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: cubit.showVisualOptions ? 40.w : 0),
+                    child: Text(
+                      cubit.showVisualOptions
+                          ? "اختر نوع الاستشارة المرئية المناسبة لك"
+                          : "اختر وسيلة الاستشارة المناسبة لك للحصول على أفضل خدمة",
+                      style: TextStyles.cairo_12_semiBold
+                          .copyWith(color: appColors.grey15),
+                    ),
                   ),
                   verticalSpace(10.h),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: data!.length,
-                    itemBuilder: (context, index) => ToolSelectionType(
-                      isVideo: data[index].requiresAppointment == 1,
+                  if (!cubit.showVisualOptions) ...[
+                    // Level 1: Written vs Visual
+                    ToolSelectionType(
+                      svgAsset: AppAssets.advisoryOrder,
+                      name: "استشارة مكتوبة",
+                      description: "احصل على رد مكتوب لشرح قضيتك ومرفقاتك بدقة من قبل المحامي",
                       onSelected: () {
-                        getit<AdvisoryCubit>().selectedAdvisoryType =
-                            data[index].id!;
-                        getit<AdvisoryCubit>().isNeedAppointment =
-                            data[index].requiresAppointment == 1;
-                        context.read<AdvisoryCubit>().nextStep();
+                        cubit.selectedAdvisoryType = writtenItem.id!;
+                        cubit.isNeedAppointment = false;
+                        cubit.isInstant = false;
+                        cubit.nextStep();
                       },
-                      name: data[index].name!,
-                      description: data[index].description!,
                     ),
-                  )
+                    verticalSpace(10.h),
+                    ToolSelectionType(
+                      isVideo: true,
+                      name: "استشارة مرئية",
+                      description: "تواصل مع المحامي عبر مكالمة فيديو مباشرة لمناقشة التفاصيل",
+                      onSelected: () {
+                        cubit.toggleVisualOptions(true);
+                      },
+                    ),
+                  ] else ...[
+                    // Level 2: Visual Options
+                    ToolSelectionType(
+                      svgAsset: AppAssets.flash,
+                      name: "استشارة مرئية فورية",
+                      description: "تواصل مع المحامي مباشرة الآن دون الحاجة لحجز موعد مسبق",
+                      onSelected: () {
+                        cubit.selectedAdvisoryType = instantVisualItem.id!;
+                        cubit.isNeedAppointment = false;
+                        cubit.isInstant = true;
+                        cubit.nextStep();
+                      },
+                    ),
+                    verticalSpace(10.h),
+                    ToolSelectionType(
+                      svgAsset: AppAssets.appointmentOrder,
+                      name: "موعد مرئية (مجدولة)",
+                      description: "احجز موعداً لاستشارة مرئية في وقت لاحق يناسبك",
+                      onSelected: () {
+                        cubit.selectedAdvisoryType = scheduledVisualItem.id!;
+                        cubit.isNeedAppointment = true;
+                        cubit.isInstant = false;
+                        cubit.nextStep();
+                      },
+                    ),
+                  ],
                 ],
               ),
             );
@@ -107,7 +176,6 @@ class AdvisoryType extends StatelessWidget {
               child: Text('Failed to load advisory types'),
             );
           }
-          // Default to showing a loading indicator if no state matches
           return Center(
             child: CircularProgressIndicator(),
           );

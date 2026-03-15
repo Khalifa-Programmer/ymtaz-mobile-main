@@ -386,46 +386,54 @@ class ViewOrderDetails extends StatelessWidget {
                           Row(
                             children: [
                               Icon(
-                                Icons.calendar_month,
+                                servicesRequirementsResponse.date == null || servicesRequirementsResponse.date == ""
+                                    ? Icons.flash_on
+                                    : Icons.calendar_month,
                                 color: appColors.primaryColorYellow,
                                 size: 20.sp,
                               ),
                               horizontalSpace(10.w),
                               Text(
-                                "يوم الاستشارة",
+                                servicesRequirementsResponse.date == null || servicesRequirementsResponse.date == ""
+                                    ? "استشارة فورية"
+                                    : "يوم الاستشارة",
                                 style: TextStyles.cairo_12_semiBold
                                     .copyWith(color: appColors.grey15),
                               ),
                               const Spacer(),
                               Text(
-                                getDate(servicesRequirementsResponse.from!),
+                                servicesRequirementsResponse.date == null || servicesRequirementsResponse.date == ""
+                                    ? "مكالمة مباشرة"
+                                    : getDate(servicesRequirementsResponse.from!),
                                 style: TextStyles.cairo_12_semiBold
                                     .copyWith(color: appColors.blue100),
                               ),
                             ],
                           ),
-                          verticalSpace(10.h),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.timelapse,
-                                color: appColors.primaryColorYellow,
-                                size: 20.sp,
-                              ),
-                              horizontalSpace(10.w),
-                              Text(
-                                "وقت  بدء المكالمة ",
-                                style: TextStyles.cairo_12_semiBold
-                                    .copyWith(color: appColors.grey15),
-                              ),
-                              const Spacer(),
-                              Text(
-                                getTime(servicesRequirementsResponse.from!),
-                                style: TextStyles.cairo_12_semiBold
-                                    .copyWith(color: appColors.blue100),
-                              ),
-                            ],
-                          ),
+                          if (servicesRequirementsResponse.date != null && servicesRequirementsResponse.date != "") ...[
+                            verticalSpace(10.h),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.timelapse,
+                                  color: appColors.primaryColorYellow,
+                                  size: 20.sp,
+                                ),
+                                horizontalSpace(10.w),
+                                Text(
+                                  "وقت بدء المكالمة ",
+                                  style: TextStyles.cairo_12_semiBold
+                                      .copyWith(color: appColors.grey15),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  getTime(servicesRequirementsResponse.from!),
+                                  style: TextStyles.cairo_12_semiBold
+                                      .copyWith(color: appColors.blue100),
+                                ),
+                              ],
+                            ),
+                          ],
                           verticalSpace(10.h),
                           Row(
                             children: [
@@ -442,7 +450,7 @@ class ViewOrderDetails extends StatelessWidget {
                               ),
                               const Spacer(),
                               Text(
-                                "15 دقيقة",
+                                "${servicesRequirementsResponse.appointmentDuration ?? 15} دقيقة",
                                 style: TextStyles.cairo_12_semiBold
                                     .copyWith(color: appColors.blue100),
                               ),
@@ -501,9 +509,8 @@ class ViewOrderDetails extends StatelessWidget {
                                 }
 
                                 var call = StreamVideo.instance.makeCall(
-// type: 'default',
                                   callType: StreamCallType.custom("default"),
-                                  id: servicesRequirementsResponse.callId!,
+                                  id: servicesRequirementsResponse.callId!.toString(),
                                 );
 
                                 Navigator.of(context).push(
@@ -520,9 +527,14 @@ class ViewOrderDetails extends StatelessWidget {
                                 debugPrint(e.toString());
                               }
                             },
-                            title: 'بدء المكالمة',
-                            height: 35.h,
-                            fontSize: 12.sp,
+                            title: (servicesRequirementsResponse.date == null || servicesRequirementsResponse.date == "") 
+                                ? 'دخول المكالمة الفورية' 
+                                : 'بدء المكالمة',
+                            height: 45.h,
+                            fontSize: 14.sp,
+                            bgColor: (servicesRequirementsResponse.date == null || servicesRequirementsResponse.date == "")
+                                ? appColors.primaryColorYellow
+                                : appColors.blue100,
                           ),
                         ],
                       ),

@@ -116,44 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SliverToBoxAdapter(child: verticalSpace(20.h)),
 
               _buildGridSection(context),
-                              // Removed preview button
-                SliverToBoxAdapter(child: SizedBox.shrink()),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                  child: CupertinoButton(
-                    color: Colors.red.withOpacity(0.1),
-                    onPressed: () {
-                      final dummyRequest = Request(
-                        id: 1,
-                        description: "هناك حقيقة مثبتة منذ زمن طويل وهي أن المحتوى المقروء لصفحة ما سيلهي القارئ عن التركيز على الشكل الخارجي للنص أو شكل توضع الفقرات في الصفحة التي يقرأها.",
-                        eliteServiceCategory: EliteServiceCategory(name: "توكيل محامي"),
-                        offers: Offers(
-                          reservationType: ReservationType(
-                            typesImportance: [
-                              TypesImportance(
-                                id: 101,
-                                price: 3000,
-                                lawyer: Lawyer(name: "المستشار القانوني"),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                      Navigator.pushNamed(
-                        context,
-                        Routes.eliteConsultantOffers,
-                        arguments: dummyRequest,
-                      );
-                    },
-                    child: const Text(
-                      "👁️ معاينة تصميم عروض الاستشاريين (تجريبي)",
-                      style: TextStyle(color: Colors.red, fontFamily: 'Cairo', fontSize: 12),
-                    ),
-                  ),
-                ),
-              ),
               SliverToBoxAdapter(child: verticalSpace(20.h)),
-
 
               // Grid Section
             ],

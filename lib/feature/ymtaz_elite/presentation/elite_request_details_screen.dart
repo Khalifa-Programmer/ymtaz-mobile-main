@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:photo_view/photo_view.dart';
@@ -65,6 +66,16 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
               imageProvider: CachedNetworkImageProvider(imageUrl),
               minScale: PhotoViewComputedScale.contained,
               maxScale: PhotoViewComputedScale.covered * 2,
+              errorBuilder: (context, error, stackTrace) => const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.broken_image, color: Colors.white, size: 50),
+                    SizedBox(height: 10),
+                    Text("الصورة غير متاحة", style: TextStyle(color: Colors.white, fontFamily: 'Cairo')),
+                  ],
+                ),
+              ),
             ),
             Positioned(
               top: 40,
@@ -223,15 +234,14 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildFileWidgetUI(FileElement file) {
     final fileType = _getFileType(file.file);
-    final filePath = file.file ?? '';
+    final filePath = (file.file ?? '').replaceAll('https://ymtaz.sa/', 'https://api.ymtaz.sa/');
 
-    if (fileType == 'audio' || file.isVoice == 1) {
+    if (fileType == 'audio' || (file.isVoice == 1 && fileType != 'image' && fileType != 'pdf')) {
       return Container(
         margin: EdgeInsets.only(bottom: 12.h),
         decoration: BoxDecoration(
@@ -431,18 +441,6 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
         children: [
           Row(
             children: [
-              _buildTeamIcon(Icons.call),
-              horizontalSpace(8.w),
-              _buildTeamIcon(Icons.sms),
-              horizontalSpace(8.w),
-              _buildTeamIcon(
-                Icons.videocam, 
-                onTap: widget.request.offers?.advisoryServiceSub?.generalCategory?.paymentCategoryType?.requiresAppointment == 1
-                  ? _startVideoCall
-                  : null,
-                isActive: widget.request.offers?.advisoryServiceSub?.generalCategory?.paymentCategoryType?.requiresAppointment == 1,
-              ),
-              const Spacer(),
               Text(
                 "فريقك الاستشاري",
                 style: TextStyle(
@@ -451,6 +449,42 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                   color: const Color(0xFF0F2D37),
                   fontFamily: 'Cairo',
                 ),
+              ),
+              const Spacer(),
+              _buildTeamIcon(
+                Icons.videocam, 
+                onTap: widget.request.offers?.advisoryServiceSub?.generalCategory?.paymentCategoryType?.requiresAppointment == 1
+                  ? _startVideoCall
+                  : null,
+                isActive: widget.request.offers?.advisoryServiceSub?.generalCategory?.paymentCategoryType?.requiresAppointment == 1,
+              ),
+              horizontalSpace(8.w),
+              _buildTeamIcon(
+                Icons.sms,
+                onTap: widget.request.offers?.reservationType?.typesImportance?.isNotEmpty == true && 
+                       widget.request.offers?.reservationType?.typesImportance?.first.lawyer?.id != null
+                  ? () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('سيتم فتح المحادثة قريباً', style: TextStyle(fontFamily: 'Cairo'))),
+                      );
+                    }
+                  : null,
+                isActive: widget.request.offers?.reservationType?.typesImportance?.isNotEmpty == true && 
+                          widget.request.offers?.reservationType?.typesImportance?.first.lawyer?.id != null,
+              ),
+              horizontalSpace(8.w),
+              _buildTeamIcon(
+                Icons.call,
+                onTap: widget.request.offers?.reservationType?.typesImportance?.isNotEmpty == true && 
+                       widget.request.offers?.reservationType?.typesImportance?.first.lawyer?.id != null
+                  ? () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('سيتم بدء الاتصال قريباً', style: TextStyle(fontFamily: 'Cairo'))),
+                      );
+                    }
+                  : null,
+                isActive: widget.request.offers?.reservationType?.typesImportance?.isNotEmpty == true && 
+                          widget.request.offers?.reservationType?.typesImportance?.first.lawyer?.id != null,
               ),
             ],
           ),
@@ -652,14 +686,18 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
             ),
           ),
           verticalSpace(8.h),
-          Text(
-            widget.request.description ?? "",
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: const Color(0xFF0F2D37),
-              height: 1.6,
-              fontFamily: 'Cairo',
+          SizedBox(
+            width: double.infinity,
+            child: Text(
+              widget.request.description ?? "",
+              textAlign: TextAlign.justify,
+              textDirection: TextDirection.rtl,
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: const Color(0xFF0F2D37),
+                height: 1.6,
+                fontFamily: 'Cairo',
+              ),
             ),
           ),
         ],
@@ -673,8 +711,14 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
 
     // Collect reply files (isReply == 1)
     final replyFiles = widget.request.files?.where((f) => (f.isReply ?? 0) == 1).toList() ?? [];
-    final replyAudioFiles = replyFiles.where((f) => _getFileType(f.file) == 'audio' || (f.isVoice ?? 0) == 1).toList();
-    final replyDocFiles = replyFiles.where((f) => _getFileType(f.file) != 'audio' && (f.isVoice ?? 0) != 1).toList();
+    final replyAudioFiles = replyFiles.where((f) {
+      final t = _getFileType(f.file);
+      return t == 'audio' || ((f.isVoice ?? 0) == 1 && t != 'image' && t != 'pdf');
+    }).toList();
+    final replyDocFiles = replyFiles.where((f) {
+      final t = _getFileType(f.file);
+      return !(t == 'audio' || ((f.isVoice ?? 0) == 1 && t != 'image' && t != 'pdf'));
+    }).toList();
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -703,10 +747,14 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                   style: TextStyle(fontSize: 11.sp, color: const Color(0xFFB4B4B4), fontFamily: 'Cairo'),
                 ),
                 verticalSpace(12.h),
-                Text(
-                  replyDetailsText,
-                  textAlign: TextAlign.right,
-                  style: TextStyle(fontSize: 13.sp, color: const Color(0xFF0F2D37), height: 1.8, fontFamily: 'Cairo'),
+                SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    replyDetailsText,
+                    textAlign: TextAlign.justify,
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(fontSize: 13.sp, color: const Color(0xFF0F2D37), height: 1.8, fontFamily: 'Cairo'),
+                  ),
                 ),
               ],
             ),
@@ -769,6 +817,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
   }
 
   Widget _buildReplyAudioPlayer(String audioUrl) {
+    audioUrl = audioUrl.replaceAll('https://ymtaz.sa/', 'https://api.ymtaz.sa/');
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
@@ -789,7 +838,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
 
   Widget _buildReplyFileCard(FileElement file) {
     final fileType = _getFileType(file.file);
-    final filePath = file.file ?? '';
+    final filePath = (file.file ?? '').replaceAll('https://ymtaz.sa/', 'https://api.ymtaz.sa/');
     final fileName = filePath.split('/').last;
 
     return GestureDetector(

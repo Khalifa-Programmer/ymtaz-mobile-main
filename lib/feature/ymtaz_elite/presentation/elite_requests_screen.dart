@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -95,12 +96,13 @@ class EliteRequestsScreen extends StatelessWidget {
                   ),
                 );
               }
-
+              final reversedRequests = state.requests.reversed.toList();
+              
               return ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-                itemCount: state.requests.length,
+                itemCount: reversedRequests.length,
                 itemBuilder: (context, index) {
-                  final request = state.requests[index];
+                  final request = reversedRequests[index];
                   return _buildRequestCard(context, request);
                 },
               );
@@ -199,16 +201,20 @@ class EliteRequestsScreen extends StatelessWidget {
             ),
             verticalSpace(16.h),
             // Description
-            Text(
-              request.description ?? '',
-              maxLines: 4,
-              textAlign: TextAlign.right,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: const Color(0xFFB4B4B4),
-                fontSize: 12.sp,
-                fontFamily: 'Cairo',
-                height: 1.6,
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                request.description ?? '',
+                maxLines: 4,
+                textAlign: TextAlign.justify,
+                textDirection: TextDirection.rtl,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: const Color(0xFFB4B4B4),
+                  fontSize: 12.sp,
+                  fontFamily: 'Cairo',
+                  height: 1.6,
+                ),
               ),
             ),
 
@@ -234,9 +240,14 @@ class EliteRequestsScreen extends StatelessWidget {
                           offset: const Offset(0, 2),
                         )
                       ],
-                      image: DecorationImage(
-                        image: NetworkImage(request.offers!.reservationType!.typesImportance!.first.lawyer!.image!),
-                        fit: BoxFit.cover,
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: CachedNetworkImage(
+                      imageUrl: request.offers!.reservationType!.typesImportance!.first.lawyer!.image!,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) => Container(
+                        color: Colors.grey[200],
+                        child: Icon(Icons.person, color: Colors.grey[400], size: 20.sp),
                       ),
                     ),
                   ),

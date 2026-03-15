@@ -9,17 +9,19 @@ import 'package:yamtaz/core/widgets/spacing.dart';
 import '../../../../config/themes/styles.dart';
 
 class ToolSelectionType extends StatelessWidget {
-  ToolSelectionType(
+  const ToolSelectionType(
       {super.key,
       this.isVideo = false,
+      this.svgAsset,
       required this.name,
       required this.description,
       required this.onSelected});
 
-  bool isVideo = false;
-  String name;
-  String description;
-  Null Function() onSelected;
+  final bool isVideo;
+  final String? svgAsset;
+  final String name;
+  final String description;
+  final VoidCallback onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class ToolSelectionType extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SvgPicture.asset(
-                  isVideo ? AppAssets.video : AppAssets.advisories),
+                  svgAsset ?? (isVideo ? AppAssets.video : AppAssets.advisories)),
               SizedBox(
                 width: 10,
               ),

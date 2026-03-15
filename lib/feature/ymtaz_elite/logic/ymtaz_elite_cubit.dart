@@ -209,6 +209,7 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
     required int requestId,
     required int offerId,
     required String comment,
+    int? categoryId,
     String? voicePath,
   }) async {
     emit(YmtazEliteRepricingLoading());
@@ -218,13 +219,19 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
         'elite_service_request_id': requestId,
         'elite_service_offer_id': offerId,
         'description': comment,
+        if (categoryId != null) 'elite_service_category_id': categoryId,
       };
 
+      final formData = FormData.fromMap(data);
+
       if (voicePath != null) {
-        data['files[]'] = await MultipartFile.fromFile(voicePath, filename: 'reprice_voice.m4a');
+        formData.files.add(MapEntry(
+          'files[0][file]',
+          await MultipartFile.fromFile(voicePath, filename: 'reprice_voice.m4a'),
+        ));
+        formData.fields.add(const MapEntry('files[0][is_voice]', '1'));
       }
 
-      final formData = FormData.fromMap(data);
       // Using sendEliteRequest as a fallback or a general purpose endpoint if a specific reprice isn't found
       // Note: If a specific API is discovered later, this can be updated.
       final result = await _ymtazEliteRepo.sendEliteRequest(formData);
