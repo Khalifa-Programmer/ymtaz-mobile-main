@@ -154,30 +154,36 @@ class EliteRequestsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title and Date
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      request.eliteServiceCategory?.name ?? '',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF0F2D37),
-                        fontFamily: 'Cairo',
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        request.eliteServiceCategory?.name ?? '',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF0F2D37),
+                          fontFamily: 'Cairo',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    verticalSpace(4.h),
-                    Text(
-                      request.createdAt?.contains("T") ?? false
-                          ? "${getDate(request.createdAt)}  ${getTime(request.createdAt!)}"
-                          : request.createdAt ?? "",
-                      style: TextStyle(
-                        color: const Color(0xFFB4B4B4),
-                        fontSize: 11.sp,
-                        fontFamily: 'Cairo',
+                      verticalSpace(4.h),
+                      Text(
+                        request.createdAt?.contains("T") ?? false
+                            ? "${getDate(request.createdAt)}  ${getTime(request.createdAt!)}"
+                            : request.createdAt ?? "",
+                        style: TextStyle(
+                          color: const Color(0xFFB4B4B4),
+                          fontSize: 11.sp,
+                          fontFamily: 'Cairo',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 const Spacer(),
                 // Crown Icon Box
@@ -187,6 +193,12 @@ class EliteRequestsScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: const Color(0xFFFAF6E9),
                     borderRadius: BorderRadius.circular(12.r),
+                    border: const Border(
+                      right: BorderSide(
+                        color: Color(0xFF0F2D37), // Navy Blue
+                        width: 1.5,
+                      ),
+                    ),
                   ),
                   padding: EdgeInsets.all(10.w),
                   child: SvgPicture.asset(
@@ -279,8 +291,13 @@ class EliteRequestsScreen extends StatelessWidget {
   Widget _buildStatusTag(String status) {
     Color textColor;
     Color bgColor;
+    String displayStatus = status;
 
-    if (status == "قيد الدراسة" || status == "قيد الإنتظار") {
+    if (status == "pending-pricing") {
+      displayStatus = "قيد التسعير";
+      textColor = const Color(0xFF2DAFAF);
+      bgColor = const Color(0xFFE6F7F7);
+    } else if (status == "قيد الدراسة" || status == "قيد الإنتظار") {
       textColor = const Color(0xFF2DAFAF);
       bgColor = const Color(0xFFE6F7F7);
     } else if (status == "مكتملة" || status == "مكتمل") {
@@ -298,7 +315,7 @@ class EliteRequestsScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Text(
-        status,
+        displayStatus,
         style: TextStyle(
           color: textColor,
           fontSize: 12.sp,

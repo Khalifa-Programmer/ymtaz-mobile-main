@@ -76,89 +76,102 @@ class MyClients extends StatelessWidget {
           ),
         );
       },
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(12.r),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-        margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 0.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: ShapeDecoration(
           color: Colors.white,
           shadows: [
             BoxShadow(
               color: Colors.black12.withOpacity(0.04),
-              // Shadow color
-              spreadRadius: 3,
-              // Spread radius
-              blurRadius: 10,
-              // Blur radius
-              offset: const Offset(0, 3), // Offset in x and y direction
+              spreadRadius: 2,
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
           shape: RoundedRectangleBorder(
-            // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
-            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(
+              width: 1, 
+              color: index % 4 < 2 
+                  ? appColors.primaryColorYellow.withOpacity(0.3) 
+                  : appColors.blue90.withOpacity(0.3)
+            ),
+            borderRadius: BorderRadius.circular(12.r),
           ),
         ),
         child: Row(
-        children: [
-          ClipOval(
-            child: CachedNetworkImage(
-              imageUrl: category[index].image ?? "https://api.ymtaz.sa/uploads/person.png",
-              width: 50.w,
-              height: 50.h,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                width: 50.w,
-                height: 50.h,
-                color: appColors.grey.withOpacity(0.3),
-                child: Icon(Icons.person, size: 25.w, color: appColors.grey),
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: index % 4 < 2 
+                      ? appColors.primaryColorYellow 
+                      : appColors.blue90,
+                  width: 2,
+                ),
               ),
-              errorWidget: (context, url, error) => Container(
-                width: 50.w,
-                height: 50.h,
-                color: appColors.grey.withOpacity(0.3),
-                child: Icon(Icons.person, size: 25.w, color: appColors.grey),
+              child: ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: category[index].image ?? "https://api.ymtaz.sa/uploads/person.png",
+                  width: 50.w,
+                  height: 50.h,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    width: 50.w,
+                    height: 50.h,
+                    color: appColors.grey.withOpacity(0.3),
+                    child: Icon(Icons.person, size: 25.w, color: appColors.grey),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    width: 50.w,
+                    height: 50.h,
+                    color: appColors.grey.withOpacity(0.3),
+                    child: Icon(Icons.person, size: 25.w, color: appColors.grey),
+                  ),
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 10.0.w),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("${category[index].name}",
-                  style: TextStyles.cairo_14_bold.copyWith(
-                    color: appColors.blue100,
-                  )),
-              verticalSpace(6.h),
-              Row(
+            SizedBox(width: 12.0.w),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    CupertinoIcons.location_solid,
-                    color: appColors.primaryColorYellow,
-                    size: 20.sp,
+                  Text(
+                    category[index].name ?? 'بدون اسم',
+                    style: TextStyles.cairo_14_bold.copyWith(
+                      color: appColors.blue100,
+                    ),
                   ),
-                  horizontalSpace(0.w),
-                  Text(category[index].city!.title ?? "",
-                      style: TextStyles.cairo_12_semiBold),
+                  verticalSpace(4.h),
+                  Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.location_solid,
+                        color: appColors.primaryColorYellow,
+                        size: 16.sp,
+                      ),
+                      horizontalSpace(4.w),
+                      Text(
+                        category[index].city?.title ?? "",
+                        style: TextStyles.cairo_12_semiBold.copyWith(
+                          color: appColors.grey15,
+                        ),
+                      ),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
-          // Spacer(),
-          // Container(
-          //   margin: EdgeInsets.only(left: 0.w),
-          //   padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-          //   decoration: BoxDecoration(
-          //     color: appColors.lightYellow10,
-          //     borderRadius: BorderRadius.circular(6.r),
-          //   ),
-          //   child: Text(,
-          //       style: TextStyles.cairo_12_semiBold.copyWith(
-          //         color: appColors.blue100,
-          //       )),
-          // )
-        ],
-      ),
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: appColors.grey,
+              size: 16.sp,
+            ),
+          ],
+        ),
       ),
     );
   }

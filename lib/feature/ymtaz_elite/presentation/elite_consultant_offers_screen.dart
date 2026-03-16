@@ -80,16 +80,20 @@ class EliteConsultantOffersScreen extends StatelessWidget {
           // Badges
           Row(
             children: [
-              _buildBadge(
-                "2-3 أيام", 
-                backgroundColor: const Color(0xFFF2F2F2),
-                textColor: const Color(0xFF5A5A5A),
+              Flexible(
+                child: _buildBadge(
+                  "2-3 أيام", 
+                  backgroundColor: const Color(0xFFF2F2F2),
+                  textColor: const Color(0xFF5A5A5A),
+                ),
               ),
               horizontalSpace(8.w),
-              _buildBadge(
-                "مهم - ${offer.price ?? 0} رس",
-                backgroundColor: const Color(0xFFFAF6E9),
-                textColor: const Color(0xFFD4AF37),
+              Flexible(
+                child: _buildBadge(
+                  "مهم - ${offer.price ?? 0} رس",
+                  backgroundColor: const Color(0xFFFAF6E9),
+                  textColor: const Color(0xFFD4AF37),
+                ),
               ),
             ],
           ),

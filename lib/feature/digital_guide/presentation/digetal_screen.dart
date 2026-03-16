@@ -96,7 +96,7 @@ class DigetalScreen extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: 1.2,
+                      childAspectRatio: 1.8,
                       crossAxisCount: 2,
                       crossAxisSpacing: 12.0.w,
                       mainAxisSpacing: 12.0.h,
@@ -210,7 +210,7 @@ class DigetalScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      "${category.lawyersCount} محترف",
+                      "${category.lawyersCount}",
                       style: TextStyles.cairo_10_bold.copyWith(
                         color: appColors.primaryColorYellow,
                         fontSize: 10.sp,

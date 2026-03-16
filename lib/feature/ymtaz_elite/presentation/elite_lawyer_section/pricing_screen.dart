@@ -11,6 +11,7 @@ import 'widgets/consultation_form.dart';
 import 'widgets/service_form.dart';
 import 'widgets/appointment_form.dart';
 import 'models/service_request.dart';
+import 'add_service_screen.dart';
 
 class PricingScreen extends StatefulWidget {
   const PricingScreen({super.key});
@@ -148,156 +149,14 @@ class _PricingScreenState extends State<PricingScreen> {
   }
 
   void _showAddServiceBottomSheet() {
-    _priceController.clear();
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-        ),
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: SingleChildScrollView(
-          child: ServiceSelectionContent(
-            priceController: _priceController,
-            onServiceAdded: _addServiceRequest,
-          ),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddServiceScreen(
+          onServiceAdded: _addServiceRequest,
         ),
       ),
     );
   }
 }
 
-class ServiceSelectionContent extends StatefulWidget {
-  final TextEditingController priceController;
-  final Function(BaseServiceRequest) onServiceAdded;
-
-  const ServiceSelectionContent({
-    super.key,
-    required this.priceController,
-    required this.onServiceAdded,
-  });
-
-  @override
-  State<ServiceSelectionContent> createState() => _ServiceSelectionContentState();
-}
-
-class _ServiceSelectionContentState extends State<ServiceSelectionContent> {
-  String selectedService = 'استشارة';
-
-  void _handleServiceSuccess(BaseServiceRequest request) {
-    widget.onServiceAdded(request);
-    Navigator.pop(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildHandleBar(),
-
-          _buildTitle(),
-          SizedBox(height: 16.h),
-
-          _buildServiceOptions(),
-          SizedBox(height: 16.h),
-
-          if (selectedService == 'استشارة')
-            ConsultationForm(
-              priceController: widget.priceController,
-              onSuccess: _handleServiceSuccess,
-            )
-          else if (selectedService == 'موعد')
-            AppointmentForm(
-              priceController: widget.priceController,
-              onSuccess: _handleServiceSuccess,
-            )
-          else if (selectedService == 'خدمة')
-            ServiceForm(
-              priceController: widget.priceController,
-              onSuccess: _handleServiceSuccess,
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildServiceOptions() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildServiceOption('موعد', AppAssets.appointments),
-        _buildServiceOption('استشارة', AppAssets.advisories),
-        _buildServiceOption('خدمة', AppAssets.services),
-      ],
-    );
-  }
-
-  Widget _buildServiceOption(String title, String icon) {
-    final bool isSelected = selectedService == title;
-    return InkWell(
-      onTap: () {
-        setState(() => selectedService = title);
-      },
-      child: Container(
-        width: 80.w,
-        height: 80.w,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected ? const Color(0xFFD4AF37) : Colors.grey[300]!,
-          ),
-          borderRadius: BorderRadius.circular(8.r),
-          color: isSelected ? const Color(0xFFFFF8E1) : Colors.transparent,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              icon,
-              color: isSelected ? const Color(0xFFD4AF37) : appColors.grey1w5,
-              width: 24.w,
-              height: 24.w,
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: isSelected ? const Color(0xFFD4AF37) : Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHandleBar() {
-    return Container(
-      width: 40.w,
-      height: 4.h,
-      margin: EdgeInsets.only(bottom: 16.h),
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(2.r),
-      ),
-    );
-  }
-
-  Widget _buildTitle() {
-    return Text(
-      'إضافة خدمة',
-      style: TextStyle(
-        fontSize: 18.sp,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-}

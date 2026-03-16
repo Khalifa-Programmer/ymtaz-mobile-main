@@ -9,7 +9,7 @@ import '../../../feature/layout/account/presentation/widgets/share_screen.dart';
 
 String getTime(String timestamp) {
   DateTime dateTime = DateTime.parse(timestamp).toLocal();
-  return DateFormat('hh:mm a').format(dateTime);
+  return DateFormat('HH:mm').format(dateTime);
 }
 
 int daysRemaining(DateTime endDate) {

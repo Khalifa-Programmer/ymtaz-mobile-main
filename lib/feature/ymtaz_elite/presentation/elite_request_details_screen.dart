@@ -19,6 +19,9 @@ import 'package:stream_video_flutter/stream_video_flutter.dart';
 import '../../advisory_window/presentation/call_screen.dart';
 import '../../../core/network/local/cache_helper.dart';
 import '../../layout/account/logic/my_account_cubit.dart';
+import '../../../core/widgets/users_images.dart';
+import 'consultants_list_screen.dart';
+import 'rejection_reason_screen.dart';
 
 class EliteRequestDetailsScreen extends StatefulWidget {
   final Request request;
@@ -209,7 +212,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                     borderRadius: BorderRadius.circular(30.r),
                   ),
                   tabs: const [
-                    Tab(text: "تفاصيل القضية"),
+                    Tab(text: "تفاصيل الطلب"),
                     Tab(text: "تفاصيل الرد"),
                   ],
                 ),
@@ -286,16 +289,20 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
           children: [
             Icon(Icons.picture_as_pdf, color: Colors.red[700], size: 28.sp),
             horizontalSpace(12.w),
-            Text(
-              "ملفات القضية.PDF", 
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF0F2D37),
-                fontFamily: 'Cairo',
+            Expanded(
+              child: Text(
+                file.file?.split('/').last ?? "ملف القضية", 
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF0F2D37),
+                  fontFamily: 'Cairo',
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-            const Spacer(),
+            horizontalSpace(8.w),
             Icon(Icons.file_download_outlined, color: Colors.grey[400], size: 24.sp),
           ],
         ),
@@ -317,11 +324,11 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
         children: [
           Row(
             children: [
-              _buildStepPoint(currentStep >= 1, "فيد الانتظار"),
+              Expanded(flex: 2, child: _buildStepPoint(currentStep >= 1, "قيد الانتظار")),
               _buildStepLine(currentStep >= 2),
-              _buildStepPoint(currentStep >= 2, "قيد الدراسة"),
+              Expanded(flex: 2, child: _buildStepPoint(currentStep >= 2, "قيد الدراسة")),
               _buildStepLine(currentStep >= 3),
-              _buildStepPoint(currentStep >= 3, "مكتملة"),
+              Expanded(flex: 2, child: _buildStepPoint(currentStep >= 3, "مكتملة")),
             ],
           ),
         ],
@@ -350,6 +357,9 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
         verticalSpace(8.h),
         Text(
           label,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: isActive ? const Color(0xFFD4AF37) : const Color(0xFFB4B4B4),
             fontSize: 10.sp,
@@ -423,6 +433,12 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
   }
 
   Widget _buildAdvisoryTeamBox() {
+    final typesImportance = widget.request.offers?.reservationType?.typesImportance ?? [];
+    final consultants = typesImportance.where((ti) => ti.lawyer != null).map((ti) => ti.lawyer!).toList();
+    final totalPrice = (widget.request.offers?.advisoryServiceSubPrice ?? 0) +
+                       (widget.request.offers?.serviceSubPrice ?? 0) +
+                       (widget.request.offers?.reservationPrice ?? 0);
+
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -451,64 +467,131 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                 ),
               ),
               const Spacer(),
-              _buildTeamIcon(
-                Icons.videocam, 
-                onTap: widget.request.offers?.advisoryServiceSub?.generalCategory?.paymentCategoryType?.requiresAppointment == 1
-                  ? _startVideoCall
-                  : null,
-                isActive: widget.request.offers?.advisoryServiceSub?.generalCategory?.paymentCategoryType?.requiresAppointment == 1,
-              ),
-              horizontalSpace(8.w),
-              _buildTeamIcon(
-                Icons.sms,
-                onTap: widget.request.offers?.reservationType?.typesImportance?.isNotEmpty == true && 
-                       widget.request.offers?.reservationType?.typesImportance?.first.lawyer?.id != null
-                  ? () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('سيتم فتح المحادثة قريباً', style: TextStyle(fontFamily: 'Cairo'))),
-                      );
-                    }
-                  : null,
-                isActive: widget.request.offers?.reservationType?.typesImportance?.isNotEmpty == true && 
-                          widget.request.offers?.reservationType?.typesImportance?.first.lawyer?.id != null,
-              ),
-              horizontalSpace(8.w),
-              _buildTeamIcon(
-                Icons.call,
-                onTap: widget.request.offers?.reservationType?.typesImportance?.isNotEmpty == true && 
-                       widget.request.offers?.reservationType?.typesImportance?.first.lawyer?.id != null
-                  ? () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('سيتم بدء الاتصال قريباً', style: TextStyle(fontFamily: 'Cairo'))),
-                      );
-                    }
-                  : null,
-                isActive: widget.request.offers?.reservationType?.typesImportance?.isNotEmpty == true && 
-                          widget.request.offers?.reservationType?.typesImportance?.first.lawyer?.id != null,
-              ),
+              if (totalPrice > 0)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFAF6E9),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Text(
+                    "$totalPrice ريال",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFFD4AF37),
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                ),
             ],
           ),
-          verticalSpace(20.h),
-          Text(
-            "خدمة نخبة",
-            style: TextStyle(
-              fontSize: 11.sp,
-              color: const Color(0xFFB4B4B4),
-              fontFamily: 'Cairo',
+          verticalSpace(16.h),
+          
+          if (consultants.isNotEmpty) ...[
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ConsultantsListScreen(lawyers: consultants)),
+                );
+              },
+              child: Row(
+                children: [
+                   UsersImagesWidget(
+                    imageList: consultants.map((c) => c.image ?? "https://api.ymtaz.sa/uploads/person.png").toList(),
+                    totalCount: consultants.length,
+                    imageRadius: 18.w,
+                    imageCount: 5,
+                    imageBorderWidth: 1.5.w,
+                    overlapDistance: 25.w,
+                  ),
+                  horizontalSpace(10.w),
+                  Text(
+                    "(${consultants.length}) مستشار",
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: const Color(0xFFB4B4B4),
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                  const Spacer(),
+                  Icon(Icons.arrow_forward_ios, size: 14.sp, color: Colors.grey[400]),
+                ],
+              ),
             ),
-          ),
-          verticalSpace(8.h),
-          Text(
-            "تقديم حلول متنوعة وخطوات مدروسة لحل المشكلة بشكل شامل من قبل نخبة من المستشارين المتخصصين بأحدث التقنيات المتاحة",
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: const Color(0xFFB4B4B4),
-              height: 1.6,
-              fontFamily: 'Cairo',
+            verticalSpace(20.h),
+          ],
+
+          if (widget.request.offers != null && (widget.request.status != "مكتمل" && widget.request.status != "مكتملة"))
+             Row(
+               children: [
+                 Expanded(
+                   child: _buildActionButton(
+                     label: "قبول العرض",
+                     color: const Color(0xFFD4AF37),
+                     onTap: () => context.read<YmtazEliteCubit>().approveOffer(widget.request.offers!.id.toString(), "elite"),
+                   ),
+                 ),
+                 horizontalSpace(12.w),
+                 Expanded(
+                   child: _buildActionButton(
+                     label: "رفض العرض",
+                     color: Colors.red[400]!,
+                     onTap: () => _showRejectionDialog(),
+                   ),
+                 ),
+               ],
+             )
+          else ...[
+            Text(
+              "خدمة نخبة",
+              style: TextStyle(
+                fontSize: 11.sp,
+                color: const Color(0xFFB4B4B4),
+                fontFamily: 'Cairo',
+              ),
             ),
-          ),
+            verticalSpace(8.h),
+            Text(
+              "تقديم حلول متنوعة وخطوات مدروسة لحل المشكلة بشكل شامل من قبل نخبة من المستشارين المتخصصين بأحدث التقنيات المتاحة",
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: const Color(0xFFB4B4B4),
+                height: 1.6,
+                fontFamily: 'Cairo',
+              ),
+            ),
+          ],
         ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({required String label, required Color color, required VoidCallback onTap}) {
+    return CupertinoButton(
+      padding: EdgeInsets.symmetric(vertical: 12.h),
+      color: color,
+      borderRadius: BorderRadius.circular(12.r),
+      onPressed: onTap,
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 14.sp,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          fontFamily: 'Cairo',
+        ),
+      ),
+    );
+  }
+
+  void _showRejectionDialog() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RejectionReasonScreen(offerId: widget.request.offers!.id.toString()),
       ),
     );
   }
@@ -605,12 +688,14 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                           Text(
                             "موعد الرد",
                             style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 10.sp, fontFamily: 'Cairo'),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           Text(
                             widget.request.offers?.createdAt != null
-                              ? "${getDate(widget.request.offers!.createdAt!)}  ${getTime(widget.request.offers!.createdAt!)}"
-                              : "--",
-                            maxLines: 1,
+                                ? "${getDate(widget.request.offers!.createdAt!)}  ${getTime(widget.request.offers!.createdAt!)}"
+                                : "--",
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(color: Colors.white, fontSize: 11.sp, fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
                           ),

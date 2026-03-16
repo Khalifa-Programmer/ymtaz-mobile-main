@@ -216,7 +216,7 @@ class _AdvisoryRequestDetailsScreenState
                               color: appColors.primaryColorYellow,
                             ),
                             SizedBox(width: 10.w),
-                            Text("ارفق ملف أو صورة",
+                            Text("إرفاق ملف او صورة",
                                 style: TextStyles.cairo_12_semiBold),
                           ],
                         )),

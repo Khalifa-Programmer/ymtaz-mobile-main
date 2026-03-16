@@ -79,7 +79,7 @@ class AdvisoryCommitteesScreen extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.only(top: 10.0.h, bottom: 50.h),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              childAspectRatio: 1.2,
+              childAspectRatio: 1.8,
               crossAxisCount: 2,
               crossAxisSpacing: 12.0.w,
               mainAxisSpacing: 12.0.h,

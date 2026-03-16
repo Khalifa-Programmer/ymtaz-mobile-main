@@ -111,7 +111,7 @@ class MyOrdersItemsClientCard extends StatelessWidget {
                   height: double.infinity,
                   width: 4.h,
                   decoration: BoxDecoration(
-                    color: appColors.primaryColorYellow,
+                    color: appColors.blue100, // Navy Blue
                     borderRadius: BorderRadius.only(
                         topRight: Radius.circular(10.r),
                         bottomRight: Radius.circular(10.r)),
@@ -126,7 +126,7 @@ class MyOrdersItemsClientCard extends StatelessWidget {
                       const CircularProgressIndicator(),
                 ),
                 horizontalSpace(10.w),
-                Text("النخبة",
+                Text("طلبات النخبة",
                     style: TextStyles.cairo_12_bold.copyWith(
                       color: appColors.blue100,
                     )),

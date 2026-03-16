@@ -180,17 +180,21 @@ class SeeMyProfileProvider extends StatelessWidget {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            Text(
-                                              myAccountCubit
-                                                  .userDataResponse!
-                                                  .data!
-                                                  .account!
-                                                  .name!, // Static name
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: appColors
-                                                    .primaryColorYellow,
+                                            Flexible(
+                                              child: Text(
+                                                myAccountCubit
+                                                    .userDataResponse!
+                                                    .data!
+                                                    .account!
+                                                    .name!, // Static name
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: appColors
+                                                      .primaryColorYellow,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
                                               ),
                                             ),
                                             horizontalSpace(5.w),
@@ -442,23 +446,28 @@ class SeeMyProfileProvider extends StatelessWidget {
                                             .copyWith(color: appColors.grey15),
                                       ),
                                       const Spacer(),
-                                      Text(
-                                        (myAccountCubit.userDataResponse!.data!
-                                                        .account!.country?.name !=
-                                                    null &&
-                                                myAccountCubit
-                                                        .userDataResponse!
-                                                        .data!
-                                                        .account!
-                                                        .country!
-                                                        .name!
-                                                        .toLowerCase() !=
-                                                    'null')
-                                            ? myAccountCubit.userDataResponse!
-                                                .data!.account!.country!.name!
-                                            : '-',
-                                        style: TextStyles.cairo_12_semiBold
-                                            .copyWith(color: appColors.blue100),
+                                      Expanded(
+                                        child: Text(
+                                          (myAccountCubit.userDataResponse!.data!
+                                                          .account!.country?.name !=
+                                                      null &&
+                                                  myAccountCubit
+                                                          .userDataResponse!
+                                                          .data!
+                                                          .account!
+                                                          .country!
+                                                          .name!
+                                                          .toLowerCase() !=
+                                                      'null')
+                                              ? myAccountCubit.userDataResponse!
+                                                  .data!.account!.country!.name!
+                                              : '-',
+                                          style: TextStyles.cairo_12_semiBold
+                                              .copyWith(color: appColors.blue100),
+                                          textAlign: TextAlign.end,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -477,23 +486,28 @@ class SeeMyProfileProvider extends StatelessWidget {
                                             .copyWith(color: appColors.grey15),
                                       ),
                                       const Spacer(),
-                                      Text(
-                                        (myAccountCubit.userDataResponse!.data!
-                                                        .account!.city?.title !=
-                                                    null &&
-                                                myAccountCubit
-                                                        .userDataResponse!
-                                                        .data!
-                                                        .account!
-                                                        .city!
-                                                        .title!
-                                                        .toLowerCase() !=
-                                                    'null')
-                                            ? myAccountCubit.userDataResponse!
-                                                .data!.account!.city!.title!
-                                            : '-',
-                                        style: TextStyles.cairo_12_semiBold
-                                            .copyWith(color: appColors.blue100),
+                                      Expanded(
+                                        child: Text(
+                                          (myAccountCubit.userDataResponse!.data!
+                                                          .account!.city?.title !=
+                                                      null &&
+                                                  myAccountCubit
+                                                          .userDataResponse!
+                                                          .data!
+                                                          .account!
+                                                          .city!
+                                                          .title!
+                                                          .toLowerCase() !=
+                                                      'null')
+                                              ? myAccountCubit.userDataResponse!
+                                                  .data!.account!.city!.title!
+                                              : '-',
+                                          style: TextStyles.cairo_12_semiBold
+                                              .copyWith(color: appColors.blue100),
+                                          textAlign: TextAlign.end,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -512,23 +526,28 @@ class SeeMyProfileProvider extends StatelessWidget {
                                             .copyWith(color: appColors.grey15),
                                       ),
                                       const Spacer(),
-                                      Text(
-                                        (myAccountCubit.userDataResponse!.data!
-                                                        .account!.region?.name !=
-                                                    null &&
-                                                myAccountCubit
-                                                        .userDataResponse!
-                                                        .data!
-                                                        .account!
-                                                        .region!
-                                                        .name!
-                                                        .toLowerCase() !=
-                                                    'null')
-                                            ? myAccountCubit.userDataResponse!
-                                                .data!.account!.region!.name!
-                                            : '-',
-                                        style: TextStyles.cairo_12_semiBold
-                                            .copyWith(color: appColors.blue100),
+                                      Expanded(
+                                        child: Text(
+                                          (myAccountCubit.userDataResponse!.data!
+                                                          .account!.region?.name !=
+                                                      null &&
+                                                  myAccountCubit
+                                                          .userDataResponse!
+                                                          .data!
+                                                          .account!
+                                                          .region!
+                                                          .name!
+                                                          .toLowerCase() !=
+                                                      'null')
+                                              ? myAccountCubit.userDataResponse!
+                                                  .data!.account!.region!.name!
+                                              : '-',
+                                          style: TextStyles.cairo_12_semiBold
+                                              .copyWith(color: appColors.blue100),
+                                          textAlign: TextAlign.end,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -547,22 +566,27 @@ class SeeMyProfileProvider extends StatelessWidget {
                                             .copyWith(color: appColors.grey15),
                                       ),
                                       const Spacer(),
-                                      Text(
-                                        (myAccountCubit.userDataResponse!.data!
-                                                        .account!.nationality?.name !=
-                                                    null &&
-                                                myAccountCubit.userDataResponse!
-                                                        .data!
-                                                        .account!
-                                                        .nationality!
-                                                        .name!
-                                                        .toLowerCase() !=
-                                                    'null')
-                                            ? myAccountCubit.userDataResponse!
-                                                .data!.account!.nationality!.name!
-                                            : '-',
-                                        style: TextStyles.cairo_12_semiBold
-                                            .copyWith(color: appColors.blue100),
+                                      Expanded(
+                                        child: Text(
+                                          (myAccountCubit.userDataResponse!.data!
+                                                          .account!.nationality?.name !=
+                                                      null &&
+                                                  myAccountCubit.userDataResponse!
+                                                          .data!
+                                                          .account!
+                                                          .nationality!
+                                                          .name!
+                                                          .toLowerCase() !=
+                                                      'null')
+                                              ? myAccountCubit.userDataResponse!
+                                                  .data!.account!.nationality!.name!
+                                              : '-',
+                                          style: TextStyles.cairo_12_semiBold
+                                              .copyWith(color: appColors.blue100),
+                                          textAlign: TextAlign.end,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -581,23 +605,28 @@ class SeeMyProfileProvider extends StatelessWidget {
                                             .copyWith(color: appColors.grey15),
                                       ),
                                       const Spacer(),
-                                      Text(
-                                        (myAccountCubit.userDataResponse!.data!
-                                                        .account!.degree?.title !=
-                                                    null &&
-                                                myAccountCubit
-                                                        .userDataResponse!
-                                                        .data!
-                                                        .account!
-                                                        .degree!
-                                                        .title!
-                                                        .toLowerCase() !=
-                                                    'null')
-                                            ? myAccountCubit.userDataResponse!
-                                                .data!.account!.degree!.title!
-                                            : '-',
-                                        style: TextStyles.cairo_12_semiBold
-                                            .copyWith(color: appColors.blue100),
+                                      Expanded(
+                                        child: Text(
+                                          (myAccountCubit.userDataResponse!.data!
+                                                          .account!.degree?.title !=
+                                                      null &&
+                                                  myAccountCubit
+                                                          .userDataResponse!
+                                                          .data!
+                                                          .account!
+                                                          .degree!
+                                                          .title!
+                                                          .toLowerCase() !=
+                                                      'null')
+                                              ? myAccountCubit.userDataResponse!
+                                                  .data!.account!.degree!.title!
+                                              : '-',
+                                          style: TextStyles.cairo_12_semiBold
+                                              .copyWith(color: appColors.blue100),
+                                          textAlign: TextAlign.end,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -616,11 +645,16 @@ class SeeMyProfileProvider extends StatelessWidget {
                                             .copyWith(color: appColors.grey15),
                                       ),
                                       const Spacer(),
-                                      Text(
-                                        getDate(myAccountCubit.userDataResponse!
-                                            .data!.account!.createdAt!),
-                                        style: TextStyles.cairo_12_semiBold
-                                            .copyWith(color: appColors.blue100),
+                                      Expanded(
+                                        child: Text(
+                                          getDate(myAccountCubit.userDataResponse!
+                                              .data!.account!.createdAt!),
+                                          style: TextStyles.cairo_12_semiBold
+                                              .copyWith(color: appColors.blue100),
+                                          textAlign: TextAlign.end,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
                                       ),
                                     ],
                                   ),

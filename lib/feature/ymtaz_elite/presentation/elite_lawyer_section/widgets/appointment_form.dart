@@ -157,10 +157,11 @@ class _AppointmentFormState extends State<AppointmentForm> {
             },
             initialLocation: const LatLng(29.378586, 47.990341),
             usePinPointingSearch: true,
+
             searchInputConfig: const SearchInputConfig(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               autofocus: false,
-              textDirection: TextDirection.ltr,
+              textDirection: TextDirection.rtl,
             ),
             searchInputDecorationConfig: const SearchInputDecorationConfig(
               hintText: "ابحث عن مكان .....",

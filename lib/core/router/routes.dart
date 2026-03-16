@@ -158,6 +158,7 @@ class Routes {
   static const String eliteRepricingRequest = "/eliteRepricingRequest";
   static const String elitePayment = "/elitePayment";
   static const String eliteSuccessPayment = "/eliteSuccessPayment";
+  static const String elitePromo = "/elitePromo";
 
   // learning path
   static const String learningPathHome = "/learningpathhome";

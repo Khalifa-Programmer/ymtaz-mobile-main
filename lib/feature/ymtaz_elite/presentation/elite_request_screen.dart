@@ -326,7 +326,7 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "ارفق ملف أو صورة",
+                              "إرفاق ملف او صورة",
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 color: const Color(0xFFD4AF37).withOpacity(0.8),
@@ -335,7 +335,7 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
                               ),
                             ),
                             horizontalSpace(8.w),
-                            Icon(Icons.cloud_upload, color: const Color(0xFFD4AF37).withOpacity(0.8), size: 22.sp),
+                            Icon(CupertinoIcons.paperclip, color: const Color(0xFFD4AF37).withOpacity(0.8), size: 22.sp),
                           ],
                         ),
                       ),

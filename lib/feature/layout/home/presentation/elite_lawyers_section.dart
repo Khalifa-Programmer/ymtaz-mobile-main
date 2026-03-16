@@ -81,7 +81,7 @@ class EliteLawyersSection extends StatelessWidget {
                 color: const Color(0xFFD4AF37),
                 borderRadius: BorderRadius.circular(12.r),
                 onPressed: () {
-                  context.pushNamed(Routes.eliteRequestScreen);
+                  context.pushNamed(Routes.elitePromo);
                 },
                 child: Text(
                   "ابدأ الآن",

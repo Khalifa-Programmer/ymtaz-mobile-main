@@ -49,6 +49,7 @@ import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_price_offer_screen
 import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_repricing_request_screen.dart';
 import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_payment_screen.dart';
 import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_success_payment_screen.dart';
+import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_promo_screen.dart';
 
 import '../../feature/advisory_window/data/model/all_advirsory_response.dart';
 import '../../feature/advisory_window/logic/advisory_cubit.dart';
@@ -671,6 +672,9 @@ class AppRouter {
             offer: args['offer'] as TypesImportance,
           ),
         ));
+
+      case Routes.elitePromo:
+        return _getFadeTransition(const ElitePromoScreen());
 
 
       case Routes.learningPathHome:

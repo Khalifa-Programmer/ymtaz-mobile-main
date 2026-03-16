@@ -67,16 +67,20 @@ class ElitePriceOfferScreen extends StatelessWidget {
                         // Badges Row
                         Row(
                           children: [
-                            _buildBadge(
-                              "5 أيام", 
-                              backgroundColor: const Color(0xFFE9EDEF),
-                              textColor: const Color(0xFF0F2D37),
+                            Flexible(
+                              child: _buildBadge(
+                                "5 أيام", 
+                                backgroundColor: const Color(0xFFE9EDEF),
+                                textColor: const Color(0xFF0F2D37),
+                              ),
                             ),
                             horizontalSpace(10.w),
-                            _buildBadge(
-                              "متوسط الأهمية - ${offer.price ?? 2500} رس",
-                              backgroundColor: const Color(0xFFFAF6E9),
-                              textColor: const Color(0xFFD4AF37),
+                            Flexible(
+                              child: _buildBadge(
+                                "متوسط الأهمية - ${offer.price ?? 2500} رس",
+                                backgroundColor: const Color(0xFFFAF6E9),
+                                textColor: const Color(0xFFD4AF37),
+                              ),
                             ),
                           ],
                         ),

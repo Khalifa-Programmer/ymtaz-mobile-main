@@ -20,6 +20,8 @@ import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/layout/account/logic/my_account_cubit.dart';
 
 import '../../../../core/constants/assets.dart';
+import 'package:yamtaz/feature/digital_office/data/models/my_clients_response.dart';
+import 'package:yamtaz/feature/digital_office/view/client_profile_screen.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/validators.dart';
 import '../../../../core/di/dependency_injection.dart';
@@ -106,7 +108,8 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
-                  _buildDetailsContainer(context, "تفاصيل الاستشارة", [
+                   _buildClientInfo(context),
+                  _buildDetailsContainer(context, "بيانات الطلب", [
                     _buildDetailRow(
                         FontAwesomeIcons.ticket,
                         "نوع الاستشارة",
@@ -132,9 +135,7 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
                     _buildDetailRow(
                         Icons.calendar_month,
                         "تاريخ الطلب",
-                        getTimeDate(widget
-                            .servicesRequirementsResponse.createdAt
-                            .toString())),
+                        getDate(widget.servicesRequirementsResponse.createdAt!)),
                   ]),
                   _buildDetailsContainer(context, "تفاصيل الطلب", [
                     const Text("الموضوع",
@@ -416,7 +417,7 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
                         color: appColors.primaryColorYellow,
                       ),
                       SizedBox(width: 10.w),
-                      Text("ارفق ملف أو صورة",
+                      Text("إرفاق ملف او صورة",
                           style: TextStyles.cairo_12_semiBold),
                     ],
                   )),
@@ -666,5 +667,75 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final seconds = twoDigits(duration.inSeconds.remainder(60));
     return '$minutes:$seconds';
+  }
+
+  Widget _buildClientInfo(BuildContext context) {
+    final account = widget.servicesRequirementsResponse.account;
+    if (account == null) return const SizedBox.shrink();
+
+    return GestureDetector(
+      onTap: () {
+        // Convert Account to Client
+        final clientJson = account.toJson();
+        final client = Client.fromJson(clientJson);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ClientProfileScreen(client: client),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.all(16.r),
+        padding: EdgeInsets.all(16.r),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 30.r,
+              backgroundColor: appColors.grey.withOpacity(0.1),
+              backgroundImage: NetworkImage(account.image ?? "https://api.ymtaz.sa/uploads/person.png"),
+            ),
+            horizontalSpace(16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    account.name ?? "بدون اسم",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Cairo',
+                      color: const Color(0xFF0F2D37),
+                    ),
+                  ),
+                  verticalSpace(4.h),
+                  Text(
+                    "طالب الخدمة",
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.grey,
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.arrow_forward_ios, size: 16.sp, color: Colors.grey),
+          ],
+        ),
+      ),
+    );
   }
 }

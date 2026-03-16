@@ -182,14 +182,13 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                                 child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SvgPicture.asset(
-                                  AppAssets.upload,
-                                  width: 24.sp,
-                                  height: 24.sp,
+                                Icon(
+                                  CupertinoIcons.paperclip,
+                                  size: 24.sp,
                                   color: appColors.primaryColorYellow,
                                 ),
                                 SizedBox(width: 10.w),
-                                Text("ارفق ملف أو صورة",
+                                Text("إرفاق ملف او صورة",
                                     style: TextStyles.cairo_12_semiBold),
                               ],
                             )),
