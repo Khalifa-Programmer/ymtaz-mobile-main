@@ -89,7 +89,7 @@ android {
         production {
             dimension "default"
             resValue "string", "app_name", "Ymtaz"
-            buildConfigField "String", "BASE_URL", '"https://api.ymtaz.sa/api/"'
+            buildConfigField "String", "BASE_URL", '"https://ymtaz.sa/api/"'
         }
 
         development {
