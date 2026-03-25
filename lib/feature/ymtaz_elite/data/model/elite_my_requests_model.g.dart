@@ -44,6 +44,7 @@ Request _$RequestFromJson(Map<String, dynamic> json) => Request(
           : EliteServiceCategory.fromJson(
               json['elite_service_category'] as Map<String, dynamic>),
       description: json['description'] as String?,
+      serviceTitle: json['service_title'] as String?,
       transactionComplete: (json['transaction_complete'] as num?)?.toInt(),
       transactionId: json['transaction_id'],
       status: json['status'] as String?,
@@ -61,6 +62,7 @@ Map<String, dynamic> _$RequestToJson(Request instance) => <String, dynamic>{
       'account_id': instance.accountId,
       'elite_service_category': instance.eliteServiceCategory,
       'description': instance.description,
+      'service_title': instance.serviceTitle,
       'transaction_complete': instance.transactionComplete,
       'transaction_id': instance.transactionId,
       'status': instance.status,

@@ -80,9 +80,10 @@ class EliteMainScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(12.r),
             ),
             padding: EdgeInsets.all(20.w),
-            child: SvgPicture.asset(
-              AppAssets.crown,
+            child: Icon(
+              Icons.workspace_premium,
               color: appColors.primaryColorYellow,
+              size: 80.sp,
             ),
           ),
           verticalSpace(20.h),

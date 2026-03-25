@@ -10,6 +10,7 @@ import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/di/dependency_injection.dart';
 import '../../../core/widgets/spacing.dart';
+import '../../../core/widgets/breadcrumb_widget.dart';
 import '../../layout/services/presentation/widgets/card_loading.dart';
 import '../data/model/available_lawyers_for_advisory_type_model.dart';
 import '../logic/advisory_cubit.dart';
@@ -27,6 +28,17 @@ class SelectLawyerScreen extends StatelessWidget {
           if (selectedLevel == null) {
             return Center(child: Text("No level selected"));
           }
+          final parts = <String>[];
+          if (advisoryCubit.selectedAdvisoryItem?.name != null) {
+            parts.add(advisoryCubit.selectedAdvisoryItem!.name!);
+          }
+          if (advisoryCubit.selectedGeneralData?.name != null) {
+            parts.add(advisoryCubit.selectedGeneralData!.name!);
+          }
+          if (advisoryCubit.selectedAccurateData?.name != null) {
+            parts.add(advisoryCubit.selectedAccurateData!.name!);
+          }
+          final breadcrumbPath = parts.join(' > ');
           return ConditionalBuilder(
               condition: state is AdvisoryTypeLawyersLoading,
               builder: (context) => LawyerCardLoading(),
@@ -63,7 +75,11 @@ class SelectLawyerScreen extends StatelessWidget {
                     ],
                     child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
-                        child: Column(children: [
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          BreadcrumbWidget(path: breadcrumbPath),
+                          verticalSpace(15.h),
                           Row(
                             children: [
                               Text("المحامين المتاحين ",

@@ -42,70 +42,7 @@ class _SendSupportYmtazState extends State<SendSupportYmtaz> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<ContactYmtazCubit, ContactYmtazState>(
-        listenWhen: (previous, current) =>
-            current is ErrorSendMessage ||
-            current is SuccessSendMessage ||
-            current is LoadingSendMessage,
-        listener: (context, state) {
-          state.whenOrNull(
-            loadingSendMessage: () {
-              showDialog(
-                context: context,
-                builder: (context) => const Center(
-                  child: CircularProgressIndicator(
-                    color: appColors.primaryColorYellow,
-                  ),
-                ),
-              );
-            },
-            successSendMessage: (s) {
-              context.pop();
-              
-              // تعيين متغير حالة النموذج
-              _isFormSubmitted = true;
-              
-              // إعادة تعيين متغيرات التحقق
-              _validateSubject = false;
-              _validateDetails = false;
-              _validateType = false;
-              
-              // تفريغ البيانات
-              context.read<ContactYmtazCubit>().subject.clear();
-              context.read<ContactYmtazCubit>().details.clear();
-              context.read<ContactYmtazCubit>().attachments = null;
-              context.read<ContactYmtazCubit>().contactUsTypeId = null;
-              
-              // عرض رسالة النجاح
-              AppAlerts.showAlert(
-                  context: context,
-                  message: "تم ارسال الرسالة بنجاح",
-                  buttonText: "استمرار",
-                  type: AlertType.success);
-              
-              // إعادة بناء الواجهة بعد إغلاق الرسالة
-              Future.delayed(const Duration(milliseconds: 300), () {
-                setState(() {
-                  // إعادة تعيين النموذج بعد تفريغ البيانات
-                  if (_formKey.currentState != null) {
-                    _formKey.currentState!.reset();
-                  }
-                  
-                  // إعادة تعيين متغير حالة النموذج
-                  _isFormSubmitted = false;
-                });
-              });
-            },
-            errorSendMessage: (e) {
-              context.pop();
-              AppAlerts.showAlert(
-                  context: context,
-                  message: e,
-                  buttonText: "حاول مرة اخرى",
-                  type: AlertType.error);
-            },
-          );
-        },
+      body: BlocBuilder<ContactYmtazCubit, ContactYmtazState>(
         builder: (context, state) {
           return SingleChildScrollView(
             child: Padding(
@@ -140,8 +77,7 @@ class _SendSupportYmtazState extends State<SendSupportYmtaz> {
                               items: context
                                   .read<ContactYmtazCubit>()
                                   .contactUsTypes!
-                                  .data!
-                                  .contactTypes!,
+                                  .data!,
                               onChanged: (value) {
                                 debugPrint("Selected Type: ${value?.name}");
                                 debugPrint("Selected Type: ${value?.id}");

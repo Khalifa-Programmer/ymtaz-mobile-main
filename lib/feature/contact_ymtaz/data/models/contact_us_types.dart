@@ -9,7 +9,7 @@ class ContactUsTypes {
   @JsonKey(name: "message")
   String? message;
   @JsonKey(name: "data")
-  Data? data;
+  List<ContactType>? data;
   @JsonKey(name: "code")
   int? code;
 
@@ -24,20 +24,6 @@ class ContactUsTypes {
       _$ContactUsTypesFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContactUsTypesToJson(this);
-}
-
-@JsonSerializable()
-class Data {
-  @JsonKey(name: "contactTypes")
-  List<ContactType>? contactTypes;
-
-  Data({
-    this.contactTypes,
-  });
-
-  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DataToJson(this);
 }
 
 @JsonSerializable()

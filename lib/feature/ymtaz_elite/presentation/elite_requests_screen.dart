@@ -179,7 +179,7 @@ class EliteRequestsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        request.eliteServiceCategory?.name ?? '',
+                        request.serviceTitle ?? request.eliteServiceCategory?.name ?? '',
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,

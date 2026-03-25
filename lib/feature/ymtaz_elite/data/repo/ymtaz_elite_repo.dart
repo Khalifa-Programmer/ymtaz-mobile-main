@@ -11,10 +11,22 @@ import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_pricing_response.dar
 import '../model/elite_my_requests_model.dart';
 import '../model/elite_request_model.dart';
 
+import '../model/elite_consultants_response.dart';
+
 class YmtazEliteRepo {
   final ApiService _apiService;
 
   YmtazEliteRepo(this._apiService);
+
+  Future<ApiResult<EliteConsultantsResponse>> getEliteConsultants() async {
+    var token = CacheHelper.getData(key: 'token');
+    try {
+      var response = await _apiService.getEliteConsultants('Bearer $token');
+      return ApiResult.success(response);
+    } on DioException catch (error) {
+      return ApiResult.failure(error.response?.data);
+    }
+  }
 
   Future<ApiResult<EliteCategoryModel>> getEliteCategories() async {
     var token = CacheHelper.getData(key: 'token');

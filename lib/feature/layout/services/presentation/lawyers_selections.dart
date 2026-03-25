@@ -16,6 +16,7 @@ import '../../../../core/router/routes.dart';
 import '../../../../core/widgets/alerts.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/spacing.dart';
+import '../../../../core/widgets/breadcrumb_widget.dart';
 import '../../../../l10n/locale_keys.g.dart';
 import '../data/model/available_lawyers_for_service_model.dart';
 import '../logic/services_cubit.dart';
@@ -137,8 +138,11 @@ class LawyersSelections extends StatelessWidget {
                         }
 
                         final filteredLawyers = filteredData.map((e) => e.lawyer!).toList();
+                        final breadcrumbPath = '${getit<ServicesCubit>().selectedMainType?.name} > ${getit<ServicesCubit>().selectedSubService?.title}';
                         return ListView(
                           children: [
+                            BreadcrumbWidget(path: breadcrumbPath),
+                            verticalSpace(15.h),
                             _buildSearchAndFilter(),
                             ValueListenableBuilder(
                               valueListenable: selectedLawyers,

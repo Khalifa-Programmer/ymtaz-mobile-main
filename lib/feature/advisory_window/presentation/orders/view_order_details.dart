@@ -69,6 +69,8 @@ class ViewOrderDetails extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
+            verticalSpace(10.h),
+            _buildBreadcrumbSection(servicesRequirementsResponse),
             Container(
               padding: EdgeInsets.all(20.0.sp),
               margin: EdgeInsets.all(20.0.sp),
@@ -459,12 +461,21 @@ class ViewOrderDetails extends StatelessWidget {
                           verticalSpace(20.h),
                           CustomButton(
                             onPress: () async {
+                              int duration = 15;
+                              if (servicesRequirementsResponse.appointmentDuration != null) {
+                                if (servicesRequirementsResponse.appointmentDuration is int) {
+                                  duration = servicesRequirementsResponse.appointmentDuration;
+                                } else {
+                                  duration = int.tryParse(servicesRequirementsResponse.appointmentDuration.toString()) ?? 15;
+                                }
+                              }
+                              
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => VideoCallLobbyScreen(
-                                    durationMinutes: servicesRequirementsResponse.appointmentDuration ?? 15,
-                                    date: servicesRequirementsResponse.date ?? "الآن",
-                                    time: servicesRequirementsResponse.from ?? "",
+                                    durationMinutes: duration,
+                                    date: (servicesRequirementsResponse.date ?? "الآن").toString(),
+                                    time: (servicesRequirementsResponse.from ?? "").toString(),
                                   ),
                                 ),
                               );
@@ -579,6 +590,81 @@ class ViewOrderDetails extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (context) => AIAssistantBottomSheet(
         orderDetails: servicesRequirementsResponse,
+      ),
+    );
+  }
+
+  Widget _buildBreadcrumbSection(Reservation reservation) {
+    final parts = <String>[];
+    if (reservation.advisoryServicesSub?.generalCategory?.name != null) {
+      parts.add(reservation.advisoryServicesSub!.generalCategory!.name!);
+    }
+    if (reservation.advisoryServicesSub?.name != null) {
+      parts.add(reservation.advisoryServicesSub!.name!);
+    }
+    if (reservation.importance?.title != null) {
+      parts.add(reservation.importance!.title!);
+    }
+
+    if (parts.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: appColors.primaryColorYellow.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: appColors.primaryColorYellow.withOpacity(0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.route_rounded,
+                size: 16.sp,
+                color: appColors.primaryColorYellow,
+              ),
+              horizontalSpace(8.w),
+              Text(
+                "مسار الاستشارة المختارة",
+                style: TextStyles.cairo_14_bold.copyWith(
+                  color: appColors.blue100,
+                  fontSize: 13.sp,
+                ),
+              ),
+            ],
+          ),
+          verticalSpace(8.h),
+          Wrap(
+            spacing: 4.w,
+            runSpacing: 4.h,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: List.generate(parts.length * 2 - 1, (i) {
+              if (i.isOdd) {
+                return Icon(
+                  Icons.arrow_back_ios,
+                  size: 10.sp,
+                  color: appColors.grey15,
+                );
+              }
+              final index = i ~/ 2;
+              return Text(
+                parts[index],
+                style: TextStyles.cairo_14_semiBold.copyWith(
+                  color: index == parts.length - 1
+                      ? appColors.primaryColorYellow
+                      : appColors.blue100,
+                  fontSize: 12.sp,
+                ),
+              );
+            }),
+          ),
+        ],
       ),
     );
   }

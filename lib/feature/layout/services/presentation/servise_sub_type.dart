@@ -16,6 +16,7 @@ import '../../../../core/widgets/alerts.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/moyasar_payment_screen.dart';
 import '../../../../core/widgets/new_payment_success.dart';
+import '../../../../core/widgets/breadcrumb_widget.dart';
 import '../../../../core/widgets/spacing.dart';
 import '../../../../core/widgets/webpay_new.dart';
 import '../logic/services_cubit.dart';
@@ -83,14 +84,15 @@ class _ServicesSubTypeScreenState extends State<ServicesSubTypeScreen> {
               padding: EdgeInsets.symmetric(horizontal: 10.0.w),
               child: ListView(
                 children: [
+                  BreadcrumbWidget(path: widget.items.name ?? ''),
                   verticalSpace(20.h),
                   Text(
-                    "تخصص الخدمة العام",
+                    "تخصص الخدمة الدقيق",
                     style: TextStyles.cairo_14_bold,
                   ),
                   verticalSpace(5.h),
                   Text(
-                    "اختر التخصص الذي ترغب فيه للحصول على الخدمات المتاحة",
+                    "اختر التخصص الدقيق الذي ترغب فيه للحصول على الخدمات المتاحة",
                     style: TextStyles.cairo_12_semiBold
                         .copyWith(color: appColors.grey15),
                   ),

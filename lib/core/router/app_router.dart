@@ -674,7 +674,10 @@ class AppRouter {
         ));
 
       case Routes.elitePromo:
-        return _getFadeTransition(const ElitePromoScreen());
+        return _getFadeTransition(BlocProvider.value(
+          value: getit<YmtazEliteCubit>(),
+          child: const ElitePromoScreen(),
+        ));
 
 
       case Routes.learningPathHome:

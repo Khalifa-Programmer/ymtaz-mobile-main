@@ -145,6 +145,10 @@ if (userType == null) {
 
   response.when(
     success: (contactYmtazResponse) {
+      subject.clear();
+      details.clear();
+      attachments = null;
+      contactUsTypeId = null;
       emit(ContactYmtazState.successSendMessage(contactYmtazResponse));
     },
     failure: (fail) {

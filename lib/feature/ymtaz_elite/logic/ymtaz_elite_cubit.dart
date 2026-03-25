@@ -8,6 +8,7 @@ import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_lawyer_section/mod
 
 import '../data/model/elite_my_requests_model.dart';
 import '../data/model/elite_request_model.dart';
+import '../data/model/elite_consultants_response.dart';
 import '../data/model/elite_pricing_requests_model.dart';
 import '../data/models/elite_service_item.dart';
 
@@ -21,6 +22,21 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
   int? selectedCategoryId;
   PendingPricing? selectedRequest;
   final Map<String, EliteServiceItem> _addedServices = {};
+  EliteConsultantsResponse? eliteConsultantsData;
+
+  Future<void> getEliteConsultants() async {
+    emit(YmtazEliteConsultantsLoading());
+    final result = await _ymtazEliteRepo.getEliteConsultants();
+    result.when(
+      success: (data) {
+        eliteConsultantsData = data;
+        emit(YmtazEliteConsultantsSuccess(data));
+      },
+      failure: (error) {
+        emit(YmtazEliteConsultantsError(error.toString()));
+      },
+    );
+  }
 
   Future<void> getCategories() async {
     emit(YmtazEliteLoading());

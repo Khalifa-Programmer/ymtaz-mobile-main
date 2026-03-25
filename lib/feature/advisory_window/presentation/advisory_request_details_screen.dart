@@ -11,6 +11,7 @@ import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/core/di/dependency_injection.dart';
 import 'package:yamtaz/core/widgets/primary/text_form_primary.dart';
 import 'package:yamtaz/feature/advisory_window/presentation/widgets/selections_level.dart';
+import 'package:yamtaz/core/widgets/breadcrumb_widget.dart';
 
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
@@ -149,13 +150,27 @@ class _AdvisoryRequestDetailsScreenState
         final advisoryCubit = getit<AdvisoryCubit>();
         final selectedAccurateData = advisoryCubit.selectedAccurateData;
         final selectedLevel = advisoryCubit.selectedLevel;
-        if (selectedAccurateData == null ) {
-          return Center(child: Text("No accurate data or level selected"));
+        if (selectedAccurateData == null) {
+          return Center(child: Text("No accurate data selected"));
         }
+
+        final parts = <String>[];
+        if (advisoryCubit.selectedAdvisoryItem?.name != null) {
+          parts.add(advisoryCubit.selectedAdvisoryItem!.name!);
+        }
+        if (advisoryCubit.selectedGeneralData?.name != null) {
+          parts.add(advisoryCubit.selectedGeneralData!.name!);
+        }
+        if (selectedAccurateData.name != null) {
+          parts.add(selectedAccurateData.name!);
+        }
+        final breadcrumbPath = parts.join(' > ');
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              BreadcrumbWidget(path: breadcrumbPath),
+              verticalSpace(15.h),
               Text(
                 "تفاصيل طلبك",
                 style: TextStyles.cairo_14_bold,

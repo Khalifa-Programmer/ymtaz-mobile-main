@@ -319,6 +319,7 @@ class ApiConstants {
   static const elitePricingRequests = "v1/elite/pricing-requests";
   static const elitePricingRequestReply = "v1/elite/pricing-requests/reply";
   static const eliteApproveOffer = "v1/elite/offers/{id}/approve";
+  static const eliteConsultants = "v1/elite-consultants";
 
   // Learning Paths
   static const learningPaths = "v1/learning-paths";

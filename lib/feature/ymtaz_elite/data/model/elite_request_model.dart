@@ -36,6 +36,8 @@ class Data {
   String? eliteServiceCategoryId;
   @JsonKey(name: "description")
   String? description;
+  @JsonKey(name: "service_title")
+  String? serviceTitle;
   @JsonKey(name: "transaction_complete")
   dynamic transactionComplete;
   @JsonKey(name: "transaction_id")
@@ -50,6 +52,7 @@ class Data {
     this.accountId,
     this.eliteServiceCategoryId,
     this.description,
+    this.serviceTitle,
     this.transactionComplete,
     this.transactionId,
     this.status,

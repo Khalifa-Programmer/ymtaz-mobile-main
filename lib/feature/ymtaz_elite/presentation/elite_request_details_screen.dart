@@ -442,7 +442,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                        (widget.request.offers?.serviceSubPrice ?? 0) +
                        (widget.request.offers?.reservationPrice ?? 0);
     
-    final serviceName = widget.request.eliteServiceCategory?.name ?? "طلب خدمة النخبة";
+    final serviceName = widget.request.serviceTitle ?? widget.request.eliteServiceCategory?.name ?? "طلب خدمة النخبة";
 
     return InkWell(
       onTap: () => _showOfferOptionsBottomSheet(),
@@ -979,7 +979,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.request.eliteServiceCategory?.name ?? "قضية جنائية",
+            widget.request.serviceTitle ?? widget.request.eliteServiceCategory?.name ?? "طلب خدمة النخبة",
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,

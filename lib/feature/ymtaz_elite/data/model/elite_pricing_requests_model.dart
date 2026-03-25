@@ -49,6 +49,8 @@ class PendingPricing {
   EliteServiceCategory? eliteServiceCategory;
   @JsonKey(name: "description")
   String? description;
+  @JsonKey(name: "service_title")
+  String? serviceTitle;
   @JsonKey(name: "transaction_complete")
   int? transactionComplete;
   @JsonKey(name: "transaction_id")
@@ -67,6 +69,7 @@ class PendingPricing {
     this.accountId,
     this.eliteServiceCategory,
     this.description,
+    this.serviceTitle,
     this.transactionComplete,
     this.transactionId,
     this.status,

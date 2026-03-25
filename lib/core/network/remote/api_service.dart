@@ -114,6 +114,7 @@ import '../../../feature/package_and_subscriptions/data/model/packages_subscribe
 import '../../../feature/ymtaz_elite/data/model/elite_category_model.dart';
 import '../../../feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
 import '../../../feature/ymtaz_elite/data/model/elite_request_model.dart';
+import '../../../feature/ymtaz_elite/data/model/elite_consultants_response.dart';
 import '../../../feature/ymtaz_elite/data/model/elite_pricing_requests_model.dart';
 import '../../../feature/advisory_committees/data/model/advisory_committees_lawyers_response.dart';
 import '../../../feature/advisory_committees/data/model/advisory_committees_response.dart';
@@ -840,6 +841,11 @@ abstract class ApiService {
     @Header('Authorization') String token,
     @Path('id') String offerId,
     @Body() Map<String, String> body,
+  );
+  
+  @GET(ApiConstants.eliteConsultants)
+  Future<EliteConsultantsResponse> getEliteConsultants(
+    @Header('Authorization') String token,
   );
 
   @GET(ApiConstants.learningPaths)

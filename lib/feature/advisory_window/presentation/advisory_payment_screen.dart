@@ -10,6 +10,7 @@ import 'package:yamtaz/core/di/dependency_injection.dart';
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/widgets/spacing.dart';
+import '../../../core/widgets/breadcrumb_widget.dart';
 import '../../../core/widgets/moyasar_payment_screen.dart';
 import '../../../core/widgets/new_payment_success.dart';
 import '../../../core/widgets/webpay_new.dart';
@@ -75,9 +76,22 @@ class AdvisoryPaymentScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        final parts = <String>[];
+        if (cubit.selectedAdvisoryItem?.name != null) {
+          parts.add(cubit.selectedAdvisoryItem!.name!);
+        }
+        if (cubit.selectedGeneralData?.name != null) {
+          parts.add(cubit.selectedGeneralData!.name!);
+        }
+        if (cubit.selectedAccurateData?.name != null) {
+          parts.add(cubit.selectedAccurateData!.name!);
+        }
+        final breadcrumbPath = parts.join(' > ');
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            BreadcrumbWidget(path: breadcrumbPath),
+            verticalSpace(15.h),
             Text(
               "مراجعة طلبك",
               style: TextStyles.cairo_14_bold,

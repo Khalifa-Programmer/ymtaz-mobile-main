@@ -26,6 +26,7 @@ class AdvisoryCubit extends Cubit<AdvisoryState> {
   int selectedGeneralType = 0;
   int selectedAccurateType = 0;
   SubCategory? selectedAccurateData;
+  AdvisoriesGeneralData? selectedGeneralData;
   lawyer.Datum? selectedLawyer;
   Item? selectedAdvisoryItem;
 
@@ -68,6 +69,7 @@ class AdvisoryCubit extends Cubit<AdvisoryState> {
     isInstant = false;
     showVisualOptions = false;
     selectedGeneralType = 0;
+    selectedGeneralData = null;
     selectedAccurateType = 0;
     selectedAccurateData = null;
     selectedLawyer = null;

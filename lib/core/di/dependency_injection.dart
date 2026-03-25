@@ -78,7 +78,7 @@ Future<void> setGetIt() async {
 
   getit
       .registerLazySingleton<ContactYmtazRepo>(() => ContactYmtazRepo(getit()));
-  getit.registerFactory<ContactYmtazCubit>(() => ContactYmtazCubit(getit()));
+  getit.registerLazySingleton<ContactYmtazCubit>(() => ContactYmtazCubit(getit()));
 
   getit
       .registerLazySingleton<DigitalGuideRepo>(() => DigitalGuideRepo(getit()));

@@ -18,6 +18,7 @@ import 'package:yamtaz/core/widgets/custom_button.dart';
 import 'package:yamtaz/core/widgets/custom_container.dart';
 import 'package:yamtaz/core/widgets/primary/text_form_primary.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
+import 'package:yamtaz/core/widgets/breadcrumb_widget.dart';
 import 'package:yamtaz/feature/my_appointments/data/model/working_hours_response.dart';
 import 'package:yamtaz/feature/my_appointments/logic/appointments_state.dart';
 import 'package:yamtaz/feature/my_appointments/presentation/select_appointment_screen.dart';
@@ -164,20 +165,22 @@ class _AppointmentDataState extends State<AppointmentData> {
                       return _buildMainType();
                     },
                     fallback: (BuildContext context) {
+                      final selectedItem = widget.reservationsType != null
+                          ? widget.reservationsType!
+                          : context
+                              .read<AppointmentsCubit>()
+                              .datesTypesResponse!
+                              .data!
+                              .reservationsTypes![widget.selectedMainTypeIndex];
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 16, horizontal: 16),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildAppointmentDetails(
-                                widget.reservationsType != null
-                                    ? widget.reservationsType!
-                                    : context
-                                            .read<AppointmentsCubit>()
-                                            .datesTypesResponse!
-                                            .data!
-                                            .reservationsTypes![
-                                        widget.selectedMainTypeIndex]),
+                            BreadcrumbWidget(path: selectedItem.name ?? ''),
+                            verticalSpace(15.h),
+                            _buildAppointmentDetails(selectedItem),
                             verticalSpace(20.h),
                             CustomButton(
                               title: "التالي",

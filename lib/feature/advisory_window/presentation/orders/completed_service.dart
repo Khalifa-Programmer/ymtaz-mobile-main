@@ -130,6 +130,7 @@ class CompletedAdvisory extends StatelessWidget {
                                       .advisoryServicesSub!
                                       .generalCategory!
                                       .name!,
+                                  servicePath: _buildAdvisoryPath(getit<AdvisoryCubit>().advisoriesResponseDigital!.data!.reservations![index]),
                                 ),
                               ),
                             );
@@ -157,5 +158,16 @@ class CompletedAdvisory extends StatelessWidget {
         },
       ),
     );
+  }
+
+  String? _buildAdvisoryPath(dynamic reservation) {
+    final parts = <String>[];
+    if (reservation.advisoryServicesSub?.generalCategory?.name != null) {
+      parts.add(reservation.advisoryServicesSub!.generalCategory!.name!);
+    }
+    if (reservation.advisoryServicesSub?.name != null) {
+      parts.add(reservation.advisoryServicesSub!.name!);
+    }
+    return parts.length > 1 ? parts.join(' > ') : null;
   }
 }

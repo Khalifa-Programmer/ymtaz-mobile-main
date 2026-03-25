@@ -9,6 +9,7 @@ import 'package:yamtaz/feature/layout/services/presentation/widgets/no_data_serv
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/widgets/spacing.dart';
+import '../../../core/widgets/breadcrumb_widget.dart';
 import '../logic/advisory_cubit.dart';
 
 class AdvisoryGeneralType extends StatelessWidget {
@@ -41,6 +42,8 @@ class AdvisoryGeneralType extends StatelessWidget {
               ),
             );
           }
+          final cubit = context.read<AdvisoryCubit>();
+          final breadcrumbPath = cubit.selectedAdvisoryItem?.name ?? '';
           return Animate(
             effects: [FadeEffect(duration: 500.ms)],
             child: SingleChildScrollView(
@@ -48,6 +51,8 @@ class AdvisoryGeneralType extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  BreadcrumbWidget(path: breadcrumbPath),
+                  verticalSpace(15.h),
                   Text(
                     "التخصص العام",
                     style: TextStyles.cairo_14_bold,
@@ -70,6 +75,8 @@ class AdvisoryGeneralType extends StatelessWidget {
                         onPressed: () {
                           context.read<AdvisoryCubit>().selectedGeneralType =
                               specialization.id!;
+                          context.read<AdvisoryCubit>().selectedGeneralData =
+                              specialization;
                           context.read<AdvisoryCubit>().nextStep();
                         },
                         index: index,

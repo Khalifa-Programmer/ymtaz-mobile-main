@@ -18,6 +18,7 @@ class AdvisoryServiceCard extends StatelessWidget {
   final String type;
 
   final String generalType;
+  final String? servicePath;
 
   const AdvisoryServiceCard({
     super.key,
@@ -31,6 +32,7 @@ class AdvisoryServiceCard extends StatelessWidget {
     required this.providerImage,
     required this.type,
     required this.generalType,
+    this.servicePath,
   });
 
   @override
@@ -77,6 +79,34 @@ class AdvisoryServiceCard extends StatelessWidget {
               )
             ],
           ),
+          // مسار الاختيار (Breadcrumb)
+          if ((servicePath != null && servicePath!.isNotEmpty) || (generalType.isNotEmpty)) ...[
+            verticalSpace(8.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: appColors.primaryColorYellow.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(8.r),
+                border: Border.all(
+                  color: appColors.primaryColorYellow.withOpacity(0.25),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.route_rounded,
+                    size: 14.sp,
+                    color: appColors.primaryColorYellow,
+                  ),
+                  horizontalSpace(6.w),
+                  Expanded(
+                    child: _buildBreadcrumb(servicePath ?? "$generalType > $serviceName"),
+                  ),
+                ],
+              ),
+            ),
+          ],
           verticalSpace(10.h),
           Row(
             children: [
@@ -186,4 +216,35 @@ class AdvisoryServiceCard extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildBreadcrumb(String path) {
+    final parts = path.split(' > ');
+    return Wrap(
+      spacing: 2.w,
+      runSpacing: 2.h,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: List.generate(parts.length * 2 - 1, (i) {
+        if (i.isOdd) {
+          return Icon(
+            Icons.arrow_back_ios,
+            size: 9.sp,
+            color: appColors.grey15,
+          );
+        }
+        final partIndex = i ~/ 2;
+        return Text(
+          parts[partIndex],
+          style: TextStyles.cairo_12_semiBold.copyWith(
+            color: partIndex == parts.length - 1
+                ? appColors.primaryColorYellow
+                : appColors.blue100,
+            fontWeight: partIndex == parts.length - 1
+                ? FontWeight.bold
+                : FontWeight.w600,
+          ),
+        );
+      }),
+    );
+  }
 }
+

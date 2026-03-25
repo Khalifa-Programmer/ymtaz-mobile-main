@@ -82,7 +82,19 @@ class ReqestsAppointmentsDone extends StatelessWidget {
         providerImage: request.lawyer!.image == null
             ? 'https://api.ymtaz.sa/uploads/person.png'
             : request.lawyer!.image!,
+        servicePath: _buildAppointmentDonePath(request),
       ),
     );
+  }
+
+  String? _buildAppointmentDonePath(Accepted request) {
+    final parts = <String>[];
+    if (request.reservationImportance?.title != null && request.reservationImportance!.title!.isNotEmpty) {
+      parts.add(request.reservationImportance!.title!);
+    }
+    if (request.reservationType?.name != null && request.reservationType!.name!.isNotEmpty) {
+      parts.add(request.reservationType!.name!);
+    }
+    return parts.length > 1 ? parts.join(' > ') : null;
   }
 }

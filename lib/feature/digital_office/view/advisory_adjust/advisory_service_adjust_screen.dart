@@ -126,6 +126,7 @@ class AdvisorySeviceAdjustScreen extends StatelessWidget {
                             color: appColors.black,
                           ),
                         ),
+                        const SizedBox(height: 8),
                         serviceData.description != null
                             ? Text(
                                 "الوصف : ${serviceData.description ?? "لا يوجد"}",
@@ -238,6 +239,49 @@ class AdvisorySeviceAdjustScreen extends StatelessWidget {
                                 ? "تعديل الاستشارة"
                                 : "تخصيص الاستشارة",
                             onPress: () {
+                              // التحقق من أن جميع المستويات تحتوي على id صحيح
+                              final prices = serviceDataNew!.isActivated == true
+                                  ? serviceDataNew!.lawyerPrices
+                                  : serviceData.ymtazPrices;
+                              if (prices == null || prices.isEmpty) {
+                                AppAlerts.showAlert(
+                                    context: context,
+                                    message: "لا توجد مستويات متاحة لهذه الاستشارة",
+                                    buttonText: "حسناً",
+                                    type: AlertType.error);
+                                return;
+                              }
+                              bool hasNullLevel = false;
+                              for (int i = 0; i < prices.length; i++) {
+                                if (prices[i].level?.id == null) {
+                                  hasNullLevel = true;
+                                  break;
+                                }
+                              }
+                              if (hasNullLevel) {
+                                AppAlerts.showAlert(
+                                    context: context,
+                                    message:
+                                        "يوجد مستوى بدون معرف صحيح، يرجى التواصل مع الدعم الفني",
+                                    buttonText: "حسناً",
+                                    type: AlertType.error);
+                                return;
+                              }
+                              final controllers = context
+                                  .read<OfficeProviderCubit>()
+                                  .textEditingControllers;
+                              for (int i = 0; i < prices.length; i++) {
+                                if (i >= controllers.length ||
+                                    controllers[i].text.isEmpty) {
+                                  AppAlerts.showAlert(
+                                      context: context,
+                                      message: "يرجى إدخال السعر لجميع المستويات",
+                                      buttonText: "حسناً",
+                                      type: AlertType.error);
+                                  return;
+                                }
+                              }
+
                               Map<String, dynamic> data = {
                                 "sub_category_id": serviceData.id,
                               };
@@ -411,7 +455,7 @@ class _PriceDataState extends State<PriceData> {
         Expanded(
           flex: 2,
           child: Text(
-            widget.data[widget.index].level!.name!,
+            widget.data[widget.index].level?.name ?? "مستوى ${widget.index + 1}",
             style: TextStyles.cairo_12_semiBold.copyWith(
               color: appColors.black,
             ),

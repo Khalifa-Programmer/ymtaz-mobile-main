@@ -13,6 +13,7 @@ import '../../../core/widgets/spacing.dart';
 import '../../layout/account/presentation/guest_screen.dart';
 import '../logic/advisory_cubit.dart';
 import 'advisory_general_type_shimmer.dart';
+import '../../../core/widgets/breadcrumb_widget.dart';
 
 class AdvisoryAccurateType extends StatelessWidget {
   const AdvisoryAccurateType({super.key});
@@ -39,12 +40,23 @@ class AdvisoryAccurateType extends StatelessWidget {
               ),
             );
           }
+          final cubit = context.read<AdvisoryCubit>();
+          final parts = <String>[];
+          if (cubit.selectedAdvisoryItem?.name != null) {
+            parts.add(cubit.selectedAdvisoryItem!.name!);
+          }
+          if (cubit.selectedGeneralData?.name != null) {
+            parts.add(cubit.selectedGeneralData!.name!);
+          }
+          final breadcrumbPath = parts.join(' > ');
           return Animate(
             effects: [FadeEffect(duration: 500.ms)],
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  BreadcrumbWidget(path: breadcrumbPath),
+                  verticalSpace(15.h),
                   Text(
                     "التخصص الدقيق",
                     style: TextStyles.cairo_14_bold,

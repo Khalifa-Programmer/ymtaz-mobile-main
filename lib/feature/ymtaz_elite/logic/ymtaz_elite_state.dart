@@ -130,3 +130,23 @@ final class YmtazEliteRepricingError extends YmtazEliteState {
   @override
   List<Object> get props => [message];
 }
+
+final class YmtazEliteConsultantsLoading extends YmtazEliteState {}
+
+final class YmtazEliteConsultantsSuccess extends YmtazEliteState {
+  final EliteConsultantsResponse response;
+
+  const YmtazEliteConsultantsSuccess(this.response);
+
+  @override
+  List<Object> get props => [response];
+}
+
+final class YmtazEliteConsultantsError extends YmtazEliteState {
+  final String message;
+
+  const YmtazEliteConsultantsError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

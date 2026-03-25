@@ -80,6 +80,7 @@ class ViewOfferScreen extends StatelessWidget {
               child: Column(
                 children: [
                   verticalSpace(110.h),
+                  _buildBreadcrumbSection(offer),
                   _buildDetailsContainer(context, "تفاصيل الخدمة", [
                     _buildDetailRow(FontAwesomeIcons.ticket, "نوع الخدمة",
                         offer.service!.title!),
@@ -164,6 +165,78 @@ class ViewOfferScreen extends StatelessWidget {
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildBreadcrumbSection(Offer offer) {
+    final parts = <String>[];
+    if (offer.priority?.title != null && offer.priority!.title!.isNotEmpty) {
+      parts.add(offer.priority!.title!);
+    }
+    if (offer.service?.title != null && offer.service!.title!.isNotEmpty) {
+      parts.add(offer.service!.title!);
+    }
+
+    if (parts.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      margin: EdgeInsets.symmetric(horizontal: 17.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: appColors.primaryColorYellow.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: appColors.primaryColorYellow.withOpacity(0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.route_rounded,
+                size: 16.sp,
+                color: appColors.primaryColorYellow,
+              ),
+              horizontalSpace(8.w),
+              Text(
+                "مسار النوع المختار",
+                style: TextStyles.cairo_14_bold.copyWith(
+                  color: appColors.blue100,
+                  fontSize: 13.sp,
+                ),
+              ),
+            ],
+          ),
+          verticalSpace(8.h),
+          Wrap(
+            spacing: 4.w,
+            runSpacing: 4.h,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: List.generate(parts.length * 2 - 1, (i) {
+              if (i.isOdd) {
+                return Icon(
+                  Icons.arrow_back_ios,
+                  size: 10.sp,
+                  color: appColors.grey15,
+                );
+              }
+              final index = i ~/ 2;
+              return Text(
+                parts[index],
+                style: TextStyles.cairo_14_semiBold.copyWith(
+                  color: index == parts.length - 1
+                      ? appColors.primaryColorYellow
+                      : appColors.blue100,
+                  fontSize: 12.sp,
+                ),
+              );
+            }),
+          ),
+        ],
       ),
     );
   }

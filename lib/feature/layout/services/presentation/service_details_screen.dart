@@ -10,6 +10,7 @@ import 'package:yamtaz/core/helpers/extentions.dart';
 import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/feature/layout/services/logic/services_state.dart';
 import 'package:yamtaz/feature/layout/services/presentation/widgets/select_price_component.dart';
+import '../../../../core/widgets/breadcrumb_widget.dart';
 
 import '../../../../config/themes/styles.dart';
 import '../../../../core/constants/assets.dart';
@@ -125,8 +126,10 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                 return Center(
                     child: Text("No accurate data or level selected"));
               }
+              final breadcrumbPath = '${selectedAccurateData.name} > ${serviseCubit.selectedSubService?.title}';
               return ListView(
                 children: [
+                  BreadcrumbWidget(path: breadcrumbPath),
                   verticalSpace(20.h),
 
                   Text(

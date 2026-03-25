@@ -88,7 +88,19 @@ class ReqestsScreen extends StatelessWidget {
         providerImage: request.lawyer?.image == null
             ? 'https://api.ymtaz.sa/uploads/person.png'
             : request.lawyer!.image!,
+        servicePath: _buildServicePath(request),
       ),
     );
+  }
+
+  String? _buildServicePath(Offer request) {
+    final parts = <String>[];
+    if (request.priority?.title != null && request.priority!.title!.isNotEmpty) {
+      parts.add(request.priority!.title!);
+    }
+    if (request.service?.title != null && request.service!.title!.isNotEmpty) {
+      parts.add(request.service!.title!);
+    }
+    return parts.length > 1 ? parts.join(' > ') : null;
   }
 }

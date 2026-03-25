@@ -6,120 +6,149 @@ import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/core/widgets/app_bar.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 
-class ElitePromoScreen extends StatelessWidget {
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
+import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_consultants_response.dart';
+import 'package:yamtaz/core/di/dependency_injection.dart';
+
+class ElitePromoScreen extends StatefulWidget {
   const ElitePromoScreen({super.key});
 
   @override
+  State<ElitePromoScreen> createState() => _ElitePromoScreenState();
+}
+
+class _ElitePromoScreenState extends State<ElitePromoScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getit<YmtazEliteCubit>().getEliteConsultants();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return BlocProvider.value(
+      value: getit<YmtazEliteCubit>(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
       appBar: buildBlurredAppBar(context, 'طلب لفريقك الاستشاري'),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Column(
-                  children: [
-                    verticalSpace(20.h),
-                    // Elite Badge
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFAF6E9),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.workspace_premium, color: const Color(0xFFD4AF37), size: 18.sp),
-                          horizontalSpace(8.w),
-                          Text(
-                            "نخبة",
-                            style: TextStyle(
-                              color: const Color(0xFFD4AF37),
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Cairo',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    verticalSpace(30.h),
-                    // Description 1
-                    Text(
-                      "توفر خدمة \"النخبة - فريقك الاستشاري\" تجربة مميزة من خلال تقديم حلول استشارية وتنفيذية شاملة تعتمد على التعاون بين نخبة من الخبراء والمستشارين باستخدام أحدث التقنيات لتحقيق رضا العملاء بأعلى معايير الجودة.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: const Color(0xFFB4B4B4),
-                        height: 1.6,
-                        fontFamily: 'Cairo',
-                      ),
-                    ),
-                    verticalSpace(30.h),
-                    // Triple Cards
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: BlocBuilder<YmtazEliteCubit, YmtazEliteState>(
+          builder: (context, state) {
+            if (state is YmtazEliteConsultantsLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final data = context.read<YmtazEliteCubit>().eliteConsultantsData?.data;
+
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Column(
                       children: [
-                        _buildStatCard("عدد المحامين", "4-5 محامي", Icons.groups),
-                        _buildStatCard("المدة", "2-10 أيام", Icons.access_time),
-                        _buildStatCard("السعر", "من 200 ر.س", Icons.style),
+                        verticalSpace(20.h),
+                        // Elite Badge
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFAF6E9),
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.workspace_premium, color: const Color(0xFFD4AF37), size: 18.sp),
+                              horizontalSpace(8.w),
+                              Text(
+                                "نخبة",
+                                style: TextStyle(
+                                  color: const Color(0xFFD4AF37),
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Cairo',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        verticalSpace(30.h),
+                        // Description 1 (Header from API)
+                        Text(
+                          data?.details?.header ?? "توفر خدمة \"النخبة - فريقك الاستشاري\" تجربة مميزة من خلال تقديم حلول استشارية وتنفيذية شاملة تعتمد على التعاون بين نخبة من الخبراء والمستشارين باستخدام أحدث التقنيات لتحقيق رضا العملاء بأعلى معايير الجودة.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: const Color(0xFFB4B4B4),
+                            height: 1.6,
+                            fontFamily: 'Cairo',
+                          ),
+                        ),
+                        verticalSpace(30.h),
+                        // Triple Cards (Statistics from API)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildStatCard("عدد المحامين", "${data?.statistics?.lawyersCount ?? '4-5'} محامي", Icons.groups),
+                            _buildStatCard("المدة", "${data?.statistics?.duration ?? '2-10'} أيام", Icons.access_time),
+                            _buildStatCard("السعر", "من ${data?.statistics?.price ?? '200'} ر.س", Icons.style),
+                          ],
+                        ),
+                        verticalSpace(30.h),
+                        // Description 2 (Footer from API)
+                        Text(
+                          data?.details?.footer ?? "توفر خدمة \"النخبة - فريقك الاستشاري\" تجربة مميزة من خلال تقديم حلول استشارية وتنفيذية شاملة تعتمد على التعاون بين نخبة من الخبراء والمستشارين باستخدام أحدث التقنيات لتحقيق رضا العملاء بأعلى معايير الجودة.",
+                          textAlign: TextAlign.justify,
+                          textDirection: TextDirection.rtl,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: const Color(0xFFB4B4B4),
+                            height: 1.8,
+                            fontFamily: 'Cairo',
+                          ),
+                        ),
+                        verticalSpace(20.h),
                       ],
                     ),
-                    verticalSpace(30.h),
-                    // Description 2 (Repeated in image)
-                    Text(
-                      "توفر خدمة \"النخبة - فريقك الاستشاري\" تجربة مميزة من خلال تقديم حلول استشارية وتنفيذية شاملة تعتمد على التعاون بين نخبة من الخبراء والمستشارين باستخدام أحدث التقنيات لتحقيق رضا العملاء بأعلى معايير الجودة. توفر خدمة \"النخبة - فريقك الاستشاري\" تجربة مميزة من خلال تقديم حلول استشارية وتنفيذية شاملة تعتمد على التعاون بين نخبة من الخبراء والمستشارين باستخدام أحدث التقنيات لتحقيق رضا العملاء بأعلى معايير الجودة. توفر خدمة \"النخبة - فريقك الاستشاري\" تجربة مميزة من خلال تقديم حلول استشارية وتنفيذية شاملة تعتمد على التعاون بين نخبة من الخبراء والمستشارين باستخدام أحدث التقنيات لتحقيق رضا العملاء بأعلى معايير الجودة.",
-                      textAlign: TextAlign.justify,
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: const Color(0xFFB4B4B4),
-                        height: 1.8,
-                        fontFamily: 'Cairo',
+                  ),
+                ),
+                // Bottom Button
+                Padding(
+                  padding: EdgeInsets.all(20.w),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.pushReplacementNamed(Routes.eliteRequestScreen);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFD4AF37),
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      ),
+                      child: Text(
+                        "اطلب الآن",
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontFamily: 'Cairo',
+                        ),
                       ),
                     ),
-                    verticalSpace(20.h),
-                  ],
-                ),
-              ),
-            ),
-            // Bottom Button
-            Padding(
-              padding: EdgeInsets.all(20.w),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.pushReplacementNamed(Routes.eliteRequestScreen);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFD4AF37),
-                    padding: EdgeInsets.symmetric(vertical: 16.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                  ),
-                  child: Text(
-                    "اطلب الآن",
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontFamily: 'Cairo',
-                    ),
                   ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildStatCard(String title, String value, IconData icon) {
     return Container(
