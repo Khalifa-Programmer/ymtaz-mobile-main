@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:yamtaz/core/di/dependency_injection.dart';
+import 'package:yamtaz/core/widgets/rank_icon.dart';
 
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
@@ -290,20 +291,7 @@ class AdvisoryPaymentScreen extends StatelessWidget {
             child: CircleAvatar(
               radius: 10.sp,
               backgroundColor: appColors.white,
-              child: CachedNetworkImage(
-                imageUrl: lawyer.currentRank?.image ?? '',
-                width: 12.0.w,
-                height: 12.0.h,
-                placeholder: (context, url) => SizedBox(
-                    width: 12.w,
-                    height: 12.h,
-                    child: const CircularProgressIndicator(strokeWidth: 2)),
-                errorWidget: (context, url, error) => SvgPicture.asset(
-                  AppAssets.rank,
-                  width: 12.0.w,
-                  height: 12.0.h,
-                ),
-              ),
+              child: RankIcon(imageUrl: lawyer.currentRank?.image, size: 12),
             ),
           ),
         ),

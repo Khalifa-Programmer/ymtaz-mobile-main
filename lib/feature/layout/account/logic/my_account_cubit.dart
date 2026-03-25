@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -77,7 +78,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
         },
         failure: (fail) {
           emit(MyAccountState.errorGetAccountExperience(
-            error: extractErrors(fail['data']),
+            error: extractErrors(fail),
           ));
         },
       );
@@ -94,7 +95,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       emit(MyAccountState.successGetAccountExperience(responseModel));
     }, failure: (fail) {
       emit(MyAccountState.errorGetAccountExperience(
-          error: extractErrors(fail['data'])));
+          error: extractErrors(fail)));
     });
   }
 
@@ -116,7 +117,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       emit(MyAccountState.successGetPayoutIban(responseModel));
     }, failure: (fail) {
       emit(MyAccountState.errorGetPayoutIban(
-          error: extractErrors(fail['data'])));
+          error: extractErrors(fail)));
     });
   }
 
@@ -128,7 +129,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       emit(MyAccountState.successGetPayoutIban(responseModel));
     }, failure: (fail) {
       emit(MyAccountState.errorGetPayoutIban(
-          error: extractErrors(fail['data'])));
+          error: extractErrors(fail)));
     });
   }
 
@@ -139,7 +140,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       emit(MyAccountState.successSignUpProviderOtp(responseModel));
     }, failure: (fail) {
       emit(MyAccountState.errorSignUpProviderOtp(
-          error: extractErrors(fail['data'])));
+          error: extractErrors(fail)));
     });
   }
 
@@ -332,6 +333,34 @@ class MyAccountCubit extends Cubit<MyAccountState> {
   String accountTypeValueName = "";
 
   Future<void> loadApiData() async {
+    // 1. Try to load from cache first
+    try {
+      final cachedCountries = CacheHelper.getData(key: 'cached_countries');
+      final cachedNationalities = CacheHelper.getData(key: 'cached_nationalities');
+
+      if (cachedCountries != null) {
+        countries = CountriesResponse.fromJson(jsonDecode(cachedCountries));
+      }
+      if (cachedNationalities != null) {
+        nationalities = NationalitiesResponse.fromJson(jsonDecode(cachedNationalities));
+      }
+
+      // If both are available from cache, we can avoid the API call for a faster UI
+      if (countries != null && nationalities != null) {
+        emit(const MyAccountState.loadDataSuccess());
+        // Still fetch from API in the background to ensure data is up-to-date
+        _fetchAndCacheData();
+        return;
+      }
+    } catch (e) {
+      debugPrint("Error loading from cache: $e");
+    }
+
+    // 2. Fetch from API if cache missed or failed
+    await _fetchAndCacheData();
+  }
+
+  Future<void> _fetchAndCacheData() async {
     try {
       List<ApiResult<dynamic>> results =
           await _myAccountRepo.fetchAllDataRequest();
@@ -341,13 +370,16 @@ class MyAccountCubit extends Cubit<MyAccountState> {
           success: (data) {
             if (data is CountriesResponse) {
               countries = data;
+              CacheHelper.saveData(key: 'cached_countries', value: jsonEncode(data.toJson()));
             } else if (data is NationalitiesResponse) {
               nationalities = data;
+              CacheHelper.saveData(key: 'cached_nationalities', value: jsonEncode(data.toJson()));
             }
           },
           failure: (error) {},
         );
       }
+      emit(const MyAccountState.loadDataSuccess());
     } catch (error) {}
   }
 
@@ -452,7 +484,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       },
       failure: (error) {
         emit(MyAccountState.errorEditClient(
-            error: extractErrors(error['data'])));
+            error: extractErrors(error)));
       },
     );
   }
@@ -485,13 +517,18 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       }
     }
 
-    // 2. Check for top-level 'message' field
+    // 2. Check for nested 'data' field (some of our older APIs use this)
+    if (errorData['data'] != null && errorData['data'] is Map<String, dynamic>) {
+      return extractErrors(errorData['data']);
+    }
+
+    // 3. Check for top-level 'message' field
     if (errorData['message'] != null &&
         errorData['message'].toString().isNotEmpty) {
       return errorData['message'].toString();
     }
 
-    // 3. Fallback to a generic error message
+    // 4. Fallback to a generic error message
     return 'حدث خطأ ما مراجعة البيانات';
   }
 

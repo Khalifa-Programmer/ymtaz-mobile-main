@@ -141,6 +141,35 @@ class HomeCubit extends Cubit<HomeState> {
   ];
   List<HomeModel> homeDataLawyer = [
     HomeModel(
+        title: LocaleKeys.consultationWindow.tr(),
+        description: LocaleKeys.consultationWindow.tr(),
+        route: Routes.advisoryScreen,
+        icon: SvgPicture.asset(
+          AppAssets.advisories,
+          width: 30.sp,
+          height: 30.sp,
+        )),
+
+    HomeModel(
+        title: LocaleKeys.servicesPortal.tr(),
+        description: LocaleKeys.servicesPortal.tr(),
+        route: Routes.services,
+        icon: SvgPicture.asset(
+          AppAssets.services,
+          width: 30.sp,
+          height: 30.sp,
+        )),
+
+    HomeModel(
+        title: LocaleKeys.appointments.tr(),
+        description: LocaleKeys.appointments.tr(),
+        route: Routes.appointmentYmatz,
+        icon: SvgPicture.asset(
+          AppAssets.appointments,
+          width: 30.sp,
+          height: 30.sp,
+        )),
+    HomeModel(
         title: "هيئة المستشارين",
         description: "هيئة المستشارين",
         route: Routes.advisoryCommitteesScreen,

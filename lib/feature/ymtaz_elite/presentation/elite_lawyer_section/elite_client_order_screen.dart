@@ -271,6 +271,44 @@ class EliteClientOrderScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 16.h),
                     Text(
+                      'اسم العميل',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: Colors.grey[500],
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    Text(
+                      request.effectiveAccount?.fullName != null && request.effectiveAccount!.fullName.isNotEmpty 
+                        ? request.effectiveAccount!.fullName 
+                        : "",
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF0F2D37),
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      'عنوان الطلب',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: Colors.grey[500],
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    Text(
+                      request.serviceTitle ?? '',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF0F2D37),
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
                       'نوع الخدمة المطلوبة',
                       style: TextStyle(
                         fontSize: 13.sp,

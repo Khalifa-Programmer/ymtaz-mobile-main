@@ -324,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen> {
               gender: userGender,
               name: userName ?? "زائر",
               color: appColors.primaryColorYellow,
-              image: "https://api.ymtaz.sa/uploads/ranks/BrownShield.svg",
+              image: AppAssets.rank,
             );
           },
           fallback: (BuildContext context) => const SizedBox(),
@@ -333,12 +333,12 @@ class _HomeScreenState extends State<HomeScreen> {
           condition: userType == 'guest',
 
           builder: (BuildContext context) =>
-          const UserProfileRow(
+          UserProfileRow(
             imageUrl:
             "https://e7.pngegg.com/pngimages/141/425/png-clipart-user-profile-computer-icons-avatar-profile-s-free-angle-rectangle-thumbnail.png",
             name: "ضيفنا الكريم",
             color: appColors.primaryColorYellow,
-            image: "https://api.ymtaz.sa/uploads/ranks/BrownShield.svg",
+            image: AppAssets.rank,
           ),
           fallback: (BuildContext context) => const SizedBox(),
         ),

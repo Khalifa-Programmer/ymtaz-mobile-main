@@ -22,66 +22,79 @@ class AnalyticsCard extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       child: Row(
         children: [
-          horizontalSpace(10.w),
           PolarChart(data),
-          horizontalSpace(70.w),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 10.w,
-                    height: 10.h,
-                    decoration: BoxDecoration(
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.circular(3.r),
+          const Spacer(),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 10.w,
+                      height: 10.h,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(3.r),
+                      ),
                     ),
-                  ),
-                  horizontalSpace(5.w),
-                  Text('منتظر',
-                      style: TextStyle(
-                          fontSize: 12.sp, fontWeight: FontWeight.bold)),
-                ],
-              ),
-              verticalSpace(5.h),
-              Row(
-                children: [
-                  Container(
-                    width: 10.w,
-                    height: 10.h,
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(3.r),
+                    horizontalSpace(5.w),
+                    Flexible(
+                      child: Text('منتظر',
+                          style: TextStyle(
+                              fontSize: 10.sp, fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis),
                     ),
-                  ),
-                  horizontalSpace(5.w),
-                  Text('تم الانتهاء',
-                      style: TextStyle(
-                          fontSize: 12.sp, fontWeight: FontWeight.bold)),
-                ],
-              ),
-              verticalSpace(5.h),
-              Row(
-                children: [
-                  Container(
-                    width: 10.w,
-                    height: 10.h,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(3.r),
+                  ],
+                ),
+                verticalSpace(5.h),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 10.w,
+                      height: 10.h,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(3.r),
+                      ),
                     ),
-                  ),
-                  horizontalSpace(5.w),
-                  Text('متأخر',
-                      style: TextStyle(
-                          fontSize: 12.sp, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ],
+                    horizontalSpace(5.w),
+                    Flexible(
+                      child: Text('تم الانتهاء',
+                          style: TextStyle(
+                              fontSize: 10.sp, fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                  ],
+                ),
+                verticalSpace(5.h),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 10.w,
+                      height: 10.h,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(3.r),
+                      ),
+                    ),
+                    horizontalSpace(5.w),
+                    Flexible(
+                      child: Text('متأخر',
+                          style: TextStyle(
+                              fontSize: 10.sp, fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          horizontalSpace(50.w),
+          const Spacer(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -99,7 +112,6 @@ class AnalyticsCard extends StatelessWidget {
                       TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold)),
             ],
           ),
-          // SHOW DATA FROM POLAR CHART WITH COLOR
         ],
       ),
     );
@@ -121,66 +133,79 @@ class AnalyticsTotalCard extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       child: Row(
         children: [
-          horizontalSpace(10.w),
           PolarChart(data),
-          horizontalSpace(70.w),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 10.w,
-                    height: 10.h,
-                    decoration: BoxDecoration(
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.circular(3.r),
+          const Spacer(),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 10.w,
+                      height: 10.h,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(3.r),
+                      ),
                     ),
-                  ),
-                  horizontalSpace(5.w),
-                  Text('الخدمات',
-                      style: TextStyle(
-                          fontSize: 12.sp, fontWeight: FontWeight.bold)),
-                ],
-              ),
-              verticalSpace(5.h),
-              Row(
-                children: [
-                  Container(
-                    width: 10.w,
-                    height: 10.h,
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(3.r),
+                    horizontalSpace(5.w),
+                    Flexible(
+                      child: Text('الخدمات',
+                          style: TextStyle(
+                              fontSize: 10.sp, fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis),
                     ),
-                  ),
-                  horizontalSpace(5.w),
-                  Text('الاستشارات',
-                      style: TextStyle(
-                          fontSize: 12.sp, fontWeight: FontWeight.bold)),
-                ],
-              ),
-              verticalSpace(5.h),
-              Row(
-                children: [
-                  Container(
-                    width: 10.w,
-                    height: 10.h,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(3.r),
+                  ],
+                ),
+                verticalSpace(5.h),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 10.w,
+                      height: 10.h,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(3.r),
+                      ),
                     ),
-                  ),
-                  horizontalSpace(5.w),
-                  Text('المواعيد',
-                      style: TextStyle(
-                          fontSize: 12.sp, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ],
+                    horizontalSpace(5.w),
+                    Flexible(
+                      child: Text('الاستشارات',
+                          style: TextStyle(
+                              fontSize: 10.sp, fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                  ],
+                ),
+                verticalSpace(5.h),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 10.w,
+                      height: 10.h,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(3.r),
+                      ),
+                    ),
+                    horizontalSpace(5.w),
+                    Flexible(
+                      child: Text('المواعيد',
+                          style: TextStyle(
+                              fontSize: 10.sp, fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          horizontalSpace(50.w),
+          const Spacer(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -198,7 +223,6 @@ class AnalyticsTotalCard extends StatelessWidget {
                       TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold)),
             ],
           ),
-          // SHOW DATA FROM POLAR CHART WITH COLOR
         ],
       ),
     );

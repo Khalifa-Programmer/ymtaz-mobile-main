@@ -10,9 +10,9 @@ PointsRules _$PointsRulesFromJson(Map<String, dynamic> json) => PointsRules(
       status: json['status'] as bool?,
       code: (json['code'] as num?)?.toInt(),
       message: json['message'] as String?,
-      data: json['data'] == null
-          ? null
-          : Data.fromJson(json['data'] as Map<String, dynamic>),
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) => Activity.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$PointsRulesToJson(PointsRules instance) =>

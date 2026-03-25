@@ -35,7 +35,7 @@ class VisitorAccountScreen extends StatelessWidget {
                       imageUrl: userImage ?? "https://api.ymtaz.sa/uploads/person.png",
                       name: userName ?? "زائر",
                       color: appColors.primaryColorYellow,
-                      image: "https://api.ymtaz.sa/uploads/ranks/BrownShield.svg",
+                      image: AppAssets.rank,
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,

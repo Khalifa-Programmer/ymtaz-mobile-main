@@ -133,7 +133,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       emit(SignUpState.successSignUpProviderOtp(responseModel));
     }, failure: (fail) {
       emit(SignUpState.errorSignUpProviderOtp(
-          error: extractErrors(fail['data'])));
+          error: extractErrors(fail)));
     });
   }
 
@@ -566,9 +566,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       emit(SignUpState.successEditProvider(response));
     }, failure: (fail) {
       emit(SignUpState.errorEditProvider(
-          error: fail['data'] != null
-              ? extractErrors(fail['data'])
-              : fail['message']));
+          error: extractErrors(fail)));
     });
   }
 
@@ -593,7 +591,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     response.when(success: (signupResponse) {
       emit(SignUpState.successSignUpProvider(signupResponse));
     }, failure: (fail) {
-      emit(SignUpState.errorSignUpProvider(error: extractErrors(fail['data'])));
+      emit(SignUpState.errorSignUpProvider(error: extractErrors(fail)));
     });
   }
 
@@ -607,9 +605,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       emit(SignUpState.success(signupResponse));
     }, failure: (fail) {
       emit(SignUpState.error(
-          error: fail['data'] != null
-              ? extractErrors(fail['data'])
-              : fail['message']));
+          error: extractErrors(fail)));
     });
   }
 
@@ -621,7 +617,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     response.when(success: (verify) {
       emit(SignUpState.successVerify(verify));
     }, failure: (fail) {
-      emit(SignUpState.errorVerify(error: extractErrors(fail['data'])));
+      emit(SignUpState.errorVerify(error: extractErrors(fail)));
     });
   }
 
@@ -1007,13 +1003,18 @@ class SignUpCubit extends Cubit<SignUpState> {
       }
     }
 
-    // 2. Check for top-level 'message' field
+    // 2. Check for nested 'data' field
+    if (errorData['data'] != null && errorData['data'] is Map<String, dynamic>) {
+      return extractErrors(errorData['data']);
+    }
+
+    // 3. Check for top-level 'message' field
     if (errorData['message'] != null &&
         errorData['message'].toString().isNotEmpty) {
       return errorData['message'].toString();
     }
 
-    // 3. Fallback to a generic error message
+    // 4. Fallback to a generic error message
     return 'حدث خطأ ما مراجعة البيانات';
   }
 

@@ -61,12 +61,23 @@ class PendingPricing {
   String? createdAt;
   @JsonKey(name: "files")
   List<FileElement>? files;
+  @JsonKey(name: "account")
+  Account? account;
+  @JsonKey(name: "client")
+  Account? client;
+  @JsonKey(name: "user")
+  Account? user;
   @JsonKey(name: "offers")
   dynamic offers;
+
+  Account? get effectiveAccount => account ?? client ?? user;
 
   PendingPricing({
     this.id,
     this.accountId,
+    this.account,
+    this.client,
+    this.user,
     this.eliteServiceCategory,
     this.description,
     this.serviceTitle,
@@ -133,4 +144,41 @@ class FileElement {
   factory FileElement.fromJson(Map<String, dynamic> json) => _$FileElementFromJson(json);
 
   Map<String, dynamic> toJson() => _$FileElementToJson(this);
+}
+
+@JsonSerializable()
+class Account {
+  @JsonKey(name: "id")
+  dynamic id;
+  @JsonKey(name: "name")
+  String? name;
+  @JsonKey(name: "first_name")
+  String? firstName;
+  @JsonKey(name: "second_name")
+  String? secondName;
+  @JsonKey(name: "third_name")
+  String? thirdName;
+  @JsonKey(name: "fourth_name")
+  String? fourthName;
+
+  Account({
+    this.id,
+    this.name,
+    this.firstName,
+    this.secondName,
+    this.thirdName,
+    this.fourthName,
+  });
+
+  String get fullName {
+    if (name != null && name!.isNotEmpty) return name!;
+    final names = [firstName, secondName, thirdName, fourthName]
+        .where((n) => n != null && n.toString().isNotEmpty)
+        .join(' ');
+    return names.isNotEmpty ? names : "";
+  }
+
+  factory Account.fromJson(Map<String, dynamic> json) => _$AccountFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AccountToJson(this);
 }

@@ -40,6 +40,15 @@ PendingPricing _$PendingPricingFromJson(Map<String, dynamic> json) =>
     PendingPricing(
       id: (json['id'] as num?)?.toInt(),
       accountId: json['account_id'] as String?,
+      account: json['account'] == null
+          ? null
+          : Account.fromJson(json['account'] as Map<String, dynamic>),
+      client: json['client'] == null
+          ? null
+          : Account.fromJson(json['client'] as Map<String, dynamic>),
+      user: json['user'] == null
+          ? null
+          : Account.fromJson(json['user'] as Map<String, dynamic>),
       eliteServiceCategory: json['elite_service_category'] == null
           ? null
           : EliteServiceCategory.fromJson(
@@ -68,6 +77,9 @@ Map<String, dynamic> _$PendingPricingToJson(PendingPricing instance) =>
       'status': instance.status,
       'created_at': instance.createdAt,
       'files': instance.files,
+      'account': instance.account,
+      'client': instance.client,
+      'user': instance.user,
       'offers': instance.offers,
     };
 
@@ -108,4 +120,22 @@ Map<String, dynamic> _$FileElementToJson(FileElement instance) =>
       'file': instance.file,
       'is_voice': instance.isVoice,
       'is_reply': instance.isReply,
+    };
+
+Account _$AccountFromJson(Map<String, dynamic> json) => Account(
+      id: json['id'],
+      name: json['name'] as String?,
+      firstName: json['first_name'] as String?,
+      secondName: json['second_name'] as String?,
+      thirdName: json['third_name'] as String?,
+      fourthName: json['fourth_name'] as String?,
+    );
+
+Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'first_name': instance.firstName,
+      'second_name': instance.secondName,
+      'third_name': instance.thirdName,
+      'fourth_name': instance.fourthName,
     };

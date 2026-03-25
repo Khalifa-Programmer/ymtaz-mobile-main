@@ -35,13 +35,13 @@ class GamificationRulesPage extends StatelessWidget {
                 child: ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: rules.data?.activities?.length ?? 0,
+                  itemCount: rules.data?.length ?? 0,
                   itemBuilder: (BuildContext context, int index) {
                     return _buildTaskItem(
                       points: int.parse(
-                          rules.data!.activities![index].experiencePoints!),
+                          rules.data![index].experiencePoints!),
                       title: "تكتسب نقاط عند",
-                      subtitle: rules.data!.activities![index].name!,
+                      subtitle: rules.data![index].name!,
                       index: index,
                     );
                   },

@@ -634,6 +634,37 @@ class SeeMyProfileProvider extends StatelessWidget {
                                   Row(
                                     children: [
                                       Icon(
+                                        Icons.phone_rounded,
+                                        color: appColors.primaryColorYellow,
+                                        size: 20.sp,
+                                      ),
+                                      horizontalSpace(10.w),
+                                      Text(
+                                        "رقم الجوال",
+                                        style: TextStyles.cairo_12_semiBold
+                                            .copyWith(color: appColors.grey15),
+                                      ),
+                                      const Spacer(),
+                                      Expanded(
+                                        child: Text(
+                                          (myAccountCubit.userDataResponse!.data!.account!.phone != null &&
+                                                  myAccountCubit.userDataResponse!.data!.account!.phone!.isNotEmpty &&
+                                                  myAccountCubit.userDataResponse!.data!.account!.phone!.toLowerCase() != 'null')
+                                              ? '${myAccountCubit.userDataResponse!.data!.account!.phoneCode ?? ''} ${myAccountCubit.userDataResponse!.data!.account!.phone!}'
+                                              : '-',
+                                          style: TextStyles.cairo_12_semiBold
+                                              .copyWith(color: appColors.blue100),
+                                          textAlign: TextAlign.end,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  verticalSpace(20.h),
+                                  Row(
+                                    children: [
+                                      Icon(
                                         Icons.date_range_sharp,
                                         color: appColors.primaryColorYellow,
                                         size: 20.sp,

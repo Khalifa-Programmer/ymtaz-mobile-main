@@ -128,16 +128,21 @@ class _EliteClientsRequestsState extends State<EliteClientsRequests> {
                   child: Icon(Icons.person, size: 20.r, color: appColors.grey),
                 ),
                 horizontalSpace(10.w),
-                Text(
-                  "طلب من عميل",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF0F2D37),
-                    fontFamily: 'Cairo',
+                Expanded(
+                  child: Text(
+                    request.effectiveAccount?.fullName != null && request.effectiveAccount!.fullName.isNotEmpty 
+                      ? "طلب من: ${request.effectiveAccount!.fullName}" 
+                      : "طلب من عميل",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF0F2D37),
+                      fontFamily: 'Cairo',
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
                 ),
-                const Spacer(),
                 Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: appColors.grey15,
@@ -151,6 +156,15 @@ class _EliteClientsRequestsState extends State<EliteClientsRequests> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      "عنوان الطلب",
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: appColors.grey15,
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    verticalSpace(5.h),
                     Text(
                       "نوع الطلب",
                       style: TextStyle(
@@ -175,6 +189,18 @@ class _EliteClientsRequestsState extends State<EliteClientsRequests> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        request.serviceTitle ?? '',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF0F2D37),
+                          fontFamily: 'Cairo',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      verticalSpace(5.h),
                       Text(
                         request.eliteServiceCategory?.name ?? '',
                         style: TextStyle(

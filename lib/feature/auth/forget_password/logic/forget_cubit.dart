@@ -100,31 +100,46 @@ class ForgetCubit extends Cubit<ForgetState> {
     });
   }
 
-  String extractErrors(Map<String, dynamic>? errorData) {
-    if (errorData == null || !errorData.containsKey('data')) {
-      return 'حدث خطأ ما يرجى مراجعة البيانات';
+  String extractErrors(dynamic errorData) {
+    if (errorData == null) return 'حدث خطأ ما مراجعة البيانات';
+
+    if (errorData is! Map<String, dynamic>) {
+      return errorData.toString();
     }
 
-    final data = errorData['data'] as Map<String, dynamic>?;
+    // 1. Check if 'errors' exists and is a map (typical Laravel structure)
+    final errorsMap = errorData['errors'] as Map<String, dynamic>?;
+    if (errorsMap != null && errorsMap.isNotEmpty) {
+      final errorMessages = <String>[];
 
-    if (data == null || !data.containsKey('errors')) {
-      return 'حدث خطأ ما يرجى مراجعة البيانات';
-    }
+      // Iterate through each field and collect its error messages
+      errorsMap.forEach((field, messages) {
+        if (messages is List && messages.isNotEmpty) {
+          final formattedMessages =
+              messages.map((msg) => msg.toString()).join('\n');
+          errorMessages.add(formattedMessages);
+        } else if (messages is String) {
+          errorMessages.add(messages);
+        }
+      });
 
-    final errorsMap = data['errors'] as Map<String, dynamic>?;
-
-    if (errorsMap == null || errorsMap.isEmpty) {
-      return 'حدث خطأ ما يرجى مراجعة البيانات';
-    }
-
-    final errorMessages = <String>[];
-    errorsMap.forEach((field, messages) {
-      if (messages is List && messages.isNotEmpty) {
-        final formattedMessages = messages.map((msg) => ' $msg').join('\n');
-        errorMessages.add(formattedMessages);
+      if (errorMessages.isNotEmpty) {
+        return errorMessages.join('\n');
       }
-    });
+    }
 
-    return errorMessages.join('\n');
+    // 2. Check for nested 'data' field
+    if (errorData['data'] != null && errorData['data'] is Map<String, dynamic>) {
+      return extractErrors(errorData['data']);
+    }
+
+    // 3. Check for top-level 'message' field
+    if (errorData['message'] != null &&
+        errorData['message'].toString().isNotEmpty) {
+      return errorData['message'].toString();
+    }
+
+    // 4. Fallback to a generic error message
+    return 'حدث خطأ ما مراجعة البيانات';
   }
 }

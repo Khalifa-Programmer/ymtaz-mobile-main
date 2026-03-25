@@ -640,6 +640,52 @@ class SeeMyProfileClient extends StatelessWidget {
                                           Row(
                                             children: [
                                               Icon(
+                                                Icons.phone_rounded,
+                                                color: appColors
+                                                    .primaryColorYellow,
+                                                size: 20.sp,
+                                              ),
+                                              horizontalSpace(10.w),
+                                              Text(
+                                                "رقم الجوال",
+                                                style: TextStyles
+                                                    .cairo_14_semiBold
+                                                    .copyWith(
+                                                        color: appColors.grey5),
+                                              ),
+                                              Spacer(),
+                                              Text(
+                                                (myAccountCubit.clientProfile!
+                                                                .data!.account!
+                                                                .phone !=
+                                                            null &&
+                                                        myAccountCubit
+                                                            .clientProfile!
+                                                            .data!
+                                                            .account!
+                                                            .phone!
+                                                            .isNotEmpty &&
+                                                        myAccountCubit
+                                                                .clientProfile!
+                                                                .data!
+                                                                .account!
+                                                                .phone!
+                                                                .toLowerCase() !=
+                                                            'null')
+                                                    ? '${myAccountCubit.clientProfile!.data!.account!.phoneCode ?? ''} ${myAccountCubit.clientProfile!.data!.account!.phone!}'
+                                                    : '-',
+                                                style: TextStyles
+                                                    .cairo_14_semiBold
+                                                    .copyWith(
+                                                        color:
+                                                            appColors.blue100),
+                                              ),
+                                            ],
+                                          ),
+                                          verticalSpace(20.h),
+                                          Row(
+                                            children: [
+                                              Icon(
                                                 Icons.date_range_rounded,
                                                 color: appColors
                                                     .primaryColorYellow,
@@ -669,6 +715,7 @@ class SeeMyProfileClient extends StatelessWidget {
                                             ],
                                           ),
                                           verticalSpace(20.h),
+
                                         ],
                                       ),
                                     )

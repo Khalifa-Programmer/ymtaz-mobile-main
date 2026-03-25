@@ -393,157 +393,64 @@ class PointsGamificationScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // verticalSpace(20.h),
-                      // ListView(
-                      //   padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      //   shrinkWrap: true,
-                      //   physics: const NeverScrollableScrollPhysics(),
-                      //   children: [
-                      //     Text(
-                      //       "المهام",
-                      //       style: TextStyles.cairo_14_bold,
-                      //     ),
-                      //     verticalSpace(10.h),
-                      //     Container(
-                      //       decoration: ShapeDecoration(
-                      //         color: Colors.white,
-                      //         shadows: [
-                      //           BoxShadow(
-                      //             color: Colors.black12.withOpacity(0.04),
-                      //             // Shadow color
-                      //             spreadRadius: 3,
-                      //             // Spread radius
-                      //             blurRadius: 10,
-                      //             // Blur radius
-                      //             offset:
-                      //             const Offset(0, 3), // Offset in x and y direction
-                      //           ),
-                      //         ],
-                      //         shape: RoundedRectangleBorder(
-                      //           // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
-                      //
-                      //           borderRadius: BorderRadius.circular(4.r),
-                      //         ),
-                      //       ),
-                      //       child: ListTile(
-                      //         shape: RoundedRectangleBorder(
-                      //           borderRadius: BorderRadius.circular(10),
-                      //         ),
-                      //         title: Text(
-                      //           'اطلب',
-                      //           style: TextStyles.cairo_12_semiBold.copyWith(
-                      //             color: appColors.grey20,
-                      //           ),
-                      //         ),
-                      //         subtitle: Text(
-                      //           'توكيل محام',
-                      //           style: TextStyles.cairo_12_bold.copyWith(
-                      //             color: appColors.blue100,
-                      //           ),
-                      //         ),
-                      //         trailing: Text(
-                      //           '
-                      //           100 نقطة',
-                      //           style: TextStyles.cairo_14_bold.copyWith(
-                      //             color: appColors.primaryColorYellow,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //     verticalSpace(10.h),
-                      //     Container(
-                      //       decoration: ShapeDecoration(
-                      //         color: Colors.white,
-                      //         shadows: [
-                      //           BoxShadow(
-                      //             color: Colors.black12.withOpacity(0.04),
-                      //             // Shadow color
-                      //             spreadRadius: 3,
-                      //             // Spread radius
-                      //             blurRadius: 10,
-                      //             // Blur radius
-                      //             offset:
-                      //             const Offset(0, 3), // Offset in x and y direction
-                      //           ),
-                      //         ],
-                      //         shape: RoundedRectangleBorder(
-                      //           // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
-                      //
-                      //           borderRadius: BorderRadius.circular(4.r),
-                      //         ),
-                      //       ),
-                      //       child: ListTile(
-                      //         shape: RoundedRectangleBorder(
-                      //           borderRadius: BorderRadius.circular(10),
-                      //         ),
-                      //         title: Text(
-                      //           'اطلب',
-                      //           style: TextStyles.cairo_12_semiBold.copyWith(
-                      //             color: appColors.grey20,
-                      //           ),
-                      //         ),
-                      //         subtitle: Text(
-                      //           'ترجمة عقد',
-                      //           style: TextStyles.cairo_12_bold.copyWith(
-                      //             color: appColors.blue100,
-                      //           ),
-                      //         ),
-                      //         trailing: Text(
-                      //           '100 نقطة',
-                      //           style: TextStyles.cairo_14_bold.copyWith(
-                      //             color: appColors.primaryColorYellow,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //     verticalSpace(10.h),
-                      //     Container(
-                      //       decoration: ShapeDecoration(
-                      //         color: Colors.white,
-                      //         shadows: [
-                      //           BoxShadow(
-                      //             color: Colors.black12.withOpacity(0.04),
-                      //             // Shadow color
-                      //             spreadRadius: 3,
-                      //             // Spread radius
-                      //             blurRadius: 10,
-                      //             // Blur radius
-                      //             offset:
-                      //             const Offset(0, 3), // Offset in x and y direction
-                      //           ),
-                      //         ],
-                      //         shape: RoundedRectangleBorder(
-                      //           // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
-                      //
-                      //           borderRadius: BorderRadius.circular(4.r),
-                      //         ),
-                      //       ),
-                      //       child: ListTile(
-                      //         shape: RoundedRectangleBorder(
-                      //           borderRadius: BorderRadius.circular(10),
-                      //         ),
-                      //         title: Text(
-                      //           'شارك',
-                      //           style: TextStyles.cairo_12_semiBold.copyWith(
-                      //             color: appColors.grey20,
-                      //           ),
-                      //         ),
-                      //         subtitle: Text(
-                      //           'شارك التطبيق',
-                      //           style: TextStyles.cairo_12_bold.copyWith(
-                      //             color: appColors.blue100,
-                      //           ),
-                      //         ),
-                      //         trailing: Text(
-                      //           '100 نقطة',
-                      //           style: TextStyles.cairo_14_bold.copyWith(
-                      //             color: appColors.primaryColorYellow,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
+                      verticalSpace(20.h),
+                      if (rules.data != null && rules.data!.isNotEmpty)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "المهام",
+                                style: TextStyles.cairo_14_bold,
+                              ),
+                              verticalSpace(10.h),
+                              ListView.separated(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: rules.data!.length,
+                                separatorBuilder: (context, index) => verticalSpace(10.h),
+                                itemBuilder: (context, index) {
+                                  final activity = rules.data![index];
+                                  return Container(
+                                    decoration: ShapeDecoration(
+                                      color: Colors.white,
+                                      shadows: [
+                                        BoxShadow(
+                                          color: Colors.black12.withOpacity(0.04),
+                                          spreadRadius: 3,
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 3),
+                                        ),
+                                      ],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.r),
+                                      ),
+                                    ),
+                                    child: ListTile(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.r),
+                                      ),
+                                      title: Text(
+                                        activity.name ?? '',
+                                        style: TextStyles.cairo_12_bold.copyWith(
+                                          color: appColors.blue100,
+                                        ),
+                                      ),
+                                      trailing: Text(
+                                        '${activity.experiencePoints ?? 0} نقطة خبرة',
+                                        style: TextStyles.cairo_14_bold.copyWith(
+                                          color: appColors.primaryColorYellow,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       verticalSpace(30.h),
                     ],
                   ),

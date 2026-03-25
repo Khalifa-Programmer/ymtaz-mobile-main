@@ -11,7 +11,7 @@ class PointsRules {
   @JsonKey(name: "message")
   String? message;
   @JsonKey(name: "data")
-  Data? data;
+  List<Activity>? data;
 
   PointsRules({
     this.status,

@@ -13,6 +13,7 @@ import '../../logic/my_page_state.dart';
 import '../../../../layout/services/presentation/widgets/no_data_services.dart';
 import 'package:yamtaz/feature/digital_office/view/client_profile_screen.dart';
 import 'package:yamtaz/feature/digital_office/data/models/my_clients_response.dart' as digital_office;
+import 'package:yamtaz/feature/layout/account/logic/my_account_cubit.dart';
 
 
 
@@ -41,25 +42,33 @@ class MyLawyers extends StatelessWidget {
             return state is LoadingMyClients
                 ? const Center(child: CircularProgressIndicator())
                 : state is LoadedMyClients
-                    ? state.data.data!.clients!.isEmpty
-                        ? NoProducts(text: 'عملاء')
-                        : ListView.separated(
-                            physics: const BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: state.data.data!.clients!.length,
-                            itemBuilder: (context, index) {
-                              return _buildCategoryItem(
-                                  state.data.data!.clients!, context, index);
-                            },
-                            separatorBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 5.h),
-                                child: const Divider(
-                                  thickness: 0.5,
-                                ),
+                    ? () {
+                        final currentUserId = getit<MyAccountCubit>().userDataResponse?.data?.account?.id ?? 
+                                             getit<MyAccountCubit>().clientProfile?.data?.account?.id;
+                        final filteredClients = state.data.data!.clients!.where(
+                          (client) => client.id.toString() != currentUserId.toString()
+                        ).toList();
+
+                        return filteredClients.isEmpty
+                            ? NoProducts(text: 'عملاء')
+                            : ListView.separated(
+                                physics: const BouncingScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: filteredClients.length,
+                                itemBuilder: (context, index) {
+                                  return _buildCategoryItem(
+                                      filteredClients, context, index);
+                                },
+                                separatorBuilder: (BuildContext context, int index) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 5.h),
+                                    child: const Divider(
+                                      thickness: 0.5,
+                                    ),
+                                  );
+                                },
                               );
-                            },
-                          )
+                      }()
                     : const Center(child: Text('error'));
           },
         ),

@@ -371,11 +371,11 @@ class _HomeScreenLawyerState extends State<HomeScreenLawyer> {
         ),
         ConditionalBuilder(
           condition: userType == 'guest',
-          builder: (BuildContext context) => const UserProfileRow(
+          builder: (BuildContext context) => UserProfileRow(
             imageUrl: "default",
             name: "ضيفنا الكريم",
             color: appColors.primaryColorYellow,
-            image: "https://api.ymtaz.sa/uploads/ranks/BrownShield.svg",
+            image: AppAssets.rank,
           ),
           fallback: (BuildContext context) => const SizedBox(),
         ),

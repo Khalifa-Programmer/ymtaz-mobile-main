@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/feature/digital_office/data/models/my_clients_response.dart';
+import 'package:yamtaz/feature/layout/account/logic/my_account_cubit.dart';
 import '../../../core/di/dependency_injection.dart';
 import '../../../core/widgets/spacing.dart';
 import '../logic/office_provider_cubit.dart';
@@ -39,25 +40,33 @@ class MyClients extends StatelessWidget {
             return state is LoadingMyClients
                 ? const Center(child: CircularProgressIndicator())
                 : state is LoadedMyClients
-                    ? state.data.data!.clients!.isEmpty
-                        ? NoProducts(text: 'عملاء')
-                        : ListView.separated(
-                            physics: const BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: state.data.data!.clients!.length,
-                            itemBuilder: (context, index) {
-                              return _buildCategoryItem(
-                                  state.data.data!.clients!, context, index);
-                            },
-                            separatorBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 5.h),
-                                child: const Divider(
-                                  thickness: 0.5,
-                                ),
+                    ? () {
+                        final currentUserId = getit<MyAccountCubit>().userDataResponse?.data?.account?.id ?? 
+                                             getit<MyAccountCubit>().clientProfile?.data?.account?.id;
+                        final filteredClients = state.data.data!.clients!.where(
+                          (client) => client.id.toString() != currentUserId.toString()
+                        ).toList();
+
+                        return filteredClients.isEmpty
+                            ? NoProducts(text: 'عملاء')
+                            : ListView.separated(
+                                physics: const BouncingScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: filteredClients.length,
+                                itemBuilder: (context, index) {
+                                  return _buildCategoryItem(
+                                      filteredClients, context, index);
+                                },
+                                separatorBuilder: (BuildContext context, int index) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 5.h),
+                                    child: const Divider(
+                                      thickness: 0.5,
+                                    ),
+                                  );
+                                },
                               );
-                            },
-                          )
+                      }()
                     : const Center(child: Text('error'));
           },
         ),

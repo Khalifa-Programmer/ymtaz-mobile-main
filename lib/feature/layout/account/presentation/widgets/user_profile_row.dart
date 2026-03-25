@@ -9,6 +9,7 @@ import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/l10n/locale_keys.g.dart';
 import 'package:yamtaz/core/constants/assets.dart';
 
+import 'package:yamtaz/core/widgets/rank_icon.dart';
 import '../../../../../config/themes/styles.dart';
 import '../../../../../core/network/local/cache_helper.dart';
 
@@ -79,36 +80,7 @@ class UserProfileColumn extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 10.sp,
                     backgroundColor: appColors.white,
-                    child: image.endsWith('.svg')
-                        ? SvgPicture.network(
-                            image,
-                            width: 12.0.w,
-                            height: 12.0.h,
-                            placeholderBuilder: (context) => SizedBox(
-                                width: 12.w,
-                                height: 12.h,
-                                child: const CircularProgressIndicator(strokeWidth: 2)),
-                            errorBuilder: (context, error, stackTrace) =>
-                                SvgPicture.asset(
-                              AppAssets.rank,
-                              width: 12.0.w,
-                              height: 12.0.h,
-                            ),
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: image,
-                            width: 12.0.w,
-                            height: 12.0.h,
-                            placeholder: (context, url) => SizedBox(
-                                width: 12.w,
-                                height: 12.h,
-                                child: const CircularProgressIndicator(strokeWidth: 2)),
-                            errorWidget: (context, url, error) => SvgPicture.asset(
-                              AppAssets.rank,
-                              width: 12.0.w,
-                              height: 12.0.h,
-                            ),
-                          ),
+                    child: RankIcon(imageUrl: image, size: 12),
                   ),
                 ),
               ),
@@ -236,84 +208,105 @@ class UserProfileRow extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 10.sp,
                     backgroundColor: appColors.white,
-                    child: image.endsWith('.svg')
-                        ? SvgPicture.network(
-                            image,
-                            width: 12.0.w,
-                            height: 12.0.h,
-                            placeholderBuilder: (context) => SizedBox(
-                                width: 12.w,
-                                height: 12.h,
-                                child: const CircularProgressIndicator(strokeWidth: 2)),
-                            errorBuilder: (context, error, stackTrace) =>
-                                SvgPicture.asset(
-                              AppAssets.rank,
-                              width: 12.0.w,
-                              height: 12.0.h,
-                            ),
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: image,
-                            width: 12.0.w,
-                            height: 12.0.h,
-                            placeholder: (context, url) => SizedBox(
-                                width: 12.w,
-                                height: 12.h,
-                                child: const CircularProgressIndicator(strokeWidth: 2)),
-                            errorWidget: (context, url, error) => SvgPicture.asset(
-                              AppAssets.rank,
-                              width: 12.0.w,
-                              height: 12.0.h,
-                            ),
-                          ),
+                    child: RankIcon(imageUrl: image, size: 12),
                   ),
                 ),
               ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.only(right: 8.w, left: 8.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      LocaleKeys.welcome.tr(),
-                      style: TextStyles.cairo_16_medium
-                          .copyWith(color: appColors.grey10),
-                    ),
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(name, style: TextStyles.cairo_16_bold),
-                    if (isVerified != null)
-                      isVerified == "blue"
-                          ? Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: Icon(
-                                Icons.verified,
-                                color: CupertinoColors.activeBlue,
-                                size: 16.sp,
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(right: 8.w, left: 8.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        LocaleKeys.welcome.tr(),
+                        style: TextStyles.cairo_16_medium
+                            .copyWith(color: appColors.grey10),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          name,
+                          style: TextStyles.cairo_16_bold,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                      if (isVerified != null)
+                        isVerified == "blue"
+                            ? Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                child: Icon(
+                                  Icons.verified,
+                                  color: CupertinoColors.activeBlue,
+                                  size: 16.sp,
+                                ),
+                              )
+                            : Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                child: Icon(
+                                  Icons.verified,
+                                  // gold color
+                                  color: const Color(0xffd0b101),
+                                  size: 16.sp,
+                                ),
                               ),
-                            )
-                          : Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: Icon(
-                                Icons.verified,
-                                // gold color
-                                color: Color(0xffd0b101),
-                                size: 16.sp,
-                              ),
-                            ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                  SizedBox(height: 3.h),
+                  _buildUserTypeBadge(userType),
+                ],
+              ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildUserTypeBadge(dynamic userType) {
+    String label;
+    Color bgColor;
+    Color textColor;
+
+    if (userType == 'provider') {
+      label = 'مقدم خدمة';
+      bgColor = Colors.green.withValues(alpha: 0.15);
+      textColor = Colors.green.shade700;
+    } else if (userType == 'client') {
+      label = 'طالب خدمة';
+      bgColor = Colors.blue.withValues(alpha: 0.12);
+      textColor = Colors.blue.shade700;
+    } else if (userType == 'guest') {
+      label = 'زائر';
+      bgColor = appColors.primaryColorYellow.withValues(alpha: 0.15);
+      textColor = appColors.primaryColorYellow;
+    } else {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.h),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(6.r),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 10.sp,
+          fontWeight: FontWeight.bold,
+          color: textColor,
+          fontFamily: 'Cairo',
+        ),
       ),
     );
   }

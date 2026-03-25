@@ -11,6 +11,7 @@ import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
 import 'package:yamtaz/core/helpers/fuctions_helpers/functions_helpers.dart';
 import 'package:yamtaz/core/widgets/app_bar.dart';
+import 'package:yamtaz/core/widgets/rank_icon.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/auth/login/data/models/login_provider_response.dart';
 import 'package:yamtaz/feature/digital_office/logic/office_provider_cubit.dart';
@@ -82,9 +83,12 @@ class _NewOfficeHomeState extends State<NewOfficeHome> {
           appBar: buildBlurredUserAppBar(context, 'الرئيسية'),
           body: SingleChildScrollView(
             child: ConditionalBuilder(
-              condition: getit<MyAccountCubit>().userDataResponse != null &&
+              condition: (getit<MyAccountCubit>().userDataResponse != null ||
+                  getit<MyAccountCubit>().clientProfile != null) &&
                   myOfficeResponseModel != null,
               builder: (BuildContext context) {
+                final _cubit = getit<MyAccountCubit>();
+                final _isProvider = _cubit.userDataResponse != null;
                 return Padding(
                   padding: EdgeInsets.all(20.r),
                   child: Column(
@@ -92,78 +96,78 @@ class _NewOfficeHomeState extends State<NewOfficeHome> {
                       SizedBox(height: 115.h),
                       CardComponent(),
                       SizedBox(height: 20.h),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BlocProvider.value(
-                                    value: getit<MyAccountCubit>(),
-                                    child: WorkExperienceScreen()),
-                              ));
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 15.h, horizontal: 20.w),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(15.r),
-                              bottomRight: Radius.circular(15.r),
-                              topLeft: Radius.circular(15.r),
-                              topRight: Radius.circular(15.r),
+                      // عناصر خاصة بمقدم الخدمة فقط
+                      if (_isProvider)
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider.value(
+                                      value: getit<MyAccountCubit>(),
+                                      child: WorkExperienceScreen()),
+                                ));
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 15.h, horizontal: 20.w),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(15.r),
+                                bottomRight: Radius.circular(15.r),
+                                topLeft: Radius.circular(15.r),
+                                topRight: Radius.circular(15.r),
+                              ),
+                              gradient: LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: [
+                                  appColors.primaryColorYellow.withOpacity(0.1),
+                                  appColors.lightYellow10.withOpacity(0.2),
+                                  Colors.orangeAccent.withOpacity(0.2),
+                                ],
+                              ),
                             ),
-                            gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: [
-                                appColors.primaryColorYellow.withOpacity(0.1),
-                                appColors.lightYellow10.withOpacity(0.2),
-                                Colors.orangeAccent.withOpacity(0.2),
+                            child: Row(
+                              children: [
+                                Icon(Icons.work,
+                                    color: appColors.blue100, size: 15.sp),
+                                horizontalSpace(10.w),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'الخبرات العملية',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: appColors.blue100,
+                                      ),
+                                    ),
+                                    Text(
+                                      'قم بإضافة خبراتك العملية لإظهارها في ملفك',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: appColors.blue100,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Spacer(),
+                                Icon(Icons.arrow_forward_ios,
+                                    color: appColors.blue100, size: 15.sp),
                               ],
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.work,
-                                  color: appColors.blue100, size: 15.sp),
-                              horizontalSpace(10.w),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'الخبرات العملية',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: appColors.blue100,
-                                    ),
-                                  ),
-                                  Text(
-                                    'قم بإضافة خبراتك العملية لإظهارها في ملفك',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: appColors.blue100,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Spacer(),
-                              Icon(Icons.arrow_forward_ios,
-                                  color: appColors.blue100, size: 15.sp),
-                            ],
-                          ),
                         ),
-                      ),
-                      SizedBox(height: 20.h),
+                      if (_isProvider) SizedBox(height: 20.h),
                       ProductsCard(),
                       SizedBox(height: 20.h),
                       LawyerPackageCard(
-                          package: getit<MyAccountCubit>()
-                              .userDataResponse!
-                              .data!
-                              .account!
-                              .package),
+                          package: _isProvider
+                              ? _cubit.userDataResponse!.data!.account!.package
+                              : _cubit.clientProfile?.data?.account?.package),
                       SizedBox(height: 20.h),
                       myOfficeResponseModel == null
                           ? Skeletonizer(
@@ -664,9 +668,36 @@ class CardComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = getit<MyAccountCubit>();
+    final isProvider = cubit.userDataResponse != null;
+    final isClient = cubit.clientProfile != null;
+
     return ConditionalBuilder(
-      condition: getit<MyAccountCubit>().userDataResponse != null,
+      condition: isProvider || isClient,
       builder: (BuildContext context) {
+        // بيانات مشتركة بين provider و client
+        final String rankImage = isProvider
+            ? cubit.userDataResponse!.data!.account!.currentRank!.image!.toString()
+            : cubit.clientProfile!.data!.account!.currentRank?.image ?? '';
+        final String rankName = isProvider
+            ? cubit.userDataResponse!.data!.account!.currentRank!.name!.toString()
+            : cubit.clientProfile!.data!.account!.currentRank?.name ?? '';
+        final int daysStreak = isProvider
+            ? cubit.userDataResponse!.data!.account!.daysStreak ?? 0
+            : cubit.clientProfile!.data!.account!.daysStreak ?? 0;
+        final int xp = isProvider
+            ? cubit.userDataResponse!.data!.account!.xp ?? 0
+            : cubit.clientProfile!.data!.account!.xp ?? 0;
+        final int points = isProvider
+            ? cubit.userDataResponse!.data!.account!.points ?? 0
+            : cubit.clientProfile!.data!.account!.points ?? 0;
+        final int currentLevel = isProvider
+            ? cubit.userDataResponse!.data!.account!.currentLevel ?? 0
+            : cubit.clientProfile!.data!.account!.currentLevel ?? 0;
+        final int xpUntilNextLevel = isProvider
+            ? cubit.userDataResponse!.data!.account!.xpUntilNextLevel ?? 0
+            : cubit.clientProfile!.data!.account!.xpUntilNextLevel ?? 0;
+
         return Container(
           width: 350.w,
           decoration: BoxDecoration(
@@ -689,35 +720,10 @@ class CardComponent extends StatelessWidget {
                 children: [
                   Column(
                     children: [
-                      CachedNetworkImage(
-                        imageUrl: getit<MyAccountCubit>()
-                            .userDataResponse!
-                            .data!
-                            .account!
-                            .currentRank!
-                            .image!
-                            .toString(),
-                        width: 30.0.w,
-                        height: 30.0.h,
-                        placeholder: (context, url) => SizedBox(
-                            width: 30.w,
-                            height: 30.h,
-                            child: const CircularProgressIndicator(strokeWidth: 2)),
-                        errorWidget: (context, url, error) => SvgPicture.asset(
-                          AppAssets.rank,
-                          width: 30.0.w,
-                          height: 30.0.h,
-                        ),
-                      ),
+                      RankIcon(imageUrl: rankImage, size: 30),
                       verticalSpace(5.h),
                       Text(
-                        getit<MyAccountCubit>()
-                            .userDataResponse!
-                            .data!
-                            .account!
-                            .currentRank!
-                            .name!
-                            .toString(),
+                        rankName,
                         style: TextStyle(
                           color: appColors.primaryColorYellow,
                           fontSize: 14,
@@ -728,34 +734,19 @@ class CardComponent extends StatelessWidget {
                   ),
                   Item(
                     icon: AppAssets.star,
-                    value: getit<MyAccountCubit>()
-                        .userDataResponse!
-                        .data!
-                        .account!
-                        .daysStreak
-                        .toString(),
+                    value: daysStreak.toString(),
                     label: 'يوم',
                     color: appColors.primaryColorYellow,
                   ),
                   Item(
                     icon: AppAssets.flash,
-                    value: getit<MyAccountCubit>()
-                        .userDataResponse!
-                        .data!
-                        .account!
-                        .xp
-                        .toString(),
+                    value: xp.toString(),
                     label: 'نقاط الخبرة',
                     color: appColors.primaryColorYellow,
                   ),
                   Item(
                     icon: AppAssets.target,
-                    value: getit<MyAccountCubit>()
-                        .userDataResponse!
-                        .data!
-                        .account!
-                        .points
-                        .toString(),
+                    value: points.toString(),
                     label: 'نقطة',
                     color: appColors.primaryColorYellow,
                   ),
@@ -770,37 +761,12 @@ class CardComponent extends StatelessWidget {
                         builder: (context) => BlocProvider.value(
                           value: getit<MyAccountCubit>()..getPointsRules(),
                           child: PointsGamificationScreen(
-                            daysStreak: getit<MyAccountCubit>()
-                                .userDataResponse!
-                                .data!
-                                .account!
-                                .daysStreak!,
-                            points: getit<MyAccountCubit>()
-                                .userDataResponse!
-                                .data!
-                                .account!
-                                .points!,
-                            xp: getit<MyAccountCubit>()
-                                .userDataResponse!
-                                .data!
-                                .account!
-                                .xp!,
-                            currentLevel: getit<MyAccountCubit>()
-                                .userDataResponse!
-                                .data!
-                                .account!
-                                .currentLevel!,
-                            currentRank: getit<MyAccountCubit>()
-                                .userDataResponse!
-                                .data!
-                                .account!
-                                .currentRank!
-                                .name!,
-                            xpUntilNextLevel: getit<MyAccountCubit>()
-                                .userDataResponse!
-                                .data!
-                                .account!
-                                .xpUntilNextLevel!,
+                            daysStreak: daysStreak,
+                            points: points,
+                            xp: xp,
+                            currentLevel: currentLevel,
+                            currentRank: rankName,
+                            xpUntilNextLevel: xpUntilNextLevel,
                           ),
                         ),
                       ));

@@ -170,6 +170,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
         listener: (context, state) {
           if (state is YmtazEliteOfferApprovalSuccess) {
             launchUrl(Uri.parse(state.paymentUrl), mode: LaunchMode.externalApplication);
+            Navigator.pop(context); // Return to requests list
           } else if (state is YmtazEliteOfferApprovalError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -978,23 +979,29 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.request.serviceTitle ?? widget.request.eliteServiceCategory?.name ?? "طلب خدمة النخبة",
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF0F2D37),
-              fontFamily: 'Cairo',
-            ),
-          ),
-          verticalSpace(4.h),
-          Text(
-            "${getDate(widget.request.createdAt)}  ${getTime(widget.request.createdAt!)}",
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: const Color(0xFFD4AF37),
-              fontFamily: 'Cairo',
-            ),
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.w),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFAF6E9),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Icon(Icons.gavel_rounded, color: const Color(0xFFD4AF37), size: 22.sp),
+              ),
+              horizontalSpace(12.w),
+              Expanded(
+                child: Text(
+                  widget.request.serviceTitle ?? widget.request.eliteServiceCategory?.name ?? "طلب خدمة النخبة",
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF0F2D37),
+                    fontFamily: 'Cairo',
+                  ),
+                ),
+              ),
+            ],
           ),
           verticalSpace(20.h),
           Divider(color: Colors.grey[50]),
@@ -1028,8 +1035,14 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
   }
 
   Widget _buildReplyTab() {
-    String replyDetailsText = widget.request.offers?.advisoryServiceSub?.description ?? widget.request.description ?? '';
-    if (replyDetailsText.isEmpty) replyDetailsText = "لا يوجد رد حتى الآن";
+    String replyDetailsText = widget.request.offers?.advisoryServiceSub?.description ?? '';
+    
+    if (widget.request.status == "pending-pricing" || 
+        (replyDetailsText.isEmpty && (widget.request.status == "قيد الدراسة" || widget.request.status == "قيد الانتظار"))) {
+      replyDetailsText = "الطلب قيد التسعير الآن، وسيتم الرد عليك قريباً من قبل فريق النخبة الاستشاري.";
+    } else if (replyDetailsText.isEmpty) {
+      replyDetailsText = "لا يوجد رد حتى الآن";
+    }
 
     // Collect reply files (isReply == 1)
     final replyFiles = widget.request.files?.where((f) => (f.isReply ?? 0) == 1).toList() ?? [];
@@ -1072,6 +1085,20 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                       style: TextStyle(fontSize: 11.sp, color: const Color(0xFFB4B4B4), fontFamily: 'Cairo'),
                     ),
                     _buildStatusTag(widget.request.status ?? "قيد الدراسة"),
+                  ],
+                ),
+                verticalSpace(12.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "تاريخ الطلب",
+                      style: TextStyle(fontSize: 11.sp, color: const Color(0xFFB4B4B4), fontFamily: 'Cairo'),
+                    ),
+                    Text(
+                      "${getDate(widget.request.createdAt)}  ${getTime(widget.request.createdAt!)}",
+                      style: TextStyle(fontSize: 12.sp, color: const Color(0xFF0F2D37), fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
+                    ),
                   ],
                 ),
                 verticalSpace(16.h),

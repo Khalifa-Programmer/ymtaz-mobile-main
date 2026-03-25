@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:yamtaz/core/widgets/rank_icon.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/core/widgets/app_bar.dart';
@@ -195,21 +196,7 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
                   child: CircleAvatar(
                     radius: 10.sp,
                     backgroundColor: appColors.white,
-                    child: CachedNetworkImage(
-                      imageUrl: lawyer.currentRank?.image ?? "",
-
-                      width: 12.0.w,
-                      height: 12.0.h,
-                      placeholder: (context, url) => SizedBox(
-                          width: 12.w,
-                          height: 12.h,
-                          child: const CircularProgressIndicator(strokeWidth: 2)),
-                      errorWidget: (context, url, error) => SvgPicture.asset(
-                        AppAssets.rank,
-                        width: 12.0.w,
-                        height: 12.0.h,
-                      ),
-                    ),
+                    child: RankIcon(imageUrl: lawyer.currentRank?.image, size: 12),
                   ),
                 ),
               ),

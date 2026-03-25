@@ -110,12 +110,10 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
 
   Future<void> getMyClients() async {
     emit(const OfficeProviderState.loadingMyClients());
-    String id = getit
-        .get<MyAccountCubit>()
-        .userDataResponse!
-        .data!
-        .account!
-        .id
+    final cubit = getit.get<MyAccountCubit>();
+    // يدعم كلا النوعين: مقدم خدمة وطالب خدمة
+    final String id = (cubit.userDataResponse?.data?.account?.id ??
+            cubit.clientProfile?.data?.account?.id)
         .toString();
     final result = await repo.getMyClients(id);
     result.whenOrNull(
