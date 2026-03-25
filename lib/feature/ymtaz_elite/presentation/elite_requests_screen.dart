@@ -151,9 +151,29 @@ class EliteRequestsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Title and Date
+                // Crown Icon (Far Left)
+                Container(
+                  width: 38.w,
+                  height: 38.w,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFAF6E9),
+                    borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(
+                      color: const Color(0xFF0F2D37).withOpacity(0.1),
+                      width: 1,
+                    ),
+                  ),
+                  padding: EdgeInsets.all(8.w),
+                  child: SvgPicture.asset(
+                    AppAssets.crown,
+                    colorFilter: const ColorFilter.mode(
+                        Color(0xFFD4AF37), BlendMode.srcIn),
+                  ),
+                ),
+                horizontalSpace(12.w),
+                // Title and Subject (Middle/Left side)
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,7 +181,7 @@ class EliteRequestsScreen extends StatelessWidget {
                       Text(
                         request.eliteServiceCategory?.name ?? '',
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFF0F2D37),
                           fontFamily: 'Cairo',
@@ -169,49 +189,47 @@ class EliteRequestsScreen extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      verticalSpace(4.h),
-                      Text(
-                        request.createdAt?.contains("T") ?? false
-                            ? "${getDate(request.createdAt)}  ${getTime(request.createdAt!)}"
-                            : request.createdAt ?? "",
-                        style: TextStyle(
-                          color: const Color(0xFFB4B4B4),
-                          fontSize: 11.sp,
-                          fontFamily: 'Cairo',
+                      if (request.offers?.advisoryServiceSub?.name != null || request.offers?.serviceSub?.title != null)
+                        Text(
+                          request.offers?.advisoryServiceSub?.name ?? request.offers?.serviceSub?.title ?? '',
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: const Color(0xFF8B7355),
+                            fontFamily: 'Cairo',
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
                     ],
                   ),
                 ),
                 const Spacer(),
-                // Crown Icon Box
-                Container(
-                  width: 42.w,
-                  height: 42.w,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFAF6E9),
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: const Border(
-                      right: BorderSide(
-                        color: Color(0xFF0F2D37), // Navy Blue
-                        width: 1.5,
+                // Date and Time (Right side)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      getDate(request.createdAt),
+                      style: TextStyle(
+                        color: const Color(0xFF0F2D37).withOpacity(0.5),
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Cairo',
                       ),
                     ),
-                  ),
-                  padding: EdgeInsets.all(10.w),
-                  child: SvgPicture.asset(
-                    AppAssets.crown,
-                    colorFilter: const ColorFilter.mode(
-                      Color(0xFFD4AF37),
-                      BlendMode.srcIn,
+                    Text(
+                      getTime(request.createdAt ?? ""),
+                      style: TextStyle(
+                        color: const Color(0xFF00BABA),
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Cairo',
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
-            verticalSpace(16.h),
             // Description
             SizedBox(
               width: double.infinity,

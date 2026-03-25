@@ -191,17 +191,18 @@ class AdvisoryCommitteesScreen extends StatelessWidget {
                   ),
                   verticalSpace(5.h),
                   Container(
+                    alignment: Alignment.center,
                     padding:
                         EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                     decoration: BoxDecoration(
                       color: appColors.primaryColorYellow.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Text(
-                      "${category.advisorsAvailableCounts} مستشار",
-                      style: TextStyles.cairo_10_bold.copyWith(
+                      "${category.advisorsAvailableCounts}",
+                      style: TextStyles.cairo_12_bold.copyWith(
                         color: appColors.primaryColorYellow,
-                        fontSize: 10.sp,
+                        fontSize: 12.sp,
                       ),
                     ),
                   ),

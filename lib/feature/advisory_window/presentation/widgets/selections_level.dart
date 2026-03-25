@@ -5,6 +5,8 @@ import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../logic/advisory_cubit.dart';
 import '../../data/model/advisories_accurate_specialization.dart';
 
 class CustomCheckSelectLevel extends StatefulWidget {
@@ -34,6 +36,23 @@ class _CustomCheckSelectLevelState extends State<CustomCheckSelectLevel> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.items.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(20.h),
+          child: Text(
+            "لا توجد مستويات متاحة حالياً لنوع الاستشارة هذه",
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
     return Animate(
       effects: [
         FadeEffect(
@@ -90,7 +109,7 @@ class _CustomCheckSelectLevelState extends State<CustomCheckSelectLevel> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        item.level!.title!,
+                        item.level?.title ?? "مستوى غير معروف",
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
@@ -99,14 +118,22 @@ class _CustomCheckSelectLevelState extends State<CustomCheckSelectLevel> {
                               : Colors.black,
                         ),
                       ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        '${item.duration!} ${item.duration?.hourNoun ?? 'ساعة'} للرد على الاستشارة',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: Colors.grey.shade600,
+                      if (item.duration != null &&
+                          !(context
+                                  .read<AdvisoryCubit>()
+                                  .selectedAdvisoryItem
+                                  ?.name
+                                  ?.contains("مرئي") ??
+                              false)) ...[
+                        SizedBox(height: 4.h),
+                        Text(
+                          '${item.duration!} ${item.duration?.hourNoun ?? 'ساعة'} للرد على الاستشارة',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.grey.shade600,
+                          ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ],

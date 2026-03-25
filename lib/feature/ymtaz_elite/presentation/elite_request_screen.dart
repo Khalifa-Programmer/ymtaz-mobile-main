@@ -33,6 +33,7 @@ class EliteRequestScreen extends StatefulWidget {
 
 class _EliteRequestScreenState extends State<EliteRequestScreen> {
   final TextEditingController externalController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
   final List<PlatformFile> _files = [];
 
   final RecorderController _recorderController = RecorderController();
@@ -80,6 +81,13 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
   }
 
   void _validateAndSubmit() async {
+    if (titleController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('يجب كتابة عنوان الطلب')),
+      );
+      return;
+    }
+
     if (externalController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('يجب كتابة تفاصيل الطلب')),
@@ -97,6 +105,7 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
 
     final formData = FormData.fromMap({
       "elite_service_category_id": eliteCubit.selectedCategoryId.toString(),
+      "title": titleController.text,
       "description": externalController.text,
     });
 
@@ -261,6 +270,37 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
                   ),
                   verticalSpace(20.h),
 
+                  // Request Title
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      "عنوان الطلب",
+                      style: TextStyle(fontSize: 12.sp, color: Colors.grey[400], fontFamily: 'Cairo'),
+                    ),
+                  ),
+                  verticalSpace(8.h),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(color: Colors.grey[200]!),
+                    ),
+                    child: TextField(
+                      controller: titleController,
+                      maxLength: 30,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(fontSize: 13.sp, fontFamily: 'Cairo'),
+                      decoration: InputDecoration(
+                        counterText: "", // Hide counter
+                        hintText: "اكتب عنواناً مختصراً للطلب...",
+                        hintStyle: TextStyle(fontSize: 12.sp, color: Colors.grey[300], fontFamily: 'Cairo'),
+                        contentPadding: EdgeInsets.all(16.w),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  verticalSpace(20.h),
+
                   // Problem Description
                   Align(
                     alignment: Alignment.centerRight,
@@ -391,6 +431,15 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
       recorderController: _recorderController,
       playerController: _playerController,
     );
+  }
+
+  @override
+  void dispose() {
+    externalController.dispose();
+    titleController.dispose();
+    _recorderController.dispose();
+    _playerController.dispose();
+    super.dispose();
   }
 }
 

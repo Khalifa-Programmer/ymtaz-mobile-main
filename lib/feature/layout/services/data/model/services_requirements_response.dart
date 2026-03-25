@@ -110,6 +110,8 @@ class Service {
 class YmtazLevelsPrice {
   @JsonKey(name: "id")
   int? id;
+  @JsonKey(name: "duration")
+  int? duration;
   @JsonKey(name: "level")
   Level? level;
   @JsonKey(name: "price")

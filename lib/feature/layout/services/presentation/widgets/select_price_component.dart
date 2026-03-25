@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../logic/services_cubit.dart';
 import 'package:yamtaz/feature/layout/services/data/model/services_requirements_response.dart';
 
 class CustomCheckSelectLevelServices extends StatefulWidget {
@@ -35,6 +37,23 @@ class _CustomCheckSelectLevelServicesState
 
   @override
   Widget build(BuildContext context) {
+    if (widget.items.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(20.h),
+          child: Text(
+            "لا توجد مستويات خدمة متاحة لهذه الخدمة حالياً",
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
     return Animate(
       effects: [
         FadeEffect(
@@ -91,7 +110,7 @@ class _CustomCheckSelectLevelServicesState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        item.level!.name!,
+                        item.level?.name ?? "مستوى غير معروف",
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
@@ -100,14 +119,16 @@ class _CustomCheckSelectLevelServicesState
                               : Colors.black,
                         ),
                       ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        '${item.id!} ${item.id!.hourNoun} للرد على الخدمه',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: Colors.grey.shade600,
+                      if (item.duration != null) ...[
+                        SizedBox(height: 4.h),
+                        Text(
+                          '${item.duration!} ${item.duration?.hourNoun ?? 'ساعة'} للرد على الخدمه',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.grey.shade600,
+                          ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ],

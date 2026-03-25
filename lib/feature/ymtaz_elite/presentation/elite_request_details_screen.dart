@@ -1064,6 +1064,19 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "حالة الطلب",
+                      style: TextStyle(fontSize: 11.sp, color: const Color(0xFFB4B4B4), fontFamily: 'Cairo'),
+                    ),
+                    _buildStatusTag(widget.request.status ?? "قيد الدراسة"),
+                  ],
+                ),
+                verticalSpace(16.h),
+                Divider(color: Colors.grey[100], thickness: 1),
+                verticalSpace(16.h),
                 Text(
                   "الرد",
                   style: TextStyle(fontSize: 11.sp, color: const Color(0xFFB4B4B4), fontFamily: 'Cairo'),
@@ -1207,6 +1220,44 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
             ),
             Icon(Icons.file_download_outlined, color: Colors.grey[400], size: 24.sp),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusTag(String status) {
+    Color textColor;
+    Color bgColor;
+    String displayStatus = status;
+
+    if (status == "pending-pricing") {
+      displayStatus = "قيد التسعير";
+      textColor = const Color(0xFF2DAFAF);
+      bgColor = const Color(0xFFE6F7F7);
+    } else if (status == "قيد الدراسة" || status == "قيد الإنتظار") {
+      textColor = const Color(0xFF2DAFAF);
+      bgColor = const Color(0xFFE6F7F7);
+    } else if (status == "مكتملة" || status == "مكتمل") {
+      textColor = const Color(0xFF4CAF50);
+      bgColor = const Color(0xFFE8F5E9);
+    } else {
+      textColor = const Color(0xFF2DAFAF);
+      bgColor = const Color(0xFFE6F7F7);
+    }
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      child: Text(
+        displayStatus,
+        style: TextStyle(
+          color: textColor,
+          fontSize: 12.sp,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Cairo',
         ),
       ),
     );

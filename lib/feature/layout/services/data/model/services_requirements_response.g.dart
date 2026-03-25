@@ -81,11 +81,12 @@ YmtazLevelsPrice _$YmtazLevelsPriceFromJson(Map<String, dynamic> json) =>
           ? null
           : Level.fromJson(json['level'] as Map<String, dynamic>),
       price: (json['price'] as num?)?.toInt(),
-    );
+    )..duration = (json['duration'] as num?)?.toInt();
 
 Map<String, dynamic> _$YmtazLevelsPriceToJson(YmtazLevelsPrice instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'duration': instance.duration,
       'level': instance.level,
       'price': instance.price,
     };

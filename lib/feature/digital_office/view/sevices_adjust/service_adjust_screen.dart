@@ -97,10 +97,10 @@ class SeviceAdjustScreen extends StatelessWidget {
           );
         },
         builder: (BuildContext context, state) {
-          serviceDataNew = context
-              .read<OfficeProviderCubit>()
-              .servicesYmtazResponseModel!
-              .data![index];
+          final model = context.read<OfficeProviderCubit>().servicesYmtazResponseModel;
+          serviceDataNew = (model?.data != null && model!.data!.length > index)
+              ? model.data![index]
+              : null;
 
           return Scaffold(
             appBar: AppBar(
@@ -119,7 +119,7 @@ class SeviceAdjustScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          serviceData.title!,
+                          serviceData.title ?? "",
                           style: TextStyles.cairo_16_bold.copyWith(
                             color: appColors.black,
                           ),
@@ -206,17 +206,17 @@ class SeviceAdjustScreen extends StatelessWidget {
                         ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: serviceData.isActivated == true
-                              ? serviceData.lawyerPrices!.length
-                              : serviceData.ymtazLevelsPrices!.length,
+                          itemCount: (serviceData.isActivated == true
+                                  ? serviceData.lawyerPrices?.length
+                                  : serviceData.ymtazLevelsPrices?.length) ?? 0,
                           itemBuilder: (context, index) {
+                            final prices = serviceData.isActivated == true
+                                ? serviceData.lawyerPrices
+                                : serviceData.ymtazLevelsPrices;
+                            if (prices == null || index >= prices.length) return const SizedBox();
                             return Animate(
                               effects: [FadeEffect(delay: 200.ms)],
-                              child: PriceData(
-                                  serviceData.isActivated == true
-                                      ? serviceData.lawyerPrices!
-                                      : serviceData.ymtazLevelsPrices!,
-                                  index),
+                              child: PriceData(prices, index),
                             );
                           },
                           separatorBuilder: (BuildContext context, int index) {
@@ -225,24 +225,22 @@ class SeviceAdjustScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         CustomButton(
-                            title: serviceDataNew!.isActivated == true
+                            title: serviceDataNew?.isActivated == true
                                 ? "تعديل الخدمة"
                                 : "تخصيص الخدمة",
                             onPress: () {
                               Map<String, dynamic> data = {
                                 "service_id": serviceData.id,
                               };
-                              if (serviceDataNew!.isActivated == true) {
+                              if (serviceDataNew?.isActivated == true) {
                                 for (int i = 0;
-                                    i < serviceDataNew!.lawyerPrices!.length;
+                                    i < (serviceDataNew?.lawyerPrices?.length ?? 0);
                                     i++) {
                                   data["importance[$i][${"id"}]"] =
-                                      serviceDataNew!
-                                          .lawyerPrices![i].level!.id;
+                                      serviceDataNew?.lawyerPrices?[i].level?.id;
 
                                   data["importance[$i][${"isHidden"}]"] =
-                                      serviceDataNew!
-                                          .lawyerPrices![i].isHidden!;
+                                      serviceDataNew?.lawyerPrices?[i].isHidden ?? 0;
 
                                   data["importance[$i][${'price'}]"] = context
                                       .read<OfficeProviderCubit>()
@@ -255,14 +253,14 @@ class SeviceAdjustScreen extends StatelessWidget {
                                     .createServices(from);
                               } else {
                                 for (int i = 0;
-                                    i < serviceData.ymtazLevelsPrices!.length;
+                                    i < (serviceData.ymtazLevelsPrices?.length ?? 0);
                                     i++) {
                                   data["importance[$i][${"id"}]"] = serviceData
-                                      .ymtazLevelsPrices![i].level!.id;
+                                      .ymtazLevelsPrices?[i].level?.id;
 
                                   data["importance[$i][${"isHidden"}]"] =
                                       serviceData
-                                          .ymtazLevelsPrices![i].isHidden;
+                                          .ymtazLevelsPrices?[i].isHidden ?? 0;
 
                                   data["importance[$i][${'price'}]"] = context
                                       .read<OfficeProviderCubit>()
@@ -275,7 +273,7 @@ class SeviceAdjustScreen extends StatelessWidget {
                                     .createServices(from);
                               }
                             }),
-                        serviceDataNew!.isActivated == false
+                        serviceDataNew?.isActivated == false
                             ? const SizedBox()
                             : _additionalSettings(context),
                       ],
@@ -298,7 +296,7 @@ class SeviceAdjustScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           onPressed: () {
             context.read<OfficeProviderCubit>().hideService(
-                serviceData.id!.toString(), serviceDataNew!.isHidden ?? false);
+                serviceData.id?.toString() ?? "", serviceDataNew?.isHidden ?? false);
           },
           child: Row(
             children: [
@@ -320,7 +318,7 @@ class SeviceAdjustScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 5.w),
-              serviceDataNew!.isHidden == true
+              serviceDataNew?.isHidden == true
                   ? Text("تفعيل المنتج",
                       style: TextStyles.cairo_14_bold.copyWith(
                         color: appColors.grey10,
@@ -337,7 +335,7 @@ class SeviceAdjustScreen extends StatelessWidget {
           onPressed: () {
             context
                 .read<OfficeProviderCubit>()
-                .removeService(serviceData.id!.toString());
+                .removeService(serviceData.id?.toString() ?? "");
           },
           padding: EdgeInsets.zero,
           child: Row(
@@ -386,19 +384,25 @@ class _PriceDataState extends State<PriceData> {
         Transform.scale(
           scale: 0.7,
           child: CupertinoSwitch(
-            value: widget.data[widget.index].isHidden == 0 ? false : true,
+            value: (widget.data.length > widget.index)
+                ? (widget.data[widget.index].isHidden != 0)
+                : false,
             activeTrackColor: appColors.primaryColorYellow,
             onChanged: (bool value) {
-              setState(() {
-                widget.data[widget.index].isHidden = value ? 1 : 0;
-              });
+              if (widget.data.length > widget.index) {
+                setState(() {
+                  widget.data[widget.index].isHidden = value ? 1 : 0;
+                });
+              }
             },
           ),
         ),
         Expanded(
           flex: 2,
           child: Text(
-            widget.data[widget.index].level!.name!,
+            (widget.data.length > widget.index)
+                ? (widget.data[widget.index].level?.name ?? "")
+                : "",
             style: TextStyles.cairo_12_semiBold.copyWith(
               color: appColors.black,
             ),
