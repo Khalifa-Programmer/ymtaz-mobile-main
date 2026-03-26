@@ -14,6 +14,7 @@ import 'package:photo_view/photo_view.dart';  // Add this import
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/helpers/fuctions_helpers/functions_helpers.dart';
 import '../../../../core/widgets/spacing.dart';
+import '../../../../core/widgets/app_attachment_tile.dart';
 
 class EliteClientOrderScreen extends StatelessWidget {
   final YmtazEliteCubit cubit;
@@ -103,69 +104,45 @@ class EliteClientOrderScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildFileWidget(BuildContext context, FileElement file) {  // Added context parameter
+  Widget _buildFileWidget(BuildContext context, FileElement file) {
+    if (file.file == null) return const SizedBox.shrink();
+    
     final fileType = _getFileType(file.file);
     final filePath = file.file ?? '';
-    final fileName = filePath.split('/').last;  // Simplified filename extraction
 
-    return GestureDetector(
-      onTap: () {
-        switch (fileType) {
-          case 'image':
-            _showFullScreenImage(context, filePath);  // Pass context from parameter
-            break;
-          case 'audio':
-            _showAudioPlayer(context, filePath);  // Pass context from parameter
-            break;
-          case 'pdf':
-            _openPdf(filePath);
-            break;
-        }
-      },
-      child: Container(
-        margin: EdgeInsets.only(bottom: 8.h),
-        padding: EdgeInsets.all(12.w),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(8.r),
-          color: Colors.white,
-        ),
-        child: Row(
-          children: [
-            _buildFileTypeIcon(fileType),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    fileName,  // Using simplified filename
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: Colors.black87,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    'اضغط للعرض',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
+    if (fileType == 'audio' || (file.isVoice == 1)) {
+      return GestureDetector(
+        onTap: () => _showAudioPlayer(context, filePath),
+        child: Container(
+          margin: EdgeInsets.only(bottom: 8.h),
+          padding: EdgeInsets.all(12.w),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[300]!),
+            borderRadius: BorderRadius.circular(8.r),
+            color: Colors.white,
+          ),
+          child: Row(
+            children: [
+              _buildFileTypeIcon('audio'),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Text(
+                  filePath.split('/').last,
+                  style: TextStyle(fontSize: 14.sp, color: Colors.black87),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16.sp,
-              color: Colors.grey[400],
-            ),
-          ],
+              Icon(Icons.play_arrow, size: 16.sp, color: appColors.primaryColorYellow),
+            ],
+          ),
         ),
-      ),
+      );
+    }
+
+    return AppAttachmentTile(
+      url: filePath,
+      title: filePath.split('/').last,
     );
   }
 
@@ -192,7 +169,7 @@ class EliteClientOrderScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: buildBlurredAppBar(context, 'تفاصيل الطلب'),
+      appBar: buildBlurredAppBar(context, request.serviceTitle ?? request.eliteServiceCategory?.name ?? 'تفاصيل الطلب'),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: SingleChildScrollView(
@@ -216,6 +193,7 @@ class EliteClientOrderScreen extends StatelessWidget {
                 child: Column(
                                     children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                           padding: EdgeInsets.symmetric(
@@ -269,80 +247,68 @@ class EliteClientOrderScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      'اسم العميل',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: Colors.grey[500],
-                        fontFamily: 'Cairo',
-                      ),
+                    SizedBox(height: 24.h),
+                    
+                    // Client Info
+                    _buildDetailItem(
+                      label: 'اسم العميل',
+                      value: request.effectiveAccount?.fullName ?? 'طلب من عميل',
+                      icon: Icons.person_outline,
                     ),
-                    Text(
-                      request.effectiveAccount?.fullName != null && request.effectiveAccount!.fullName.isNotEmpty 
-                        ? request.effectiveAccount!.fullName 
-                        : "",
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF0F2D37),
-                        fontFamily: 'Cairo',
-                      ),
+                    
+                    // Request Title
+                    _buildDetailItem(
+                      label: 'عنوان الطلب',
+                      value: request.serviceTitle ?? 'غير محدد',
+                      icon: Icons.title,
                     ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      'عنوان الطلب',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: Colors.grey[500],
-                        fontFamily: 'Cairo',
-                      ),
+                    
+                    // Service Type
+                    _buildDetailItem(
+                      label: 'نوع الخدمة المطلوبة',
+                      value: request.eliteServiceCategory?.name ?? 'غير محدد',
+                      icon: Icons.category_outlined,
                     ),
-                    Text(
-                      request.serviceTitle ?? '',
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF0F2D37),
-                        fontFamily: 'Cairo',
-                      ),
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      'نوع الخدمة المطلوبة',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: Colors.grey[500],
-                        fontFamily: 'Cairo',
-                      ),
-                    ),
-                    Text(
-                      request.eliteServiceCategory?.name ?? '',
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF0F2D37),
-                        fontFamily: 'Cairo',
-                      ),
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      'الوصف',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Cairo',
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      request.description ?? '',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: Colors.black87,
-                        height: 1.5,
-                        fontFamily: 'Cairo',
-                      ),
+                    
+                    // Description
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.description_outlined, size: 18.sp, color: Colors.grey[600]),
+                            horizontalSpace(8.w),
+                            Text(
+                              'الوصف',
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                color: Colors.grey[500],
+                                fontFamily: 'Cairo',
+                              ),
+                            ),
+                          ],
+                        ),
+                        verticalSpace(8.h),
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(12.w),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(8.r),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: Text(
+                            request.description ?? '',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: const Color(0xFF0F2D37),
+                              height: 1.6,
+                              fontFamily: 'Cairo',
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ],
                     ),
                     if (request.files?.isNotEmpty == true) ...[
                       SizedBox(height: 16.h),
@@ -534,6 +500,49 @@ class EliteClientOrderScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 14.sp,
               color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailItem({
+    required String label,
+    required String value,
+    required IconData icon,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 18.sp, color: Colors.grey[600]),
+              horizontalSpace(8.w),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: Colors.grey[500],
+                  fontFamily: 'Cairo',
+                ),
+              ),
+            ],
+          ),
+          verticalSpace(4.h),
+          Padding(
+            padding: EdgeInsets.only(right: 26.w), // Align with text after icon
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF0F2D37),
+                fontFamily: 'Cairo',
+              ),
+              textAlign: TextAlign.right,
             ),
           ),
         ],

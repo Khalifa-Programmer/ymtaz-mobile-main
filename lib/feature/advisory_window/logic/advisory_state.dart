@@ -102,3 +102,18 @@ final class ErrorMyReservation extends AdvisoryState {
 
   ErrorMyReservation(this.error);
 }
+
+// Agora
+final class AgoraTokenLoading extends AdvisoryState {}
+
+final class AgoraTokenLoaded extends AdvisoryState {
+  final AgoraTokenResponse data;
+
+  AgoraTokenLoaded(this.data);
+}
+
+final class AgoraTokenError extends AdvisoryState {
+  final dynamic error;
+
+  AgoraTokenError(this.error);
+}

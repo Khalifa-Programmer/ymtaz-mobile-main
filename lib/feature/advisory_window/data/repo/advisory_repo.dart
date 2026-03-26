@@ -11,6 +11,8 @@ import '../../../my_appointments/data/model/working_hours_response.dart';
 import '../model/advisory_request_response.dart';
 import '../model/all_advirsory_response.dart';
 import '../model/available_lawyers_for_advisory_type_model.dart';
+import '../model/agora_token_request.dart';
+import '../model/agora_token_response.dart';
 
 class AdvisoryRepo {
   final ApiService _apiService;
@@ -161,4 +163,17 @@ class AdvisoryRepo {
     return ApiResult.failure({"message": e.toString()});
   }
 }
+
+  Future<ApiResult<AgoraTokenResponse>> getAgoraToken(String channelName) async {
+    var token = CacheHelper.getData(key: 'token');
+    try {
+      var response = await _apiService.getAgoraToken(
+        token ?? '',
+        AgoraTokenRequest(channel: channelName),
+      );
+      return ApiResult.success(response);
+    } on DioException catch (error) {
+      return ApiResult.failure(error.response?.data);
+    }
+  }
 }

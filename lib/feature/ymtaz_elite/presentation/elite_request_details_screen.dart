@@ -1,6 +1,8 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -23,6 +25,9 @@ import '../../../core/widgets/users_images.dart';
 import 'consultants_list_screen.dart';
 import 'rejection_reason_screen.dart';
 import 'elite_repricing_request_screen.dart';
+import '../../../../core/helpers/file_helper.dart';
+import '../../advisory_window/presentation/video_call/video_call_lobby_screen.dart';
+import '../../../core/widgets/app_attachment_tile.dart';
 
 class EliteRequestDetailsScreen extends StatefulWidget {
   final Request request;
@@ -52,8 +57,11 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
 
   String _getFileType(String? filePath) {
     if (filePath == null) return '';
-    final extension = filePath.split('.').last.toLowerCase();
-    if (['jpg', 'jpeg', 'png', 'gif'].contains(extension)) return 'image';
+    final resolved = FileHelper.resolveUrl(filePath);
+    final fileName = resolved.split('/').last.split('?').first.toLowerCase();
+    final extension = fileName.split('.').last;
+    
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].contains(extension)) return 'image';
     if (extension == 'pdf') return 'pdf';
     if (['mp3', 'wav', 'm4a'].contains(extension)) return 'audio';
     return 'other';
@@ -96,9 +104,13 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
   }
 
   Future<void> _openPdf(String pdfUrl) async {
-    if (await canLaunchUrl(Uri.parse(pdfUrl))) {
-      await launchUrl(Uri.parse(pdfUrl));
+    // Standardize URL
+    if (pdfUrl.contains('ymtaz.sa') && !pdfUrl.contains('api.ymtaz.sa')) {
+      pdfUrl = pdfUrl.replaceFirst('ymtaz.sa', 'api.ymtaz.sa');
     }
+    pdfUrl = pdfUrl.replaceFirst('http://', 'https://');
+    
+    await FileHelper.openFile(context, pdfUrl, title: "ملف الرد");
   }
 
   Future<void> _startVideoCall() async {
@@ -110,57 +122,8 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
       return;
     }
 
-    try {
-      var userType = CacheHelper.getData(key: 'userType');
-      final myAccountCubit = getit<MyAccountCubit>();
-      
-      // Initialize Stream Video
-      StreamVideo.reset();
-      
-      if (userType == 'client') {
-        final account = myAccountCubit.clientProfile?.data?.account;
-        if (account == null) return;
-        
-        StreamVideo(
-          'd3cgunkh7jrg',
-          user: User.regular(
-            userId: account.streamioId.toString(),
-            name: account.name ?? '',
-          ),
-          userToken: account.streamioToken ?? '',
-        );
-      } else {
-        final account = myAccountCubit.userDataResponse?.data?.account;
-        if (account == null) return;
-        
-        StreamVideo(
-          'd3cgunkh7jrg',
-          user: User.regular(
-            userId: account.streamioId.toString(),
-            name: account.name ?? '',
-          ),
-          userToken: account.streamioToken ?? '',
-        );
-      }
-
-      var call = StreamVideo.instance.makeCall(
-        callType: StreamCallType.custom("default"),
-        id: "elite_$offerId", // Using offer ID as unique call ID
-      );
-
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => CallScreen(call: call),
-        ),
-      );
-
-      await call.getOrCreate();
-    } catch (e) {
-      debugPrint('Error joining or creating elite call: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("خطأ في بدء المكالمة: $e")),
-      );
-    }
+    final channelName = "elite_$offerId";
+    context.read<YmtazEliteCubit>().getAgoraToken(channelName);
   }
 
 
@@ -178,11 +141,28 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                 backgroundColor: appColors.red,
               ),
             );
+          } else if (state is YmtazEliteAgoraTokenSuccess) {
+            // Navigate to Video Call Lobby (same as Advisory window does)
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VideoCallLobbyScreen(
+                  durationMinutes: 30, // Or get from offer if available
+                  date: widget.request.offers?.reservationDate != null ? DateFormat('yyyy/MM/dd').format(widget.request.offers!.reservationDate!) : "لا يوجد تاريخ",
+                  time: widget.request.offers?.reservationFromTime ?? "",
+                  channelName: state.response.channel ?? "elite_${widget.request.offers?.id}",
+                ),
+              ),
+            );
+          } else if (state is YmtazEliteAgoraTokenError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("خطأ في جلب التوكن: ${state.message}")),
+            );
           }
         },
         child: Scaffold(
           backgroundColor: const Color(0xFFFBFBFB),
-          appBar: buildBlurredAppBar(context, "تفاصيل الطلب"),
+          appBar: buildBlurredAppBar(context, widget.request.serviceTitle ?? widget.request.eliteServiceCategory?.name ?? "تفاصيل الطلب"),
           body: Column(
             children: [
               // Custom Tabs (Pill Style)
@@ -243,8 +223,10 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
   }
 
   Widget _buildFileWidgetUI(FileElement file) {
+    if (file.file == null) return const SizedBox.shrink();
+    
     final fileType = _getFileType(file.file);
-    final filePath = (file.file ?? '').replaceAll('https://ymtaz.sa/', 'https://api.ymtaz.sa/');
+    final filePath = FileHelper.resolveUrl(file.file ?? '');
 
     if (fileType == 'audio' || (file.isVoice == 1 && fileType != 'image' && fileType != 'pdf')) {
       return Container(
@@ -265,50 +247,9 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
       );
     }
 
-    return GestureDetector(
-      onTap: () {
-        if (fileType == 'image') {
-          _showFullScreenImage(filePath);
-        } else if (fileType == 'pdf') {
-          _openPdf(filePath);
-        }
-      },
-      child: Container(
-        margin: EdgeInsets.only(bottom: 12.h),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.picture_as_pdf, color: Colors.red[700], size: 28.sp),
-            horizontalSpace(12.w),
-            Expanded(
-              child: Text(
-                file.file?.split('/').last ?? "ملف القضية", 
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF0F2D37),
-                  fontFamily: 'Cairo',
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            horizontalSpace(8.w),
-            Icon(Icons.file_download_outlined, color: Colors.grey[400], size: 24.sp),
-          ],
-        ),
-      ),
+    return AppAttachmentTile(
+      url: filePath,
+      title: file.file?.split('/').last ?? "ملف المرفق",
     );
   }
 
@@ -438,10 +379,10 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
 
   Widget _buildServicePriceBox() {
     if (widget.request.offers == null) return const SizedBox.shrink();
-
-    final totalPrice = (widget.request.offers?.advisoryServiceSubPrice ?? 0) +
-                       (widget.request.offers?.serviceSubPrice ?? 0) +
-                       (widget.request.offers?.reservationPrice ?? 0);
+    
+    final totalPrice = (num.tryParse(widget.request.offers?.advisoryServiceSubPrice?.toString() ?? '0') ?? 0) +
+                       (num.tryParse(widget.request.offers?.serviceSubPrice?.toString() ?? '0') ?? 0) +
+                       (num.tryParse(widget.request.offers?.reservationPrice?.toString() ?? '0') ?? 0);
     
     final serviceName = widget.request.serviceTitle ?? widget.request.eliteServiceCategory?.name ?? "طلب خدمة النخبة";
 
@@ -546,95 +487,99 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
   }
 
   void _showOfferOptionsBottomSheet() {
+    final cubit = context.read<YmtazEliteCubit>();
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => Container(
-        padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 40.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 20,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 50.w,
-              height: 5.h,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10.r),
+      builder: (innerContext) => BlocProvider.value(
+        value: cubit,
+        child: Container(
+          padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 40.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, -5),
               ),
-            ),
-            verticalSpace(30.h),
-            Text(
-              "اتخاذ إجراء بشأن التسعير",
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 50.w,
+                height: 5.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+              ),
+              verticalSpace(30.h),
+              Text(
+                "اتخاذ إجراء بشأن التسعير",
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF0F2D37),
+                  fontFamily: 'Cairo',
+                ),
+              ),
+              verticalSpace(12.h),
+              Text(
+                "اختر الإجراء المناسب للعرض المقدم من فريق النخبة الاستشاري",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.grey[600],
+                  fontFamily: 'Cairo',
+                  height: 1.5,
+                ),
+              ),
+              verticalSpace(32.h),
+              _buildOptionButton(
+                label: "قبول السعر والمتابعة للدفع",
+                icon: Icons.check_circle_rounded,
+                color: const Color(0xFFD4AF37),
+                onTap: () {
+                  Navigator.pop(innerContext);
+                  cubit.approveOffer(widget.request.offers!.id.toString(), "elite");
+                },
+              ),
+              verticalSpace(16.h),
+              _buildOptionButton(
+                label: "طلب إعادة تسعير (لجنة أخرى)",
+                icon: Icons.history_edu_rounded,
                 color: const Color(0xFF0F2D37),
-                fontFamily: 'Cairo',
-              ),
-            ),
-            verticalSpace(12.h),
-            Text(
-              "اختر الإجراء المناسب للعرض المقدم من فريق النخبة الاستشاري",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: Colors.grey[600],
-                fontFamily: 'Cairo',
-                height: 1.5,
-              ),
-            ),
-            verticalSpace(32.h),
-            _buildOptionButton(
-              label: "قبول السعر والمتابعة للدفع",
-              icon: Icons.check_circle_rounded,
-              color: const Color(0xFFD4AF37),
-              onTap: () {
-                Navigator.pop(context);
-                context.read<YmtazEliteCubit>().approveOffer(widget.request.offers!.id.toString(), "elite");
-              },
-            ),
-            verticalSpace(16.h),
-            _buildOptionButton(
-              label: "طلب إعادة تسعير (لجنة أخرى)",
-              icon: Icons.history_edu_rounded,
-              color: const Color(0xFF0F2D37),
-              onTap: () {
-                Navigator.pop(context);
-                final offerData = widget.request.offers?.reservationType?.typesImportance?.first;
-                if (offerData != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EliteRepricingRequestScreen(
-                        request: widget.request,
-                        offer: offerData,
+                onTap: () {
+                  Navigator.pop(innerContext);
+                  final offerData = widget.request.offers?.reservationType?.typesImportance?.first;
+                  if (offerData != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EliteRepricingRequestScreen(
+                          request: widget.request,
+                          offer: offerData,
+                        ),
                       ),
-                    ),
-                  );
-                }
-              },
-            ),
-            verticalSpace(16.h),
-            _buildOptionButton(
-              label: "تجاهل هذا العرض حالياً",
-              icon: Icons.close_rounded,
-              color: const Color(0xFFE54560),
-              showArrow: false,
-              onTap: () => Navigator.pop(context),
-            ),
-          ],
+                    );
+                  }
+                },
+              ),
+              verticalSpace(16.h),
+              _buildOptionButton(
+                label: "تجاهل هذا العرض حالياً",
+                icon: Icons.close_rounded,
+                color: const Color(0xFFE54560),
+                showArrow: false,
+                onTap: () => Navigator.pop(innerContext),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -691,9 +636,6 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
   Widget _buildAdvisoryTeamBox() {
     final typesImportance = widget.request.offers?.reservationType?.typesImportance ?? [];
     final consultants = typesImportance.where((ti) => ti.lawyer != null).map((ti) => ti.lawyer!).toList();
-    final totalPrice = (widget.request.offers?.advisoryServiceSubPrice ?? 0) +
-                       (widget.request.offers?.serviceSubPrice ?? 0) +
-                       (widget.request.offers?.reservationPrice ?? 0);
 
     return Container(
       width: double.infinity,
@@ -743,6 +685,12 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                     ),
                   ],
                 ),
+                if (widget.request.offers?.reservationFromTime != null)
+                   _buildTeamIcon(
+                    Icons.videocam_rounded,
+                    isActive: true,
+                    onTap: _startVideoCall,
+                  ),
                 if (consultants.isNotEmpty)
                   CupertinoButton(
                     padding: EdgeInsets.zero,
@@ -1020,8 +968,8 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
             child: Text(
               widget.request.description ?? "",
               textAlign: TextAlign.justify,
-              textDirection: TextDirection.rtl,
-              style: TextStyle(
+               textDirection: ui.TextDirection.rtl,
+               style: TextStyle(
                 fontSize: 13.sp,
                 color: const Color(0xFF0F2D37),
                 height: 1.6,
@@ -1114,7 +1062,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                   child: Text(
                     replyDetailsText,
                     textAlign: TextAlign.justify,
-                    textDirection: TextDirection.rtl,
+                    textDirection: ui.TextDirection.rtl,
                     style: TextStyle(fontSize: 13.sp, color: const Color(0xFF0F2D37), height: 1.8, fontFamily: 'Cairo'),
                   ),
                 ),
@@ -1179,7 +1127,26 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
   }
 
   Widget _buildReplyAudioPlayer(String audioUrl) {
-    audioUrl = audioUrl.replaceAll('https://ymtaz.sa/', 'https://api.ymtaz.sa/');
+    if (audioUrl.isEmpty) return const SizedBox.shrink();
+
+    // Standardize URL to current API domain
+    if (audioUrl.contains('ymtaz.sa') && !audioUrl.contains('api.ymtaz.sa')) {
+      audioUrl = audioUrl.replaceFirst('ymtaz.sa', 'api.ymtaz.sa');
+    }
+    
+    // Ensure https
+    audioUrl = audioUrl.replaceFirst('http://', 'https://');
+    
+    // Handle relative paths
+    if (!audioUrl.startsWith('http')) {
+      if (audioUrl.startsWith('/')) {
+        audioUrl = 'https://api.ymtaz.sa$audioUrl';
+      } else {
+        audioUrl = 'https://api.ymtaz.sa/$audioUrl';
+      }
+    }
+    
+    audioUrl = audioUrl.trim();
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
@@ -1200,8 +1167,8 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
 
   Widget _buildReplyFileCard(FileElement file) {
     final fileType = _getFileType(file.file);
-    final filePath = (file.file ?? '').replaceAll('https://ymtaz.sa/', 'https://api.ymtaz.sa/');
-    final fileName = filePath.split('/').last;
+    final filePath = FileHelper.resolveUrl(file.file ?? '');
+    final fileName = filePath.split('/').last.split('?').first;
 
     return GestureDetector(
       onTap: () {

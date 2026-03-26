@@ -63,6 +63,8 @@ class Request {
   List<FileElement>? files;
   @JsonKey(name: "offers")
   Offers? offers;
+  @JsonKey(name: "account")
+  Account? account;
 
   Request({
     this.id,
@@ -76,6 +78,7 @@ class Request {
     this.createdAt,
     this.files,
     this.offers,
+    this.account,
   });
 
   factory Request.fromJson(Map<String, dynamic> json) => _$RequestFromJson(json);
@@ -98,6 +101,32 @@ class EliteServiceCategory {
   factory EliteServiceCategory.fromJson(Map<String, dynamic> json) => _$EliteServiceCategoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$EliteServiceCategoryToJson(this);
+}
+
+@JsonSerializable()
+class Account {
+  @JsonKey(name: "id")
+  String? id;
+  @JsonKey(name: "name")
+  String? name;
+  @JsonKey(name: "username")
+  String? username;
+  @JsonKey(name: "phone")
+  String? phone;
+  @JsonKey(name: "image")
+  String? image;
+
+  Account({
+    this.id,
+    this.name,
+    this.username,
+    this.phone,
+    this.image,
+  });
+
+  factory Account.fromJson(Map<String, dynamic> json) => _$AccountFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AccountToJson(this);
 }
 
 @JsonSerializable()

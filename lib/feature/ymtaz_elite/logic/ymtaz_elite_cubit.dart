@@ -10,7 +10,9 @@ import '../data/model/elite_my_requests_model.dart';
 import '../data/model/elite_request_model.dart';
 import '../data/model/elite_consultants_response.dart';
 import '../data/model/elite_pricing_requests_model.dart';
+import '../data/model/elite_promo_model.dart';
 import '../data/models/elite_service_item.dart';
+import '../../advisory_window/data/model/agora_token_response.dart';
 
 part 'ymtaz_elite_state.dart';
 
@@ -23,6 +25,9 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
   PendingPricing? selectedRequest;
   final Map<String, EliteServiceItem> _addedServices = {};
   EliteConsultantsResponse? eliteConsultantsData;
+  ElitePromoModel? elitePromoTexts;
+  List<PendingPricing>? pricingRequests;
+  List<Request>? eliteRequests;
 
   Future<void> getEliteConsultants() async {
     emit(YmtazEliteConsultantsLoading());
@@ -34,6 +39,20 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
       },
       failure: (error) {
         emit(YmtazEliteConsultantsError(error.toString()));
+      },
+    );
+  }
+
+  Future<void> getElitePromoTexts() async {
+    emit(YmtazElitePromoTextsLoading());
+    final result = await _ymtazEliteRepo.getElitePromoTexts();
+    result.when(
+      success: (data) {
+        elitePromoTexts = data;
+        emit(YmtazElitePromoTextsSuccess(data));
+      },
+      failure: (error) {
+        emit(YmtazElitePromoTextsError(error.toString()));
       },
     );
   }
@@ -75,7 +94,8 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
     final result = await _ymtazEliteRepo.getEliteRequests();
     result.when(
       success: (data) {
-        emit(YmtazEliteRequestsLoaded(data.data?.requests ?? []));
+        eliteRequests = data.data?.requests ?? [];
+        emit(YmtazEliteRequestsLoaded(eliteRequests!));
       },
       failure: (error) {
         emit(YmtazEliteError(error.toString()));
@@ -88,7 +108,8 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
     final result = await _ymtazEliteRepo.getPricingRequests();
     result.when(
       success: (data) {
-        emit(YmtazElitePricingRequestsLoaded(data.data!.pendingPricing ?? []));
+        pricingRequests = data.data!.pendingPricing ?? [];
+        emit(YmtazElitePricingRequestsLoaded(pricingRequests!));
       },
       failure: (error) {
         emit(YmtazEliteError(error.toString()));
@@ -289,6 +310,19 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
     } catch (e) {
       emit(YmtazEliteRepricingError(e.toString()));
     }
+  }
+
+  Future<void> getAgoraToken(String channelName) async {
+    emit(YmtazEliteAgoraTokenLoading());
+    final result = await _ymtazEliteRepo.getAgoraToken(channelName);
+    result.when(
+      success: (data) {
+        emit(YmtazEliteAgoraTokenSuccess(data));
+      },
+      failure: (error) {
+        emit(YmtazEliteAgoraTokenError(error.toString()));
+      },
+    );
   }
 }
 

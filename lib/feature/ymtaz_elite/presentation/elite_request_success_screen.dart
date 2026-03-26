@@ -11,6 +11,7 @@ import '../../../core/router/routes.dart';
 import '../../../core/widgets/app_bar.dart';
 import '../../../core/widgets/spacing.dart';
 import '../data/model/elite_request_model.dart';
+import '../../../core/widgets/app_attachment_tile.dart';
 
 class EliteRequestSuccessScreen extends StatelessWidget {
   final EliteRequestModel request;
@@ -179,6 +180,8 @@ class EliteRequestSuccessScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildDetailRow(
+                    "العنوان:", request.data?.serviceTitle ?? '', false),
+                _buildDetailRow(
                     "الوصف:", request.data?.description ?? '', false),
                 if (request.data?.files?.isNotEmpty == true) ...[
                   verticalSpace(15.h),
@@ -188,7 +191,10 @@ class EliteRequestSuccessScreen extends StatelessWidget {
                   ),
                   verticalSpace(10.h),
                   ...request.data!.files!
-                      .map((file) => _buildAttachmentItem(file)),
+                      .map((file) => AppAttachmentTile(
+                            url: file.file,
+                            title: file.file?.split('/').last ?? "ملف المرفق",
+                          )),
                 ],
               ],
             ),

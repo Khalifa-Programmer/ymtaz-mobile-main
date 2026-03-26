@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
+import 'package:yamtaz/core/helpers/file_helper.dart';
 
 class AudioPlayerWidget extends StatefulWidget {
   final String audioUrl;
@@ -53,6 +57,22 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   }
 
   void _setupAudioPlayer() {
+    // Configure audio context to avoid system errors and handle speaker correctly
+    _audioPlayer.setAudioContext(AudioContext(
+      android: const AudioContextAndroid(
+        contentType: AndroidContentType.music,
+        usageType: AndroidUsageType.media,
+        audioFocus: AndroidAudioFocus.gain,
+      ),
+      iOS: AudioContextIOS(
+        category: AVAudioSessionCategory.playAndRecord,
+        options: {
+          AVAudioSessionOptions.defaultToSpeaker,
+          AVAudioSessionOptions.mixWithOthers,
+        },
+      ),
+    ));
+
     // استخدام متغيرات الاشتراك لتخزين الاشتراكات
     _durationSubscription = _audioPlayer.onDurationChanged.listen((Duration d) {
       if (!_isDisposed) {
@@ -71,6 +91,20 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
         _playerState.value = state;
       }
     });
+  }
+
+  Future<String?> _downloadIfNeeded(String url) async {
+    try {
+      final File? file = await FileHelper.downloadIfNeeded(url);
+      if (file != null && await file.exists() && await file.length() > 0) {
+        debugPrint("PLAYING (from local): ${file.path}");
+        return file.path;
+      }
+      return null;
+    } catch (e) {
+      debugPrint("AudioPlayerWidget Error: Failed to setup audio source: $e");
+      return null;
+    }
   }
 
   @override
@@ -205,16 +239,43 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   Future<void> _handlePlayButtonTap() async {
     if (_isDisposed) return;
     
-    if (_playerState.value == PlayerState.playing) {
+    final PlayerState currentState = _playerState.value;
+    debugPrint("AudioPlayerWidget: _handlePlayButtonTap state=$currentState");
+    
+    if (currentState == PlayerState.playing) {
       await _audioPlayer.pause();
-    } else if (_playerState.value == PlayerState.paused) {
+    } else if (currentState == PlayerState.paused) {
       await _audioPlayer.resume();
     } else {
       _isLoading.value = true;
       try {
-        await _audioPlayer.play(UrlSource(widget.audioUrl));
+        final String rawUrl = widget.audioUrl;
+        final String resolvedUrl = FileHelper.resolveUrl(rawUrl);
+        debugPrint("AudioPlayerWidget: RawUrl=$rawUrl | ResolvedUrl=$resolvedUrl");
+        
+        // Try local download/cache first (especially for Android)
+        final String? localPath = await _downloadIfNeeded(resolvedUrl);
+        
+        if (_isDisposed) return;
+
+        if (localPath != null) {
+          debugPrint("AudioPlayerWidget: Playing via DeviceFileSource: $localPath");
+          await _audioPlayer.play(DeviceFileSource(localPath));
+        } else {
+          // Fallback to URL source
+          debugPrint("AudioPlayerWidget: Falling back to UrlSource: $resolvedUrl");
+          await _audioPlayer.play(UrlSource(resolvedUrl));
+        }
       } catch (e) {
-        debugPrint('Error playing audio: $e');
+        debugPrint('AudioPlayerWidget Error: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('عذراً، تعذر تشغيل الملف الصوتي. يرجى المحاولة لاحقاً'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
       } finally {
         if (!_isDisposed) {
           _isLoading.value = false;

@@ -10,6 +10,7 @@ import '../../../layout/services/presentation/widgets/service_card.dart';
 import '../../data/models/lawyer_advisory_requests_responnse.dart';
 import '../../logic/office_provider_cubit.dart';
 import '../../logic/office_provider_state.dart';
+import '../../../advisory_window/logic/advisory_cubit.dart';
 import 'advisory_details.dart';
 
 class MyAdvisoryScreen extends StatelessWidget {
@@ -69,8 +70,10 @@ class MyAdvisoryScreen extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ViewAdvisoryDetails(
-                    servicesRequirementsResponse: request)));
+                builder: (context) => BlocProvider.value(
+                    value: getit<AdvisoryCubit>(),
+                    child: ViewAdvisoryDetails(
+                        servicesRequirementsResponse: request))));
       },
       child: AdvisoryServiceCard(
         serviceName: request.advisoryServicesSub!.name!,

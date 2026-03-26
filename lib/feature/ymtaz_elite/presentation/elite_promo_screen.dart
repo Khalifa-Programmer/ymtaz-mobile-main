@@ -22,7 +22,7 @@ class _ElitePromoScreenState extends State<ElitePromoScreen> {
   @override
   void initState() {
     super.initState();
-    getit<YmtazEliteCubit>().getEliteConsultants();
+    getit<YmtazEliteCubit>().getElitePromoTexts();
   }
 
   @override
@@ -35,11 +35,11 @@ class _ElitePromoScreenState extends State<ElitePromoScreen> {
       body: SafeArea(
         child: BlocBuilder<YmtazEliteCubit, YmtazEliteState>(
           builder: (context, state) {
-            if (state is YmtazEliteConsultantsLoading) {
+            if (state is YmtazElitePromoTextsLoading) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            final data = context.read<YmtazEliteCubit>().eliteConsultantsData?.data;
+            final promoData = context.read<YmtazEliteCubit>().elitePromoTexts;
 
             return Column(
               children: [
@@ -74,9 +74,9 @@ class _ElitePromoScreenState extends State<ElitePromoScreen> {
                           ),
                         ),
                         verticalSpace(30.h),
-                        // Description 1 (Header from API)
+                        // Description 1 (Header from dynamic API)
                         Text(
-                          data?.details?.header ?? "توفر خدمة \"النخبة - فريقك الاستشاري\" تجربة مميزة من خلال تقديم حلول استشارية وتنفيذية شاملة تعتمد على التعاون بين نخبة من الخبراء والمستشارين باستخدام أحدث التقنيات لتحقيق رضا العملاء بأعلى معايير الجودة.",
+                          promoData?.getValue('advisory-top-section') ?? "توفر خدمة \"النخبة - فريقك الاستشاري\" تجربة مميزة من خلال تقديم حلول استشارية وتنفيذية شاملة تعتمد على التعاون بين نخبة من الخبراء والمستشارين باستخدام أحدث التقنيات لتحقيق رضا العملاء بأعلى معايير الجودة.",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 14.sp,
@@ -86,19 +86,19 @@ class _ElitePromoScreenState extends State<ElitePromoScreen> {
                           ),
                         ),
                         verticalSpace(30.h),
-                        // Triple Cards (Statistics from API)
+                        // Triple Cards (Statistics from dynamic API)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _buildStatCard("عدد المحامين", "${data?.statistics?.lawyersCount ?? '4-5'} محامي", Icons.groups),
-                            _buildStatCard("المدة", "${data?.statistics?.duration ?? '2-10'} أيام", Icons.access_time),
-                            _buildStatCard("السعر", "من ${data?.statistics?.price ?? '200'} ر.س", Icons.style),
+                            _buildStatCard("عدد المحامين", promoData?.getValue('advisory-between-lawyer-section') ?? '4-5 محامي', Icons.groups),
+                            _buildStatCard("المدة", promoData?.getValue('advisory-between-time-section') ?? '2-10 أيام', Icons.access_time),
+                            _buildStatCard("السعر", "من ${promoData?.getValue('advisory-between-price-section') ?? '200 ر.س'}", Icons.style),
                           ],
                         ),
                         verticalSpace(30.h),
-                        // Description 2 (Footer from API)
+                        // Description 2 (Footer from dynamic API)
                         Text(
-                          data?.details?.footer ?? "توفر خدمة \"النخبة - فريقك الاستشاري\" تجربة مميزة من خلال تقديم حلول استشارية وتنفيذية شاملة تعتمد على التعاون بين نخبة من الخبراء والمستشارين باستخدام أحدث التقنيات لتحقيق رضا العملاء بأعلى معايير الجودة.",
+                          promoData?.getValue('advisory-bottom-section') ?? "توفر خدمة \"النخبة - فريقك الاستشاري\" تجربة مميزة من خلال تقديم حلول استشارية وتنفيذية شاملة تعتمد على التعاون بين نخبة من الخبراء والمستشارين باستخدام أحدث التقنيات لتحقيق رضا العملاء بأعلى معايير الجودة.",
                           textAlign: TextAlign.justify,
                           textDirection: TextDirection.rtl,
                           style: TextStyle(

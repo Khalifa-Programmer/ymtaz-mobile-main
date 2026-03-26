@@ -4391,6 +4391,38 @@ class _ApiService implements ApiService {
   }
 
   @override
+  Future<AgoraTokenResponse> getAgoraToken(
+    String token,
+    AgoraTokenRequest body,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<AgoraTokenResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'api/agora/token',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = AgoraTokenResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<ResponseModel> inviteUser(
     String token,
     Map<String, String> body,
@@ -4655,6 +4687,34 @@ class _ApiService implements ApiService {
               baseUrl,
             ))));
     final value = EliteConsultantsResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ElitePromoModel> getElitePromoTexts(String token) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ElitePromoModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-texts/elite-advisors',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ElitePromoModel.fromJson(_result.data!);
     return value;
   }
 

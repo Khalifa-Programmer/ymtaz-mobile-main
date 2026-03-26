@@ -116,6 +116,7 @@ import '../../../feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
 import '../../../feature/ymtaz_elite/data/model/elite_request_model.dart';
 import '../../../feature/ymtaz_elite/data/model/elite_consultants_response.dart';
 import '../../../feature/ymtaz_elite/data/model/elite_pricing_requests_model.dart';
+import '../../../feature/ymtaz_elite/data/model/elite_promo_model.dart';
 import '../../../feature/advisory_committees/data/model/advisory_committees_lawyers_response.dart';
 import '../../../feature/advisory_committees/data/model/advisory_committees_response.dart';
 import '../../../feature/digital_guide/data/model/digital_guide_response.dart';
@@ -126,6 +127,9 @@ import '../../models/base_response.dart';
 
 import '../../shared/models/resend_code.dart';
 import 'package:yamtaz/feature/learning_path/data/models/favourite_items_response.dart';
+
+import 'package:yamtaz/feature/advisory_window/data/model/agora_token_request.dart';
+import 'package:yamtaz/feature/advisory_window/data/model/agora_token_response.dart';
 
 part 'api_service.g.dart';
 
@@ -801,6 +805,11 @@ abstract class ApiService {
   Future<BooksResponse> getMainCategoryBooks(
       @Header('Authorization') String token);
 
+  // Agora
+  @POST(ApiConstants.agoraToken)
+  Future<AgoraTokenResponse> getAgoraToken(
+      @Header('Authorization') String token, @Body() AgoraTokenRequest body);
+
   // ivcitations
 // send invitations
   @POST(ApiConstants.invite)
@@ -845,6 +854,11 @@ abstract class ApiService {
   
   @GET(ApiConstants.eliteConsultants)
   Future<EliteConsultantsResponse> getEliteConsultants(
+    @Header('Authorization') String token,
+  );
+
+  @GET(ApiConstants.elitePromoTexts)
+  Future<ElitePromoModel> getElitePromoTexts(
     @Header('Authorization') String token,
   );
 

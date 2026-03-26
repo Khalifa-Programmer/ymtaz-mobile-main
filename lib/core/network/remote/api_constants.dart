@@ -320,6 +320,7 @@ class ApiConstants {
   static const elitePricingRequestReply = "v1/elite/pricing-requests/reply";
   static const eliteApproveOffer = "v1/elite/offers/{id}/approve";
   static const eliteConsultants = "v1/elite-consultants";
+  static const elitePromoTexts = "app-texts/elite-advisors";
 
   // Learning Paths
   static const learningPaths = "v1/learning-paths";
@@ -327,4 +328,7 @@ class ApiConstants {
   static const learningPathItemFavourite = "v1/learning-paths/learning-path-items/:id/favourite";
 
   static const String updateLearningProgress = '/learning-path/update-progress';
+
+  // Agora
+  static const agoraToken = "api/agora/token";
 }

@@ -6,9 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:readmore/readmore.dart';
-import 'package:stream_video_flutter/stream_video_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:stream_video_flutter/stream_video_flutter.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/helpers/fuctions_helpers/functions_helpers.dart';
@@ -476,6 +474,7 @@ class ViewOrderDetails extends StatelessWidget {
                                     durationMinutes: duration,
                                     date: (servicesRequirementsResponse.date ?? "الآن").toString(),
                                     time: (servicesRequirementsResponse.from ?? "").toString(),
+                                    channelName: (servicesRequirementsResponse.callId ?? "Ymtaz").toString(),
                                   ),
                                 ),
                               );

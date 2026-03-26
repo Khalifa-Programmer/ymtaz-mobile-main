@@ -1,8 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/colors.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class PdfWebView extends StatefulWidget {
   const PdfWebView({super.key, required this.link});
@@ -10,79 +11,30 @@ class PdfWebView extends StatefulWidget {
   final String link;
 
   @override
-  State<PdfWebView> createState() => PdfWebViewState(link);
+  State<PdfWebView> createState() => _PdfWebViewState();
 }
 
-class PdfWebViewState extends State<PdfWebView> {
-  HeadlessInAppWebView? headlessWebView;
-  PullToRefreshController? pullToRefreshController;
-  InAppWebViewController? webViewController;
-
-  PdfWebViewState(this.url);
-
-  String url = "";
-  int progress = 0;
-  bool convertFlag = false;
+class _PdfWebViewState extends State<PdfWebView> {
+  bool isImage = false;
+  bool isPdf = false;
 
   @override
   void initState() {
     super.initState();
-
-    pullToRefreshController = kIsWeb ||
-            ![TargetPlatform.iOS, TargetPlatform.android]
-                .contains(defaultTargetPlatform)
-        ? null
-        : PullToRefreshController(
-            settings: PullToRefreshSettings(
-              color: Colors.blue,
-            ),
-            onRefresh: () async {
-              if (defaultTargetPlatform == TargetPlatform.android) {
-                webViewController?.reload();
-              } else if (defaultTargetPlatform == TargetPlatform.iOS ||
-                  defaultTargetPlatform == TargetPlatform.macOS) {
-                webViewController?.loadUrl(
-                    urlRequest:
-                        URLRequest(url: await webViewController?.getUrl()));
-              }
-            },
-          );
-
-    headlessWebView = HeadlessInAppWebView(
-      initialUrlRequest: URLRequest(url: WebUri(url)),
-      initialSettings: InAppWebViewSettings(isInspectable: kDebugMode),
-      pullToRefreshController: pullToRefreshController,
-      onWebViewCreated: (controller) {
-        webViewController = controller;
-
-        const snackBar = SnackBar(
-          content: Text('HeadlessInAppWebView created!'),
-          duration: Duration(seconds: 1),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      },
-      onLoadStart: (controller, url) async {
-        setState(() {
-          this.url = url?.toString() ?? '';
-        });
-      },
-      onProgressChanged: (controller, progress) {
-        setState(() {
-          this.progress = progress;
-        });
-      },
-      onLoadStop: (controller, url) async {
-        setState(() {
-          this.url = url?.toString() ?? '';
-        });
-      },
-    );
+    _checkFileType();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    headlessWebView?.dispose();
+  void _checkFileType() {
+    final lowerCaseLink = widget.link.toLowerCase();
+    if (lowerCaseLink.endsWith('.pdf')) {
+      isPdf = true;
+    } else if (lowerCaseLink.endsWith('.jpg') ||
+        lowerCaseLink.endsWith('.jpeg') ||
+        lowerCaseLink.endsWith('.png') ||
+        lowerCaseLink.endsWith('.gif') ||
+        lowerCaseLink.endsWith('.webp')) {
+      isImage = true;
+    }
   }
 
   @override
@@ -90,69 +42,44 @@ class PdfWebViewState extends State<PdfWebView> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("عرض المرفقات",
-            textScaleFactor: .8,
-            style: TextStyles.cairo_14_bold.copyWith(
-              color: appColors.black,
-            )),
-      ),
-      body: Column(children: <Widget>[
-        Expanded(
-          child: InAppWebView(
-            // Authorization : token
-            initialUrlRequest: URLRequest(url: WebUri(url)),
-            onWebViewCreated: (controller) {
-              headlessWebView = null;
-              webViewController = controller;
-            },
-            onLoadStart: (controller, url) {
-              setState(() {
-                this.url = url?.toString() ?? "";
-              });
-            },
-            onProgressChanged: (controller, progress) {
-              if (progress == 100) {
-                pullToRefreshController?.endRefreshing();
-                // injectVisaData();
-              }
-              setState(() {
-                this.progress = progress;
-              });
-            },
-            onLoadStop: (controller, url) {
-              pullToRefreshController?.endRefreshing();
-              setState(() {
-                this.url = url?.toString() ?? "";
-              });
-            },
-            onReceivedError: (controller, request, error) {
-              pullToRefreshController?.endRefreshing();
-            },
+        title: Text(
+          "عرض المرفقات",
+          style: TextStyles.cairo_14_bold.copyWith(
+            color: appColors.black,
           ),
-        )
-      ]),
+        ),
+      ),
+      body: _buildBody(),
     );
   }
 
-// Future<void> injectVisaData() async {
-//   // Replace the following lines with logic to retrieve saved Visa data from your app
-//   var initialData = {
-//     'creditCardNumber': '4000000000000002',
-//     'creditCardExp': '12/25',
-//     'cardCVV': '123',
-//     'bill_phone': '1234567890',
-//   };
-//
-//   // Construct JavaScript code to set initial data
-//   String script = '''
-//     document.getElementById('creditCardNumber').value = '${initialData['creditCardNumber']}';
-//     document.getElementById('creditCardExp').value = '${initialData['creditCardExp']}';
-//     document.getElementById('cardCVV').value = '${initialData['cardCVV']}';
-//     document.getElementById('bill_phone').value = '${initialData['bill_phone']}';
-//   ''';
-//
-//
-//   // Execute the JavaScript code in the web view
-//   await webViewController?.evaluateJavascript(source: script);
-// }
+  Widget _buildBody() {
+    if (isPdf) {
+      return SfPdfViewer.network(
+        widget.link,
+        onDocumentLoadFailed: (details) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('فشل تحميل ملف PDF: ${details.description}')),
+          );
+        },
+      );
+    } else if (isImage) {
+      return PhotoView(
+        imageProvider: NetworkImage(widget.link),
+        backgroundDecoration: const BoxDecoration(color: Colors.white),
+        loadingBuilder: (context, event) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        errorBuilder: (context, error, stackTrace) => const Center(
+          child: Text('فشل تحميل الصورة'),
+        ),
+      );
+    } else {
+      // Fallback to WebView for other types
+      return InAppWebView(
+        initialUrlRequest: URLRequest(url: WebUri(widget.link)),
+      );
+    }
+  }
 }
+

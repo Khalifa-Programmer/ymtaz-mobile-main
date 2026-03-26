@@ -9,8 +9,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:readmore/readmore.dart';
-import 'package:stream_video_flutter/stream_video_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../advisory_window/presentation/video_call/video_call_lobby_screen.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
 import 'package:yamtaz/core/helpers/fuctions_helpers/functions_helpers.dart';
@@ -27,7 +27,6 @@ import '../../../../core/constants/validators.dart';
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/widgets/alerts.dart';
 import '../../../../core/widgets/primary/text_form_primary.dart';
-import '../../../advisory_window/presentation/call_screen.dart';
 import '../../data/models/lawyer_advisory_requests_responnse.dart';
 import '../../logic/office_provider_cubit.dart';
 import '../../logic/office_provider_state.dart';
@@ -296,70 +295,17 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
         verticalSpace(20.h),
         CustomButton(
           onPress: () async {
-            try {
-              var userType = CacheHelper.getData(key: 'userType');
-              if (userType == 'client') {
-                StreamVideo.reset();
-                StreamVideo(
-                  'd3cgunkh7jrg',
-                  user: User.regular(
-                      userId: getit<MyAccountCubit>()
-                          .clientProfile!
-                          .data!
-                          .account!
-                          .streamioId
-                          .toString(),
-                      name: getit<MyAccountCubit>()
-                          .clientProfile!
-                          .data!
-                          .account!
-                          .name),
-                  userToken: getit<MyAccountCubit>()
-                      .clientProfile!
-                      .data!
-                      .account!
-                      .streamioToken,
-                );
-              } else {
-                StreamVideo.reset();
-                StreamVideo(
-                  'd3cgunkh7jrg',
-                  user: User.regular(
-                      userId: getit<MyAccountCubit>()
-                          .userDataResponse!
-                          .data!
-                          .account!
-                          .streamioId
-                          .toString(),
-                      name: getit<MyAccountCubit>()
-                          .userDataResponse!
-                          .data!
-                          .account!
-                          .name),
-                  userToken: getit<MyAccountCubit>()
-                      .userDataResponse!
-                      .data!
-                      .account!
-                      .streamioToken,
-                );
-              }
-
-              var call = StreamVideo.instance.makeCall(
-                callType: StreamCallType.custom("default"),
-                id: widget.servicesRequirementsResponse.callId!,
-              );
-
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CallScreen(call: call),
+            final duration = int.tryParse(widget.servicesRequirementsResponse.appointmentDuration?.toString() ?? "15") ?? 15;
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => VideoCallLobbyScreen(
+                  durationMinutes: duration,
+                  date: (widget.servicesRequirementsResponse.date ?? "الآن").toString(),
+                  time: (widget.servicesRequirementsResponse.from ?? "").toString(),
+                  channelName: (widget.servicesRequirementsResponse.callId ?? "Ymtaz").toString(),
                 ),
-              );
-
-              await call.getOrCreate();
-            } catch (e) {
-              debugPrint('Error joining or creating call: $e');
-              debugPrint(e.toString());
-            }
+              ),
+            );
           },
           title: 'بدء المكالمة',
           height: 35.h,

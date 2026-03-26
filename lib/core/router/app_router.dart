@@ -455,8 +455,11 @@ class AppRouter {
           ),
         );
       case Routes.myAdvisoryOrderDetails:
-        return _getFadeTransition(ViewOrderDetails(
-          servicesRequirementsResponse: settings.arguments as Reservation,
+        return _getFadeTransition(BlocProvider.value(
+          value: getit<AdvisoryCubit>(),
+          child: ViewOrderDetails(
+            servicesRequirementsResponse: settings.arguments as Reservation,
+          ),
         ));
 
       case Routes.myAdvisoryOrders:

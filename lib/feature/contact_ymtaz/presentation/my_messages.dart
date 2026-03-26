@@ -10,7 +10,7 @@ import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/contact_ymtaz/logic/contact_ymtaz_cubit.dart';
 import 'package:yamtaz/feature/contact_ymtaz/logic/contact_ymtaz_state.dart';
 import '../../../core/helpers/fuctions_helpers/functions_helpers.dart';
-
+import '../../../core/widgets/app_attachment_tile.dart';
 import '../../../core/widgets/webview_pdf.dart';
 
 class MyMessages extends StatelessWidget {
@@ -127,46 +127,15 @@ allContactRequests.sort((a, b) {
                                         .contactRequests![index]
                                         .subject!),
                                   ),
-                                  context
-                                              .read<ContactYmtazCubit>()
-                                              .myContactYmtazResponse!
-                                              .data!
-                                              .contactRequests![index]
-                                              .file !=
-                                          null
-                                      ? ListTile(
-                                          contentPadding: EdgeInsets.zero,
-                                          title: Text(
-                                            "تم إرفاق ملف",
-                                            style: TextStyles.cairo_12_bold
-                                                .copyWith(
-                                                    color: appColors.blue100),
-                                          ),
-                                          leading: Icon(
-                                            Icons.attach_file,
-                                            color: appColors.blue100,
-                                          ),
-                                          trailing: CupertinoButton(
-                                            onPressed: () {
-                                              String link = context
-                                                  .read<ContactYmtazCubit>()
-                                                  .myContactYmtazResponse!
-                                                  .data!
-                                                  .contactRequests![index]
-                                                  .file!;
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        PdfWebView(
-                                                      link: link,
-                                                    ),
-                                                  ));
-                                            },
-                                            child: Text("عرض"),
-                                          ),
-                                        )
-                                      : Container(),
+                                  AppAttachmentTile(
+                                    url: context
+                                        .read<ContactYmtazCubit>()
+                                        .myContactYmtazResponse!
+                                        .data!
+                                        .contactRequests![index]
+                                        .file,
+                                    title: "تم إرفاق ملف",
+                                  ),
                                   SizedBox(height: 16.sp),
                                   Row(
                                     children: [

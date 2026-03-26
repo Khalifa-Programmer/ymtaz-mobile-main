@@ -8,16 +8,21 @@ import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/spacing.dart';
 import 'agora_video_call_screen.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../logic/advisory_cubit.dart';
+
 class VideoCallLobbyScreen extends StatefulWidget {
   final int durationMinutes;
   final String date;
   final String time;
+  final String channelName;
 
   const VideoCallLobbyScreen({
     Key? key,
     required this.durationMinutes,
     required this.date,
     required this.time,
+    this.channelName = "Ymtaz",
   }) : super(key: key);
 
   @override
@@ -122,21 +127,35 @@ class _VideoCallLobbyScreenState extends State<VideoCallLobbyScreen> {
             Spacer(flex: 1),
 
             // Join Button
-            CustomButton(
-              onPress: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AgoraVideoCallScreen(
-                      // We can pass initial mute/video states here if we modify AgoraVideoCallScreen to accept them
+            BlocConsumer<AdvisoryCubit, AdvisoryState>(
+              listener: (context, state) {
+                if (state is AgoraTokenLoaded) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AgoraVideoCallScreen(
+                        customToken: state.data.token,
+                        customChannelName: state.data.channel ?? widget.channelName,
+                      ),
                     ),
-                  ),
+                  );
+                } else if (state is AgoraTokenError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("خطأ في جلب التوكن: \${state.error}")),
+                  );
+                }
+              },
+              builder: (context, state) {
+                return CustomButton(
+                  onPress: () {
+                    context.read<AdvisoryCubit>().getAgoraToken(widget.channelName);
+                  },
+                  title: state is AgoraTokenLoading ? "جاري التحميل..." : "الانضمام",
+                  height: 50.h,
+                  fontSize: 16.sp,
+                  bgColor: appColors.primaryColorYellow,
                 );
               },
-              title: "الانضمام",
-              height: 50.h,
-              fontSize: 16.sp,
-              bgColor: appColors.primaryColorYellow,
             ),
             verticalSpace(20.h),
           ],

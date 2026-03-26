@@ -12,6 +12,7 @@ import '../data/model/advisories_general_specialization.dart';
 import '../data/model/advisory_request_response.dart';
 import '../data/model/all_advirsory_response.dart';
 import '../data/model/available_lawyers_for_advisory_type_model.dart' as lawyer;
+import '../data/model/agora_token_response.dart';
 import '../data/repo/advisory_repo.dart';
 
 part 'advisory_state.dart';
@@ -327,5 +328,18 @@ class AdvisoryCubit extends Cubit<AdvisoryState> {
 
   void sendServiceRequests(List<BaseServiceRequest> serviceRequests) {
     
+  }
+
+  void getAgoraToken(String channelName) async {
+    emit(AgoraTokenLoading());
+    final result = await _advisoryRepo.getAgoraToken(channelName);
+    result.when(
+      success: (data) {
+        emit(AgoraTokenLoaded(data));
+      },
+      failure: (error) {
+        emit(AgoraTokenError(error));
+      },
+    );
   }
 }

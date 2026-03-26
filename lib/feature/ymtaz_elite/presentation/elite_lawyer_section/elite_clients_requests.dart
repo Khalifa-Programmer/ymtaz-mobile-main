@@ -24,7 +24,9 @@ class _EliteClientsRequestsState extends State<EliteClientsRequests> {
   void initState() {
     super.initState();
     _cubit = context.read<YmtazEliteCubit>();
-    _loadData();
+    if (_cubit.pricingRequests == null) {
+      _loadData();
+    }
   }
 
   Future<void> _loadData() async {
@@ -41,14 +43,29 @@ class _EliteClientsRequestsState extends State<EliteClientsRequests> {
           onRefresh: _loadData,
           child: BlocBuilder<YmtazEliteCubit, YmtazEliteState>(
             builder: (context, state) {
-              if (state is YmtazEliteLoading) {
+              List<PendingPricing>? requestsToShow;
+              
+              if (state is YmtazElitePricingRequestsLoaded) {
+                requestsToShow = state.requests;
+              } else if (_cubit.pricingRequests != null) {
+                requestsToShow = _cubit.pricingRequests;
+              }
+
+              if (state is YmtazEliteLoading && requestsToShow == null) {
                 return const Center(child: CircularProgressIndicator());
               }
-              if (state is YmtazElitePricingRequestsLoaded) {
-                if (state.requests.isEmpty) {
-                  return const Center(child: Text('لا توجد طلبات نخبة حالياً'));
+
+              if (requestsToShow != null) {
+                if (requestsToShow.isEmpty) {
+                  return SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: const Center(child: Text('لا توجد طلبات نخبة حالياً')),
+                    ),
+                  );
                 }
-                final sortedRequests = state.requests.toList()
+                final sortedRequests = requestsToShow.toList()
                   ..sort((a, b) => DateTime.parse(b.createdAt!).compareTo(DateTime.parse(a.createdAt!)));
 
                 return ListView.builder(
@@ -60,17 +77,24 @@ class _EliteClientsRequestsState extends State<EliteClientsRequests> {
                   },
                 );
               }
+
               if (state is YmtazEliteError) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('حدث خطأ ما'),
-                      TextButton(
-                        onPressed: _loadData,
-                        child: const Text('إعادة المحاولة'),
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('حدث خطأ ما'),
+                          TextButton(
+                            onPressed: _loadData,
+                            child: const Text('إعادة المحاولة'),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 );
               }

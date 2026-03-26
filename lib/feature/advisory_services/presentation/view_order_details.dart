@@ -16,6 +16,7 @@ import 'package:yamtaz/feature/layout/account/logic/my_account_cubit.dart';
 
 import '../../../core/di/dependency_injection.dart';
 import '../../../core/network/local/cache_helper.dart';
+import '../../../core/widgets/app_attachment_tile.dart';
 import '../../../core/widgets/webview_pdf.dart';
 
 class ViewOrderDetails extends StatelessWidget {
@@ -541,44 +542,9 @@ class ViewOrderDetails extends StatelessWidget {
                       ],
                     ),
                     verticalSpace(10.h),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PdfWebView(
-                                      link: servicesRequirementsResponse.file!,
-                                    )));
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20.w, vertical: 10.h),
-                        decoration: BoxDecoration(
-                          color: appColors.blue100.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.picture_as_pdf,
-                              color: appColors.blue100,
-                              size: 20.sp,
-                            ),
-                            horizontalSpace(10.w),
-                            Text(
-                              "ملف الوثيقة",
-                              style: TextStyles.cairo_14_semiBold
-                                  .copyWith(color: appColors.blue100),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.remove_red_eye_rounded,
-                              color: appColors.blue100,
-                              size: 20.sp,
-                            ),
-                          ],
-                        ),
-                      ),
+                    AppAttachmentTile(
+                      url: servicesRequirementsResponse.file,
+                      title: "ملف الوثيقة",
                     ),
                   ],
                 ),

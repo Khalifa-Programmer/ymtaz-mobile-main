@@ -150,3 +150,43 @@ final class YmtazEliteConsultantsError extends YmtazEliteState {
   @override
   List<Object> get props => [message];
 }
+
+final class YmtazEliteAgoraTokenLoading extends YmtazEliteState {}
+
+final class YmtazEliteAgoraTokenSuccess extends YmtazEliteState {
+  final AgoraTokenResponse response;
+
+  const YmtazEliteAgoraTokenSuccess(this.response);
+
+  @override
+  List<Object> get props => [response];
+}
+
+final class YmtazEliteAgoraTokenError extends YmtazEliteState {
+  final String message;
+
+  const YmtazEliteAgoraTokenError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+final class YmtazElitePromoTextsLoading extends YmtazEliteState {}
+
+final class YmtazElitePromoTextsSuccess extends YmtazEliteState {
+  final ElitePromoModel response;
+
+  const YmtazElitePromoTextsSuccess(this.response);
+
+  @override
+  List<Object> get props => [response];
+}
+
+final class YmtazElitePromoTextsError extends YmtazEliteState {
+  final String message;
+
+  const YmtazElitePromoTextsError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

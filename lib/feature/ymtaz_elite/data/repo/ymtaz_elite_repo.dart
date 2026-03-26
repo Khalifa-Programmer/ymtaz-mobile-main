@@ -10,8 +10,10 @@ import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_pricing_response.dar
 
 import '../model/elite_my_requests_model.dart';
 import '../model/elite_request_model.dart';
-
 import '../model/elite_consultants_response.dart';
+import '../model/elite_promo_model.dart';
+import '../../../advisory_window/data/model/agora_token_request.dart';
+import '../../../advisory_window/data/model/agora_token_response.dart';
 
 class YmtazEliteRepo {
   final ApiService _apiService;
@@ -90,6 +92,28 @@ class YmtazEliteRepo {
         offerId,
         {'type': type},
       );
+      return ApiResult.success(response);
+    } on DioException catch (error) {
+      return ApiResult.failure(error.response?.data);
+    }
+  }
+
+  Future<ApiResult<AgoraTokenResponse>> getAgoraToken(String channelName) async {
+    var token = CacheHelper.getData(key: 'token');
+    try {
+      var response = await _apiService.getAgoraToken(
+        'Bearer $token',
+        AgoraTokenRequest(channel: channelName),
+      );
+      return ApiResult.success(response);
+    } on DioException catch (error) {
+      return ApiResult.failure(error.response?.data);
+    }
+  }
+  Future<ApiResult<ElitePromoModel>> getElitePromoTexts() async {
+    var token = CacheHelper.getData(key: 'token');
+    try {
+      var response = await _apiService.getElitePromoTexts('Bearer $token');
       return ApiResult.success(response);
     } on DioException catch (error) {
       return ApiResult.failure(error.response?.data);

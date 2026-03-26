@@ -55,6 +55,9 @@ Request _$RequestFromJson(Map<String, dynamic> json) => Request(
       offers: json['offers'] == null
           ? null
           : Offers.fromJson(json['offers'] as Map<String, dynamic>),
+      account: json['account'] == null
+          ? null
+          : Account.fromJson(json['account'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$RequestToJson(Request instance) => <String, dynamic>{
@@ -69,6 +72,7 @@ Map<String, dynamic> _$RequestToJson(Request instance) => <String, dynamic>{
       'created_at': instance.createdAt,
       'files': instance.files,
       'offers': instance.offers,
+      'account': instance.account,
     };
 
 EliteServiceCategory _$EliteServiceCategoryFromJson(
@@ -108,6 +112,22 @@ Map<String, dynamic> _$FileElementToJson(FileElement instance) =>
       'file': instance.file,
       'is_voice': instance.isVoice,
       'is_reply': instance.isReply,
+    };
+
+Account _$AccountFromJson(Map<String, dynamic> json) => Account(
+      id: json['id'] as String?,
+      name: json['name'] as String?,
+      username: json['username'] as String?,
+      phone: json['phone'] as String?,
+      image: json['image'] as String?,
+    );
+
+Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'username': instance.username,
+      'phone': instance.phone,
+      'image': instance.image,
     };
 
 Offers _$OffersFromJson(Map<String, dynamic> json) => Offers(
