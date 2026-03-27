@@ -27,7 +27,7 @@ class ReqestsScreen extends StatelessWidget {
       builder: (context, state) {
         return RefreshIndicator(
           onRefresh: () async {
-            officeProviderCubit.loadServices();
+            await officeProviderCubit.getMyServicesRequestOffers();
           },
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),

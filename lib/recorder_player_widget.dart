@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'dart:io';
@@ -13,11 +15,13 @@ class RecorderPlayerWidget extends StatefulWidget {
   final Function(String?) onRecordingComplete;
   final RecorderController recorderController;
   final PlayerController playerController;
+  final bool isDark;
 
   const RecorderPlayerWidget({super.key, 
     required this.onRecordingComplete,
     required this.recorderController,
     required this.playerController,
+    this.isDark = false,
   });
 
   @override
@@ -38,6 +42,7 @@ class _RecorderPlayerWidgetState extends State<RecorderPlayerWidget> {
   String recordingTime = "00:00";
   late Directory appDirectory;
 
+  Timer? _maxDurationTimer;
   RecordingState _recordingState = RecordingState.idle;
 
   @override
@@ -51,7 +56,9 @@ class _RecorderPlayerWidgetState extends State<RecorderPlayerWidget> {
     appDirectory = await getApplicationDocumentsDirectory();
     path = "${appDirectory.path}/recording.m4a";
     isLoading = false;
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void _initialiseControllers() {
@@ -61,11 +68,20 @@ class _RecorderPlayerWidgetState extends State<RecorderPlayerWidget> {
       ..iosEncoder = IosEncoder.kAudioFormatMPEG4AAC
       ..sampleRate = 44100;
 
-    // Listen to recording duration updates
     widget.recorderController.onCurrentDuration.listen((duration) {
-      setState(() {
-        recordingTime = _formatDuration(duration);
-      });
+      if (mounted) {
+        setState(() {
+          recordingTime = _formatDuration(duration);
+        });
+      }
+    });
+
+    widget.playerController.onPlayerStateChanged.listen((state) {
+        if(mounted){
+            setState(() {
+                isPlaybackInProgress = state.isPlaying;
+            });
+        }
     });
   }
 
@@ -77,21 +93,27 @@ class _RecorderPlayerWidgetState extends State<RecorderPlayerWidget> {
   }
 
   void _deleteRecording() {
-    setState(() {
-      isRecording = false;
-      isRecoded = false;
-      isRecordingCompleted = false;
-      isPlaybackInProgress = false;
-      recordingTime = "00:00";
-      widget.playerController.stopPlayer();
-      widget.recorderController.reset();
-    });
+    if (mounted) {
+      setState(() {
+        isRecording = false;
+        isRecoded = false;
+        isRecordingCompleted = false;
+        isPlaybackInProgress = false;
+        recordingTime = "00:00";
+        widget.playerController.stopPlayer();
+        widget.recorderController.reset();
+      });
+      widget.onRecordingComplete(null);
+    }
   }
 
   void startTimer() {
     _startOrStopRecording();
-    Timer(Duration(seconds: 180), () {
-      _startOrStopRecording();
+    _maxDurationTimer?.cancel();
+    _maxDurationTimer = Timer(const Duration(seconds: 180), () {
+      if (isRecording) {
+        _startOrStopRecording();
+      }
     });
   }
 
@@ -101,18 +123,12 @@ class _RecorderPlayerWidgetState extends State<RecorderPlayerWidget> {
 
       if (widget.playerController.playerState.isPlaying) {
         await widget.playerController.pausePlayer();
-        setState(() {
-          isPlaybackInProgress = false;
-        });
       } else {
         if (widget.playerController.playerState == PlayerState.stopped ||
             widget.playerController.playerState == PlayerState.initialized) {
           await widget.playerController.preparePlayer(path: path!);
         }
-        await widget.playerController.startPlayer();
-        setState(() {
-          isPlaybackInProgress = true;
-        });
+        await widget.playerController.startPlayer(finishMode: FinishMode.pause);
       }
     } catch (e) {
       debugPrint("Error during playback: $e");
@@ -123,152 +139,160 @@ class _RecorderPlayerWidgetState extends State<RecorderPlayerWidget> {
     isRecoded = true;
     try {
       if (isRecording) {
-        widget.recorderController.reset();
         path = await widget.recorderController.stop(false);
 
         if (path != null) {
           isRecordingCompleted = true;
-          setState(() => _recordingState = RecordingState.recorded);
+          if (mounted) setState(() => _recordingState = RecordingState.recorded);
           widget.onRecordingComplete(path);
         }
       } else {
         await widget.recorderController.record(path: path);
-        setState(() => _recordingState = RecordingState.recording);
+        if (mounted) setState(() => _recordingState = RecordingState.recording);
       }
     } catch (e) {
       debugPrint(e.toString());
     } finally {
-      setState(() {
-        isRecording = !isRecording;
-      });
+      if (mounted) {
+        setState(() {
+          isRecording = !isRecording;
+        });
+      }
     }
   }
 
   @override
   void dispose() {
-    widget.recorderController.dispose();
-    widget.playerController.dispose();
+    _maxDurationTimer?.cancel();
     _stopWatchTimer.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (isRecordingCompleted)
-          Container(
-            decoration: BoxDecoration(
-              color: appColors.lightYellow10,
-              borderRadius: BorderRadius.circular(12.0),
-              border: Border.all(color: appColors.primaryColorYellow),
+    if (isRecordingCompleted) {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: widget.isDark ? const Color(0xFF0F2D37) : const Color(0xFF042029), 
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          children: [
+            // Delete (Trash) button with red circle background
+            GestureDetector(
+              onTap: _deleteRecording,
+              child: Container(
+                padding: EdgeInsets.all(6.w),
+                decoration: const BoxDecoration(
+                  color: Color(0xFF421212), // Dark Red/Brown background
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(CupertinoIcons.trash_fill, color: const Color(0xFFD32F2F), size: 18.sp),
+              ),
             ),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: _deleteRecording,
-                  icon: Icon(Icons.delete, color: Colors.red),
-                ),
-                Expanded(
-                  child: AudioFileWaveforms(
-                    size: Size(MediaQuery.of(context).size.width / 2, 30),
-                    playerController: widget.playerController,
-                    waveformType: WaveformType.long,
-                    playerWaveStyle: PlayerWaveStyle(
-                      fixedWaveColor:
-                          appColors.primaryColorYellow.withOpacity(0.5),
-                      liveWaveColor: appColors.primaryColorYellow,
-                      seekLineColor: appColors.red,
-                    ),
-                  ),
-                ),
-                Text(recordingTime,
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                IconButton(
-                  onPressed: _playOrPauseRecording,
-                  icon: Icon(
-                    isPlaybackInProgress ? Icons.pause : Icons.play_arrow,
-                    color: appColors.primaryColorYellow,
-                  ),
-                ),
-              ],
+            SizedBox(width: 12.w),
+            Text(
+              recordingTime,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12.sp,
+                fontFamily: 'Cairo',
+              ),
             ),
-          )
-        else
-          Row(
-            children: [
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: isRecording
-                      ? Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            color: appColors.lightYellow10,
-                            borderRadius: BorderRadius.circular(12.0),
-                            border:
-                                Border.all(color: appColors.primaryColorYellow),
-                          ),
-                          child: Row(
-                            children: [
-                              Text(recordingTime,
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: AudioWaveforms(
-                                  enableGesture: true,
-                                  size: Size(
-                                      MediaQuery.of(context).size.width / 2,
-                                      30),
-                                  recorderController: widget.recorderController,
-                                  waveStyle: WaveStyle(
-                                    waveColor: appColors.primaryColorYellow,
-                                    waveCap: StrokeCap.round,
-                                    waveThickness: 4.0,
-                                    extendWaveform: true,
-                                    showMiddleLine: false,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : GestureDetector(
-                          onTap: startTimer,
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: appColors.lightYellow10,
-                              borderRadius: BorderRadius.circular(12.0),
-                              border: Border.all(
-                                  color: appColors.primaryColorYellow),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.mic,
-                                    color: appColors.primaryColorYellow),
-                                SizedBox(width: 10),
-                                Text("تسجيل صوتي",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                          ),
-                        ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: AudioFileWaveforms(
+                size: Size(double.infinity, 30.h),
+                playerController: widget.playerController,
+                waveformType: WaveformType.long,
+                playerWaveStyle: PlayerWaveStyle(
+                  fixedWaveColor: widget.isDark ? Colors.white.withOpacity(0.3) : const Color(0xFFD4AF37).withOpacity(0.3),
+                  liveWaveColor: widget.isDark ? Colors.white : const Color(0xFFD4AF37),
+                  spacing: 4,
+                  waveThickness: 2,
                 ),
               ),
-              if (isRecording)
-                IconButton(
-                  onPressed: _startOrStopRecording,
-                  icon: Icon(Icons.stop),
-                  color: appColors.primaryColorYellow,
+            ),
+            IconButton(
+              onPressed: _playOrPauseRecording,
+              icon: Icon(
+                isPlaybackInProgress ? CupertinoIcons.pause_fill : CupertinoIcons.play_fill,
+                color: widget.isDark ? Colors.white : const Color(0xFFD4AF37),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (isRecording) {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: const Color(0xFF042029),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          children: [
+            Text(
+              recordingTime,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12.sp,
+                fontFamily: 'Cairo',
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: AudioWaveforms(
+                enableGesture: true,
+                size: Size(double.infinity, 30.h),
+                recorderController: widget.recorderController,
+                waveStyle: WaveStyle(
+                  waveColor: const Color(0xFFD4AF37),
+                  waveCap: StrokeCap.round,
+                  waveThickness: 4.0,
+                  extendWaveform: true,
+                  showMiddleLine: false,
                 ),
-            ],
-          ),
-      ],
+              ),
+            ),
+            IconButton(
+              onPressed: _startOrStopRecording,
+              icon: Icon(CupertinoIcons.stop_fill, color: const Color(0xFFD4AF37)),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return GestureDetector(
+      onTap: startTimer,
+      child: Container(
+        padding: EdgeInsets.all(16.h),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFAF6E9),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(CupertinoIcons.mic_fill, color: const Color(0xFFD4AF37)),
+            SizedBox(width: 8.w),
+            Text(
+              "تسجيل صوتي",
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFFD4AF37),
+                fontFamily: 'Cairo',
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

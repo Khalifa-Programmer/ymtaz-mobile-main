@@ -305,16 +305,15 @@ class ProductsCard extends StatelessWidget {
             ],
           ),
           // todo elite card
-          // verticalSpace(10.h),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children: [
-          //     buildProductItem('طلبات النخبة', AppAssets.crown, () {
-          //       context.pushNamed(Routes.eliteRequestsClients);
-          //     }),
-          //
-          //   ],
-          // ),
+          verticalSpace(10.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              buildProductItem('طلبات النخبة', AppAssets.crown, () {
+                context.pushNamed(Routes.eliteRequestsClients);
+              }),
+            ],
+          ),
         ],
       ),
     );

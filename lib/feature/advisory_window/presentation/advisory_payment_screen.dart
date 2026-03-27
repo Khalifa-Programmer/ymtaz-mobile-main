@@ -104,8 +104,13 @@ class AdvisoryPaymentScreen extends StatelessWidget {
                             "sub_price_id": cubit.selectedLevel!.id,
                             "description": cubit.description,
                             "lawyer_id": cubit.selectedLawyer!.lawyer!.id,
+                            "importance_id": cubit.selectedLawyer!.importance!.id,
+                            "type_id": cubit.selectedLawyer!.subCategory!.id,
+                            "advisory_services_id": cubit.selectedAdvisoryType,
+                            "accept_rules": 1,
                           };
                           FormData newRequestData = FormData.fromMap(map);
+
 
                           if (cubit.isNeedAppointment) {
                             newRequestData.fields

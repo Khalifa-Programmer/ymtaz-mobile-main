@@ -117,3 +117,16 @@ final class YmtazEliteOfferApprovalError extends YmtazEliteState {
   @override
   List<Object> get props => [message];
 }
+
+final class YmtazEliteRepricingLoading extends YmtazEliteState {}
+
+final class YmtazEliteRepricingSuccess extends YmtazEliteState {}
+
+final class YmtazEliteRepricingError extends YmtazEliteState {
+  final String message;
+
+  const YmtazEliteRepricingError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

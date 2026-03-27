@@ -44,6 +44,11 @@ import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.da
 import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
 import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_request_details_screen.dart';
 import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_requests_screen.dart';
+import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_consultant_offers_screen.dart';
+import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_price_offer_screen.dart';
+import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_repricing_request_screen.dart';
+import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_payment_screen.dart';
+import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_success_payment_screen.dart';
 
 import '../../feature/advisory_window/data/model/all_advirsory_response.dart';
 import '../../feature/advisory_window/logic/advisory_cubit.dart';
@@ -594,9 +599,7 @@ class AppRouter {
 
     // elite
       case Routes.elite:
-        return _getFadeTransition(BlocProvider.value(
-            value: getit<YmtazEliteCubit>(),
-            child: EliteMainScreen()));
+        return _getFadeTransition(const EliteMainScreen());
 
       case Routes.eliteRequestsClients:
         return _getFadeTransition(BlocProvider.value(
@@ -614,8 +617,59 @@ class AppRouter {
         ));
 
       case Routes.eliteRequestDetails:
-        return _getFadeTransition(EliteRequestDetailsScreen(
-          request: settings.arguments as Request,
+        return _getFadeTransition(BlocProvider.value(
+          value: getit<YmtazEliteCubit>(),
+          child: EliteRequestDetailsScreen(
+            request: settings.arguments as Request,
+          ),
+        ));
+
+      case Routes.eliteConsultantOffers:
+        return _getFadeTransition(BlocProvider.value(
+          value: getit<YmtazEliteCubit>(),
+          child: EliteConsultantOffersScreen(
+            request: settings.arguments as Request,
+          ),
+        ));
+
+      case Routes.elitePriceOffer:
+        final args = settings.arguments as Map<String, dynamic>;
+        return _getFadeTransition(BlocProvider.value(
+          value: getit<YmtazEliteCubit>(),
+          child: ElitePriceOfferScreen(
+            request: args['request'] as Request,
+            offer: args['offer'] as TypesImportance,
+          ),
+        ));
+
+      case Routes.eliteRepricingRequest:
+        final args = settings.arguments as Map<String, dynamic>;
+        return _getFadeTransition(BlocProvider.value(
+          value: getit<YmtazEliteCubit>(),
+          child: EliteRepricingRequestScreen(
+            request: args['request'] as Request,
+            offer: args['offer'] as TypesImportance,
+          ),
+        ));
+
+      case Routes.elitePayment:
+        final args = settings.arguments as Map<String, dynamic>;
+        return _getFadeTransition(BlocProvider.value(
+          value: getit<YmtazEliteCubit>(),
+          child: ElitePaymentScreen(
+            request: args['request'] as Request,
+            offer: args['offer'] as TypesImportance,
+          ),
+        ));
+
+      case Routes.eliteSuccessPayment:
+        final args = settings.arguments as Map<String, dynamic>;
+        return _getFadeTransition(BlocProvider.value(
+          value: getit<YmtazEliteCubit>(),
+          child: EliteSuccessPaymentScreen(
+            request: args['request'] as Request,
+            offer: args['offer'] as TypesImportance,
+          ),
         ));
 
 

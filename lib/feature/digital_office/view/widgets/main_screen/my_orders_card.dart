@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
 
 import '../../../../../config/themes/styles.dart';
@@ -77,62 +78,62 @@ class MyOrdersItemsClientCard extends StatelessWidget {
           ],
         ),
         verticalSpace(10.h),
-        // todo add elite requests here
-        // GestureDetector(
-        //   onTap: () {
-        //     context.pushNamed(Routes.eliteRequests);
-        //   },
-        //   child: Container(
-        //     height: 40.h,
-        //     margin: EdgeInsets.symmetric(horizontal: 12.w),
-        //     decoration: ShapeDecoration(
-        //       color: Colors.white,
-        //       shadows: [
-        //         BoxShadow(
-        //           color: Colors.black12.withOpacity(0.04),
-        //           // Shadow color
-        //           spreadRadius: 3,
-        //           // Spread radius
-        //           blurRadius: 10,
-        //           // Blur radius
-        //           offset: const Offset(0, 3), // Offset in x and y direction
-        //         ),
-        //       ],
-        //       shape: RoundedRectangleBorder(
-        //         // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
-        //
-        //         borderRadius: BorderRadius.circular(4.r),
-        //       ),
-        //     ),
-        //     child: Row(
-        //       children: [
-        //         Container(
-        //           height: double.infinity,
-        //           width: 4.h,
-        //           decoration: BoxDecoration(
-        //             color: appColors.primaryColorYellow,
-        //             borderRadius: BorderRadius.only(
-        //                 topRight: Radius.circular(10.r),
-        //                 bottomRight: Radius.circular(10.r)),
-        //           ),
-        //         ),
-        //         horizontalSpace(10.w),
-        //         SvgPicture.asset(
-        //           AppAssets.crown,
-        //           width: 20.sp,
-        //           height: 20.sp,
-        //           placeholderBuilder: (context) =>
-        //               const CircularProgressIndicator(),
-        //         ),
-        //         horizontalSpace(10.w),
-        //         Text("هيئة المستشارين",
-        //             style: TextStyles.cairo_12_bold.copyWith(
-        //               color: appColors.blue100,
-        //             )),
-        //       ],
-        //     ),
-        //   ),
-        // ),
+        // elite requests
+        GestureDetector(
+          onTap: () {
+            context.pushNamed(Routes.eliteRequests);
+          },
+          child: Container(
+            height: 40.h,
+            margin: EdgeInsets.symmetric(horizontal: 12.w),
+            decoration: ShapeDecoration(
+              color: Colors.white,
+              shadows: [
+                BoxShadow(
+                  color: Colors.black12.withOpacity(0.04),
+                  // Shadow color
+                  spreadRadius: 3,
+                  // Spread radius
+                  blurRadius: 10,
+                  // Blur radius
+                  offset: const Offset(0, 3), // Offset in x and y direction
+                ),
+              ],
+              shape: RoundedRectangleBorder(
+                // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
+
+                borderRadius: BorderRadius.circular(4.r),
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  height: double.infinity,
+                  width: 4.h,
+                  decoration: BoxDecoration(
+                    color: appColors.primaryColorYellow,
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10.r),
+                        bottomRight: Radius.circular(10.r)),
+                  ),
+                ),
+                horizontalSpace(10.w),
+                SvgPicture.asset(
+                  AppAssets.crown,
+                  width: 20.sp,
+                  height: 20.sp,
+                  placeholderBuilder: (context) =>
+                      const CircularProgressIndicator(),
+                ),
+                horizontalSpace(10.w),
+                Text("النخبة",
+                    style: TextStyles.cairo_12_bold.copyWith(
+                      color: appColors.blue100,
+                    )),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

@@ -208,7 +208,7 @@ class _AppointmentDataState extends State<AppointmentData> {
                                     "date": DateFormat("yyyy-MM-dd")
                                         .format(_selectedDate!),
                                     "from": selectedTimeFrom,
-                                    "to": selectedTimeFrom
+                                    "to": selectedTimeTo
                                   });
                                   if (widget.documentFile != null) {
                                     data.files.add(MapEntry(
@@ -716,8 +716,8 @@ class _AppointmentDataState extends State<AppointmentData> {
     );
     if (picked != null) {
       setState(() {
-        selectedTimeFrom = "${picked.hour}:${picked.minute}";
-        selectedTimeTo = "${picked.hour + 1}:${picked.minute}";
+        selectedTimeFrom = "${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}";
+        selectedTimeTo = "${(picked.hour + 1).toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}";
       });
     }
   }

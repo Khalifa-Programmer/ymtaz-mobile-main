@@ -14,79 +14,87 @@ class EliteLawyersSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
+      margin: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.r),
+        borderRadius: BorderRadius.circular(16.r),
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFFFBF1D4), // Color from image
+            Color(0xFFF1D896), // Darker gold for bottom
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black12.withOpacity(0.04),
-            spreadRadius: 3,
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            color: const Color(0xFFD4AF37).withOpacity(0.15),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            context.pushNamed(Routes.elite);
-          },
-          borderRadius: BorderRadius.circular(10.r),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-            child: Row(
-              children: [
-                Container(
-                  width: 50.w,
-                  height: 50.h,
-                  decoration: BoxDecoration(
-                    color: appColors.primaryColorYellow.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  padding: EdgeInsets.all(10.w),
-                  child: SvgPicture.asset(
+      child: Padding(
+        padding: EdgeInsets.all(24.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end, // Aligns description text and button to right
+          children: [
+            // Align Header (Text + Icon) to the absolute right
+            Align(
+              alignment: Alignment.centerRight,
+              child: Row(
+                mainAxisSize: MainAxisSize.min, // Takes only needed space
+                children: [
+                  SvgPicture.asset(
                     AppAssets.crown,
-                    color: appColors.primaryColorYellow,
+                    width: 18.sp,
+                    color: const Color(0xFFD4AF37),
                   ),
-                ),
-                horizontalSpace(10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "نخبة المستشارين",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                          color: appColors.blue100,
-                          fontFamily: 'Cairo',
-                        ),
-                      ),
-                      verticalSpace(5.h),
-                      Text(
-                        "نخبة من أفضل المستشارين القانونيين لخدمتكم",
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          color: Colors.grey,
-                          fontFamily: 'Cairo',
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                  horizontalSpace(8.w),
+                  Text(
+                    "فريقك الاستشاري",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF0F2D37),
+                      fontFamily: 'Cairo',
+                    ),
                   ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 15.sp,
-                  color: appColors.blue100,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+            verticalSpace(8.h),
+            Text(
+              "تقديم حلول متنوعة وخطوات مدروسة لحل المشكلة بشكل شامل من قبل نخبة من المستشارين المتخصصين بأحدث التقنيات المتاحة",
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 11.sp,
+                color: const Color(0xFF0F2D37).withOpacity(0.9),
+                fontFamily: 'Cairo',
+                height: 1.6,
+              ),
+            ),
+            verticalSpace(20.h),
+            SizedBox(
+              width: double.infinity,
+              child: CupertinoButton(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                color: const Color(0xFFD4AF37),
+                borderRadius: BorderRadius.circular(12.r),
+                onPressed: () {
+                  context.pushNamed(Routes.eliteRequestScreen);
+                },
+                child: Text(
+                  "ابدأ الآن",
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontFamily: 'Cairo',
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

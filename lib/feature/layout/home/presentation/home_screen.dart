@@ -19,6 +19,7 @@ import 'package:yamtaz/feature/layout/home/logic/home_cubit.dart';
 import 'package:yamtaz/feature/layout/home/logic/home_state.dart';
 import 'package:yamtaz/feature/layout/home/presentation/recent_joined_lawyers.dart';
 import 'package:yamtaz/feature/layout/home/presentation/elite_lawyers_section.dart';
+import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
 
 import '../../../notifications/logic/notification_cubit.dart';
 import '../../account/logic/my_account_cubit.dart';
@@ -115,6 +116,41 @@ class _HomeScreenState extends State<HomeScreen> {
               SliverToBoxAdapter(child: verticalSpace(20.h)),
 
               _buildGridSection(context),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                  child: CupertinoButton(
+                    color: Colors.red.withOpacity(0.1),
+                    onPressed: () {
+                      final dummyRequest = Request(
+                        id: 1,
+                        description: "هناك حقيقة مثبتة منذ زمن طويل وهي أن المحتوى المقروء لصفحة ما سيلهي القارئ عن التركيز على الشكل الخارجي للنص أو شكل توضع الفقرات في الصفحة التي يقرأها.",
+                        eliteServiceCategory: EliteServiceCategory(name: "توكيل محامي"),
+                        offers: Offers(
+                          reservationType: ReservationType(
+                            typesImportance: [
+                              TypesImportance(
+                                id: 101,
+                                price: 3000,
+                                lawyer: Lawyer(name: "المستشار القانوني"),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                      Navigator.pushNamed(
+                        context,
+                        Routes.eliteConsultantOffers,
+                        arguments: dummyRequest,
+                      );
+                    },
+                    child: const Text(
+                      "👁️ معاينة تصميم عروض الاستشاريين (تجريبي)",
+                      style: TextStyle(color: Colors.red, fontFamily: 'Cairo', fontSize: 12),
+                    ),
+                  ),
+                ),
+              ),
               SliverToBoxAdapter(child: verticalSpace(20.h)),
 
 

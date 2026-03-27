@@ -658,7 +658,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'client/profile/delete-account-request',
+              ApiConstants.reomoveProfile,
               queryParameters: queryParameters,
               data: _data,
             )
@@ -689,7 +689,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'lawyer/profile/delete-account-request',
+              ApiConstants.reomoveProfileProvider,
               queryParameters: queryParameters,
               data: _data,
             )
@@ -802,7 +802,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'v1/activities',
+              ApiConstants.pointsRules,
               queryParameters: queryParameters,
               data: _data,
             )
@@ -2658,7 +2658,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'v1/contact-us/types',
+              ApiConstants.contactYmtazTypes,
               queryParameters: queryParameters,
               data: _data,
             )

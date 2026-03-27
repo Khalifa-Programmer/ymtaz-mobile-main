@@ -1,3 +1,4 @@
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -16,8 +17,10 @@ import '../../../core/constants/colors.dart';
 import '../../../core/router/routes.dart';
 import '../../../core/widgets/alerts.dart';
 import '../../../core/widgets/app_bar.dart';
+import '../../../core/widgets/custom_container.dart';
 import '../../../core/widgets/primary/text_form_primary.dart';
 import '../../../core/widgets/spacing.dart';
+import '../data/model/elite_category_model.dart';
 import '../logic/ymtaz_elite_cubit.dart';
 import 'elite_request_success_screen.dart';
 
@@ -36,6 +39,12 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
   final PlayerController _playerController = PlayerController();
 
   String? recordingPath;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<YmtazEliteCubit>().getCategories();
+  }
 
   Future<void> _pickFiles() async {
     if (_files.length >= 5) {
@@ -173,143 +182,200 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
         }
       },
       child: Scaffold(
-        appBar: buildBlurredAppBar(context, "تفاصيل الطلب"),
+        backgroundColor: Colors.white,
+        appBar: buildBlurredAppBar(context, "طلب خدمة النخبة"),
         body: Animate(
           effects: [FadeEffect(duration: 500.ms)],
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    "تفاصيل طلبك",
-                    style: TextStyles.cairo_14_bold,
-                  ),
-                  verticalSpace(5.h),
-                  Text(
-                    "تفاصيل طلبك للحصول على خدمة دقيقة",
-                    style: TextStyles.cairo_12_semiBold
-                        .copyWith(color: appColors.grey15),
-                  ),
-                  verticalSpace(20.h),
-                  // Text("مستوى الطلب ", style: TextStyles.cairo_12_bold),
-                  // CustomCheckSelectLevel(
-                  //   items: selectedAccurateData.levels!,
-                  //   onChanged: (item) {
-                  //     advisoryCubit.selectedLevel = item;
-                  //   },
-                  // ),
-                  Text("تفاصيل الطلب", style: TextStyles.cairo_12_bold),
-                  CustomTextFieldPrimary(
-                    hintText: "تفاصيل الطلب",
-                    multiLine: true,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return "الموضوع مطلوب";
-                      }
-                      return null;
-                    },
-                    externalController: externalController,
-                    title: "اكتب تفاصيل الطلب",
-                  ),
-                  if (_files.isEmpty)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("الملفات المرفقة (إختياري)",
-                            style: TextStyles.cairo_12_bold),
-                        verticalSpace(10.h),
-                        GestureDetector(
-                          onTap: _pickFiles,
-                          child: Container(
-                            width: double.infinity,
-                            height: 100.h,
-                            decoration: BoxDecoration(
-                              color: appColors.lightYellow10,
-                              border: Border.all(
-                                  color: appColors.primaryColorYellow),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                                child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  AppAssets.upload,
-                                  width: 24.sp,
-                                  height: 24.sp,
-                                  color: appColors.primaryColorYellow,
-                                ),
-                                SizedBox(width: 10.w),
-                                Text("ارفق ملف أو صورة",
-                                    style: TextStyles.cairo_12_semiBold),
-                              ],
-                            )),
-                          ),
-                        ),
-                      ],
-                    ),
                   verticalSpace(10.h),
-                  if (_files.isNotEmpty)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  // "Elite" Tag
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFAF6E9),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text("الملفات المرفقة (إختياري)",
-                            style: TextStyles.cairo_12_bold),
-                        verticalSpace(10.h),
-                        Container(
-                          padding: EdgeInsets.all(10.h),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border:
-                                Border.all(color: appColors.primaryColorYellow),
+                        Text(
+                          "نخبة",
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFFD4AF37),
+                            fontFamily: 'Cairo',
                           ),
-                          child: Column(
-                            children: [
-                              ..._files.map((file) {
-                                int index = _files.indexOf(file);
-                                return _buildFileListItem(file, index);
-                              }),
-                              Container(
-                                color: appColors.white,
-                                width: double.infinity,
-                                child: CupertinoButton(
-                                    padding: EdgeInsets.zero,
-                                    child: Text(
-                                      "اضافة المزيد",
-                                      style: TextStyles.cairo_12_bold.copyWith(
-                                          color: appColors.primaryColorYellow),
-                                    ),
-                                    onPressed: () {
-                                      _pickFiles();
-                                    }),
-                              )
-                            ],
-                          ),
+                        ),
+                        horizontalSpace(4.w),
+                        SvgPicture.asset(
+                          AppAssets.crown,
+                          width: 16.sp,
+                          height: 16.sp,
+                          color: const Color(0xFFD4AF37),
                         ),
                       ],
                     ),
+                  ),
+                  verticalSpace(30.h),
+                  
+                  // Request Type Dropdown
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      "نوع الطلب",
+                      style: TextStyle(fontSize: 12.sp, color: Colors.grey[400], fontFamily: 'Cairo'),
+                    ),
+                  ),
+                  verticalSpace(8.h),
+                  BlocBuilder<YmtazEliteCubit, YmtazEliteState>(
+                    buildWhen: (previous, current) => current is YmtazEliteSuccess || current is YmtazEliteLoading,
+                    builder: (context, state) {
+                      final cubit = context.read<YmtazEliteCubit>();
+                      if (cubit.categories == null || cubit.categories!.data == null || cubit.categories!.data!.categories == null) {
+                        return Container(
+                          height: 50.h,
+                          alignment: Alignment.center,
+                          child: const CircularProgressIndicator(),
+                        );
+                      }
+                      return CustomDropdown<Category>(
+                        hintText: 'اختر نوع الطلب',
+                        items: cubit.categories!.data!.categories!,
+                        onChanged: (value) {
+                          cubit.selectCategory(value!.id!);
+                        },
+                        decoration: CustomDropdownDecoration(
+                          closedFillColor: Colors.white,
+                          closedBorder: Border.all(color: Colors.grey[200]!),
+                          closedBorderRadius: BorderRadius.circular(12.r),
+                          hintStyle: TextStyle(fontSize: 13.sp, color: Colors.grey[300], fontFamily: 'Cairo'),
+                        ),
+                      );
+                    },
+                  ),
                   verticalSpace(20.h),
-                  RecorderPlayerWidget(
-                    onRecordingComplete: _onRecordingComplete,
-                    recorderController: _recorderController,
-                    playerController: _playerController,
-                  ), // Use the custom component
+
+                  // Problem Description
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      "توصيف المشكلة",
+                      style: TextStyle(fontSize: 12.sp, color: Colors.grey[400], fontFamily: 'Cairo'),
+                    ),
+                  ),
+                  verticalSpace(8.h),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(color: Colors.grey[200]!),
+                    ),
+                    child: TextField(
+                      controller: externalController,
+                      maxLines: 5,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(fontSize: 13.sp, fontFamily: 'Cairo'),
+                      decoration: InputDecoration(
+                        hintText: "اكتب وصف الطلب بشكل دقيق...",
+                        hintStyle: TextStyle(fontSize: 12.sp, color: Colors.grey[300], fontFamily: 'Cairo'),
+                        contentPadding: EdgeInsets.all(16.w),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
                   verticalSpace(20.h),
+
+                  // Attachments Section
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "المرفقات",
+                          style: TextStyle(fontSize: 12.sp, color: Colors.grey[600], fontFamily: 'Cairo'),
+                        ),
+                        Text(
+                          "الحد المسموح به 5 ملفات*",
+                          style: TextStyle(fontSize: 10.sp, color: Colors.grey[400], fontFamily: 'Cairo'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  verticalSpace(12.h),
+                  
+                  // Dotted Border for upload
+                  CustomPaint(
+                    painter: DottedBorderPainter(color: const Color(0xFFD4AF37)),
+                    child: GestureDetector(
+                      onTap: _pickFiles,
+                      child: Container(
+                        width: double.infinity,
+                        height: 70.h,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFAF6E9).withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "ارفق ملف أو صورة",
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                color: const Color(0xFFD4AF37).withOpacity(0.8),
+                                fontFamily: 'Cairo',
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            horizontalSpace(8.w),
+                            Icon(Icons.cloud_upload, color: const Color(0xFFD4AF37).withOpacity(0.8), size: 22.sp),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+                  if (_files.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.h),
+                      child: Column(
+                        children: _files.asMap().entries.map((entry) => _buildFileListItem(entry.value, entry.key)).toList(),
+                      ),
+                    ),
+
+                  verticalSpace(20.h),
+
+                  // Voice Recording / Player Bar
+                  _buildRecorderUI(),
+
+                  verticalSpace(40.h),
+
+                  // Submit Button
                   SizedBox(
                     width: double.infinity,
                     child: CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        color: appColors.primaryColorYellow,
-                        onPressed: _validateAndSubmit,
-                        child: Text(
-                          "التالي",
-                          style: TextStyles.cairo_14_bold
-                              .copyWith(color: appColors.white),
-                        )),
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      color: const Color(0xFFD4AF37),
+                      onPressed: _validateAndSubmit,
+                      child: Text(
+                        "إرسال الطلب",
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                    ),
                   ),
-                  verticalSpace(50.h),
+                  verticalSpace(40.h),
                 ],
               ),
             ),
@@ -318,4 +384,50 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
       ),
     );
   }
+
+  Widget _buildRecorderUI() {
+    return RecorderPlayerWidget(
+      onRecordingComplete: _onRecordingComplete,
+      recorderController: _recorderController,
+      playerController: _playerController,
+    );
+  }
+}
+
+class DottedBorderPainter extends CustomPainter {
+  final Color color;
+  DottedBorderPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double dashWidth = 5, dashSpace = 3, startX = 0;
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+
+    RRect rrect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(0, 0, size.width, size.height),
+      Radius.circular(12.r),
+    );
+
+    Path path = Path()..addRRect(rrect);
+    
+    // Draw dotted path
+    Path dottedPath = Path();
+    for (var metric in path.computeMetrics()) {
+      double distance = 0.0;
+      while (distance < metric.length) {
+        dottedPath.addPath(
+          metric.extractPath(distance, distance + dashWidth),
+          Offset.zero,
+        );
+        distance += dashWidth + dashSpace;
+      }
+    }
+    canvas.drawPath(dottedPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

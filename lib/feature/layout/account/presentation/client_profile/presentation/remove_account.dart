@@ -171,7 +171,7 @@ class _RemoveAccountState extends State<RemoveAccount> {
                             // If "Other" IS selected, the controller is bound to the TextField.
                             context
                                 .read<MyAccountCubit>()
-                                .removeAccountProvider();
+                                .removeAccount();
                           }
                         }),
                   ],

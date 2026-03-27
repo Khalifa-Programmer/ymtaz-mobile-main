@@ -87,22 +87,27 @@ class ServicesCubit extends Cubit<ServicesState> {
   // get services from api
   MyServicesRequestsResponse? myServicesRequestResponse;
 
-  void getMyServicesRequestOffers() {
+  Future<void> getMyServicesRequestOffers() async {
     print("loadServices");
 
     myServicesRequestResponse = null;
     emit(const ServicesState.getServices());
-    _servicesRepo.getMyServicesRequestOffers().then((result) {
-      result.when(
-        success: (data) {
+    final result = await _servicesRepo.getMyServicesRequestOffers();
+    result.when(
+      success: (data) {
           myServicesRequestResponse = data;
           emit(ServicesState.getServicesSuccess(data));
         },
         failure: (error) {
-          emit(ServicesState.getServicesError(error));
+          String errorMessage = "حدث خطأ في جلب العروض";
+          if (error is Map && error.containsKey('message')) {
+            errorMessage = error['message'];
+          } else if (error is String) {
+            errorMessage = error;
+          }
+          emit(ServicesState.getServicesError(errorMessage));
         },
       );
-    });
   }
 
   void myServicesClientOffersRespond(FormData data) {

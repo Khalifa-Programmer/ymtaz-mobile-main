@@ -16,11 +16,15 @@ import 'package:yamtaz/firebase_options.dart';
 import 'package:yamtaz/yamtaz.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter/services.dart';
+import 'package:yamtaz/config/enviroment.dart';
+
 
 import 'main.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Environment.set(EnvironmentType.dev);
+
   // 2. إخفاء شريط التنقل (Navigation Bar) وشريط الحالة (Status Bar) بشكل دائم
   // وضع immersiveSticky يجعل الشريط يظهر عند السحب ويختفي تلقائياً دون التأثير على حجم الشاشة
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);

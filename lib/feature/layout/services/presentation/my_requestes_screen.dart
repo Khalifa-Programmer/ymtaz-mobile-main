@@ -54,69 +54,68 @@ class MyServicesRequestsScreen extends StatelessWidget {
                       ),
                     ]),
               ),
-              body: TabBarView(children: [
-                ConditionalBuilder(
-                  condition:
-                      getit<ServicesCubit>().myServicesRequestResponse != null,
-                  builder: (BuildContext context) {
-                    final combinedOffers = [
-                      ...?getit<ServicesCubit>()
-                          .myServicesRequestResponse
-                          ?.data
-                          ?.offers
-                          ?.pendingOffer,
-                      ...?getit<ServicesCubit>()
-                          .myServicesRequestResponse
-                          ?.data
-                          ?.offers
-                          ?.declined
-                    ];
-                    return ReqestsScreen(
-                      request: combinedOffers,
+              body: BlocBuilder<ServicesCubit, ServicesState>(
+                builder: (context, state) {
+                  final cubit = context.read<ServicesCubit>();
+
+                  if (state is GetServices) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (state is GetServicesError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                          const SizedBox(height: 16),
+                          Text(state.message, 
+                            textAlign: TextAlign.center,
+                            style: TextStyles.cairo_14_semiBold
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () => cubit.getMyServicesRequestOffers(),
+                            child: const Text("إعادة المحاولة"),
+                          )
+                        ],
+                      ),
                     );
-                  },
-                  fallback: (BuildContext context) {
-                    return SizedBox(
-                        height: 400, child: ShimmerServiceOfferCardPending());
-                  },
-                ),
-                ConditionalBuilder(
-                  condition:
-                      getit<ServicesCubit>().myServicesRequestResponse != null,
-                  builder: (BuildContext context) {
-                    return ReqestsScreen(
-                      request: getit<ServicesCubit>()
-                              .myServicesRequestResponse!
-                              .data!
-                              .offers!
-                              .pendingAcceptance ??
-                          [],
-                    );
-                  },
-                  fallback: (BuildContext context) {
+                  }
+
+                  if (cubit.myServicesRequestResponse == null) {
                     return ShimmerServiceOfferCardPending();
-                  },
-                ),
-                ConditionalBuilder(
-                  condition:
-                      getit<ServicesCubit>().myServicesRequestResponse != null,
-                  builder: (BuildContext context) {
-                    return ReqestsScreen(
-                      request: getit<ServicesCubit>()
-                              .myServicesRequestResponse!
-                              .data!
-                              .offers!
-                              .accepted ??
-                          [],
-                    );
-                  },
-                  fallback: (BuildContext context) {
-                    return ShimmerServiceOfferCardPending();
-                  },
-                ),
-              ]),
+                  }
+
+                  return TabBarView(children: [
+                    _buildOffersTab(cubit),
+                    _buildPendingAcceptanceTab(cubit),
+                    _buildAcceptedTab(cubit),
+                  ]);
+                },
+              ),
             ));
       },
+    );
+  }
+
+  Widget _buildOffersTab(ServicesCubit cubit) {
+    final combinedOffers = [
+      ...?cubit.myServicesRequestResponse?.data?.offers?.pendingOffer,
+      ...?cubit.myServicesRequestResponse?.data?.offers?.declined
+    ];
+    return ReqestsScreen(request: combinedOffers);
+  }
+
+  Widget _buildPendingAcceptanceTab(ServicesCubit cubit) {
+    return ReqestsScreen(
+      request: cubit.myServicesRequestResponse?.data?.offers?.pendingAcceptance ?? [],
+    );
+  }
+
+  Widget _buildAcceptedTab(ServicesCubit cubit) {
+    return ReqestsScreen(
+      request: cubit.myServicesRequestResponse?.data?.offers?.accepted ?? [],
     );
   }
 }

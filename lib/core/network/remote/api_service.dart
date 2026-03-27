@@ -824,7 +824,7 @@ abstract class ApiService {
   Future<EliteRequestModel> sendEliteRequest(
       @Header('Authorization') String token, @Body() FormData body);
 
-  @GET('v1/elite/pricing-requests')
+  @GET(ApiConstants.elitePricingRequests)
   Future<ElitePricingRequestsModel> getPricingRequests(
     @Header('Authorization') String token,
   );
@@ -835,7 +835,7 @@ abstract class ApiService {
     @Body() Map<String, dynamic> body,
   );
 
-  @POST('v1/elite/offers/{id}/approve')
+  @POST(ApiConstants.eliteApproveOffer)
   Future<EliteOfferApprovalResponse> approveEliteOffer(
     @Header('Authorization') String token,
     @Path('id') String offerId,

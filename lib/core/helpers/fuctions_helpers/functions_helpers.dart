@@ -9,7 +9,7 @@ import '../../../feature/layout/account/presentation/widgets/share_screen.dart';
 
 String getTime(String timestamp) {
   DateTime dateTime = DateTime.parse(timestamp).toLocal();
-  return "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}";
+  return DateFormat('hh:mm a').format(dateTime);
 }
 
 int daysRemaining(DateTime endDate) {
@@ -25,7 +25,7 @@ String getDate(String? timestamp) {
 
   try {
     DateTime dateTime = DateTime.parse(timestamp).toLocal();
-    return "${dateTime.toLocal().year}-${dateTime.toLocal().month.toString().padLeft(2, '0')}-${dateTime.toLocal().day.toString().padLeft(2, '0')}";
+    return DateFormat('yyyy/MM/dd').format(dateTime);
   } catch (e) {
     return "لا يوجد تاريخ";
   }

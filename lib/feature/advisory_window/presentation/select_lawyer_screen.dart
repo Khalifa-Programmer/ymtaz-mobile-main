@@ -1,4 +1,5 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +35,28 @@ class SelectLawyerScreen extends StatelessWidget {
                 if (state is AdvisoryTypeLawyersLoaded) {
                   final data = state.data;
                   final validData = (data.data ?? []).where((item) => item.lawyer != null).toList();
+
+                  if (validData.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.people_alt_outlined, size: 64.sp, color: appColors.grey15),
+                          verticalSpace(16.h),
+                          Text(
+                            "لا يوجد محامين متاحين حالياً",
+                            style: TextStyles.cairo_16_bold.copyWith(color: appColors.blue100),
+                          ),
+                          verticalSpace(8.h),
+                          Text(
+                            "يرجى المحاولة مرة أخرى لاحقاً",
+                            style: TextStyles.cairo_12_semiBold.copyWith(color: appColors.grey15),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
                   return Animate(
                     effects: [
                       FadeEffect(duration: 200.ms),

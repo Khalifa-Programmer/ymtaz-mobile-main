@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:moyasar/moyasar.dart';
 import 'package:yamtaz/config/enviroment.dart';
 import 'package:yamtaz/config/themes/styles.dart';
@@ -28,11 +29,60 @@ class MoyasarPaymentScreen extends StatefulWidget {
 class _MoyasarPaymentScreenState extends State<MoyasarPaymentScreen> {
   PaymentConfig? config;
   bool isLoading = true;
+  Key _cardKey = UniqueKey(); // مفتاح للتحكم في إعادة بناء واجهة البطاقة
 
   @override
   void initState() {
     super.initState();
+    _setupErrorInterceptor();
     _initializeConfig();
+  }
+
+  // اعتراض الأخطاء غير المعالجة التي تحدث داخل مكتبة ميسر (Bug Fix)
+  void _setupErrorInterceptor() {
+    // 1. للأخطاء المتزامنة (Synchronous)
+    final originalOnError = FlutterError.onError;
+    FlutterError.onError = (FlutterErrorDetails details) {
+      final errorStr = details.exception.toString();
+      if (_isMoyasarCrash(errorStr)) {
+        debugPrint('⚠️ Caught Moyasar Sync Crash: $errorStr');
+        _handleCaughtCrash();
+        return;
+      }
+      originalOnError?.call(details);
+    };
+
+    // 2. للأخطاء غير المتزامنة (Asynchronous) - مثل أخطاء الـ Future في الـ API
+    final originalDispatcherOnError = PlatformDispatcher.instance.onError;
+    PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
+      final errorStr = error.toString();
+      if (_isMoyasarCrash(errorStr)) {
+        debugPrint('⚠️ Caught Moyasar Async Crash: $errorStr');
+        _handleCaughtCrash();
+        return true; 
+      }
+      return originalDispatcherOnError?.call(error, stack) ?? false;
+    };
+  }
+
+  bool _isMoyasarCrash(String errorStr) {
+    // التحقق من الخطأ بأكثر من صيغة لضمان القبض عليه
+    return (errorStr.contains("Null") && errorStr.contains("subtype") && errorStr.contains("String")) ||
+           (errorStr.contains("Null") && errorStr.contains("String") && errorStr.contains("expected"));
+  }
+
+  void _handleCaughtCrash() {
+    // استخدام microtask لضمان التنفيذ على الـ Main Thread وتجنب تعارض الـ build
+    Future.microtask(() {
+      if (!mounted) return;
+      
+      // إظهار رسالة الخطأ
+      _handlePaymentError('عذراً، حدث خطأ تقني. يرجى التأكد من استخدام بطاقة دفع حقيقية صالحة (وليست تجريبية) في هذه البيئة.');
+      
+      setState(() {
+        _cardKey = UniqueKey(); // إعادة بناء الواجهة بالكامل لتصفير الـ Loading
+      });
+    });
   }
 
   void _initializeConfig() async {
@@ -145,12 +195,44 @@ class _MoyasarPaymentScreenState extends State<MoyasarPaymentScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 12),
+                  // تنبيه لبيئة الإنتاج
+                  FutureBuilder<EnvironmentType>(
+                    future: Environment.current(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data == EnvironmentType.prod) {
+                        return Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 20),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'تنبيه: أنت بجلسة دفع حقيقية. يرجى استخدام بطاقة بنكية صالحة (بطاقات الاختبار لا تعمل هنا).',
+                                  style: TextStyles.cairo_12_semiBold.copyWith(color: Colors.orange[900]),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                  const SizedBox(height: 12),
                   
                   // نموذج البطاقة من ميسر
                   if (config != null)
                     CreditCard(
+                      key: _cardKey, // استخدام المفتاح للتحكم في الحالة
                       config: config!,
+                      locale: const Localization.ar(), // تعريب نصوص مكتبة ميسر الداخلية هنا
                       onPaymentResult: (result) {
                         if (result is PaymentResponse) {
                           if (result.status == PaymentStatus.paid) {
@@ -275,6 +357,10 @@ class _MoyasarPaymentScreenState extends State<MoyasarPaymentScreen> {
       if (lowerError.contains(key)) {
         return translations[key]!;
       }
+    }
+
+    if (lowerError.contains('null') && lowerError.contains('subtype') && lowerError.contains('string')) {
+      return 'فشلت معالجة الطلب: يرجى التأكد من استخدام بطاقة حقيقية صالحة (وليست تجريبية) في هذه البيئة.';
     }
 
     if (lowerError.contains('failed') || lowerError.contains('error')) {

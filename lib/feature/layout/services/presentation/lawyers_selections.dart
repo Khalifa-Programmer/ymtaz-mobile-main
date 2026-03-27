@@ -79,6 +79,28 @@ class LawyersSelections extends StatelessWidget {
             );
           }, serviceLawyersByIdSuccess: (data) {
             final validData = (data.data ?? []).where((datum) => datum.lawyer != null).toList();
+
+            if (validData.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.people_alt_outlined, size: 64.sp, color: appColors.grey15),
+                    verticalSpace(16.h),
+                    Text(
+                      "لا يوجد محامين متاحين حالياً",
+                      style: TextStyles.cairo_16_bold.copyWith(color: appColors.blue100),
+                    ),
+                    verticalSpace(8.h),
+                    Text(
+                      "يرجى المحاولة مرة أخرى لاحقاً أو تغيير الفلتر",
+                      style: TextStyles.cairo_12_semiBold.copyWith(color: appColors.grey15),
+                    ),
+                  ],
+                ),
+              );
+            }
+
             return Stack(
               children: [
                 Animate(
@@ -99,6 +121,21 @@ class LawyersSelections extends StatelessWidget {
                               regionName == selectedFilter.value;
                           return matchesQuery && matchesFilter;
                         }).toList();
+
+                        if (filteredData.isEmpty && query.isNotEmpty) {
+                          return ListView(
+                            children: [
+                              _buildSearchAndFilter(),
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 50.h),
+                                  child: Text("لا توجد نتائج بحث مطابقة", style: TextStyles.cairo_14_semiBold),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+
                         final filteredLawyers = filteredData.map((e) => e.lawyer!).toList();
                         return ListView(
                           children: [
@@ -290,9 +327,9 @@ class LawyersSelections extends StatelessWidget {
                   return CircleAvatar(
                     radius: 20.sp,
                     backgroundImage: CachedNetworkImageProvider(
-                      lawyer.image!.isEmpty
-                          ? "https://api.ymtaz.sa/uploads/person.png"
-                          : lawyer.image!,
+                      (lawyer.image != null && lawyer.image!.isNotEmpty)
+                          ? lawyer.image!
+                          : "https://api.ymtaz.sa/uploads/person.png",
                     ),
                   ).animate();
                 }).toList(),

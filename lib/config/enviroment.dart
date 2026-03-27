@@ -17,18 +17,43 @@ enum EnvironmentType {
 class Environment {
   static EnvironmentType? _current;
 
+  static void set(EnvironmentType type) {
+    _current = type;
+  }
+
   static Future<EnvironmentType> current() async {
     if (_current != null) return _current!;
 
-    // تحديد البيئة بناءً على وضع التشغيل (Debug vs Release)
-    if (kReleaseMode) {
+    // 1. Check for manual override via --dart-define
+    const envFromDefine = String.fromEnvironment('ENVIRONMENT');
+    if (envFromDefine == 'prod') {
       _current = EnvironmentType.prod;
-      print('🚀 PRODUCTION MODE: Using Live Environment.');
-    } else {
+    } else if (envFromDefine == 'dev') {
       _current = EnvironmentType.dev;
-      print('🛠️ DEVELOPMENT MODE: Using Test Environment.');
+    } else {
+      // 2. Logic based on build mode and package name
+      try {
+        final packageInfo = await PackageInfo.fromPlatform();
+        if (packageInfo.packageName.endsWith('.dev')) {
+          _current = EnvironmentType.dev;
+        } else if (kReleaseMode) {
+          _current = EnvironmentType.prod;
+        } else {
+          // Default to prod for official main (usually production flavor)
+          _current = EnvironmentType.prod;
+        }
+      } catch (e) {
+        _current = kReleaseMode ? EnvironmentType.prod : EnvironmentType.dev;
+      }
+    }
+
+    if (_current == EnvironmentType.prod) {
+      debugPrint('🚀 PRODUCTION MODE: Using Live Environment.');
+    } else {
+      debugPrint('🛠️ DEVELOPMENT MODE: Using Test Environment.');
     }
 
     return _current!;
   }
 }
+

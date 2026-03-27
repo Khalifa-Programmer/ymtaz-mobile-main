@@ -26,10 +26,14 @@ import 'feature/reminders/models/reminder_model.dart';
 import 'feature/reminders/services/reminder_service.dart';
 import 'package:yamtaz/core/services/notification_service.dart';
 import 'package:flutter/services.dart';
+import 'package:yamtaz/config/enviroment.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Environment.set(EnvironmentType.prod);
+
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();

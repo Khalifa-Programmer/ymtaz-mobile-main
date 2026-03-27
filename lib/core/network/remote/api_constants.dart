@@ -121,7 +121,7 @@ class ApiConstants {
 
   // ymtaz contact us
   static const contactYmtazClient = "client/contact-ymtaz";
-  static const contactYmtazTypes = "v1/contact-us/types";
+  static const contactYmtazTypes = "v1/contact-types";
   static const contactYmtazClientNew = "v1/contact-us";
   static const contactYmtazProvider = "lawyer/contact-ymtaz";
 
@@ -307,7 +307,7 @@ class ApiConstants {
   static const booksGuide = "v1/books/main";
 
   //gamification
-  static const pointsRules = "v1/activities";
+  static const pointsRules = "v1/gamification/activities";
 
   // invites
   static const invite = "v1/invites";
@@ -316,7 +316,9 @@ class ApiConstants {
   static const eliteCategoris = "v1/elite/categories";
   static const eliteRequests = "v1/elite/requests";
   static const eliteRequest = "v1/elite/requests";
+  static const elitePricingRequests = "v1/elite/pricing-requests";
   static const elitePricingRequestReply = "v1/elite/pricing-requests/reply";
+  static const eliteApproveOffer = "v1/elite/offers/{id}/approve";
 
   // Learning Paths
   static const learningPaths = "v1/learning-paths";

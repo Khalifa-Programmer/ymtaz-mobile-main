@@ -18,7 +18,11 @@ class DioFactory {
 
       dio!
         ..options.connectTimeout = timeOut
-        ..options.receiveTimeout = timeOut;
+        ..options.receiveTimeout = timeOut
+        ..options.headers = {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        };
 
       (dio!.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
           (client) {

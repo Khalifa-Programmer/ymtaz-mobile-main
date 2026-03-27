@@ -52,6 +52,11 @@ class Category {
     this.name,
   });
 
+  @override
+  String toString() {
+    return '$name';
+  }
+
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);
 

@@ -153,6 +153,11 @@ class Routes {
   static const String eliteRequests = "/eliteRequests";
   static const String eliteRequestDetails = "/eliteRequestDetails";
   static const String eliteRequestsClients = "/eliteRequestsClients";
+  static const String eliteConsultantOffers = "/eliteConsultantOffers";
+  static const String elitePriceOffer = "/elitePriceOffer";
+  static const String eliteRepricingRequest = "/eliteRepricingRequest";
+  static const String elitePayment = "/elitePayment";
+  static const String eliteSuccessPayment = "/eliteSuccessPayment";
 
   // learning path
   static const String learningPathHome = "/learningpathhome";

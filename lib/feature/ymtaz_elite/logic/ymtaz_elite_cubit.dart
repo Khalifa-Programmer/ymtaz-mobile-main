@@ -204,6 +204,39 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
     
     return '${hour.toString().padLeft(2, '0')}:$minute';
   }
+
+  Future<void> requestRepricing({
+    required int requestId,
+    required int offerId,
+    required String comment,
+    String? voicePath,
+  }) async {
+    emit(YmtazEliteRepricingLoading());
+
+    try {
+      final Map<String, dynamic> data = {
+        'elite_service_request_id': requestId,
+        'elite_service_offer_id': offerId,
+        'description': comment,
+      };
+
+      if (voicePath != null) {
+        data['files[]'] = await MultipartFile.fromFile(voicePath, filename: 'reprice_voice.m4a');
+      }
+
+      final formData = FormData.fromMap(data);
+      // Using sendEliteRequest as a fallback or a general purpose endpoint if a specific reprice isn't found
+      // Note: If a specific API is discovered later, this can be updated.
+      final result = await _ymtazEliteRepo.sendEliteRequest(formData);
+
+      result.when(
+        success: (data) => emit(YmtazEliteRepricingSuccess()),
+        failure: (error) => emit(YmtazEliteRepricingError(error.toString())),
+      );
+    } catch (e) {
+      emit(YmtazEliteRepricingError(e.toString()));
+    }
+  }
 }
 
 class YmtazEliteServicesUpdated extends YmtazEliteState {

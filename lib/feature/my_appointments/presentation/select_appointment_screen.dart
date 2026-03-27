@@ -92,7 +92,30 @@ class SelectLawyerScreen extends StatelessWidget {
               child: LawyerCardLoading(),
             );
           }, appointmentLawyersByIdSuccess: (data) {
-            final lawyers = data.data!.map((e) => e.lawyer!).toList();
+            final validItems = (data.data ?? []).where((e) => e.lawyer != null).toList();
+            final lawyers = validItems.map((e) => e.lawyer!).toList();
+
+            if (validItems.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.people_alt_outlined, size: 64.sp, color: appColors.grey15),
+                    verticalSpace(16.h),
+                    Text(
+                      "لا يوجد محامين متاحين حالياً",
+                      style: TextStyles.cairo_16_bold.copyWith(color: appColors.blue100),
+                    ),
+                    verticalSpace(8.h),
+                    Text(
+                      "يرجى المحاولة مرة أخرى لاحقاً أو تغيير الفلتر",
+                      style: TextStyles.cairo_12_semiBold.copyWith(color: appColors.grey15),
+                    ),
+                  ],
+                ),
+              );
+            }
+
             return Stack(
               children: [
                 Animate(
@@ -104,12 +127,29 @@ class SelectLawyerScreen extends StatelessWidget {
                     child: ValueListenableBuilder(
                       valueListenable: searchQuery,
                       builder: (context, query, _) {
-                        final filteredLawyers = lawyers.where((lawyer) {
-                          final matchesQuery = lawyer.name!.contains(query);
+                        final filteredItems = validItems.where((item) {
+                          final lawyer = item.lawyer!;
+                          final name = lawyer.name ?? '';
+                          final matchesQuery = name.contains(query);
+                          final regionName = lawyer.region?.name ?? '';
                           final matchesFilter = selectedFilter.value == 'All' ||
-                              lawyer.region!.name == selectedFilter.value;
+                              regionName == selectedFilter.value;
                           return matchesQuery && matchesFilter;
                         }).toList();
+
+                        if (filteredItems.isEmpty && query.isNotEmpty) {
+                          return ListView(
+                            children: [
+                              _buildSearchAndFilter(),
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 50.h),
+                                  child: Text("لا توجد نتائج بحث مطابقة", style: TextStyles.cairo_14_semiBold),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
                         return ListView(
                           children: [
                             _buildSearchAndFilter(),
@@ -131,7 +171,7 @@ class SelectLawyerScreen extends StatelessWidget {
                                                     .copyWith(
                                                   color: appColors.blue100,
                                                 )),
-                                            Text("(${filteredLawyers.length}) ",
+                                            Text("(${filteredItems.length}) ",
                                                 style: TextStyles.cairo_12_bold
                                                     .copyWith(
                                                   color: appColors.grey15,
@@ -140,10 +180,10 @@ class SelectLawyerScreen extends StatelessWidget {
                                         ),
                                         TextButton(
                                           onPressed: () =>
-                                              toggleSelectAll(filteredLawyers),
+                                              toggleSelectAll(filteredItems.map((e) => e.lawyer!).toList()),
                                           child: Text(
                                             selected.length ==
-                                                filteredLawyers.length
+                                                filteredItems.length
                                                 ? "إلغاء التحديد"
                                                 : "تحديد الكل",
                                             style: TextStyles.cairo_12_bold
@@ -160,13 +200,13 @@ class SelectLawyerScreen extends StatelessWidget {
                                       physics:
                                       const NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, index) {
-                                        final lawyer = filteredLawyers[index];
+                                        final item = filteredItems[index];
+                                        final lawyer = item.lawyer!;
                                         return LawyerCard(
                                           lawyer,
-                                          data.data![index].reservationType!,
-                                          data.data![index].price!.toString(),
-                                          data.data![index]
-                                              .reservationImportance!,
+                                          item.reservationType ?? ReservationType(),
+                                          (item.price ?? 0).toString(),
+                                          item.reservationImportance ?? ReservationImportance(),
                                           selected.contains(lawyer),
                                           toggleLawyerSelection,
                                         ).animate().fadeIn(
@@ -176,7 +216,7 @@ class SelectLawyerScreen extends StatelessWidget {
                                       separatorBuilder: (context, index) {
                                         return verticalSpace(16.sp);
                                       },
-                                      itemCount: filteredLawyers.length,
+                                      itemCount: filteredItems.length,
                                     ),
                                   ],
                                 );
@@ -201,18 +241,21 @@ class SelectLawyerScreen extends StatelessWidget {
                         color: appColors.primaryColorYellow,
                         onPressed: () {
                           print(dataForm.fields);
+                          print(dataForm.fields);
+                          
+                          FormData newData = FormData();
+                          newData.fields.addAll(dataForm.fields);
+                          newData.files.addAll(dataForm.files);
+                          
                           List lawyers = selected.toList();
-                          for (int i = 0;
-                          i < lawyers.length;
-                          i++) {
-                            dataForm.fields.add(MapEntry(
+                          for (int i = 0; i < lawyers.length; i++) {
+                            newData.fields.add(MapEntry(
                                 "lawyer_ids[$i]",
                                 lawyers[i].id.toString()));
                           }
-                          print(dataForm.fields);
+                          print(newData.fields);
 
-
-                                 getit<AppointmentsCubit>().requestAppointment(dataForm);
+                          getit<AppointmentsCubit>().requestAppointment(newData);
                         },
                         child: Text(
                           "إرسال الطلب للمختارين  ( ${selected.length} ) ",
@@ -306,9 +349,9 @@ class SelectLawyerScreen extends StatelessWidget {
                   return CircleAvatar(
                     radius: 20.sp,
                     backgroundImage: CachedNetworkImageProvider(
-                      lawyer.image!.isEmpty
-                          ? "https://api.ymtaz.sa/uploads/person.png"
-                          : lawyer.image!,
+                      (lawyer.image != null && lawyer.image!.isNotEmpty)
+                          ? lawyer.image!
+                          : "https://api.ymtaz.sa/uploads/person.png",
                     ),
                   ).animate();
                 }).toList(),

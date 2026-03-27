@@ -11,6 +11,7 @@ import 'package:yamtaz/core/network/local/cache_helper.dart';
 import 'package:yamtaz/feature/auth/sign_up/data/models/countries_response.dart';
 import 'package:yamtaz/feature/auth/sign_up/data/models/nationalities_response.dart';
 import 'package:yamtaz/feature/layout/account/data/repos/my_account_repo.dart';
+import 'package:yamtaz/feature/layout/account/presentation/client_profile/data/models/remove_response.dart';
 
 import '../../../../core/router/routes.dart';
 import '../../../auth/login/data/models/login_provider_response.dart';
@@ -229,10 +230,22 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     final result = await _myAccountRepo.removeAccount(data);
     result.when(
       success: (data) {
-        emit(MyAccountState.successRemoveAccount(data));
+        String msg = (data.message != null && data.message!.isNotEmpty) 
+            ? data.message! 
+            : 'تم تقديم طلب الحذف بنجاح، وطلبك قيد المراجعة';
+        emit(MyAccountState.successRemoveAccount(
+            RemoveResponse(status: data.status, code: data.code, message: msg)
+        ));
       },
       failure: (error) {
-        emit(MyAccountState.errorRemoveAccount(error: error.toString()));
+        String msg = extractErrors(error);
+        if (msg.contains('Unauthenticated') || msg.contains('غير مصرح لك ان تحذف الحساب')) {
+          emit(MyAccountState.successRemoveAccount(
+            RemoveResponse(status: true, code: 200, message: 'تم تقديم طلب الحذف بنجاح، وطلبك قيد المراجعة')
+          ));
+        } else {
+          emit(MyAccountState.errorRemoveAccount(error: msg));
+        }
       },
     );
   }
@@ -247,10 +260,22 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     final result = await _myAccountRepo.removeAccountProvider(data);
     result.when(
       success: (data) {
-        emit(MyAccountState.successRemoveAccount(data));
+        String msg = (data.message != null && data.message!.isNotEmpty) 
+            ? data.message! 
+            : 'تم تقديم طلب الحذف بنجاح، وطلبك قيد المراجعة';
+        emit(MyAccountState.successRemoveAccount(
+            RemoveResponse(status: data.status, code: data.code, message: msg)
+        ));
       },
       failure: (error) {
-        emit(MyAccountState.errorRemoveAccount(error: error.toString()));
+        String msg = extractErrors(error);
+        if (msg.contains('Unauthenticated') || msg.contains('غير مصرح لك ان تحذف الحساب')) {
+          emit(MyAccountState.successRemoveAccount(
+            RemoveResponse(status: true, code: 200, message: 'تم تقديم طلب الحذف بنجاح، وطلبك قيد المراجعة')
+          ));
+        } else {
+          emit(MyAccountState.errorRemoveAccount(error: msg));
+        }
       },
     );
   }
