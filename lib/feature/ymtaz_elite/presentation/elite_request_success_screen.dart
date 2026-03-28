@@ -8,6 +8,7 @@ import '../../../config/themes/styles.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/router/routes.dart';
+import '../../../core/network/local/cache_helper.dart';
 import '../../../core/widgets/app_bar.dart';
 import '../../../core/widgets/spacing.dart';
 import '../data/model/elite_request_model.dart';
@@ -220,16 +221,23 @@ class EliteRequestSuccessScreen extends StatelessWidget {
                     color: appColors.white, size: 20.sp), // تصغير الأيقونة
                 SizedBox(width: 10.w),
                 Text(
-                  "العودة للرئيسية",
+                  "عرض طلبات النخبة",
                   style: TextStyles.cairo_14_bold
                       .copyWith(color: appColors.white), // تغيير من 16 إلى 14
                 ),
               ],
             ),
-            onPressed: () => Navigator.pushNamed(
-              context,
-              Routes.homeLayout,
-            ),
+            onPressed: () {
+              final userType = CacheHelper.getData(key: 'userType');
+              final route = userType == 'provider'
+                  ? Routes.eliteRequestsClients
+                  : Routes.eliteRequests;
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                route,
+                (route) => false,
+              );
+            },
           ),
         ],
       ),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yamtaz/core/constants/colors.dart';
+import 'package:yamtaz/core/network/local/cache_helper.dart';
+import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/core/widgets/app_bar.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
@@ -39,7 +41,15 @@ class _EliteRepricingRequestScreenState extends State<EliteRepricingRequestScree
                 backgroundColor: Colors.green,
               ),
             );
-            Navigator.pop(context);
+            final userType = CacheHelper.getData(key: 'userType');
+            final route = userType == 'provider'
+                ? Routes.eliteRequestsClients
+                : Routes.eliteRequests;
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              route,
+              (route) => false,
+            );
           } else if (state is YmtazEliteRepricingError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

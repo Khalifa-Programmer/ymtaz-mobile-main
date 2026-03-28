@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:yamtaz/core/constants/assets.dart';
+import 'package:yamtaz/core/network/local/cache_helper.dart';
+import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/core/widgets/custom_button.dart';
 import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
 import '../../../../core/widgets/app_bar.dart';
@@ -59,7 +61,11 @@ class _PricingScreenState extends State<PricingScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('تم إرسال التسعير بنجاح')),
             );
-            Navigator.of(context).pop();
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.eliteRequestsClients,
+              (route) => false,
+            );
           } else if (state is YmtazElitePricingReplyError) {
             AppAlerts.showAlert(
               context: context,

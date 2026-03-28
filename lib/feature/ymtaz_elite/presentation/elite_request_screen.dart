@@ -13,6 +13,7 @@ import 'package:yamtaz/recorder_player_widget.dart';
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/router/routes.dart';
+import '../../../core/network/local/cache_helper.dart';
 import '../../../core/widgets/alerts.dart';
 import '../../../core/widgets/app_bar.dart';
 import '../../../core/widgets/spacing.dart';
@@ -95,7 +96,11 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
           showDialog(context: context, barrierDismissible: false, builder: (context) => const Center(child: CircularProgressIndicator()));
         } else if (state is YmtazEliteRequestSuccess) {
           Navigator.pop(context);
-          context.pushNamedAndRemoveUntil(Routes.homeLayout, predicate: (route) => false);
+          final userType = CacheHelper.getData(key: 'userType');
+          final route = userType == 'provider'
+              ? Routes.eliteRequestsClients
+              : Routes.eliteRequests;
+          context.pushNamedAndRemoveUntil(route, predicate: (route) => false);
           Navigator.push(context, MaterialPageRoute(builder: (context) => EliteRequestSuccessScreen(request: state.request)));
         } else if (state is YmtazEliteRequestError) {
           Navigator.pop(context);

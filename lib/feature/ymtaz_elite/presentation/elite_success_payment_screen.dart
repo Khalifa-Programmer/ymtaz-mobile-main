@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:yamtaz/core/constants/assets.dart';
 import 'package:yamtaz/core/router/routes.dart';
+import 'package:yamtaz/core/network/local/cache_helper.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
 import '../../../core/widgets/app_bar.dart';
@@ -215,7 +216,15 @@ class EliteSuccessPaymentScreen extends StatelessWidget {
                 child: CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(context, Routes.homeLayout, (route) => false);
+                    final userType = CacheHelper.getData(key: 'userType');
+                    final route = userType == 'provider'
+                        ? Routes.eliteRequestsClients
+                        : Routes.eliteRequests;
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      route,
+                      (route) => false,
+                    );
                   },
                   child: Container(
                     width: double.infinity,
@@ -226,7 +235,7 @@ class EliteSuccessPaymentScreen extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        "الرئيسية", 
+                        "طلبات النخبة", 
                         style: TextStyle(
                           fontSize: 16.sp, 
                           fontWeight: FontWeight.bold, 
