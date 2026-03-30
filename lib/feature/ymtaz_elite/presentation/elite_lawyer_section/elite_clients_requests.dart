@@ -73,7 +73,7 @@ class _EliteClientsRequestsState extends State<EliteClientsRequests> {
                   itemCount: sortedRequests.length,
                   itemBuilder: (context, index) {
                     final request = sortedRequests[index];
-                    return _buildEliteRequestCard(context, request);
+                    return _buildEliteRequestCard(context, request, index);
                   },
                 );
               }
@@ -106,7 +106,10 @@ class _EliteClientsRequestsState extends State<EliteClientsRequests> {
     );
   }
 
-  Widget _buildEliteRequestCard(BuildContext context, PendingPricing request) {
+  Widget _buildEliteRequestCard(BuildContext context, PendingPricing request, int index) {
+    // Alternate border color between Navy (0xFF0F2D37) and Gold (0xFFD4AF37)
+    final borderColor = index % 2 == 0 ? const Color(0xFF0F2D37) : const Color(0xFFD4AF37);
+    
     return GestureDetector(
       onTap: () {
         _cubit.selectRequest(request);
@@ -125,9 +128,9 @@ class _EliteClientsRequestsState extends State<EliteClientsRequests> {
         margin: EdgeInsets.only(bottom: 16.h),
         decoration: BoxDecoration(
           color: Colors.white,
-          border: const Border(
+          border: Border(
             right: BorderSide(
-              color: Color(0xFF0F2D37), // Navy Blue
+              color: borderColor,
               width: 4.0,
             ),
           ),
@@ -257,24 +260,9 @@ class _EliteClientsRequestsState extends State<EliteClientsRequests> {
             const Divider(color: appColors.grey, thickness: 0.5),
             verticalSpace(12.h),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE3F2FD),
-                    borderRadius: BorderRadius.circular(5.r),
-                  ),
-                  child: Text(
-                    request.status == 'pending-pricing' ? 'قيد التسعير' : request.status ?? '',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                      fontFamily: 'Cairo',
-                    ),
-                  ),
-                ),
-                horizontalSpace(10.w),
+                 // Importance (Level)
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                   decoration: BoxDecoration(
@@ -291,18 +279,25 @@ class _EliteClientsRequestsState extends State<EliteClientsRequests> {
                     ),
                   ),
                 ),
-                const Spacer(),
-                Text(
-                  "طلب تسعير",
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF0F2D37),
-                    fontFamily: 'Cairo',
+                // Status
+                 Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE3F2FD),
+                    borderRadius: BorderRadius.circular(5.r),
+                  ),
+                  child: Text(
+                    request.status == 'pending-pricing' ? 'قيد التسعير' : request.status ?? '',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                      fontFamily: 'Cairo',
+                    ),
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

@@ -49,9 +49,25 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
       allowMultiple: true,
     );
     if (result != null) {
-      setState(() {
-        _files.addAll(result.files.take(5 - _files.length));
-      });
+      final validFiles = result.files.where((file) => file.size <= 10 * 1024 * 1024).toList();
+      final oversizedFiles = result.files.where((file) => file.size > 10 * 1024 * 1024).toList();
+      
+      if (oversizedFiles.isNotEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('تم تجاهل ${oversizedFiles.length} ملفات لتجاوزها حجم 10 ميجابايت'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+      
+      if (validFiles.isNotEmpty) {
+        setState(() {
+          _files.addAll(validFiles.take(5 - _files.length));
+        });
+      }
     }
   }
 
@@ -78,12 +94,12 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
 
     for (var i = 0; i < _files.length; i++) {
       formData.files.add(MapEntry('files[$i][file]', await MultipartFile.fromFile(_files[i].path!)));
-      formData.fields.add(MapEntry('files[$i][is_voice]', 'false'));
+      formData.fields.add(MapEntry('files[$i][is_voice]', '0'));
     }
 
     if (recordingPath != null) {
       formData.files.add(MapEntry('files[${_files.length}][file]', await MultipartFile.fromFile(recordingPath!)));
-      formData.fields.add(MapEntry('files[${_files.length}][is_voice]', 'true'));
+      formData.fields.add(MapEntry('files[${_files.length}][is_voice]', '1'));
     }
     await cubit.sendEliteRequest(formData);
   }
@@ -93,9 +109,16 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
     return BlocListener<YmtazEliteCubit, YmtazEliteState>(
       listener: (context, state) {
         if (state is YmtazEliteRequestLoading) {
-          showDialog(context: context, barrierDismissible: false, builder: (context) => const Center(child: CircularProgressIndicator()));
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            useRootNavigator: true,
+            builder: (context) => const Center(child: CircularProgressIndicator()),
+          );
         } else if (state is YmtazEliteRequestSuccess) {
-          Navigator.pop(context);
+          if (Navigator.of(context, rootNavigator: true).canPop()) {
+            Navigator.of(context, rootNavigator: true).pop();
+          }
           final userType = CacheHelper.getData(key: 'userType');
           final route = userType == 'provider'
               ? Routes.eliteRequestsClients
@@ -103,7 +126,9 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
           context.pushNamedAndRemoveUntil(route, predicate: (route) => false);
           Navigator.push(context, MaterialPageRoute(builder: (context) => EliteRequestSuccessScreen(request: state.request)));
         } else if (state is YmtazEliteRequestError) {
-          Navigator.pop(context);
+          if (Navigator.of(context, rootNavigator: true).canPop()) {
+            Navigator.of(context, rootNavigator: true).pop();
+          }
           AppAlerts.showAlert(context: context, message: state.message, buttonText: 'حسناً', type: AlertType.error);
         }
       },
@@ -136,7 +161,7 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
                   if (state is YmtazEliteLoading) return const Center(child: CircularProgressIndicator());
                   if (state is YmtazEliteError) {
                     return Column(children: [
-                      const Text("فشل تحميل الأنواع", style: TextStyle(fontFamily: 'Cairo', color: Colors.red)),
+                      const Text("فشل تحميل الأنواع", style: TextStyle(fontFamily: 'Cairo', color: Colors.blue)),
                       TextButton(onPressed: () => cubit.getCategories(), child: const Text("إعادة المحاولة"))
                     ]);
                   }

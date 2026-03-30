@@ -49,7 +49,6 @@ class ContactYmtazCubit extends Cubit<ContactYmtazState> {
           'jpg',
           'jpeg',
           'PNG',
-          // 'PDF'
         ],
         allowMultiple: false,
       );
@@ -58,12 +57,9 @@ class ContactYmtazCubit extends Cubit<ContactYmtazState> {
         PlatformFile file = result.files.first;
         File pickedFile = File(file.path!);
 
-        // if (file.size! > (5 * 1024 * 1024)) { // 5 MB limit as an example
-        //   emit(const SignUpState.errorImage(
-        //       error: 'File size exceeds the allowed limit (5 MB).'));
-        //   print("object");
-        //   return null;
-        // }
+        if (file.size > (10 * 1024 * 1024)) {
+          return null;
+        }
 
         String fileExtension = extension(pickedFile.path);
         if (fileExtension == '.png' ||
@@ -77,15 +73,9 @@ class ContactYmtazCubit extends Cubit<ContactYmtazState> {
         } else {
           return null;
         }
-
-        // You can now use the pickedFile as needed
-
-        // You can return the file if needed
-        // return pickedFile;
       } else {}
     } catch (e) {}
 
-    // If there is an error or the user cancels, return null
     return null;
   }
 
@@ -95,7 +85,6 @@ class ContactYmtazCubit extends Cubit<ContactYmtazState> {
   emit(const ContactYmtazState.loading());
   var userType = CacheHelper.getData(key: 'userType');
   
-  // التحقق من وجود القيمة أولاً
   if (userType == null) {
     emit(const ContactYmtazState.error("نوع المستخدم غير معروف"));
     return;
@@ -122,7 +111,6 @@ class ContactYmtazCubit extends Cubit<ContactYmtazState> {
     response = await _contactYmtazRepo.getContactUsTypes();
     response.when(success: (contactYmtazTypes) {
       contactUsTypes = contactYmtazTypes;
-      print("object");
       emit(const ContactYmtazState.loadedContactUsTypes());
     }, failure: (fail) {
       emit(ContactYmtazState.errorContactUsTypes(fail['message']));
@@ -138,7 +126,6 @@ if (userType == null) {
   emit(const ContactYmtazState.errorSendMessage("خطأ في نوع المستخدم"));
   return;
 }
-  // تعيين القيمة مباشرة باستخدام الشرط المختصر لضمان عدم بقاء المتغير فارغاً
   final ApiResult<ContactYmtazResponse> response = (userType == 'client')
       ? await _contactYmtazRepo.postContactYmtazClient(data)
       : await _contactYmtazRepo.postContactYmtazProvider(data);

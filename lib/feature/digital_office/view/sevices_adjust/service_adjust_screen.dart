@@ -23,9 +23,9 @@ class SeviceAdjustScreen extends StatelessWidget {
     required this.index,
   });
 
-  final Datum serviceData;
+  final Service serviceData;
 
-  Datum? serviceDataNew;
+  Service? serviceDataNew;
 
   final int index;
 

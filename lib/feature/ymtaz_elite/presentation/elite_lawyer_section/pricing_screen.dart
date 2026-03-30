@@ -97,7 +97,7 @@ class _PricingScreenState extends State<PricingScreen> {
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(
-                          request.status == 'pending-pricing' ? 'قيد التسعير' : request.status ?? '',
+                          'تفاصيل التسعير',
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.bold,
@@ -107,14 +107,6 @@ class _PricingScreenState extends State<PricingScreen> {
                         ),
                       ),
                       const Spacer(),
-                      Text(
-                        'إضافة تفاصيل التسعير',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.grey[600],
-                          fontFamily: 'Cairo',
-                        ),
-                      ),
                     ],
                   ),
                 ],
@@ -297,7 +289,11 @@ class _PricingScreenState extends State<PricingScreen> {
           onServiceAdded: _addServiceRequest,
         ),
       ),
-    );
+    ).then((_) {
+      if (serviceRequests.isEmpty && mounted) {
+        Navigator.maybePop(context);
+      }
+    });
   }
 }
 

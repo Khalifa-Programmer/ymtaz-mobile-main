@@ -27,7 +27,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
 
   void _handleServiceSuccess(BaseServiceRequest request) {
     widget.onServiceAdded(request);
-    Navigator.pop(context);
+    Navigator.maybePop(context);
   }
 
   @override

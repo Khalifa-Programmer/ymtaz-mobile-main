@@ -32,7 +32,7 @@ class ReqestsScreen extends StatelessWidget {
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: ConditionalBuilder(
-              condition: request.isNotEmpty || request != null,
+              condition: request != null && request.isNotEmpty,
               builder: (BuildContext context) {
                 return _buildServiceList(request);
               },

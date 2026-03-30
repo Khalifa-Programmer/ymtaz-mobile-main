@@ -205,8 +205,29 @@ class EliteRequestsScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD4AF37).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(5.r),
+                            ),
+                            child: Text(
+                              request.eliteServiceCategory?.name ?? "طلب نخبة",
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFFD4AF37),
+                                fontFamily: 'Cairo',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      verticalSpace(6.h),
                       Text(
-                        request.serviceTitle ?? request.eliteServiceCategory?.name ?? '',
+                        request.serviceTitle ?? '',
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
@@ -316,15 +337,14 @@ class EliteRequestsScreen extends StatelessWidget {
             verticalSpace(12.h),
             // Status Tags
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatusTag(request.status ?? "قيد الدراسة"),
-                horizontalSpace(12.w),
                 _buildImportanceTag(
                   (request.status == "مكتملة" || request.status == "مكتمل")
                   ? "متوسط الأهمية" : "مهم جداً",
                   const Color(0xFFD4AF37)
                 ),
+                _buildStatusTag(request.status ?? "قيد الدراسة"),
               ],
             ),
           ],
@@ -336,16 +356,12 @@ class EliteRequestsScreen extends StatelessWidget {
   Widget _buildStatusTag(String status) {
     Color textColor;
     Color bgColor;
-    String displayStatus = status;
+    String displayStatus = getEliteRequestStatusText(status);
 
-    if (status == "pending-pricing") {
-      displayStatus = "قيد التسعير";
+    if (status == "قيد الدراسة" || status == "قيد الإنتظار" || status == "pending-pricing" || status == "pending-pricing-change" || status == "pending-pricing-approval" || status == "pending-payment") {
       textColor = const Color(0xFF2DAFAF);
       bgColor = const Color(0xFFE6F7F7);
-    } else if (status == "قيد الدراسة" || status == "قيد الإنتظار") {
-      textColor = const Color(0xFF2DAFAF);
-      bgColor = const Color(0xFFE6F7F7);
-    } else if (status == "مكتملة" || status == "مكتمل") {
+    } else if (status == "مكتملة" || status == "مكتمل" || status == "completed" || status == "approved") {
       textColor = const Color(0xFF4CAF50);
       bgColor = const Color(0xFFE8F5E9);
     } else {

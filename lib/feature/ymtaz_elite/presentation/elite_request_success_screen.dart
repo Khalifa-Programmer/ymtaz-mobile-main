@@ -21,20 +21,24 @@ class EliteRequestSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: appColors.white,
-        appBar: buildBlurredAppBar(context, "تم ارسال الطلب بنجاح"),
-        body: Animate(
-          effects: [FadeEffect(duration: 500.ms)],
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildSuccessHeader(),
-                _buildRequestDetails(),
-                _buildBottomActions(context),
-              ],
+    return PopScope(
+      canPop: false,
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          backgroundColor: appColors.white,
+          appBar: buildBlurredAppBar(context, "تم ارسال الطلب بنجاح",
+              showBackButton: false),
+          body: Animate(
+            effects: [FadeEffect(duration: 500.ms)],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildSuccessHeader(),
+                  _buildRequestDetails(),
+                  _buildBottomActions(context),
+                ],
+              ),
             ),
           ),
         ),
@@ -229,14 +233,21 @@ class EliteRequestSuccessScreen extends StatelessWidget {
             ),
             onPressed: () {
               final userType = CacheHelper.getData(key: 'userType');
-              final route = userType == 'provider'
+              final backRoute = userType == 'provider'
+                  ? Routes.mainOffice
+                  : Routes.myAdvisoryOrders;
+              final targetRoute = userType == 'provider'
                   ? Routes.eliteRequestsClients
                   : Routes.eliteRequests;
+
+              // Clear entire stack, push the parent screen first,
+              // then push eliteRequests on top so its back button returns to parent.
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                route,
+                backRoute,
                 (route) => false,
               );
+              Navigator.pushNamed(context, targetRoute);
             },
           ),
         ],

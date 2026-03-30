@@ -73,7 +73,6 @@ class SignUpCubit extends Cubit<SignUpState> {
   File? degreeVerifyImage;
   File? idImage;
 
-  //File? degreeImage;
   DateTime? selectedBirthDate;
 
   final TextEditingController aboutController = TextEditingController();
@@ -454,8 +453,6 @@ class SignUpCubit extends Cubit<SignUpState> {
           } else {
             selectedSectionsContainLicenseImageBool.add(false);
           }
-          // downloadAndAddFile(
-          //     userData.data!.client!.sections![i].lawyerLicenseFile! , i);
         }
       }
     }
@@ -570,21 +567,6 @@ class SignUpCubit extends Cubit<SignUpState> {
     });
   }
 
-  //get provider data
-  // UserDataResponse? userDataResponse;
-  //
-  // Future<void> emitGetProviderState() async {
-  //   emit(const SignUpState.loadingGetProvider());
-  //   final response = await _signUpRepo.getProviderData();
-  //   response.when(success: (user) {
-  //     userDataResponse = user;
-  //     emit(SignUpState.successGetProvider(user));
-  //   }, failure: (fail) {
-  //     emit(SignUpState.errorGetProvider(error: extractErrors(fail['data'])));
-  //   });
-  // }
-
-  /// deprecated
   Future<void> emitSignUpProviderState(FormData signUpRequestBody) async {
     emit(const SignUpState.loadingSignUpProvider());
     final response = await _signUpRepo.registerProvider(signUpRequestBody);
@@ -594,8 +576,6 @@ class SignUpCubit extends Cubit<SignUpState> {
       emit(SignUpState.errorSignUpProvider(error: extractErrors(fail)));
     });
   }
-
-  /// deprecated
 
   Future<void> emitSignUpState(SignUpRequestBody signUpRequestBody) async {
     emit(const SignUpState.loading());
@@ -890,6 +870,13 @@ class SignUpCubit extends Cubit<SignUpState> {
 
       if (image == null) return null;
       final imageFinal = File(image.path);
+      
+      if (await imageFinal.length() > (10 * 1024 * 1024)) {
+        emit(const SignUpState.errorImage(
+            error: 'عذراً، يجب أن لا يتجاوز حجم الصورة 10 ميجابايت'));
+        return null;
+      }
+
       String fileExtension = extension(imageFinal.path);
 
       if (fileExtension == '.png' ||
@@ -939,12 +926,11 @@ class SignUpCubit extends Cubit<SignUpState> {
         PlatformFile file = result.files.first;
         File pickedFile = File(file.path!);
 
-        // if (file.size! > (5 * 1024 * 1024)) { // 5 MB limit as an example
-        //   emit(const SignUpState.errorImage(
-        //       error: 'File size exceeds the allowed limit (5 MB).'));
-        //   print("object");
-        //   return null;
-        // }
+        if (file.size > (10 * 1024 * 1024)) {
+          emit(const SignUpState.errorImage(
+              error: 'عذراً، يجب أن لا يتجاوز حجم الملف 10 ميجابايت'));
+          return null;
+        }
 
         String fileExtension = extension(pickedFile.path);
         if (fileExtension == '.png' ||
@@ -960,18 +946,12 @@ class SignUpCubit extends Cubit<SignUpState> {
               error: 'يجب اختيار صورة او ملف بصيغة png,jpg,jpeg,PNG,JPG,JPEG'));
           return null;
         }
-
-        // You can now use the pickedFile as needed
-
-        // You can return the file if needed
-        // return pickedFile;
       } else {}
     } catch (e) {
       emit(const SignUpState.errorImage(
           error: 'يجب اختيار صورة او ملف بصيغة png,jpg,jpeg,PNG,JPG,JPEG'));
     }
 
-    // If there is an error or the user cancels, return null
     return null;
   }
 
@@ -982,12 +962,10 @@ class SignUpCubit extends Cubit<SignUpState> {
       return errorData.toString();
     }
 
-    // 1. Check if 'errors' exists and is a map (typical Laravel structure)
     final errorsMap = errorData['errors'] as Map<String, dynamic>?;
     if (errorsMap != null && errorsMap.isNotEmpty) {
       final errorMessages = <String>[];
 
-      // Iterate through each field and collect its error messages
       errorsMap.forEach((field, messages) {
         if (messages is List && messages.isNotEmpty) {
           final formattedMessages =
@@ -1003,18 +981,15 @@ class SignUpCubit extends Cubit<SignUpState> {
       }
     }
 
-    // 2. Check for nested 'data' field
     if (errorData['data'] != null && errorData['data'] is Map<String, dynamic>) {
       return extractErrors(errorData['data']);
     }
 
-    // 3. Check for top-level 'message' field
     if (errorData['message'] != null &&
         errorData['message'].toString().isNotEmpty) {
       return errorData['message'].toString();
     }
 
-    // 4. Fallback to a generic error message
     return 'حدث خطأ ما مراجعة البيانات';
   }
 

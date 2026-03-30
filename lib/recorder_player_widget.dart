@@ -31,7 +31,7 @@ class RecorderPlayerWidget extends StatefulWidget {
 class _RecorderPlayerWidgetState extends State<RecorderPlayerWidget> {
   final StopWatchTimer _stopWatchTimer = StopWatchTimer();
   static const int _maxRecordingDuration =
-      3 * 60 * 1000; // 3 minutes in milliseconds
+      2 * 60 * 1000; // 2 minutes in milliseconds
 
   String? path;
   bool isRecoded = false;
@@ -110,7 +110,7 @@ class _RecorderPlayerWidgetState extends State<RecorderPlayerWidget> {
   void startTimer() {
     _startOrStopRecording();
     _maxDurationTimer?.cancel();
-    _maxDurationTimer = Timer(const Duration(seconds: 180), () {
+    _maxDurationTimer = Timer(const Duration(seconds: 120), () {
       if (isRecording) {
         _startOrStopRecording();
       }

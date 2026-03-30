@@ -25,11 +25,6 @@ class AdvisorCubit extends Cubit<AdvisorState> {
 
   int selectedTypeIndex = -1;
 
-  // void selectType(int index) {
-  //   selectedTypeIndex = index;
-  //   emit(AdvisorState.selectedType(index));
-  // }
-
   void getData() {
     if (typesResponse == null ||
         paymentsResponse == null ||
@@ -69,9 +64,9 @@ class AdvisorCubit extends Cubit<AdvisorState> {
   AllAdvisoryResponse? advisoriesResponseYmtaz;
   AllAdvisoryResponse? advisoriesResponseDigital;
 
-   Future<void> getAdvisories() async {
-     getAdvisoriesFromYmtaz();
-     getAdvisoriesFromDigitalGuide();
+  Future<void> getAdvisories() async {
+    getAdvisoriesFromYmtaz();
+    getAdvisoriesFromDigitalGuide();
   }
 
   Future<void> getAdvisoriesFromYmtaz() async {
@@ -108,8 +103,6 @@ class AdvisorCubit extends Cubit<AdvisorState> {
       emit(const AdvisorState.errorMyReservation("error"));
     }
   }
-
-
 
   AdvisoryRequestResponse? requestResponse;
 
@@ -158,16 +151,6 @@ class AdvisorCubit extends Cubit<AdvisorState> {
     emit(const AdvisorState.loadingTypes());
     try {
       final payments = await _advisorRepo.getPaymentTypesById(id);
-      // final types = await _advisorRepo.getTypes();
-      // types.when(
-      //   success: (data) {
-      //     typesResponse = data;
-      //     emit(AdvisorState.sucessLoadTypes(data));
-      //   },
-      //   failure: (error) {
-      //     emit(AdvisorState.errorLoadTypes(error));
-      //   },
-      // );
       payments.when(
         success: (data) {
           paymentsResponse = data;
@@ -202,11 +185,11 @@ class AdvisorCubit extends Cubit<AdvisorState> {
       emit(const AdvisorState.errorLoadSections("error"));
     }
   }
-  WorkingHoursResponse ? availableDatesResponse;
+  WorkingHoursResponse? availableDatesResponse;
 
-  void getAvailableTimes([String ? lawyerId]) async {
+  void getAvailableTimes([String? lawyerId]) async {
     emit(const AdvisorState.loading());
-    final result = await _advisorRepo.getWorkingHours( 15 , lawyerId);
+    final result = await _advisorRepo.getWorkingHours(15, lawyerId);
     result.when(
       success: (data) {
         availableDatesResponse = data;
@@ -217,8 +200,6 @@ class AdvisorCubit extends Cubit<AdvisorState> {
       },
     );
   }
-
-
 
   Future<void> getTypes(String id) async {
     emit(const AdvisorState.loadingSections());
@@ -256,7 +237,6 @@ class AdvisorCubit extends Cubit<AdvisorState> {
           'jpg',
           'jpeg',
           'PNG',
-          // 'PDF'
         ],
         allowMultiple: false,
       );
@@ -265,12 +245,9 @@ class AdvisorCubit extends Cubit<AdvisorState> {
         PlatformFile file = result.files.first;
         File pickedFile = File(file.path!);
 
-        // if (file.size! > (5 * 1024 * 1024)) { // 5 MB limit as an example
-        //   emit(const SignUpState.errorImage(
-        //       error: 'File size exceeds the allowed limit (5 MB).'));
-        //   print("object");
-        //   return null;
-        // }
+        if (file.size > (10 * 1024 * 1024)) {
+          return null;
+        }
 
         String fileExtension = extension(pickedFile.path);
         if (fileExtension == '.png' ||
@@ -284,15 +261,9 @@ class AdvisorCubit extends Cubit<AdvisorState> {
         } else {
           return null;
         }
-
-        // You can now use the pickedFile as needed
-
-        // You can return the file if needed
-        // return pickedFile;
       } else {}
     } catch (e) {}
 
-    // If there is an error or the user cancels, return null
     return null;
   }
 }

@@ -134,11 +134,17 @@ class _SendSupportYmtazState extends State<SendSupportYmtaz> {
                             onTap: () async {
                               hideKeyboard(navigatorKey.currentContext!);
 
-                              context.read<ContactYmtazCubit>().attachments =
-                                  await context
-                                      .read<ContactYmtazCubit>()
-                                      .pickFile();
-                              setState(() {});
+                              final pickedFile = await context.read<ContactYmtazCubit>().pickFile();
+                              if (pickedFile == null) {
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('عذراً، يجب أن لا يتجاوز حجم الملف 5 ميجابايت'), backgroundColor: Colors.red),
+                                  );
+                                }
+                              } else {
+                                context.read<ContactYmtazCubit>().attachments = pickedFile;
+                                setState(() {});
+                              }
                             },
                             onRemoveFile: () {
                               context.read<ContactYmtazCubit>().attachments =

@@ -8,6 +8,7 @@ import 'package:yamtaz/core/network/local/cache_helper.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
 import '../../../core/widgets/app_bar.dart';
+import 'elite_request_details_screen.dart';
 
 class EliteSuccessPaymentScreen extends StatelessWidget {
   final Request request;
@@ -217,13 +218,20 @@ class EliteSuccessPaymentScreen extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   onPressed: () {
                     final userType = CacheHelper.getData(key: 'userType');
-                    final route = userType == 'provider'
-                        ? Routes.eliteRequestsClients
-                        : Routes.eliteRequests;
+                    final backRoute = userType == 'provider'
+                        ? Routes.mainOffice
+                        : Routes.myAdvisoryOrders;
+
                     Navigator.pushNamedAndRemoveUntil(
                       context,
-                      route,
+                      backRoute,
                       (route) => false,
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EliteRequestDetailsScreen(request: request),
+                      ),
                     );
                   },
                   child: Container(
@@ -235,7 +243,7 @@ class EliteSuccessPaymentScreen extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        "طلبات النخبة", 
+                        "عرض تفاصيل نوع الخدمة", 
                         style: TextStyle(
                           fontSize: 16.sp, 
                           fontWeight: FontWeight.bold, 

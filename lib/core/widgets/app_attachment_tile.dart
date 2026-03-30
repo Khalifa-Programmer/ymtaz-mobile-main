@@ -16,16 +16,17 @@ class AppAttachmentTile extends StatelessWidget {
   });
 
   bool _isImage(String path) {
-    final lower = path.toLowerCase();
-    return lower.endsWith('.jpg') ||
-        lower.endsWith('.jpeg') ||
-        lower.endsWith('.png') ||
-        lower.endsWith('.gif') ||
-        lower.endsWith('.webp');
+    final fileName = path.split('/').last.split('?').first.toLowerCase();
+    return fileName.endsWith('.jpg') ||
+        fileName.endsWith('.jpeg') ||
+        fileName.endsWith('.png') ||
+        fileName.endsWith('.gif') ||
+        fileName.endsWith('.webp');
   }
 
   bool _isPdf(String path) {
-    return path.toLowerCase().endsWith('.pdf');
+    final fileName = path.split('/').last.split('?').first.toLowerCase();
+    return fileName.endsWith('.pdf');
   }
 
   @override

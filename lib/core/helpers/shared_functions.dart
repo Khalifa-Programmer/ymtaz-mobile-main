@@ -11,14 +11,6 @@ String removePlusSign(String phoneNumber) {
   }
   return phoneNumber;
 }
-// String getLastSeenText(String lastSeenString) {
-//   try {
-//     DateTime lastSeen = DateTime.parse(lastSeenString); // تحويل النص إلى DateTime
-//     return timeago.format(lastSeen, locale: 'ar'); // استخدام timeago لعرض النص النسبي
-//   } catch (e) {
-//     return 'غير معروف'; // في حالة فشل التحويل، عرض نص افتراضي
-//   }
-// }
 
 String? getCountryCodeFromDialingCode(String dialingCode) {
   final Map<String, String> countryDialingCodes = {
@@ -97,12 +89,14 @@ String? getCountryCodeFromDialingCode(String dialingCode) {
     "504": "HN",
     "36": "HU",
     "354": "IS",
+    "100": "IN",
     "91": "IN",
     "62": "ID",
     "98": "IR",
     "964": "IQ",
     "353": "IE",
     "972": "IL",
+    "106": "IT",
     "39": "IT",
     "1876": "JM",
     "81": "JP",
@@ -164,6 +158,7 @@ String? getCountryCodeFromDialingCode(String dialingCode) {
     "351": "PT",
     "974": "QA",
     "40": "RO",
+    "167": "RU",
     "7": "RU",
     "250": "RW",
     "1869": "KN",
@@ -197,6 +192,7 @@ String? getCountryCodeFromDialingCode(String dialingCode) {
     "66": "TH",
     "670": "TL",
     "228": "TG",
+    "200": "TO",
     "676": "TO",
     "1868": "TT",
     "216": "TN",
@@ -233,7 +229,6 @@ Future<File?> pickFile() async {
         'jpg',
         'jpeg',
         'PNG',
-        // 'PDF'
       ],
       allowMultiple: false,
     );
@@ -242,12 +237,9 @@ Future<File?> pickFile() async {
       PlatformFile file = result.files.first;
       File pickedFile = File(file.path!);
 
-      // if (file.size! > (5 * 1024 * 1024)) { // 5 MB limit as an example
-      //   emit(const SignUpState.errorImage(
-      //       error: 'File size exceeds the allowed limit (5 MB).'));
-      //   print("object");
-      //   return null;
-      // }
+      if (file.size > (10 * 1024 * 1024)) {
+        return null;
+      }
 
       String fileExtension = extension(pickedFile.path);
       if (fileExtension == '.png' ||
@@ -261,15 +253,9 @@ Future<File?> pickFile() async {
       } else {
         return null;
       }
-
-      // You can now use the pickedFile as needed
-
-      // You can return the file if needed
-      // return pickedFile;
     } else {}
   } catch (e) {}
 
-  // If there is an error or the user cancels, return null
   return null;
 }
 

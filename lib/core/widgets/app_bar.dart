@@ -19,17 +19,17 @@ AppBar buildBlurredAppBar(BuildContext context, String title) {
   return AppBar(
     backgroundColor: Colors.transparent,
     automaticallyImplyLeading: false,
-    leading: null,
-    actions: [
-      IconButton(
-        onPressed: () => Navigator.pop(context),
-        icon: Icon(
-          Icons.arrow_back_ios,
-          color: Colors.black,
-          size: 20.sp,
-        ),
-      ),
-    ],
+    leading: Navigator.canPop(context) 
+      ? IconButton(
+          onPressed: () => Navigator.maybePop(context),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+            size: 20.sp,
+          ),
+        )
+      : null,
+    actions: [],
     // Transparent AppBar
     flexibleSpace: ClipRRect(
       borderRadius: BorderRadius.only(

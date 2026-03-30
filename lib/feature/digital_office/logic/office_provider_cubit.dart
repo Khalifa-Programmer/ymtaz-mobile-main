@@ -153,12 +153,9 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         PlatformFile file = result.files.first;
         File pickedFile = File(file.path!);
 
-        // if (file.size! > (5 * 1024 * 1024)) { // 5 MB limit as an example
-        //   emit(const SignUpState.errorImage(
-        //       error: 'File size exceeds the allowed limit (5 MB).'));
-        //   print("object");
-        //   return null;
-        // }
+        if (file.size > (10 * 1024 * 1024)) {
+          return null;
+        }
 
         String fileExtension = extension(pickedFile.path);
         if (fileExtension == '.png' ||
@@ -172,11 +169,6 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         } else {
           return null;
         }
-
-        // You can now use the pickedFile as needed
-
-        // You can return the file if needed
-        // return pickedFile;
       } else {}
     } catch (e) {}
 
@@ -333,24 +325,9 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
     );
   }
 
-  // appointmentLawyer.AppointmentOfficeReservationsLawyer ? providerAppoitmentLawyer;
-
   // get services from clients and reply to them
   ServicesFromClientsResponse? clientOrders;
 
-  // Future<void> getServicesRequestFromClients() async {
-  //   emit(const OfficeProviderState.loadingServicesRequestFromClients());
-  //   final result = await repo.getServicesRequestFromClients();
-  //   result.whenOrNull(
-  //     success: (data) {
-  //       clientOrders = data;
-  //       emit(OfficeProviderState.loadedServicesRequestFromClients(data));
-  //     },
-  //     failure: (message) {
-  //       emit(OfficeProviderState.errorServicesRequestFromClients(message));
-  //     },
-  //   );
-  // }
   ServiceLawyerOffresResponse? pendingServicesRequest;
 
   Future<void> servicesRequestsPending() async {
@@ -486,8 +463,6 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
       required String from,
       required String to,
       required int minsBetween}) {
-    // اريد في حالة وجود ال dayOfWeek في ال list ان يتم تعديل القيمة
-
     if (workingHours.any((element) => element.dayOfWeek == dayNum)) {
       workingHours.removeWhere((element) => element.dayOfWeek == dayNum);
       workingHours.add(Time(
@@ -795,16 +770,11 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
 
       if (!daySchedule.timeSlots!.contains(timeSlot)) {
         daySchedule.timeSlots!.add(timeSlot);
-        // times.add(timeSlot);
       }
     }
-
-    emit(const OfficeProviderState.changeDayIndexSelected());
   }
 
-  // adjust services New
-
-  void getServicesListPrices(services.Datum service) {
+  void getServicesListPrices(services.Service service) {
     textEditingControllers.clear();
     if (service.lawyerPrices != null && service.lawyerPrices!.isNotEmpty) {
       for (int i = 0; i < service.lawyerPrices!.length; i++) {

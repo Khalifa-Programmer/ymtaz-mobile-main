@@ -144,10 +144,6 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
                             color: appColors.grey15)),
                     Text(
                       widget.servicesRequirementsResponse.description!,
-                      // trimCollapsedText: 'عرض ا��مزيد',
-                      // trimExpandedText: 'عرض اقل',
-                      // moreStyle: TextStyles.cairo_14_bold
-                      //     .copyWith(color: appColors.black),
                       style: TextStyles.cairo_14_semiBold
                           .copyWith(color: appColors.blue100),
                     ),
@@ -421,7 +417,7 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
                 "id": widget.servicesRequirementsResponse.id,
                 if (_files.isNotEmpty)
                   for (int i = 0; i < _files.length; i++)
-                    "files[i]": await MultipartFile.fromFile(_files[i].path!),
+                    "files[$i]": await MultipartFile.fromFile(_files[i].path!, filename: _files[i].name),
               });
 
               getit<OfficeProviderCubit>()
@@ -456,7 +452,7 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
   Future<void> _pickFiles(context) async {
     if (_files.length >= 5) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('يمكنك إرفاق حتى 5 ملفات فقط')),
+        const SnackBar(content: Text('يمكنك إرفاق حتى 5 ملفات فقط')),
       );
       return;
     }
@@ -468,9 +464,25 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
     );
 
     if (result != null) {
-      setState(() {
-        _files.addAll(result.files.take(5 - _files.length));
-      });
+      final validFiles = result.files.where((file) => file.size <= 10 * 1024 * 1024).toList();
+      final oversizedFiles = result.files.where((file) => file.size > 10 * 1024 * 1024).toList();
+      
+      if (oversizedFiles.isNotEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('تم تجاهل ${oversizedFiles.length} ملفات لتجاوزها حجم 10 ميجابايت'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+      
+      if (validFiles.isNotEmpty) {
+        setState(() {
+          _files.addAll(validFiles.take(5 - _files.length));
+        });
+      }
     }
   }
 
@@ -514,7 +526,7 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
           maxLines: 1,
         ),
         trailing: IconButton(
-          icon: Icon(CupertinoIcons.xmark),
+          icon: const Icon(CupertinoIcons.xmark),
           onPressed: () => _removeFile(index),
         ),
       ),

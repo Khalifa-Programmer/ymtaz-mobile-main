@@ -87,6 +87,9 @@ class AdvisoryPaymentScreen extends StatelessWidget {
         if (cubit.selectedAccurateData?.name != null) {
           parts.add(cubit.selectedAccurateData!.name!);
         }
+        if (cubit.selectedLevel?.level?.title != null) {
+          parts.add(cubit.selectedLevel!.level!.title!);
+        }
         final breadcrumbPath = parts.join(' > ');
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,19 +308,20 @@ class AdvisoryPaymentScreen extends StatelessWidget {
       return SizedBox.shrink();
     }
 
-    // اسم التخصص الدقيق المختار من الخطوة 2
     final String specialtyName = cubit.selectedAccurateData?.name
         ?? cubit.selectedLawyer!.subCategory?.name
         ?? '-';
 
-    // نوع وسيلة الاستشارة المختارة في الخطوة 0
-    // قمنا بأخذ الاسم مباشرة من الـ API لضمان التطابق التام مهما تغير المسمى
     final String mediumName = cubit.selectedAdvisoryItem?.name ?? '-';
 
-    // السعر الصحيح: من المستوى المختار، أو من سعر المحامي كاحتياط
-    final String price = cubit.selectedLevel?.price
+    final String priceStr = cubit.selectedLevel?.price
         ?? cubit.selectedLawyer!.price
-        ?? '-';
+        ?? '0';
+    
+    final double price = double.tryParse(priceStr.replaceAll(',', '')) ?? 0.0;
+    final double taxPercent = 0.15;
+    final double taxAmount = price * taxPercent;
+    final double total = price + taxAmount;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -325,10 +329,32 @@ class AdvisoryPaymentScreen extends StatelessWidget {
         _infoRow(label: 'التخصص الدقيق', value: specialtyName),
         verticalSpace(8.h),
         _infoRow(label: 'وسيلة الاستشارة', value: mediumName),
-        verticalSpace(8.h),
-        _infoRow(label: 'سعر الاستشارة', value: '$price ريال'),
+        verticalSpace(16.h),
+        const Divider(),
+        verticalSpace(16.h),
+        Container(
+          padding: EdgeInsets.all(12.w),
+          decoration: BoxDecoration(
+            color: appColors.primaryColorYellow.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: _infoRow(
+            label: 'المجموع الكلي', 
+            value: '${total.toInt()} ريال',
+            isBold: true,
+            valueColor: appColors.primaryColorYellow,
+          ),
+        ),
+        verticalSpace(4.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          child: Text(
+            "*السعر شامل ضريبة القيمة المضافة",
+            style: TextStyles.cairo_12_regular.copyWith(color: appColors.grey15),
+          ),
+        ),
         if (cubit.selectedLevel?.level?.title != null) ...[  
-          verticalSpace(8.h),
+          verticalSpace(16.h),
           _infoRow(label: 'مستوى الطلب', value: cubit.selectedLevel!.level!.title!),
         ],
         if (cubit.isNeedAppointment && !cubit.isInstant && cubit.selectedDate != null) ...[  
@@ -339,18 +365,20 @@ class AdvisoryPaymentScreen extends StatelessWidget {
     );
   }
 
-  Widget _infoRow({required String label, required String value}) {
+  Widget _infoRow({required String label, required String value, bool isBold = false, Color? valueColor}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
-          style: TextStyles.cairo_12_semiBold.copyWith(color: appColors.grey15),
+          style: isBold 
+            ? TextStyles.cairo_12_bold.copyWith(color: appColors.grey15)
+            : TextStyles.cairo_12_semiBold.copyWith(color: appColors.grey15),
         ),
         Flexible(
           child: Text(
             value,
-            style: TextStyles.cairo_12_bold.copyWith(color: appColors.blue100),
+            style: TextStyles.cairo_12_bold.copyWith(color: valueColor ?? appColors.blue100),
             textAlign: TextAlign.end,
           ),
         ),

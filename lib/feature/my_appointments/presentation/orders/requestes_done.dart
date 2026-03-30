@@ -29,7 +29,7 @@ class ReqestsAppointmentsDone extends StatelessWidget {
           },
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: ConditionalBuilder(condition: request.isNotEmpty || request != null,
+            child: ConditionalBuilder(condition: request != null && request.isNotEmpty,
               builder: (BuildContext context) {
                 return _buildServiceList(request);
               },

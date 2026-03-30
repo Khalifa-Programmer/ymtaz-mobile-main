@@ -118,7 +118,7 @@ class CustomServiceCard extends StatelessWidget {
     required this.index,
   });
 
-  final Datum serviceData;
+  final Service serviceData;
   final int index;
 
   @override

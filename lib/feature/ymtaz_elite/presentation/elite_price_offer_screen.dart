@@ -13,11 +13,153 @@ class ElitePriceOfferScreen extends StatelessWidget {
 
   const ElitePriceOfferScreen({super.key, required this.request, required this.offer});
 
+  void _showIgnoreOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (innerContext) => Container(
+        padding: EdgeInsets.all(24.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24.r),
+            topRight: Radius.circular(24.r),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+            verticalSpace(24.h),
+            Text(
+              "تجاهل العرض",
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Cairo',
+                color: const Color(0xFF0F2D37),
+              ),
+            ),
+            verticalSpace(24.h),
+            _buildActionOption(
+              context,
+              label: "طلب إعادة تسعير",
+              icon: CupertinoIcons.refresh_thick,
+              color: const Color(0xFFD4AF37),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(
+                  context,
+                  Routes.eliteRepricingRequest,
+                  arguments: {
+                    'request': request,
+                    'offer': offer,
+                  },
+                );
+              },
+            ),
+            verticalSpace(12.h),
+            _buildActionOption(
+              context,
+              label: "رفض العرض نهائياً",
+              icon: CupertinoIcons.xmark_circle,
+              color: const Color(0xFFE54560),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RejectionReasonScreen(
+                      offerId: offer.id?.toString() ?? '',
+                    ),
+                  ),
+                );
+              },
+            ),
+            verticalSpace(24.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionOption(
+    BuildContext context, {
+    required String label,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12.r),
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey[200]!),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          children: [
+            Icon(CupertinoIcons.chevron_left, size: 14.sp, color: Colors.grey),
+            const Spacer(),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontFamily: 'Cairo',
+                color: const Color(0xFF0F2D37),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            horizontalSpace(12.w),
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 20.sp),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFBFBFB),
-      appBar: buildBlurredAppBar(context, "عرض التسعير"),
+    return BlocListener<YmtazEliteCubit, YmtazEliteState>(
+      listener: (context, state) {
+        if (state is YmtazEliteOfferApprovalSuccess) {
+          if (state.paymentUrl == "rejected") {
+             // Already handled by popping in RejectionReasonScreen or similar
+          } else {
+             Navigator.pushNamed(
+                context,
+                Routes.elitePayment,
+                arguments: {
+                  'request': request,
+                  'offer': offer,
+                },
+              );
+          }
+        } else if (state is YmtazEliteOfferApprovalError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message, style: const TextStyle(fontFamily: 'Cairo'))),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFFBFBFB),
+        appBar: buildBlurredAppBar(context, "عرض التسعير"),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
@@ -91,7 +233,7 @@ class ElitePriceOfferScreen extends StatelessWidget {
                         
                         // Description text
                         Text(
-                          request.description ?? "لطلب استشارة قانونية فيما يتعلق بتصميم وتقييم العقود وتأسيس الشركات لطلب استشارة قانونية فيما يتعلق بتصميم وتقييم العقود وتأسيس الشركات لطلب استشارة قانونية فيما يتعلق بتصميم وتقييم العقود وتأسيس الشركات لطلب استشارة قانونية فيما يتعلق بتصميم وتقييم العقود وتأسيس الشركات لطلب استشارة قانونية فيما يتعلق بتصميم وتقييم العقود وتأسيس الشركات لطلب استشارة قانونية فيما يتعلق بتصميم وتقييم العقود وتأسيس الشركات.",
+                          request.description ?? "لطلب استشارة قانونية فيما يتعلق بتصميم وتقييم العقود وتأسيس الشركات...",
                           style: TextStyle(
                             fontSize: 13.sp,
                             color: const Color(0xFFA5A5A5),
@@ -115,20 +257,16 @@ class ElitePriceOfferScreen extends StatelessWidget {
                     child: CupertinoButton(
                       padding: EdgeInsets.zero,
                       onPressed: () {
-                        Navigator.pushNamed(
-                          context, 
-                          Routes.elitePayment, 
-                          arguments: {
-                            'request': request,
-                            'offer': offer,
-                          }
-                        );
+                        context.read<YmtazEliteCubit>().approveOffer(
+                              offer.id?.toString() ?? '',
+                              'accepted',
+                            );
                       },
                       child: Container(
                         width: double.infinity,
                         height: 56.h,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFD4AF37), // Golden color from image
+                          color: const Color(0xFFD4AF37),
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Center(
@@ -147,17 +285,17 @@ class ElitePriceOfferScreen extends StatelessWidget {
                   ),
                   verticalSpace(12.h),
                   
-                  // Ignore Button (Redesigned matching image: text then icon in RTL means icon on right)
+                  // Ignore Button
                   SizedBox(
                     width: double.infinity,
                     child: CupertinoButton(
                       padding: EdgeInsets.zero,
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => _showIgnoreOptions(context),
                       child: Container(
                         width: double.infinity,
                         height: 56.h,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFEF2F4), // Very light pink
+                          color: const Color(0xFFFEF2F4),
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Row(

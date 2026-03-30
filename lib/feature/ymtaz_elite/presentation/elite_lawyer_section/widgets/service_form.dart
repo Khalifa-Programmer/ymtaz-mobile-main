@@ -174,7 +174,7 @@ class _ServiceFormState extends State<ServiceForm> {
         },
         builder: (context, state) {
           final allServices = getit<ServicesCubit>().servicesRequirementsResponse?.data?.items;
-          final eliteRequest = context.read<YmtazEliteCubit>().selectedRequest;
+          final eliteRequest = getit<YmtazEliteCubit>().selectedRequest;
           final eliteCategoryId = eliteRequest?.eliteServiceCategory?.id;
 
           // تصفية الخدمات الرئيسية لتناسب قسم طلب النخبة (مثلاً: جنائي)

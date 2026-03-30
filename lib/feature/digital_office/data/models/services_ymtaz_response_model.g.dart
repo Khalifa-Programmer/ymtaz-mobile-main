@@ -13,7 +13,7 @@ ServicesYmtazResponseModel _$ServicesYmtazResponseModelFromJson(
       code: (json['code'] as num?)?.toInt(),
       message: json['message'] as String?,
       data: (json['data'] as List<dynamic>?)
-          ?.map((e) => Datum.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => Service.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -26,7 +26,7 @@ Map<String, dynamic> _$ServicesYmtazResponseModelToJson(
       'data': instance.data,
     };
 
-Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
+Service _$ServiceFromJson(Map<String, dynamic> json) => Service(
       id: (json['id'] as num?)?.toInt(),
       title: json['title'] as String?,
       intro: json['intro'] as String?,
@@ -43,7 +43,7 @@ Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
         ?.map((e) => YmtazLevelsPrice.fromJson(e as Map<String, dynamic>))
         .toList();
 
-Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
+Map<String, dynamic> _$ServiceToJson(Service instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
       'intro': instance.intro,

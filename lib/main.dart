@@ -205,22 +205,4 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       )));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      // ...existing code...
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      locale: const Locale('en', 'US'), // Force English locale
-      supportedLocales: const [
-        Locale('en', 'US'),
-      ],
-    );
-  }
-}

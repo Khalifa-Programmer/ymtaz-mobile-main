@@ -174,7 +174,7 @@ class EliteConsultantOffersScreen extends StatelessWidget {
           verticalSpace(12.h),
           Center(
             child: TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.maybePop(context),
               child: Text(
                 "تجاهل",
                 style: TextStyle(

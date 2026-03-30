@@ -11,7 +11,7 @@ class ServicesYmtazResponseModel {
   @JsonKey(name: "message")
   String? message;
   @JsonKey(name: "data")
-  List<Datum>? data;
+  List<Service>? data;
 
   ServicesYmtazResponseModel({
     this.status,
@@ -27,7 +27,7 @@ class ServicesYmtazResponseModel {
 }
 
 @JsonSerializable()
-class Datum {
+class Service {
   @JsonKey(name: "id")
   int? id;
   @JsonKey(name: "title")
@@ -56,7 +56,7 @@ class Datum {
     return '$title';
   }
 
-  Datum({
+  Service({
     this.id,
     this.title,
     this.intro,
@@ -69,9 +69,9 @@ class Datum {
     this.isHidden,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
+  factory Service.fromJson(Map<String, dynamic> json) => _$ServiceFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DatumToJson(this);
+  Map<String, dynamic> toJson() => _$ServiceToJson(this);
 }
 
 @JsonSerializable()

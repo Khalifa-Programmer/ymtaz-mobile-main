@@ -28,6 +28,8 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
   ElitePromoModel? elitePromoTexts;
   List<PendingPricing>? pricingRequests;
   List<Request>? eliteRequests;
+  bool _isLoadingElite = false;
+  bool _isLoadingPricing = false;
 
   Future<void> getEliteConsultants() async {
     emit(YmtazEliteConsultantsLoading());
@@ -81,6 +83,7 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
     final result = await _ymtazEliteRepo.sendEliteRequest(formData);
     result.when(
       success: (data) {
+        getEliteRequests(forceRefresh: true); // Trigger refresh from API
         emit(YmtazEliteRequestSuccess(data));
       },
       failure: (error) {
@@ -89,9 +92,18 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
     );
   }
 
-  Future<void> getEliteRequests() async {
+  Future<void> getEliteRequests({bool forceRefresh = false}) async {
+    if (_isLoadingElite && !forceRefresh) return;
+    if (eliteRequests != null && !forceRefresh) {
+      emit(YmtazEliteRequestsLoaded(eliteRequests!));
+      return;
+    }
+    
+    _isLoadingElite = true;
     emit(YmtazEliteLoading());
     final result = await _ymtazEliteRepo.getEliteRequests();
+    _isLoadingElite = false;
+    
     result.when(
       success: (data) {
         eliteRequests = data.data?.requests ?? [];
@@ -103,9 +115,18 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
     );
   }
 
-  Future<void> getPricingRequests() async {
+  Future<void> getPricingRequests({bool forceRefresh = false}) async {
+    if (_isLoadingPricing && !forceRefresh) return;
+    if (pricingRequests != null && !forceRefresh) {
+      emit(YmtazElitePricingRequestsLoaded(pricingRequests!));
+      return;
+    }
+
+    _isLoadingPricing = true;
     emit(YmtazEliteLoading());
     final result = await _ymtazEliteRepo.getPricingRequests();
+    _isLoadingPricing = false;
+
     result.when(
       success: (data) {
         pricingRequests = data.data!.pendingPricing ?? [];
@@ -195,7 +216,10 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
     try {
       final result = await _ymtazEliteRepo.replyToPricingRequest(body);
       result.when(
-        success: (data) => emit(YmtazElitePricingReplySuccess(data)),
+        success: (data) {
+          getPricingRequests(forceRefresh: true); // Refresh for provider
+          emit(YmtazElitePricingReplySuccess(data));
+        },
         failure: (error) {
           String errorMessage = _extractErrorMessage(error);
           if (errorMessage.contains('Request is not pending pricing')) {
@@ -233,6 +257,25 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
     return error?.toString() ?? 'حدث خطأ غير متوقع، يرجى المحاولة لاحقاً';
   }
 
+  Future<void> rejectOffer(String offerId, String reason) async {
+    emit(YmtazEliteOfferApprovalLoading());
+    
+    try {
+      final result = await _ymtazEliteRepo.approveOffer(offerId, 'rejected');
+      result.when(
+        success: (data) {
+          getEliteRequests(forceRefresh: true); // Refresh for client
+          emit(YmtazEliteOfferApprovalSuccess("rejected")); // Specific signal for rejection
+        },
+        failure: (error) {
+          emit(YmtazEliteOfferApprovalError(_extractErrorMessage(error)));
+        },
+      );
+    } catch (e) {
+      emit(YmtazEliteOfferApprovalError(e.toString()));
+    }
+  }
+
   Future<void> approveOffer(String offerId, String type) async {
     emit(YmtazEliteOfferApprovalLoading());
     
@@ -241,7 +284,11 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
       result.when(
         success: (data) {
           if (data.data?.paymentUrl != null) {
+            getEliteRequests(forceRefresh: true); // Refresh list for client
             emit(YmtazEliteOfferApprovalSuccess(data.data!.paymentUrl!));
+          } else if (type == 'rejected') {
+             getEliteRequests(forceRefresh: true);
+             emit(const YmtazEliteOfferApprovalSuccess("rejected"));
           } else {
             emit(const YmtazEliteOfferApprovalError('لم يتم العثور على رابط الدفع'));
           }
@@ -304,7 +351,10 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
       final result = await _ymtazEliteRepo.sendEliteRequest(formData);
 
       result.when(
-        success: (data) => emit(YmtazEliteRepricingSuccess()),
+        success: (data) {
+          getEliteRequests(forceRefresh: true); // Refresh for client
+          emit(YmtazEliteRepricingSuccess());
+        },
         failure: (error) => emit(YmtazEliteRepricingError(error.toString())),
       );
     } catch (e) {

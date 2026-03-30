@@ -60,9 +60,25 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
     );
 
     if (result != null) {
-      setState(() {
-        _files.addAll(result.files.take(5 - _files.length));
-      });
+      final validFiles = result.files.where((file) => file.size <= 10 * 1024 * 1024).toList();
+      final oversizedFiles = result.files.where((file) => file.size > 10 * 1024 * 1024).toList();
+      
+      if (oversizedFiles.isNotEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('تم تجاهل ${oversizedFiles.length} ملفات لتجاوزها حجم 10 ميجابايت'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+      
+      if (validFiles.isNotEmpty) {
+        setState(() {
+          _files.addAll(validFiles.take(5 - _files.length));
+        });
+      }
     }
   }
 

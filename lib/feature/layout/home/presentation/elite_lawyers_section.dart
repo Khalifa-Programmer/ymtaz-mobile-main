@@ -76,20 +76,28 @@ class EliteLawyersSection extends StatelessWidget {
             verticalSpace(20.h),
             SizedBox(
               width: double.infinity,
-              child: CupertinoButton(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                color: const Color(0xFFD4AF37),
-                borderRadius: BorderRadius.circular(12.r),
-                onPressed: () {
-                  context.pushNamed(Routes.elitePromo);
-                },
-                child: Text(
-                  "ابدأ الآن",
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontFamily: 'Cairo',
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: const Color(0xFFD4AF37),
+                    width: 1,
+                  ),
+                ),
+                child: CupertinoButton(
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                  onPressed: () {
+                    context.pushNamed(Routes.elitePromo);
+                  },
+                  child: Text(
+                    "ابدأ الآن",
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontFamily: 'Cairo',
+                    ),
                   ),
                 ),
               ),

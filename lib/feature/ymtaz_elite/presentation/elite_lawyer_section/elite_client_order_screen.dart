@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yamtaz/core/network/local/cache_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,14 +7,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:yamtaz/feature/ymtaz_elite/presentation/elite_lawyer_section/pricing_screen.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/widgets/audio_player_widget.dart';
-import '../../data/model/elite_pricing_requests_model.dart'; // Updated import
+import '../../data/model/elite_pricing_requests_model.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../logic/ymtaz_elite_cubit.dart';
 import '../../../../core/widgets/app_bar.dart';
-import 'package:photo_view/photo_view.dart';  // Add this import
+import 'package:photo_view/photo_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/helpers/fuctions_helpers/functions_helpers.dart';
 import '../../../../core/widgets/spacing.dart';
+import '../../../../core/helpers/file_helper.dart';
 import '../../../../core/widgets/app_attachment_tile.dart';
 
 class EliteClientOrderScreen extends StatelessWidget {
@@ -25,11 +27,28 @@ class EliteClientOrderScreen extends StatelessWidget {
   });
 
   String _getFileType(String? filePath) {
-    if (filePath == null) return '';
-    final extension = filePath.split('.').last.toLowerCase();
-    if (['jpg', 'jpeg', 'png', 'gif'].contains(extension)) return 'image';
-    if (extension == 'pdf') return 'pdf';
-    if (['mp3', 'wav', 'm4a'].contains(extension)) return 'audio';
+    if (filePath == null || filePath.isEmpty) return '';
+    final resolved = FileHelper.resolveUrl(filePath);
+    final fileName = resolved.split('/').last.split('?').first.toLowerCase();
+    
+    if (fileName.endsWith('.jpg') || 
+        fileName.endsWith('.jpeg') || 
+        fileName.endsWith('.png') || 
+        fileName.endsWith('.gif') || 
+        fileName.endsWith('.webp') ||
+        fileName.endsWith('.heic') ||
+        fileName.endsWith('.heif')) return 'image';
+        
+    if (fileName.endsWith('.pdf')) return 'pdf';
+    
+    if (fileName.endsWith('.mp3') || 
+        fileName.endsWith('.wav') || 
+        fileName.endsWith('.m4a') || 
+        fileName.endsWith('.amr') || 
+        fileName.endsWith('.aac') ||
+        fileName.endsWith('.ogg') ||
+        fileName.endsWith('.audio')) return 'audio';
+        
     return 'other';
   }
 
@@ -49,8 +68,8 @@ class EliteClientOrderScreen extends StatelessWidget {
               top: 40,
               right: 20,
               child: IconButton(
-                icon: Icon(Icons.close, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.close, color: Colors.white),
+                onPressed: () => Navigator.maybePop(context),
               ),
             ),
           ],
@@ -76,10 +95,10 @@ class EliteClientOrderScreen extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.maybePop(context),
                 ),
               ],
             ),
@@ -108,9 +127,10 @@ class EliteClientOrderScreen extends StatelessWidget {
     if (file.file == null) return const SizedBox.shrink();
     
     final fileType = _getFileType(file.file);
-    final filePath = file.file ?? '';
+    final filePath = FileHelper.resolveUrl(file.file ?? '');
+    final isAudio = fileType == 'audio' || (file.isVoice == 1 && fileType != 'image' && fileType != 'pdf');
 
-    if (fileType == 'audio' || (file.isVoice == 1)) {
+    if (isAudio) {
       return GestureDetector(
         onTap: () => _showAudioPlayer(context, filePath),
         child: Container(
@@ -191,30 +211,10 @@ class EliteClientOrderScreen extends StatelessWidget {
                   ],
                 ),
                 child: Column(
-                                    children: [
+                                     children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12.w,
-                            vertical: 6.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFE3F2FD),
-                            borderRadius: BorderRadius.circular(20.r),
-                          ),
-                          child: Text(
-                            request.status == 'pending-pricing' ? 'قيد التسعير' : request.status ?? '',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                              fontFamily: 'Cairo',
-                            ),
-                          ),
-                        ),
-                        horizontalSpace(10.w),
+                        // Importance (Level) - Move to right (In RTL, this is the first item)
                         Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 12.w,
@@ -230,6 +230,27 @@ class EliteClientOrderScreen extends StatelessWidget {
                               fontSize: 12.sp,
                               fontWeight: FontWeight.bold,
                               color: appColors.primaryColorYellow,
+                              fontFamily: 'Cairo',
+                            ),
+                          ),
+                        ),
+                        horizontalSpace(10.w),
+                        // Status - Move to left (In RTL, this is the second item)
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 6.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE3F2FD),
+                            borderRadius: BorderRadius.circular(20.r),
+                          ),
+                          child: Text(
+                            request.status == 'pending-pricing' ? 'قيد التسعير' : request.status ?? '',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
                               fontFamily: 'Cairo',
                             ),
                           ),
@@ -328,62 +349,36 @@ class EliteClientOrderScreen extends StatelessWidget {
               ),
 
               SizedBox(height: 30.h),
-              if (request.status != 'pending-pricing')
-                Container(
-                  padding: EdgeInsets.all(12.w),
-                  margin: EdgeInsets.only(bottom: 16.h),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
+              if (request.status == 'pending-pricing' && 
+                  CacheHelper.getData(key: 'userType') == 'provider' &&
+                  request.accountId?.toString() != CacheHelper.getData(key: 'userId')?.toString()) ...[
+                SizedBox(
+                  width: double.infinity,
+                  child: CupertinoButton(
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    color: const Color(0xFFD4AF37),
+                    disabledColor: Colors.grey[300]!,
                     borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: Colors.grey[300]!),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.info_outline, color: Colors.grey[600], size: 20.sp),
-                      horizontalSpace(10.w),
-                      Expanded(
-                        child: Text(
-                          request.status == 'completed' || request.status == 'مكتمل' 
-                              ? 'هذا الطلب مكتمل، لا يمكن إضافة المزيد من التسعير'
-                              : 'لقد قمت بالفعل بتسعير هذا الطلب أو انتهت مدة التسعير المتاحة',
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: Colors.grey[700],
-                            fontFamily: 'Cairo',
-                          ),
-                        ),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return BlocProvider.value(
+                          value: cubit,
+                          child: const PricingScreen(),
+                        );
+                      }));
+                    },
+                    child: Text(
+                      'إضافة تسعير',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontFamily: 'Cairo',
                       ),
-                    ],
-                  ),
-                ),
-              SizedBox(
-                width: double.infinity,
-                child: CupertinoButton(
-                  padding: EdgeInsets.symmetric(vertical: 16.h),
-                  color: const Color(0xFFD4AF37),
-                  disabledColor: Colors.grey[300]!,
-                  borderRadius: BorderRadius.circular(12.r),
-                  onPressed: request.status != 'pending-pricing'
-                      ? null
-                      : () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) {
-                            return BlocProvider.value(
-                              value: cubit,
-                              child: const PricingScreen(),
-                            );
-                          }));
-                        },
-                  child: Text(
-                    'إضافة تسعير',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: request.status != 'pending-pricing' ? Colors.grey[500] : Colors.white,
-                      fontFamily: 'Cairo',
                     ),
                   ),
                 ),
-              ),
+              ],
               SizedBox(height: 40.h),
             ],
           ),
@@ -422,8 +417,8 @@ class EliteClientOrderScreen extends StatelessWidget {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     isExpanded: true,
-                    hint: Text('نوع الاستشارة'),
-                    items: [],
+                    hint: const Text('نوع الاستشارة'),
+                    items: const [],
                     onChanged: (value) {},
                   ),
                 ),
@@ -458,7 +453,7 @@ class EliteClientOrderScreen extends StatelessWidget {
               SizedBox(height: 16.h),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.maybePop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFD4AF37),

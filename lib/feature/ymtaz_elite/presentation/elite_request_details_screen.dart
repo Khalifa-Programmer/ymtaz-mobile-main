@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:yamtaz/core/network/local/cache_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +12,8 @@ import 'package:yamtaz/core/di/dependency_injection.dart';
 import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
 import 'package:yamtaz/feature/ymtaz_elite/data/repo/ymtaz_elite_repo.dart';
 import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
+import 'package:yamtaz/core/router/routes.dart';
+import 'package:yamtaz/core/router/routes.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/widgets/audio_player_widget.dart';
 import '../../../core/widgets/app_bar.dart';
@@ -28,6 +31,7 @@ import 'elite_repricing_request_screen.dart';
 import '../../../../core/helpers/file_helper.dart';
 import '../../advisory_window/presentation/video_call/video_call_lobby_screen.dart';
 import '../../../core/widgets/app_attachment_tile.dart';
+import 'elite_price_offer_screen.dart';
 
 class EliteRequestDetailsScreen extends StatefulWidget {
   final Request request;
@@ -56,14 +60,28 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
   }
 
   String _getFileType(String? filePath) {
-    if (filePath == null) return '';
+    if (filePath == null || filePath.isEmpty) return '';
     final resolved = FileHelper.resolveUrl(filePath);
     final fileName = resolved.split('/').last.split('?').first.toLowerCase();
-    final extension = fileName.split('.').last;
     
-    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].contains(extension)) return 'image';
-    if (extension == 'pdf') return 'pdf';
-    if (['mp3', 'wav', 'm4a'].contains(extension)) return 'audio';
+    if (fileName.endsWith('.jpg') || 
+        fileName.endsWith('.jpeg') || 
+        fileName.endsWith('.png') || 
+        fileName.endsWith('.gif') || 
+        fileName.endsWith('.webp') ||
+        fileName.endsWith('.heic') ||
+        fileName.endsWith('.heif')) return 'image';
+        
+    if (fileName.endsWith('.pdf')) return 'pdf';
+    
+    if (fileName.endsWith('.mp3') || 
+        fileName.endsWith('.wav') || 
+        fileName.endsWith('.m4a') || 
+        fileName.endsWith('.amr') || 
+        fileName.endsWith('.aac') ||
+        fileName.endsWith('.ogg') ||
+        fileName.endsWith('.audio')) return 'audio';
+        
     return 'other';
   }
 
@@ -94,7 +112,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
               right: 20,
               child: IconButton(
                 icon: const Icon(Icons.close, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.maybePop(context),
               ),
             ),
           ],
@@ -133,7 +151,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
         listener: (context, state) {
           if (state is YmtazEliteOfferApprovalSuccess) {
             launchUrl(Uri.parse(state.paymentUrl), mode: LaunchMode.externalApplication);
-            Navigator.pop(context); // Return to requests list
+            Navigator.maybePop(context); // Return to requests list
           } else if (state is YmtazEliteOfferApprovalError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -228,7 +246,9 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
     final fileType = _getFileType(file.file);
     final filePath = FileHelper.resolveUrl(file.file ?? '');
 
-    if (fileType == 'audio' || (file.isVoice == 1 && fileType != 'image' && fileType != 'pdf')) {
+    final isAudio = fileType == 'audio' || (file.isVoice == 1 && fileType != 'image' && fileType != 'pdf');
+
+    if (isAudio) {
       return Container(
         margin: EdgeInsets.only(bottom: 12.h),
         decoration: BoxDecoration(
@@ -387,7 +407,17 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
     final serviceName = widget.request.serviceTitle ?? widget.request.eliteServiceCategory?.name ?? "طلب خدمة النخبة";
 
     return InkWell(
-      onTap: () => _showOfferOptionsBottomSheet(),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ElitePriceOfferScreen(
+              request: widget.request,
+              offer: widget.request.offers!.reservationType!.typesImportance!.first,
+            ),
+          ),
+        );
+      },
       borderRadius: BorderRadius.circular(20.r),
       child: Container(
         width: double.infinity,
@@ -469,15 +499,6 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                     ),
                   ],
                 ),
-                Text(
-                  "تعديل / موافقة",
-                  style: TextStyle(
-                    fontSize: 10.sp,
-                    color: Colors.grey[400],
-                    fontFamily: 'Cairo',
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
               ],
             ),
           ],
@@ -541,45 +562,148 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
               ),
               verticalSpace(32.h),
               _buildOptionButton(
-                label: "قبول السعر والمتابعة للدفع",
+                label: "قبول",
                 icon: Icons.check_circle_rounded,
                 color: const Color(0xFFD4AF37),
                 onTap: () {
                   Navigator.pop(innerContext);
-                  cubit.approveOffer(widget.request.offers!.id.toString(), "elite");
+                  Navigator.pushNamed(
+                    context,
+                    Routes.elitePayment,
+                    arguments: {
+                      'request': widget.request,
+                      'offer': widget.request.offers!.reservationType!.typesImportance!.first,
+                    },
+                  );
                 },
               ),
               verticalSpace(16.h),
               _buildOptionButton(
-                label: "طلب إعادة تسعير (لجنة أخرى)",
-                icon: Icons.history_edu_rounded,
-                color: const Color(0xFF0F2D37),
-                onTap: () {
-                  Navigator.pop(innerContext);
-                  final offerData = widget.request.offers?.reservationType?.typesImportance?.first;
-                  if (offerData != null) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EliteRepricingRequestScreen(
-                          request: widget.request,
-                          offer: offerData,
-                        ),
-                      ),
-                    );
-                  }
-                },
-              ),
-              verticalSpace(16.h),
-              _buildOptionButton(
-                label: "تجاهل هذا العرض حالياً",
+                label: "تجاهل",
                 icon: Icons.close_rounded,
                 color: const Color(0xFFE54560),
                 showArrow: false,
-                onTap: () => Navigator.pop(innerContext),
+                onTap: () {
+                   Navigator.pop(innerContext);
+                   _showIgnoreMenu(context);
+                },
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showIgnoreMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (innerContext) => Container(
+        padding: EdgeInsets.all(24.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24.r),
+            topRight: Radius.circular(24.r),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+            verticalSpace(24.h),
+            Text(
+              "تجاهل العرض",
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Cairo',
+                color: const Color(0xFF0F2D37),
+              ),
+            ),
+            verticalSpace(24.h),
+            _buildActionOption(
+              context,
+              label: "طلب إعادة تسعير",
+              icon: CupertinoIcons.refresh_thick,
+              color: const Color(0xFFD4AF37),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(
+                  context,
+                  Routes.eliteRepricingRequest,
+                  arguments: {
+                    'request': widget.request,
+                    'offer': widget.request.offers!.reservationType!.typesImportance!.first,
+                  },
+                );
+              },
+            ),
+            verticalSpace(12.h),
+            _buildActionOption(
+              context,
+              label: "رفض العرض نهائياً",
+              icon: CupertinoIcons.xmark_circle,
+              color: const Color(0xFFE54560),
+              onTap: () {
+                Navigator.pop(context);
+                _showRejectionDialog();
+              },
+            ),
+            verticalSpace(24.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionOption(
+    BuildContext context, {
+    required String label,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12.r),
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey[200]!),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          children: [
+            Icon(CupertinoIcons.chevron_left, size: 14.sp, color: Colors.grey),
+            const Spacer(),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontFamily: 'Cairo',
+                color: const Color(0xFF0F2D37),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            horizontalSpace(12.w),
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 20.sp),
+            ),
+          ],
         ),
       ),
     );
@@ -912,68 +1036,116 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
 
   Widget _buildCaseDetailsBox() {
     return Container(
-      padding: EdgeInsets.all(20.w),
+      width: double.infinity,
+      padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(24.r),
+        border: Border.all(color: const Color(0xFFF5F5F5), width: 1.5),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Category Label (Pill)
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFAF6E9),
+                  borderRadius: BorderRadius.circular(30.r),
+                  border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.category_rounded, color: const Color(0xFFD4AF37), size: 14.sp),
+                    horizontalSpace(6.w),
+                    Text(
+                      widget.request.eliteServiceCategory?.name ?? "طلب نخبة",
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFFD4AF37),
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Icon Badge
               Container(
                 padding: EdgeInsets.all(8.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFAF6E9),
-                  borderRadius: BorderRadius.circular(10.r),
+                  color: const Color(0xFF0F2D37).withOpacity(0.05),
+                  shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.gavel_rounded, color: const Color(0xFFD4AF37), size: 22.sp),
-              ),
-              horizontalSpace(12.w),
-              Expanded(
-                child: Text(
-                  widget.request.serviceTitle ?? widget.request.eliteServiceCategory?.name ?? "طلب خدمة النخبة",
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF0F2D37),
-                    fontFamily: 'Cairo',
-                  ),
-                ),
+                child: Icon(Icons.gavel_rounded, color: const Color(0xFF0F2D37), size: 18.sp),
               ),
             ],
           ),
           verticalSpace(20.h),
-          Divider(color: Colors.grey[50]),
-          verticalSpace(10.h),
+          
+          // Request Title
           Text(
-            "الوصف",
+            widget.request.serviceTitle ?? "بدون عنوان",
             style: TextStyle(
-              fontSize: 11.sp,
-              color: const Color(0xFFB4B4B4),
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w900,
+              color: const Color(0xFF0F2D37),
               fontFamily: 'Cairo',
+              height: 1.4,
             ),
           ),
-          verticalSpace(8.h),
-          SizedBox(
+          
+          verticalSpace(16.h),
+          const Divider(height: 1),
+          verticalSpace(16.h),
+          
+          // Description Header
+          Row(
+            children: [
+              Icon(Icons.notes_rounded, size: 16.sp, color: const Color(0xFF8B7355)),
+              horizontalSpace(8.w),
+              Text(
+                "وصف الطلب",
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF8B7355),
+                  fontFamily: 'Cairo',
+                ),
+              ),
+            ],
+          ),
+          verticalSpace(12.h),
+          
+          // Description Content
+          Container(
             width: double.infinity,
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFBFBFB),
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(color: const Color(0xFFF0F0F0)),
+            ),
             child: Text(
-              widget.request.description ?? "",
+              widget.request.description ?? "لا يوجد وصف متاح لهذا الطلب",
               textAlign: TextAlign.justify,
-               textDirection: ui.TextDirection.rtl,
-               style: TextStyle(
-                fontSize: 13.sp,
-                color: const Color(0xFF0F2D37),
-                height: 1.6,
+              textDirection: ui.TextDirection.rtl,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: const Color(0xFF4A4A4A),
                 fontFamily: 'Cairo',
+                height: 1.8,
               ),
             ),
           ),
@@ -987,7 +1159,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
     
     if (widget.request.status == "pending-pricing" || 
         (replyDetailsText.isEmpty && (widget.request.status == "قيد الدراسة" || widget.request.status == "قيد الانتظار"))) {
-      replyDetailsText = "الطلب قيد التسعير الآن، وسيتم الرد عليك قريباً من قبل فريق النخبة الاستشاري.";
+      replyDetailsText = "الطلب قيد التسعير الان ، وسيتم الرد عليك قريبا من قبل فريق النخبة الاستشاري";
     } else if (replyDetailsText.isEmpty) {
       replyDetailsText = "لا يوجد رد حتى الآن";
     }
@@ -1040,11 +1212,13 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "تاريخ الطلب",
+                      "تاريخ الرد",
                       style: TextStyle(fontSize: 11.sp, color: const Color(0xFFB4B4B4), fontFamily: 'Cairo'),
                     ),
                     Text(
-                      "${getDate(widget.request.createdAt)}  ${getTime(widget.request.createdAt!)}",
+                      widget.request.offers?.createdAt != null 
+                        ? "${getDate(widget.request.offers!.createdAt!)}  ${getTime(widget.request.offers!.createdAt!)}"
+                        : "${getDate(widget.request.createdAt)}  ${getTime(widget.request.createdAt!)}",
                       style: TextStyle(fontSize: 12.sp, color: const Color(0xFF0F2D37), fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
                     ),
                   ],
@@ -1083,44 +1257,6 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
           ],
 
           verticalSpace(20.h),
-
-          // Approve Offer Button
-          if (widget.request.offers != null &&
-              (widget.request.status != "مكتمل" &&
-                  widget.request.status != "مكتملة")) ...[
-            Builder(builder: (context) {
-              return BlocBuilder<YmtazEliteCubit, YmtazEliteState>(
-                builder: (context, state) {
-                  return SizedBox(
-                    width: double.infinity,
-                    child: CupertinoButton(
-                      padding: EdgeInsets.symmetric(vertical: 16.h),
-                      color: const Color(0xFFD4AF37),
-                      onPressed: state is YmtazEliteOfferApprovalLoading
-                          ? null
-                          : () {
-                              context.read<YmtazEliteCubit>().approveOffer(
-                                    widget.request.offers!.id.toString(),
-                                    "elite",
-                                  );
-                            },
-                      child: state is YmtazEliteOfferApprovalLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                              "الموافقة على العرض والدفع",
-                              style: TextStyle(
-                                fontFamily: 'Cairo',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                    ),
-                  );
-                },
-              );
-            }),
-            verticalSpace(20.h),
-          ],
         ],
       ),
     );
@@ -1232,6 +1368,10 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
       textColor = const Color(0xFF2DAFAF);
       bgColor = const Color(0xFFE6F7F7);
     } else if (status == "مكتملة" || status == "مكتمل") {
+      textColor = const Color(0xFF4CAF50);
+      bgColor = const Color(0xFFE8F5E9);
+    } else if (status == "approved" || status == "accepted") {
+      displayStatus = "موافق";
       textColor = const Color(0xFF4CAF50);
       bgColor = const Color(0xFFE8F5E9);
     } else {

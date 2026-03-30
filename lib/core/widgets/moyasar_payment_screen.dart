@@ -228,7 +228,7 @@ class _MoyasarPaymentScreenState extends State<MoyasarPaymentScreen> {
                   const SizedBox(height: 12),
                   
                   // نموذج البطاقة من ميسر
-                  if (config != null)
+                  if (config != null && (widget.metadata?['payment_method'] == 'credit_card' || widget.metadata?['payment_method'] == null))
                     CreditCard(
                       key: _cardKey, // استخدام المفتاح للتحكم في الحالة
                       config: config!,
@@ -245,13 +245,13 @@ class _MoyasarPaymentScreenState extends State<MoyasarPaymentScreen> {
                         }
                       },
                     )
-                  else
+                  else if (config == null)
                     const Center(child: CircularProgressIndicator()),
                   
                   const SizedBox(height: 24),
                   
                   // دعم آبل باي (فقط على iOS)
-                  if (Platform.isIOS && config != null)
+                  if (Platform.isIOS && config != null && widget.metadata?['payment_method'] == 'apple_pay')
                     ApplePay(
                       config: config!,
                       onPaymentResult: (result) {
@@ -265,6 +265,32 @@ class _MoyasarPaymentScreenState extends State<MoyasarPaymentScreen> {
                           _handlePaymentError(result);
                         }
                       },
+                    ),
+
+                  // دعم جوجل باي (مجرد عرض نص تنبيهي أو محاكاة لأن النسخة القديمة من ميسر لا تدعمه كليدجيت)
+                  if (Platform.isAndroid && config != null && widget.metadata?['payment_method'] == 'google_pay')
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(Icons.payment_rounded, color: Colors.blue, size: 48),
+                          SizedBox(height: 16),
+                          Text(
+                            "Google Pay متاح قريباً",
+                            style: TextStyles.cairo_14_bold,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            "يرجى استخدام بطاقة الائتمان حالياً لإتمام الطلب.",
+                            textAlign: TextAlign.center,
+                            style: TextStyles.cairo_12_regular,
+                          ),
+                        ],
+                      ),
                     ),
                 ],
               ),

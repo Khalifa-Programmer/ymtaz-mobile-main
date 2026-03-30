@@ -331,4 +331,9 @@ class ApiConstants {
 
   // Agora
   static const agoraToken = "api/agora/token";
+
+  // Calls
+  static const calls = "calls";
+  static const callsActive = "calls/active";
+  static const callsHistory = "calls/history";
 }

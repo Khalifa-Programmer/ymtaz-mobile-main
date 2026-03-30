@@ -915,4 +915,34 @@ abstract class ApiService {
     @Header('Authorization') String token,
     @Path('id') int pathId,
   );
+
+  // Calls Endpoints
+  @GET(ApiConstants.calls)
+  Future<dynamic> getCalls(@Header('Authorization') String token);
+
+  @POST(ApiConstants.calls)
+  Future<dynamic> startCall(
+      @Header('Authorization') String token, @Body() Map<String, dynamic> body);
+
+  @GET('${ApiConstants.calls}/{id}')
+  Future<dynamic> getCallDetails(
+      @Header('Authorization') String token, @Path('id') String callId);
+
+  @POST('${ApiConstants.calls}/{id}/accept')
+  Future<dynamic> acceptCall(
+      @Header('Authorization') String token, @Path('id') String callId);
+
+  @POST('${ApiConstants.calls}/{id}/reject')
+  Future<dynamic> rejectCall(
+      @Header('Authorization') String token, @Path('id') String callId);
+
+  @POST('${ApiConstants.calls}/{id}/end')
+  Future<dynamic> endCall(
+      @Header('Authorization') String token, @Path('id') String callId);
+
+  @GET(ApiConstants.callsActive)
+  Future<dynamic> getActiveCalls(@Header('Authorization') String token);
+
+  @GET(ApiConstants.callsHistory)
+  Future<dynamic> getCallHistory(@Header('Authorization') String token);
 }

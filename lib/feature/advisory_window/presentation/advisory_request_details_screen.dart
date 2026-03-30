@@ -45,13 +45,10 @@ class _AdvisoryRequestDetailsScreenState
   }
 
 
-
-
-
   Future<void> _pickFiles() async {
     if (_files.length >= 5) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('يمكنك إرفاق حتى 5 ملفات فقط')),
+        const SnackBar(content: Text('يمكنك إرفاق حتى 5 ملفات فقط')),
       );
       return;
     }
@@ -63,9 +60,25 @@ class _AdvisoryRequestDetailsScreenState
     );
 
     if (result != null) {
-      setState(() {
-        _files.addAll(result.files.take(5 - _files.length));
-      });
+      final validFiles = result.files.where((file) => file.size <= 10 * 1024 * 1024).toList();
+      final oversizedFiles = result.files.where((file) => file.size > 10 * 1024 * 1024).toList();
+      
+      if (oversizedFiles.isNotEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('تم تجاهل ${oversizedFiles.length} ملفات لتجاوزها حجم 10 ميجابايت'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+      
+      if (validFiles.isNotEmpty) {
+        setState(() {
+          _files.addAll(validFiles.take(5 - _files.length));
+        });
+      }
     }
   }
 
@@ -85,13 +98,13 @@ class _AdvisoryRequestDetailsScreenState
     final advisoryCubit = getit<AdvisoryCubit>();
     if (advisoryCubit.selectedLevel == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('يجب اختيار مستوى الطلب')),
+        const SnackBar(content: Text('يجب اختيار مستوى الطلب')),
       );
       return;
     }
     if (externalController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('يجب كتابة تفاصيل الاستشارة')),
+        const SnackBar(content: Text('يجب كتابة تفاصيل الاستشارة')),
       );
       return;
     }
@@ -133,7 +146,7 @@ class _AdvisoryRequestDetailsScreenState
           maxLines: 1,
         ),
         trailing: IconButton(
-          icon: Icon(CupertinoIcons.xmark),
+          icon: const Icon(CupertinoIcons.xmark),
           onPressed: () => _removeFile(index),
         ),
       ),
@@ -149,9 +162,8 @@ class _AdvisoryRequestDetailsScreenState
       builder: (context, state) {
         final advisoryCubit = getit<AdvisoryCubit>();
         final selectedAccurateData = advisoryCubit.selectedAccurateData;
-        final selectedLevel = advisoryCubit.selectedLevel;
         if (selectedAccurateData == null) {
-          return Center(child: Text("No accurate data selected"));
+          return const Center(child: Text("No accurate data selected"));
         }
 
         final parts = <String>[];

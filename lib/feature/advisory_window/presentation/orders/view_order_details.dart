@@ -8,11 +8,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yamtaz/config/themes/styles.dart';
-import 'package:yamtaz/core/constants/colors.dart';
-import 'package:yamtaz/core/helpers/fuctions_helpers/functions_helpers.dart';
-import 'package:yamtaz/core/widgets/audio_player_widget.dart';
-import 'package:yamtaz/core/widgets/custom_button.dart';
-import 'package:yamtaz/core/widgets/spacing.dart';
+import 'package:yamtaz/core/widgets/app_attachment_tile.dart';
+import 'package:yamtaz/core/helpers/file_helper.dart';
 import 'package:yamtaz/feature/layout/account/logic/my_account_cubit.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -22,6 +19,11 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/network/local/cache_helper.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/widgets/spacing.dart';
+import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/audio_player_widget.dart';
+import '../../../../core/helpers/fuctions_helpers/functions_helpers.dart';
 import '../../data/model/all_advirsory_response.dart';
 import '../video_call/video_call_lobby_screen.dart';
 
@@ -89,7 +91,7 @@ class ViewOrderDetails extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     "تفاصيل الاستشارة",
                     style: TextStyle(
                       fontSize: 14,
@@ -262,7 +264,7 @@ class ViewOrderDetails extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     "تفاصيل الطلب",
                     style: TextStyle(
                       fontSize: 14,
@@ -271,7 +273,7 @@ class ViewOrderDetails extends StatelessWidget {
                     ),
                   ),
                   verticalSpace(20.w),
-                  const Text(
+                  Text(
                     "الموضوع",
                     style: TextStyle(
                       fontSize: 14,
@@ -291,7 +293,7 @@ class ViewOrderDetails extends StatelessWidget {
                   if (servicesRequirementsResponse.files!.isNotEmpty)
                     verticalSpace(20.w),
                   if (servicesRequirementsResponse.files!.isNotEmpty)
-                    const Text(
+                    Text(
                       "المرفقات",
                       style: TextStyle(
                         fontSize: 14,
@@ -310,23 +312,9 @@ class ViewOrderDetails extends StatelessWidget {
                         final file = servicesRequirementsResponse.files![index];
                         
                         if (file.isReply == 0 && file.isVoice == 0) {
-                          return InkWell(
-                            onTap: () => _openFileInBrowser(file.file.toString()),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.attach_file,
-                                  color: appColors.primaryColorYellow,
-                                  size: 20.sp,
-                                ),
-                                horizontalSpace(10.w),
-                                Text(
-                                  "اضغط للمشاهدة",
-                                  style: TextStyles.cairo_12_semiBold
-                                      .copyWith(color: appColors.blue100),
-                                ),
-                              ],
-                            ),
+                          return AppAttachmentTile(
+                            url: FileHelper.resolveUrl(file.file.toString()),
+                            title: file.file?.split('/').last ?? "تم إرفاق ملف",
                           );
                         }
                         return const SizedBox();
@@ -348,7 +336,7 @@ class ViewOrderDetails extends StatelessWidget {
                           return Padding(
                             padding: EdgeInsets.only(top: 10.h),
                             child: AudioPlayerWidget(
-                              audioUrl: file.file.toString(),
+                              audioUrl: FileHelper.resolveUrl(file.file.toString()),
                               backgroundColor: appColors.white,
                               activeWaveColor: appColors.primaryColorYellow,
                               playButtonColor: appColors.primaryColorYellow,

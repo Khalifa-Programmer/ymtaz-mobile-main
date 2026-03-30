@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:yamtaz/config/themes/app_theme.dart';
 import 'package:yamtaz/core/router/app_router.dart';
-
-
+import 'package:yamtaz/feature/intro/splash/presentation/splash_screen.dart';
 
 class Yamtaz extends StatelessWidget {
   final AppRouter appRouter;
@@ -21,8 +20,6 @@ class Yamtaz extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isTablet = MediaQuery.of(context).size.width >= 600;
-    
     return GestureDetector(
       onTap: () {
         FocusManager focus = FocusManager.instance;
@@ -32,23 +29,24 @@ class Yamtaz extends StatelessWidget {
       },
       child: ScreenUtilInit(
         useInheritedMediaQuery: true,
-        designSize: isTablet ? const Size(650, 1012) : const Size(375, 812),
+        designSize: const Size(375, 812),
         minTextAdapt: true,
         splitScreenMode: true,
-        child: MaterialApp(
-          title: "Ymtaz",
-          navigatorKey: navigatorKey,
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.appTheme,
-          themeMode: ThemeMode.light,
-          initialRoute: initialRoute,
-          onGenerateRoute: (settings) {
-            return appRouter.generateRoute(settings);
-          },
-        ),
+        builder: (context, child) {
+          return MaterialApp(
+            title: "Ymtaz",
+            navigatorKey: navigatorKey,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.appTheme,
+            themeMode: ThemeMode.light,
+            initialRoute: initialRoute,
+            onGenerateRoute: appRouter.generateRoute,
+            home: const SplashScreen(),
+          );
+        },
       ),
     );
   }

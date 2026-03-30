@@ -249,3 +249,45 @@ List<TextSpan> highlightOccurrences(String source, String query) {
 
   return spans;
 }
+
+String getEliteRequestStatusText(String status) {
+  final map = {
+    'pending-pricing': 'في انتظار التسعير',
+    'pending-pricing-change': 'في انتظار إعادة التسعير',
+    'pending-pricing-approval': 'في انتظار موافقة التسعير',
+    'pending-payment': 'في انتظار الدفع',
+    'approved': 'تم الموافقة',
+    'completed': 'مكتمل',
+  };
+  return map[status] ?? status;
+}
+
+String getEliteOfferStatusText(String status) {
+  final map = {
+    'pending-client-approval': 'في انتظار موافقة العميل',
+    'pending-approval': 'في انتظار الموافقة',
+    'accepted': 'مقبول',
+  };
+  return map[status] ?? status;
+}
+
+String getCallStatusText(String status) {
+  final map = {
+    'calling': 'يجرى',
+    'ringing': 'يرن',
+    'accepted': 'مقبول',
+    'rejected': 'مرفوض',
+    'missed': 'فائت',
+    'ended': 'انتهى',
+  };
+  return map[status] ?? status;
+}
+
+String getCallTypeText(String type) {
+  final map = {
+    'audio': 'صوتي',
+    'video': 'فيديو',
+  };
+  return map[type] ?? type;
+}
+
