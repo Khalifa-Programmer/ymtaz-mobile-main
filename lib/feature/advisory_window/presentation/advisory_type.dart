@@ -11,6 +11,7 @@ import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/assets.dart';
 import '../logic/advisory_cubit.dart';
+import '../data/model/advisories_categories_types.dart';
 
 class AdvisoryType extends StatelessWidget {
   const AdvisoryType({super.key});
@@ -22,164 +23,129 @@ class AdvisoryType extends StatelessWidget {
       child: BlocBuilder<AdvisoryCubit, AdvisoryState>(
         builder: (context, state) {
           final cubit = context.read<AdvisoryCubit>();
-          
+
           if (state is AdvisoryTypesLoading) {
-            return Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 200.w,
-                    height: 20.h,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.r)),
-                  ),
-                  verticalSpace(5.h),
-                  Container(
-                    width: 300.w,
-                    height: 20.h,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.r)),
-                  ),
-                  verticalSpace(10.h),
-                  Container(
-                    width: double.infinity,
-                    height: 100.h,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.r)),
-                  ),
-                  verticalSpace(10.h),
-                  Container(
-                    width: double.infinity,
-                    height: 100.h,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.r)),
-                  ),
-                ],
-              ),
-            );
+            return _buildLoadingShimmer();
           }
+
           if (cubit.advisoriesCategoriesTypes != null) {
             final data = cubit.advisoriesCategoriesTypes!.data!.items ?? [];
             if (data.isEmpty) return const SizedBox();
 
-            final writtenItem = data.firstWhere(
-              (element) => element.requiresAppointment == 0,
-              orElse: () => data.first,
-            );
-
-            final allVisualItems = data.where((element) => element.requiresAppointment == 1).toList();
-            final baseVisualItem = allVisualItems.isNotEmpty ? allVisualItems.first : data.first;
-
-            final instantVisualItem = allVisualItems.firstWhere(
-              (element) => (element.name?.contains("فورية") ?? false),
-              orElse: () => baseVisualItem,
-            );
-
-            final scheduledVisualItem = allVisualItems.firstWhere(
-              (element) => (element.name?.contains("مجدولة") ?? false) || (allVisualItems.length > 1 && element != instantVisualItem),
-              orElse: () => allVisualItems.length > 1 ? allVisualItems[1] : baseVisualItem,
-            );
-
             return Animate(
               effects: [FadeEffect(duration: 500.ms)],
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      if (cubit.showVisualOptions)
-                        IconButton(
-                          icon: Icon(Icons.arrow_back_ios, size: 18.sp),
-                          onPressed: () {
-                            cubit.toggleVisualOptions(false);
-                          },
-                        ),
-                      Text(
-                        cubit.showVisualOptions ? "نوع الاستشارة المرئية" : "وسيلة الاستشارة",
-                        style: TextStyles.cairo_14_bold,
-                      ),
-                    ],
-                  ),
-                  verticalSpace(5.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: cubit.showVisualOptions ? 40.w : 0),
-                    child: Text(
-                      cubit.showVisualOptions
-                          ? "اختر نوع الاستشارة المرئية المناسبة لك"
-                          : "اختر وسيلة الاستشارة المناسبة لك للحصول على أفضل خدمة",
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "وسيلة الاستشارة",
+                      style: TextStyles.cairo_14_bold,
+                    ),
+                    verticalSpace(5.h),
+                    Text(
+                      "اختر وسيلة الاستشارة المناسبة لك للحصول على أفضل خدمة",
                       style: TextStyles.cairo_12_semiBold
                           .copyWith(color: appColors.grey15),
                     ),
-                  ),
-                  verticalSpace(10.h),
-                  if (!cubit.showVisualOptions) ...[
-                    // Level 1: Written vs Visual
-                    ToolSelectionType(
-                      svgAsset: AppAssets.advisoryOrder,
-                      name: "استشارة مكتوبة",
-                      description: "احصل على رد مكتوب لشرح قضيتك ومرفقاتك بدقة من قبل المحامي",
-                      onSelected: () {
-                        cubit.selectedAdvisoryType = writtenItem.id!;
-                        cubit.isNeedAppointment = false;
-                        cubit.isInstant = false;
-                        cubit.nextStep();
-                      },
-                    ),
                     verticalSpace(10.h),
-                    ToolSelectionType(
-                      isVideo: true,
-                      name: "استشارة مرئية",
-                      description: "تواصل مع المحامي عبر مكالمة فيديو مباشرة لمناقشة التفاصيل",
-                      onSelected: () {
-                        cubit.toggleVisualOptions(true);
-                      },
-                    ),
-                  ] else ...[
-                    // Level 2: Visual Options
-                    ToolSelectionType(
-                      svgAsset: AppAssets.flash,
-                      name: "استشارة مرئية فورية",
-                      description: "تواصل مع المحامي مباشرة الآن دون الحاجة لحجز موعد مسبق",
-                      onSelected: () {
-                        cubit.selectedAdvisoryType = instantVisualItem.id!;
-                        cubit.isNeedAppointment = false;
-                        cubit.isInstant = true;
-                        cubit.nextStep();
-                      },
-                    ),
-                    verticalSpace(10.h),
-                    ToolSelectionType(
-                      svgAsset: AppAssets.appointmentOrder,
-                      name: "موعد مرئية (مجدولة)",
-                      description: "احجز موعداً لاستشارة مرئية في وقت لاحق يناسبك",
-                      onSelected: () {
-                        cubit.selectedAdvisoryType = scheduledVisualItem.id!;
-                        cubit.isNeedAppointment = true;
-                        cubit.isInstant = false;
-                        cubit.nextStep();
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: data.length,
+                      separatorBuilder: (context, index) => verticalSpace(10.h),
+                      itemBuilder: (context, index) {
+                        final item = data[index];
+                        return ToolSelectionType(
+                          svgAsset: _getIcon(item),
+                          name: item.name ?? '',
+                          description: item.description ?? '',
+                          onSelected: () {
+                            cubit.selectedAdvisoryItem = item;
+                            cubit.selectedAdvisoryType = item.id!;
+                            cubit.isNeedAppointment = item.requiresAppointment == 1;
+                            cubit.isInstant = _isInstantAdvisory(item);
+                            cubit.nextStep();
+                          },
+                        );
                       },
                     ),
                   ],
-                ],
+                ),
               ),
             );
           }
+
           if (state is AdvisoryTypesError) {
             return Center(
-              child: Text('Failed to load advisory types'),
+              child: Text(
+                'فشل تحميل أنواع الاستشارات',
+                style: TextStyles.cairo_14_bold.copyWith(color: appColors.red),
+              ),
             );
           }
-          return Center(
+
+          return const Center(
             child: CircularProgressIndicator(),
           );
         },
+      ),
+    );
+  }
+
+  bool _isInstantAdvisory(Item item) {
+    if (item.requiresAppointment == 1) return false;
+    final name = item.name ?? '';
+    if (name.contains("مكتوب")) return false;
+    if (name.contains("فور") || name.contains("مباشر") || name.contains("سريع") || name.contains("عاجل")) return true;
+    return true; // If it doesn't require an appointment and isn't written, it's considered an instant video/call
+  }
+
+  String _getIcon(Item item) {
+    final name = item.name ?? '';
+    if (name.contains("مكتوب")) return AppAssets.advisoryOrder;
+    if (_isInstantAdvisory(item)) return AppAssets.flash;
+    if (name.contains("مجدول")) return AppAssets.appointmentOrder;
+    if (item.requiresAppointment == 1) return AppAssets.video;
+    return AppAssets.advisories;
+  }
+
+  Widget _buildLoadingShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 200.w,
+            height: 20.h,
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(10.r)),
+          ),
+          verticalSpace(5.h),
+          Container(
+            width: 300.w,
+            height: 20.h,
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(10.r)),
+          ),
+          verticalSpace(20.h),
+          ...List.generate(
+              3,
+              (index) => Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 140.h,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.r)),
+                      ),
+                      verticalSpace(10.h),
+                    ],
+                  )),
+        ],
       ),
     );
   }

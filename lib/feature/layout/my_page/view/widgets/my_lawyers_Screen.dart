@@ -11,6 +11,8 @@ import '../../../../../core/widgets/spacing.dart';
 import '../../logic/my_page_cubit.dart';
 import '../../logic/my_page_state.dart';
 import '../../../../layout/services/presentation/widgets/no_data_services.dart';
+import 'package:yamtaz/feature/digital_office/view/client_profile_screen.dart';
+import 'package:yamtaz/feature/digital_office/data/models/my_clients_response.dart' as digital_office;
 
 
 
@@ -67,79 +69,105 @@ class MyLawyers extends StatelessWidget {
 
   Widget _buildCategoryItem(
       List<Client> category, BuildContext context, int index) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-      margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 0.h),
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shadows: [
-          BoxShadow(
-            color: Colors.black12.withOpacity(0.04),
-            // Shadow color
-            spreadRadius: 3,
-            // Spread radius
-            blurRadius: 10,
-            // Blur radius
-            offset: const Offset(0, 3), // Offset in x and y direction
-          ),
-        ],
-        shape: RoundedRectangleBorder(
-          // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 50.w,
-            height: 50.h,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: NetworkImage(category[index].image ??
-                    "https://api.ymtaz.sa/uploads/person.png"),
-                fit: BoxFit.cover,
+    return InkWell(
+      onTap: () {
+        final clientData = category[index];
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ClientProfileScreen(
+              client: digital_office.Client(
+                id: clientData.id,
+                name: clientData.name,
+                image: clientData.image,
+                about: clientData.about,
+                gender: clientData.gender,
+                currentLevel: clientData.currentLevel,
+                city: clientData.city != null ? digital_office.AccurateSpecialty(id: clientData.city!.id, title: clientData.city!.title) : null,
+                country: clientData.country != null ? digital_office.Country(id: clientData.country!.id, name: clientData.country!.name) : null,
+                region: clientData.region != null ? digital_office.Country(id: clientData.region!.id, name: clientData.region!.name) : null,
+                nationality: clientData.nationality != null ? digital_office.Country(id: clientData.nationality!.id, name: clientData.nationality!.name) : null,
+                degree: clientData.degree != null ? digital_office.Degree(id: clientData.degree!.id, title: clientData.degree!.title) : null,
+                currentRank: clientData.currentRank != null ? digital_office.CurrentRank(id: clientData.currentRank!.id, name: clientData.currentRank!.name, image: clientData.currentRank!.image) : null,
               ),
             ),
           ),
-          SizedBox(width: 10.0.h),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("${category[index].name}",
-                  style: TextStyles.cairo_14_bold.copyWith(
-                    color: appColors.blue100,
-                  )),
-              verticalSpace(6.h),
-              Row(
-                children: [
-                  Icon(
-                    CupertinoIcons.location_solid,
-                    color: appColors.primaryColorYellow,
-                    size: 20.sp,
-                  ),
-                  horizontalSpace(0.w),
-                  Text(category[index].city!.title ?? "",
-                      style: TextStyles.cairo_12_semiBold),
-                ],
-              )
-            ],
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+        margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 0.h),
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shadows: [
+            BoxShadow(
+              color: Colors.black12.withOpacity(0.04),
+              // Shadow color
+              spreadRadius: 3,
+              // Spread radius
+              blurRadius: 10,
+              // Blur radius
+              offset: const Offset(0, 3), // Offset in x and y direction
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            // side: const BorderSide(width: 1, color: Color(0xFFD9D9D9)),
+            borderRadius: BorderRadius.circular(10),
           ),
-          // Spacer(),
-          // Container(
-          //   margin: EdgeInsets.only(left: 0.w),
-          //   padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-          //   decoration: BoxDecoration(
-          //     color: appColors.lightYellow10,
-          //     borderRadius: BorderRadius.circular(6.r),
-          //   ),
-          //   child: Text(,
-          //       style: TextStyles.cairo_12_semiBold.copyWith(
-          //         color: appColors.blue100,
-          //       )),
-          // )
-        ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 50.w,
+              height: 50.h,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: NetworkImage(category[index].image ??
+                      "https://api.ymtaz.sa/uploads/person.png"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(width: 10.0.h),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("${category[index].name}",
+                    style: TextStyles.cairo_14_bold.copyWith(
+                      color: appColors.blue100,
+                    )),
+                verticalSpace(6.h),
+                Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.location_solid,
+                      color: appColors.primaryColorYellow,
+                      size: 20.sp,
+                    ),
+                    horizontalSpace(0.w),
+                    Text(category[index].city?.title ?? "",
+                        style: TextStyles.cairo_12_semiBold),
+                  ],
+                )
+              ],
+            ),
+            // Spacer(),
+            // Container(
+            //   margin: EdgeInsets.only(left: 0.w),
+            //   padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+            //   decoration: BoxDecoration(
+            //     color: appColors.lightYellow10,
+            //     borderRadius: BorderRadius.circular(6.r),
+            //   ),
+            //   child: Text(,
+            //       style: TextStyles.cairo_12_semiBold.copyWith(
+            //         color: appColors.blue100,
+            //       )),
+            // )
+          ],
+        ),
       ),
     );
   }

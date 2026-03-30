@@ -15,23 +15,34 @@ import 'package:yamtaz/feature/digital_office/view/widgets/main_screen/my_orders
 import 'package:yamtaz/feature/layout/services/presentation/widgets/item_widget.dart';
 import 'package:yamtaz/feature/package_and_subscriptions/presentation/widgets/lawyer_package_card.dart';
 
+import 'package:yamtaz/feature/layout/my_page/data/model/last_added.dart';
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/constants/colors.dart';
 import '../../account/presentation/guest_screen.dart';
 
-class MyPageScreen extends StatelessWidget {
-  MyPageScreen({super.key});
+class MyPageScreen extends StatefulWidget {
+  const MyPageScreen({super.key});
 
-  String userType = CacheHelper.getData(key: 'userType');
+  @override
+  State<MyPageScreen> createState() => _MyPageScreenState();
+}
+
+class _MyPageScreenState extends State<MyPageScreen> {
+  late String userType;
+
+  @override
+  void initState() {
+    super.initState();
+    userType = CacheHelper.getData(key: 'userType') ?? "guest";
+    if (userType != "guest") {
+      getit<MyPageCubit>().getMyPageData();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final cubit = getit<MyPageCubit>();
-    if (userType != "guest") {
-      cubit.getMyPageData();
-    }
     return BlocProvider.value(
-      value: cubit,
+      value: getit<MyPageCubit>(),
       child: BlocConsumer<MyPageCubit, MyPageState>(
         listener: (context, state) {
           // TODO: implement listener
@@ -50,8 +61,16 @@ class MyPageScreen extends StatelessWidget {
 }
 
 // تحسين صفحة العميل مع معالجة التمرير المتداخل
-class MyPageClientImproved extends StatelessWidget {
+class MyPageClientImproved extends StatefulWidget {
   const MyPageClientImproved({super.key});
+
+  @override
+  State<MyPageClientImproved> createState() => _MyPageClientImprovedState();
+}
+
+class _MyPageClientImprovedState extends State<MyPageClientImproved> {
+  bool _showAllMostBought = false;
+  bool _showAllLatest = false;
 
   @override
   Widget build(BuildContext context) {
@@ -205,172 +224,162 @@ class MyPageClientImproved extends StatelessWidget {
     );
   }
 
-  // استخراج دالة لبناء عناصر الأكثر طلباً
+  // بناء عناصر الأكثر طلباً
   List<Widget> _buildMostBoughtItems(BuildContext context) {
-    final List<Widget> widgets = [];
+    final model = getit<MyPageCubit>().lastAddedModel?.data?.mostBought;
     
-    widgets.add(SizedBox(height: 10.h));
-    
-    // الخدمات الاستشارية
-    if (getit<MyPageCubit>().lastAddedModel?.data?.mostBought?.advisoryServices?.isNotEmpty ?? false) {
-      widgets.add(_buildSectionTitle('الخدمات الاستشارية'));
-      widgets.add(SizedBox(height: 10.h));
-      widgets.addAll(
-        getit<MyPageCubit>().lastAddedModel!.data!.mostBought!.advisoryServices!.map(
-          (service) => ItemCardWidget(
-            index: service.id ?? 0,
-            name: service.name ?? '',
-            description: service.description ?? 'لا يوجد وصف متاح',
-            total: '${service.minPrice} - ${service.maxPrice} ريال',
-            id: service.id ?? 0,
-            iconPath: AppAssets.advisories,
-            onPressed: () => context.pushNamed(Routes.advisoryScreen),
-          ),
-        ),
-      );
-    }
-    
-    // الخدمات
-    if (getit<MyPageCubit>().lastAddedModel?.data?.mostBought?.services?.isNotEmpty ?? false) {
-      widgets.add(SizedBox(height: 15.h));
-      widgets.add(_buildSectionTitle('الخدمات'));
-      widgets.add(SizedBox(height: 10.h));
-      widgets.addAll(
-        getit<MyPageCubit>().lastAddedModel!.data!.mostBought!.services!.map(
-          (service) => ItemCardWidget(
-            index: service.id ?? 0,
-            name: service.title ?? '',
-            description: service.intro ?? 'لا يوجد وصف متاح',
-            total: '${service.minPrice} - ${service.maxPrice} ريال',
-            id: service.id ?? 0,
-            iconPath: AppAssets.services,
-            onPressed: () => context.pushNamed(Routes.services),
-          ),
-        ),
-      );
-    }
-    
-    // المواعيد
-    if (getit<MyPageCubit>().lastAddedModel?.data?.mostBought?.appointments?.isNotEmpty ?? false) {
-      widgets.add(SizedBox(height: 15.h));
-      widgets.add(_buildSectionTitle('المواعيد'));
-      widgets.add(SizedBox(height: 10.h));
-      widgets.addAll(
-        getit<MyPageCubit>().lastAddedModel!.data!.mostBought!.appointments!.map(
-          (appointment) => ItemCardWidget(
-            index: appointment.id ?? 0,
-            name: appointment.name ?? '',
-            description: 'موعد مع ${appointment.name ?? "محامي"}',
-            total: '${appointment.minPrice} - ${appointment.maxPrice} ريال',
-            id: appointment.id ?? 0,
-            iconPath: AppAssets.appointments,
-            onPressed: () => context.pushNamed(Routes.appointmentYmatz),
-          ),
-        ),
-      );
-    }
-    
-    // إضافة مساحة في النهاية
-    widgets.add(SizedBox(height: 20.h));
-    
-    return widgets;
+    if (model == null) return [];
+
+    final List<dynamic> allData = [
+      ...(model.advisoryServices ?? []),
+      ...(model.services ?? []),
+      ...(model.appointments ?? []),
+    ];
+
+    final List<Widget> items = allData.asMap().entries.map((entry) {
+      final index = entry.key;
+      final item = entry.value;
+
+      if (item is LatestCreatedAdvisoryService || item is MostBoughtAdvisoryService) {
+        return ItemCardWidget(
+          index: index,
+          name: (item as dynamic).name ?? '',
+          description: (item as dynamic).description ?? 'لا يوجد وصف متاح',
+          total: '${(item as dynamic).minPrice} - ${(item as dynamic).maxPrice} ريال',
+          id: (item as dynamic).id ?? 0,
+          iconPath: AppAssets.advisories,
+          onPressed: () => context.pushNamed(Routes.advisoryScreen),
+        );
+      } else if (item is LatestCreatedService || item is MostBoughtService) {
+        return ItemCardWidget(
+          index: index,
+          name: (item as dynamic).title ?? '',
+          description: (item as dynamic).intro ?? 'لا يوجد وصف متاح',
+          total: '${(item as dynamic).minPrice} - ${(item as dynamic).maxPrice} ريال',
+          id: (item as dynamic).id ?? 0,
+          iconPath: AppAssets.services,
+          onPressed: () => context.pushNamed(Routes.services),
+        );
+      } else { // Appointment
+        return ItemCardWidget(
+          index: index,
+          name: (item as dynamic).name ?? '',
+          description: 'موعد مع ${(item as dynamic).name ?? "محامي"}',
+          total: '${(item as dynamic).minPrice} - ${(item as dynamic).maxPrice} ريال',
+          id: (item as dynamic).id ?? 0,
+          iconPath: AppAssets.appointments,
+          onPressed: () => context.pushNamed(Routes.appointmentYmatz),
+        );
+      }
+    }).toList();
+
+    return _limitItems(items, _showAllMostBought, () {
+      setState(() {
+        _showAllMostBought = true;
+      });
+    });
   }
 
-  // استخراج دالة لبناء العناصر المضافة حديثاً
+  // بناء العناصر المضافة حديثاً
   List<Widget> _buildLatestCreatedItems(BuildContext context) {
-    final List<Widget> widgets = [];
+    final model = getit<MyPageCubit>().lastAddedModel?.data?.latestCreated;
     
-    widgets.add(SizedBox(height: 10.h));
-    
-    // الخدمات الاستشارية
-    if (getit<MyPageCubit>().lastAddedModel?.data?.latestCreated?.advisoryServices?.isNotEmpty ?? false) {
-      widgets.add(_buildSectionTitle('الخدمات الاستشارية'));
-      widgets.add(SizedBox(height: 10.h));
-      widgets.addAll(
-        getit<MyPageCubit>().lastAddedModel!.data!.latestCreated!.advisoryServices!.map(
-          (service) => ItemCardWidget(
-            index: service.id ?? 0,
-            name: service.name ?? '',
-            description: service.description ?? 'لا يوجد وصف متاح',
-            total: '${service.minPrice} - ${service.maxPrice} ريال',
-            id: service.id ?? 0,
-            iconPath: AppAssets.advisories,
-            onPressed: () => context.pushNamed(Routes.advisoryScreen),
-          ),
-        ),
-      );
-    }
-    
-    // الخدمات
-    if (getit<MyPageCubit>().lastAddedModel?.data?.latestCreated?.services?.isNotEmpty ?? false) {
-      widgets.add(SizedBox(height: 15.h));
-      widgets.add(_buildSectionTitle('الخدمات'));
-      widgets.add(SizedBox(height: 10.h));
-      widgets.addAll(
-        getit<MyPageCubit>().lastAddedModel!.data!.latestCreated!.services!.map(
-          (service) => ItemCardWidget(
-            index: service.id ?? 0,
-            name: service.title ?? '',
-            description: service.intro ?? 'لا يوجد وصف متاح',
-            total: '${service.minPrice} - ${service.maxPrice} ريال',
-            id: service.id ?? 0,
-            iconPath: AppAssets.services,
-            onPressed: () => context.pushNamed(Routes.services),
-          ),
-        ),
-      );
-    }
-    
-    // المواعيد
-    if (getit<MyPageCubit>().lastAddedModel?.data?.latestCreated?.appointments?.isNotEmpty ?? false) {
-      widgets.add(SizedBox(height: 15.h));
-      widgets.add(_buildSectionTitle('المواعيد'));
-      widgets.add(SizedBox(height: 10.h));
-      widgets.addAll(
-        getit<MyPageCubit>().lastAddedModel!.data!.latestCreated!.appointments!.map(
-          (appointment) => ItemCardWidget(
-            index: appointment.id ?? 0,
-            name: appointment.name ?? '',
-            description: 'موعد مع ${appointment.name ?? "محامي"}',
-            total: '${appointment.minPrice} - ${appointment.maxPrice} ريال',
-            id: appointment.id ?? 0,
-            iconPath: AppAssets.appointments,
-            onPressed: () => context.pushNamed(Routes.appointmentYmatz),
-          ),
-        ),
-      );
-    }
-    
-    // إضافة مساحة في النهاية
-    widgets.add(SizedBox(height: 20.h));
-    
-    return widgets;
+    if (model == null) return [];
+
+    final List<dynamic> allData = [
+      ...(model.advisoryServices ?? []),
+      ...(model.services ?? []),
+      ...(model.appointments ?? []),
+    ];
+
+    final List<Widget> items = allData.asMap().entries.map((entry) {
+      final index = entry.key;
+      final item = entry.value;
+
+      if (item is LatestCreatedAdvisoryService || item is MostBoughtAdvisoryService) {
+        return ItemCardWidget(
+          index: index,
+          name: (item as dynamic).name ?? '',
+          description: (item as dynamic).description ?? 'لا يوجد وصف متاح',
+          total: '${(item as dynamic).minPrice} - ${(item as dynamic).maxPrice} ريال',
+          id: (item as dynamic).id ?? 0,
+          iconPath: AppAssets.advisories,
+          onPressed: () => context.pushNamed(Routes.advisoryScreen),
+        );
+      } else if (item is LatestCreatedService || item is MostBoughtService) {
+        return ItemCardWidget(
+          index: index,
+          name: (item as dynamic).title ?? '',
+          description: (item as dynamic).intro ?? 'لا يوجد وصف متاح',
+          total: '${(item as dynamic).minPrice} - ${(item as dynamic).maxPrice} ريال',
+          id: (item as dynamic).id ?? 0,
+          iconPath: AppAssets.services,
+          onPressed: () => context.pushNamed(Routes.services),
+        );
+      } else { // Appointment
+        return ItemCardWidget(
+          index: index,
+          name: (item as dynamic).name ?? '',
+          description: 'موعد مع ${(item as dynamic).name ?? "محامي"}',
+          total: '${(item as dynamic).minPrice} - ${(item as dynamic).maxPrice} ريال',
+          id: (item as dynamic).id ?? 0,
+          iconPath: AppAssets.appointments,
+          onPressed: () => context.pushNamed(Routes.appointmentYmatz),
+        );
+      }
+    }).toList();
+
+    return _limitItems(items, _showAllLatest, () {
+      setState(() {
+        _showAllLatest = true;
+      });
+    });
   }
 
-  // دالة لبناء عنوان القسم
-  Widget _buildSectionTitle(String title) {
-    return Row(
-      children: [
-        Container(
-          width: 4.w,
-          height: 20.h,
-          decoration: BoxDecoration(
-            color: appColors.primaryColorYellow,
-            borderRadius: BorderRadius.circular(2.r),
+  // دالة لتحديد العناصر وعرض زر المزيد
+  List<Widget> _limitItems(List<Widget> items, bool showAll, VoidCallback onShowMore) {
+    if (items.isEmpty) return [];
+    
+    final List<Widget> displayedItems = [];
+    displayedItems.add(SizedBox(height: 10.h));
+    
+    if (showAll || items.length <= 5) {
+      displayedItems.addAll(items);
+    } else {
+      displayedItems.addAll(items.take(5));
+      displayedItems.add(
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 10.h),
+          child: Center(
+            child: TextButton(
+              onPressed: onShowMore,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'عرض المزيد',
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      color: appColors.primaryColorYellow,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                  Icon(
+                    Icons.keyboard_arrow_down,
+                    color: appColors.primaryColorYellow,
+                    size: 20.sp,
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
-        SizedBox(width: 8.w),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
-            color: appColors.blue100,
-            fontFamily: 'Cairo',
-          ),
-        ),
-      ],
-    );
+      );
+    }
+    
+    displayedItems.add(SizedBox(height: 20.h));
+    return displayedItems;
   }
 
   // دالة للتحقق من وجود محتوى في الأكثر طلباً

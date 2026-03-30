@@ -11,6 +11,14 @@ class ElitePricingResponse {
     this.data,
   });
 
+  static int? _toInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return double.tryParse(value)?.toInt();
+    return null;
+  }
+
   factory ElitePricingResponse.fromJson(Map<String, dynamic> json) {
     return ElitePricingResponse(
       status: json['status'] ?? false,
@@ -62,7 +70,7 @@ class EliteServiceRequest {
     return EliteServiceRequest(
       id: json['id'] ?? 0,
       accountId: json['account_id'] ?? '',
-      eliteServiceCategory: EliteServiceCategory.fromJson(json['elite_service_category']),
+      eliteServiceCategory: EliteServiceCategory.fromJson(json['elite_service_category'] ?? {}),
       description: json['description'] ?? '',
       transactionComplete: json['transaction_complete'] ?? 0,
       transactionId: json['transaction_id'],
@@ -169,14 +177,14 @@ class EliteServiceOffer {
       id: json['id'] ?? 0,
       eliteServiceRequestId: json['elite_service_request_id'] ?? 0,
       advisoryServiceSub: json['advisory_service_sub'] != null ? AdvisoryServiceSub.fromJson(json['advisory_service_sub']) : null,
-      advisoryServiceSubPrice: json['advisory_service_sub_price'],
+      advisoryServiceSubPrice: ElitePricingResponse._toInt(json['advisory_service_sub_price']),
       advisoryServiceDate: json['advisory_service_date'],
       advisoryServiceFromTime: json['advisory_service_from_time'],
       advisoryServiceToTime: json['advisory_service_to_time'],
       serviceSub: json['service_sub'],
-      serviceSubPrice: json['service_sub_price'],
+      serviceSubPrice: ElitePricingResponse._toInt(json['service_sub_price']),
       reservationType: json['reservation_type'] != null ? ReservationType.fromJson(json['reservation_type']) : null,
-      reservationPrice: json['reservation_price'],
+      reservationPrice: ElitePricingResponse._toInt(json['reservation_price']),
       reservationDate: json['reservation_date'],
       reservationFromTime: json['reservation_from_time'],
       reservationToTime: json['reservation_to_time'],
@@ -212,8 +220,8 @@ class AdvisoryServiceSub {
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
       description: json['description'] ?? '',
-      minPrice: json['min_price'] ?? 0,
-      maxPrice: json['max_price'] ?? 0,
+      minPrice: ElitePricingResponse._toInt(json['min_price']) ?? 0,
+      maxPrice: ElitePricingResponse._toInt(json['max_price']) ?? 0,
       generalCategory: GeneralCategory.fromJson(json['general_category']),
       levels: (json['levels'] as List<dynamic>?)?.map((e) => Level.fromJson(e)).toList() ?? [],
     );
@@ -284,7 +292,7 @@ class Level {
       id: json['id'] ?? 0,
       duration: json['duration'] ?? 0,
       level: LevelInfo.fromJson(json['level']),
-      price: json['price'] ?? '0',
+      price: json['price']?.toString() ?? '0',
     );
   }
 }
@@ -322,8 +330,8 @@ class ReservationType {
     return ReservationType(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
-      minPrice: json['minPrice'] ?? 0,
-      maxPrice: json['maxPrice'] ?? 0,
+      minPrice: ElitePricingResponse._toInt(json['minPrice']) ?? 0,
+      maxPrice: ElitePricingResponse._toInt(json['maxPrice']) ?? 0,
       typesImportance: (json['typesImportance'] as List<dynamic>?)?.map((e) => TypeImportance.fromJson(e)).toList() ?? [],
     );
   }
@@ -349,7 +357,7 @@ class TypeImportance {
   factory TypeImportance.fromJson(Map<String, dynamic> json) {
     return TypeImportance(
       id: json['id'] ?? 0,
-      price: json['price'] ?? 0,
+      price: ElitePricingResponse._toInt(json['price']) ?? 0,
       reservationImportanceId: json['reservation_importance_id'] ?? 0,
       reservationImportance: ReservationImportance.fromJson(json['reservation_importance']),
       isYmtaz: json['isYmtaz'] ?? 0,

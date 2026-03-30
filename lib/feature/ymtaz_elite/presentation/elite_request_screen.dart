@@ -265,7 +265,7 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      "توصيف المشكلة",
+                      "تفاصيل الطلب",
                       style: TextStyle(fontSize: 12.sp, color: Colors.grey[400], fontFamily: 'Cairo'),
                     ),
                   ),

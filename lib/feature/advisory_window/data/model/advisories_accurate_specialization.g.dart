@@ -105,6 +105,7 @@ LevelElement _$LevelElementFromJson(Map<String, dynamic> json) => LevelElement(
       level: json['level'] == null
           ? null
           : LevelLevel.fromJson(json['level'] as Map<String, dynamic>),
+      price: json['price'] as String?,
     );
 
 Map<String, dynamic> _$LevelElementToJson(LevelElement instance) =>
@@ -112,6 +113,7 @@ Map<String, dynamic> _$LevelElementToJson(LevelElement instance) =>
       'id': instance.id,
       'duration': instance.duration,
       'level': instance.level,
+      'price': instance.price,
     };
 
 LevelLevel _$LevelLevelFromJson(Map<String, dynamic> json) => LevelLevel(

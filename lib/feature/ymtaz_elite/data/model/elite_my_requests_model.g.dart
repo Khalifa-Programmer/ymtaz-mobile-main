@@ -116,20 +116,19 @@ Offers _$OffersFromJson(Map<String, dynamic> json) => Offers(
           ? null
           : AdvisoryServiceSub.fromJson(
               json['advisory_service_sub'] as Map<String, dynamic>),
-      advisoryServiceSubPrice:
-          (json['advisory_service_sub_price'] as num?)?.toInt(),
+      advisoryServiceSubPrice: json['advisory_service_sub_price'],
       advisoryServiceDate: json['advisory_service_date'],
       advisoryServiceFromTime: json['advisory_service_from_time'],
       advisoryServiceToTime: json['advisory_service_to_time'],
       serviceSub: json['service_sub'] == null
           ? null
           : ServiceSub.fromJson(json['service_sub'] as Map<String, dynamic>),
-      serviceSubPrice: (json['service_sub_price'] as num?)?.toInt(),
+      serviceSubPrice: json['service_sub_price'],
       reservationType: json['reservation_type'] == null
           ? null
           : ReservationType.fromJson(
               json['reservation_type'] as Map<String, dynamic>),
-      reservationPrice: (json['reservation_price'] as num?)?.toInt(),
+      reservationPrice: json['reservation_price'],
       reservationDate: json['reservation_date'] == null
           ? null
           : DateTime.parse(json['reservation_date'] as String),

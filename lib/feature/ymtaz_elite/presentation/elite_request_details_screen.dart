@@ -22,6 +22,7 @@ import '../../layout/account/logic/my_account_cubit.dart';
 import '../../../core/widgets/users_images.dart';
 import 'consultants_list_screen.dart';
 import 'rejection_reason_screen.dart';
+import 'elite_repricing_request_screen.dart';
 
 class EliteRequestDetailsScreen extends StatefulWidget {
   final Request request;
@@ -417,6 +418,8 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         children: [
+          _buildServicePriceBox(),
+          verticalSpace(20.h),
           _buildAdvisoryTeamBox(),
           verticalSpace(20.h),
           _buildRequestDateBox(),
@@ -432,6 +435,258 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
     );
   }
 
+  Widget _buildServicePriceBox() {
+    if (widget.request.offers == null) return const SizedBox.shrink();
+
+    final totalPrice = (widget.request.offers?.advisoryServiceSubPrice ?? 0) +
+                       (widget.request.offers?.serviceSubPrice ?? 0) +
+                       (widget.request.offers?.reservationPrice ?? 0);
+    
+    final serviceName = widget.request.eliteServiceCategory?.name ?? "طلب خدمة النخبة";
+
+    return InkWell(
+      onTap: () => _showOfferOptionsBottomSheet(),
+      borderRadius: BorderRadius.circular(20.r),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(20.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.2), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFD4AF37).withOpacity(0.05),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFAF6E9),
+                borderRadius: BorderRadius.circular(15.r),
+              ),
+              child: Icon(Icons.assignment_outlined, color: const Color(0xFFD4AF37), size: 28.sp),
+            ),
+            horizontalSpace(16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "عرض التسعير المقترح",
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.grey[500],
+                      fontFamily: 'Cairo',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  verticalSpace(2.h),
+                  Text(
+                    serviceName,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF0F2D37),
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      "$totalPrice",
+                      style: TextStyle(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.w900,
+                        color: const Color(0xFFD4AF37),
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    horizontalSpace(4.w),
+                    Text(
+                      "ريال",
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFFD4AF37),
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  "تعديل / موافقة",
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    color: Colors.grey[400],
+                    fontFamily: 'Cairo',
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showOfferOptionsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 40.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 20,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 50.w,
+              height: 5.h,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+            ),
+            verticalSpace(30.h),
+            Text(
+              "اتخاذ إجراء بشأن التسعير",
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF0F2D37),
+                fontFamily: 'Cairo',
+              ),
+            ),
+            verticalSpace(12.h),
+            Text(
+              "اختر الإجراء المناسب للعرض المقدم من فريق النخبة الاستشاري",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: Colors.grey[600],
+                fontFamily: 'Cairo',
+                height: 1.5,
+              ),
+            ),
+            verticalSpace(32.h),
+            _buildOptionButton(
+              label: "قبول السعر والمتابعة للدفع",
+              icon: Icons.check_circle_rounded,
+              color: const Color(0xFFD4AF37),
+              onTap: () {
+                Navigator.pop(context);
+                context.read<YmtazEliteCubit>().approveOffer(widget.request.offers!.id.toString(), "elite");
+              },
+            ),
+            verticalSpace(16.h),
+            _buildOptionButton(
+              label: "طلب إعادة تسعير (لجنة أخرى)",
+              icon: Icons.history_edu_rounded,
+              color: const Color(0xFF0F2D37),
+              onTap: () {
+                Navigator.pop(context);
+                final offerData = widget.request.offers?.reservationType?.typesImportance?.first;
+                if (offerData != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EliteRepricingRequestScreen(
+                        request: widget.request,
+                        offer: offerData,
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+            verticalSpace(16.h),
+            _buildOptionButton(
+              label: "تجاهل هذا العرض حالياً",
+              icon: Icons.close_rounded,
+              color: const Color(0xFFE54560),
+              showArrow: false,
+              onTap: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionButton({
+    required String label, 
+    required IconData icon, 
+    required Color color, 
+    required VoidCallback onTap,
+    bool showArrow = true,
+  }) {
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 18.h, horizontal: 20.w),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.06),
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: color.withOpacity(0.12), width: 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 22.sp),
+            ),
+            horizontalSpace(16.w),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                  fontFamily: 'Cairo',
+                ),
+              ),
+            ),
+            if (showArrow)
+              Icon(Icons.arrow_forward_ios, size: 14.sp, color: color.withOpacity(0.4)),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildAdvisoryTeamBox() {
     final typesImportance = widget.request.offers?.reservationType?.typesImportance ?? [];
     final consultants = typesImportance.where((ti) => ti.lawyer != null).map((ti) => ti.lawyer!).toList();
@@ -440,130 +695,112 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                        (widget.request.offers?.reservationPrice ?? 0);
 
     return Container(
-      padding: EdgeInsets.all(20.w),
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        gradient: LinearGradient(
+          colors: [
+            appColors.primaryColorYellow.withOpacity(0.5),
+            appColors.lightYellow10,
+            appColors.lightYellow10.withOpacity(0.8),
+            appColors.primaryColorYellow.withOpacity(0.2),
+          ],
+          stops: const [0.0, 0.2, 0.4, 1.0],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(15.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(
-                "فريقك الاستشاري",
+          verticalSpace(15.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${consultants.length}+",
+                      style: TextStyle(
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF0F2D37),
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    Text(
+                      "فريقك الاستشاري",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF0F2D37),
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                  ],
+                ),
+                if (consultants.isNotEmpty)
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ConsultantsListScreen(lawyers: consultants)),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'عرض الكل',
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF0F2D37),
+                          ),
+                        ),
+                        horizontalSpace(5.w),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14.sp,
+                          color: const Color(0xFF0F2D37),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          verticalSpace(12.h),
+          if (consultants.isNotEmpty)
+            Container(
+              height: 45.h,
+              margin: EdgeInsets.symmetric(horizontal: 20.w),
+              child: UsersImagesWidget(
+                imageList: consultants.map((c) => c.image ?? "https://api.ymtaz.sa/uploads/person.png").toList(),
+                totalCount: consultants.length,
+                imageRadius: 16.w,
+                imageCount: 9,
+                imageBorderWidth: 1.5.w,
+                overlapDistance: 28.w,
+              ),
+            )
+          else
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Text(
+                "نخبة من المستشارين المتخصصين لمتابعة طلبك",
                 style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF0F2D37),
+                  fontSize: 12.sp,
+                  color: const Color(0xFF0F2D37).withOpacity(0.6),
                   fontFamily: 'Cairo',
                 ),
               ),
-              const Spacer(),
-              if (totalPrice > 0)
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFAF6E9),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Text(
-                    "$totalPrice ريال",
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD4AF37),
-                      fontFamily: 'Cairo',
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          verticalSpace(16.h),
-          
-          if (consultants.isNotEmpty) ...[
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ConsultantsListScreen(lawyers: consultants)),
-                );
-              },
-              child: Row(
-                children: [
-                   UsersImagesWidget(
-                    imageList: consultants.map((c) => c.image ?? "https://api.ymtaz.sa/uploads/person.png").toList(),
-                    totalCount: consultants.length,
-                    imageRadius: 18.w,
-                    imageCount: 5,
-                    imageBorderWidth: 1.5.w,
-                    overlapDistance: 25.w,
-                  ),
-                  horizontalSpace(10.w),
-                  Text(
-                    "(${consultants.length}) مستشار",
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: const Color(0xFFB4B4B4),
-                      fontFamily: 'Cairo',
-                    ),
-                  ),
-                  const Spacer(),
-                  Icon(Icons.arrow_forward_ios, size: 14.sp, color: Colors.grey[400]),
-                ],
-              ),
             ),
-            verticalSpace(20.h),
-          ],
-
-          if (widget.request.offers != null && (widget.request.status != "مكتمل" && widget.request.status != "مكتملة"))
-             Row(
-               children: [
-                 Expanded(
-                   child: _buildActionButton(
-                     label: "قبول العرض",
-                     color: const Color(0xFFD4AF37),
-                     onTap: () => context.read<YmtazEliteCubit>().approveOffer(widget.request.offers!.id.toString(), "elite"),
-                   ),
-                 ),
-                 horizontalSpace(12.w),
-                 Expanded(
-                   child: _buildActionButton(
-                     label: "رفض العرض",
-                     color: Colors.red[400]!,
-                     onTap: () => _showRejectionDialog(),
-                   ),
-                 ),
-               ],
-             )
-          else ...[
-            Text(
-              "خدمة نخبة",
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: const Color(0xFFB4B4B4),
-                fontFamily: 'Cairo',
-              ),
-            ),
-            verticalSpace(8.h),
-            Text(
-              "تقديم حلول متنوعة وخطوات مدروسة لحل المشكلة بشكل شامل من قبل نخبة من المستشارين المتخصصين بأحدث التقنيات المتاحة",
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: const Color(0xFFB4B4B4),
-                height: 1.6,
-                fontFamily: 'Cairo',
-              ),
-            ),
-          ],
+          verticalSpace(15.h),
         ],
       ),
     );

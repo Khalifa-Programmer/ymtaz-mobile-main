@@ -25,7 +25,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/network/local/cache_helper.dart';
 import '../../data/model/all_advirsory_response.dart';
-import '../call_screen.dart';
+import '../video_call/video_call_lobby_screen.dart';
 
 class ViewOrderDetails extends StatelessWidget {
   const ViewOrderDetails(
@@ -459,73 +459,15 @@ class ViewOrderDetails extends StatelessWidget {
                           verticalSpace(20.h),
                           CustomButton(
                             onPress: () async {
-                              try {
-                                var userType =
-                                    CacheHelper.getData(key: 'userType');
-                                if (userType == 'client') {
-                                  StreamVideo.reset();
-                                  StreamVideo(
-                                    'd3cgunkh7jrg',
-                                    user: User.regular(
-                                        userId: getit<MyAccountCubit>()
-                                            .clientProfile!
-                                            .data!
-                                            .account!
-                                            .streamioId
-                                            .toString(),
-                                        name: getit<MyAccountCubit>()
-                                            .clientProfile!
-                                            .data!
-                                            .account!
-                                            .name),
-                                    userToken: getit<MyAccountCubit>()
-                                        .clientProfile!
-                                        .data!
-                                        .account!
-                                        .streamioToken,
-                                  );
-                                } else {
-                                  StreamVideo.reset();
-                                  StreamVideo(
-                                    'd3cgunkh7jrg',
-                                    user: User.regular(
-                                        userId: getit<MyAccountCubit>()
-                                            .userDataResponse!
-                                            .data!
-                                            .account!
-                                            .streamioId
-                                            .toString(),
-                                        name: getit<MyAccountCubit>()
-                                            .userDataResponse!
-                                            .data!
-                                            .account!
-                                            .name),
-                                    userToken: getit<MyAccountCubit>()
-                                        .userDataResponse!
-                                        .data!
-                                        .account!
-                                        .streamioToken,
-                                  );
-                                }
-
-                                var call = StreamVideo.instance.makeCall(
-                                  callType: StreamCallType.custom("default"),
-                                  id: servicesRequirementsResponse.callId!.toString(),
-                                );
-
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        CallScreen(call: call),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => VideoCallLobbyScreen(
+                                    durationMinutes: servicesRequirementsResponse.appointmentDuration ?? 15,
+                                    date: servicesRequirementsResponse.date ?? "الآن",
+                                    time: servicesRequirementsResponse.from ?? "",
                                   ),
-                                );
-
-                                await call.getOrCreate();
-                              } catch (e) {
-                                debugPrint(
-                                    'Error joining or creating call: $e');
-                                debugPrint(e.toString());
-                              }
+                                ),
+                              );
                             },
                             title: (servicesRequirementsResponse.date == null || servicesRequirementsResponse.date == "") 
                                 ? 'دخول المكالمة الفورية' 

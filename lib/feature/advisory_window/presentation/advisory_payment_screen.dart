@@ -117,12 +117,12 @@ class AdvisoryPaymentScreen extends StatelessWidget {
                       ? null
                       : () {
                           Map<String, Object?> map = {
-                            "sub_price_id": cubit.selectedLevel!.id,
+                            "sub_price_id": cubit.selectedLevel?.id ?? cubit.selectedLawyer!.subCategory?.levels?.firstOrNull?.id,
                             "description": cubit.description,
                             "lawyer_id": cubit.selectedLawyer!.lawyer!.id,
                             "importance_id": cubit.selectedLawyer!.importance!.id,
-                            "type_id": cubit.selectedLawyer!.subCategory!.id,
-                            "advisory_services_id": cubit.selectedAdvisoryType,
+                            "type_id": cubit.selectedAccurateData?.id ?? cubit.selectedLawyer!.subCategory!.id,
+                            "advisory_services_id": cubit.selectedAdvisoryType.toString(),
                             "accept_rules": 1,
                           };
                           FormData newRequestData = FormData.fromMap(map);
@@ -299,53 +299,59 @@ class AdvisoryPaymentScreen extends StatelessWidget {
 
   Widget advisoryData() {
     var cubit = getit<AdvisoryCubit>();
-    if (cubit.selectedLawyer == null || cubit.selectedLawyer!.subCategory == null) {
-      return SizedBox.shrink(); // Return an empty widget if data is null
+    if (cubit.selectedLawyer == null) {
+      return SizedBox.shrink();
     }
+
+    // اسم التخصص الدقيق المختار من الخطوة 2
+    final String specialtyName = cubit.selectedAccurateData?.name
+        ?? cubit.selectedLawyer!.subCategory?.name
+        ?? '-';
+
+    // نوع وسيلة الاستشارة المختارة في الخطوة 0
+    // قمنا بأخذ الاسم مباشرة من الـ API لضمان التطابق التام مهما تغير المسمى
+    final String mediumName = cubit.selectedAdvisoryItem?.name ?? '-';
+
+    // السعر الصحيح: من المستوى المختار، أو من سعر المحامي كاحتياط
+    final String price = cubit.selectedLevel?.price
+        ?? cubit.selectedLawyer!.price
+        ?? '-';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _infoRow(label: 'التخصص الدقيق', value: specialtyName),
+        verticalSpace(8.h),
+        _infoRow(label: 'وسيلة الاستشارة', value: mediumName),
+        verticalSpace(8.h),
+        _infoRow(label: 'سعر الاستشارة', value: '$price ريال'),
+        if (cubit.selectedLevel?.level?.title != null) ...[  
+          verticalSpace(8.h),
+          _infoRow(label: 'مستوى الطلب', value: cubit.selectedLevel!.level!.title!),
+        ],
+        if (cubit.isNeedAppointment && !cubit.isInstant && cubit.selectedDate != null) ...[  
+          verticalSpace(8.h),
+          _infoRow(label: 'تاريخ الموعد', value: '${cubit.selectedDate} | ${cubit.selectedFrom} - ${cubit.selectedTo}'),
+        ],
+      ],
+    );
+  }
+
+  Widget _infoRow({required String label, required String value}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            "نوع الاستشارة",
-            style:
-                TextStyles.cairo_12_semiBold.copyWith(color: appColors.grey15),
-          ),
-          verticalSpace(5.h),
-          Text(
-            cubit.selectedLawyer!.subCategory!.name!,
+        Text(
+          label,
+          style: TextStyles.cairo_12_semiBold.copyWith(color: appColors.grey15),
+        ),
+        Flexible(
+          child: Text(
+            value,
             style: TextStyles.cairo_12_bold.copyWith(color: appColors.blue100),
+            textAlign: TextAlign.end,
           ),
-          verticalSpace(10.h),
-        ]),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            "نوع الوسيلة",
-            style:
-                TextStyles.cairo_12_semiBold.copyWith(color: appColors.grey15),
-          ),
-          verticalSpace(5.h),
-          Text(
-            cubit.isNeedAppointment
-                ? (cubit.isInstant ? "استشارة مرئية فورية" : "موعد مرئية")
-                : "استشارة مكتوبة",
-            style: TextStyles.cairo_12_bold.copyWith(color: appColors.blue100),
-          ),
-          verticalSpace(10.h),
-        ]),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            "سعر الاستشارة",
-            style:
-                TextStyles.cairo_12_semiBold.copyWith(color: appColors.grey15),
-          ),
-          verticalSpace(5.h),
-          Text(
-            "${cubit.selectedLawyer!.price} ريال",
-            style: TextStyles.cairo_12_bold.copyWith(color: appColors.blue100),
-          ),
-          verticalSpace(10.h),
-        ]),
+        ),
       ],
     );
   }

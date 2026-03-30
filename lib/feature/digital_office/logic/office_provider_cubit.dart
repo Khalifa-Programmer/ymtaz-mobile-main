@@ -53,7 +53,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(const OfficeProviderState.loadedAnalytics());
       },
       failure: (message) {
-        emit(OfficeProviderState.errorAnalytics(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorAnalytics(errorMessage));
       },
     );
   }
@@ -69,7 +75,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(OfficeProviderState.loadedServices(data));
       },
       failure: (message) {
-        emit(OfficeProviderState.errorServices(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorServices(errorMessage));
       },
     );
   }
@@ -85,7 +97,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(const OfficeProviderState.loadedAppointmentsTypes());
       },
       failure: (message) {
-        emit(OfficeProviderState.errorAppointmentsTypes(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorAppointmentsTypes(errorMessage));
       },
     );
   }
@@ -105,7 +123,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(OfficeProviderState.loadedMyClients(data));
       },
       failure: (message) {
-        emit(OfficeProviderState.errorMyClients(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorMyClients(errorMessage));
       },
     );
   }
@@ -179,7 +203,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(OfficeProviderState.loadedServicesRequestFromClients(data));
       },
       failure: (message) {
-        emit(OfficeProviderState.errorServicesRequestFromClients(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorServicesRequestFromClients(errorMessage));
       },
     );
 
@@ -189,7 +219,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(OfficeProviderState.loadedOffersServicesRequests(data));
       },
       failure: (message) {
-        emit(OfficeProviderState.errorServicesRequestFromClients(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorServicesRequestFromClients(errorMessage));
       },
     );
   }
@@ -206,7 +242,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(const OfficeProviderState.loadedAdvisoryServicesRequests());
       },
       failure: (message) {
-        emit(OfficeProviderState.errorAdvisoryServicesRequests(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorAdvisoryServicesRequests(errorMessage));
       },
     );
   }
@@ -237,7 +279,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(OfficeProviderState.loadedOffersAppointmentsRequests(data));
       },
       failure: (message) {
-        emit(OfficeProviderState.errorAppointmentsRequestFromClients(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorAppointmentsRequestFromClients(errorMessage));
       },
     );
   }
@@ -257,7 +305,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(const OfficeProviderState.loadedAdvisoryServicesRequests());
       },
       failure: (message) {
-        emit(OfficeProviderState.errorAdvisoryServicesRequests(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorAdvisoryServicesRequests(errorMessage));
       },
     );
   }
@@ -270,7 +324,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(const OfficeProviderState.loadedStartAppointment());
       },
       failure: (message) {
-        emit(OfficeProviderState.errorStartAppointment(message['message']));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorStartAppointment(errorMessage));
       },
     );
   }
@@ -305,7 +365,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(OfficeProviderState.loadedOffersServicesRequests(data));
       },
       failure: (message) {
-        emit(OfficeProviderState.errorServicesRequestFromClients(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorServicesRequestFromClients(errorMessage));
       },
     );
   }
@@ -331,7 +397,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(OfficeProviderState.loadedOfferSend(data));
       },
       failure: (message) {
-        emit(OfficeProviderState.errorOfferSend(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorOfferSend(errorMessage));
       },
     );
   }
@@ -344,7 +416,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(OfficeProviderState.loadedAppointmentOfferSend(data));
       },
       failure: (message) {
-        emit(OfficeProviderState.errorAppointmentOfferSend(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorAppointmentOfferSend(errorMessage));
       },
     );
   }
@@ -374,7 +452,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(OfficeProviderState.loadedAdvisoryAvaliable(data));
       },
       failure: (message) {
-        emit(OfficeProviderState.errorAdvisoryAvaliable(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorAdvisoryAvaliable(errorMessage));
       },
     );
   }
@@ -387,7 +471,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(OfficeProviderState.loadedAddAdvisory(data));
       },
       failure: (message) {
-        emit(OfficeProviderState.errorAddAdvisory(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorAddAdvisory(errorMessage));
       },
     );
   }
@@ -432,7 +522,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(const OfficeProviderState.loadedPostWorkingHours());
       },
       failure: (message) {
-        emit(OfficeProviderState.errorPostWorkingHours(message['message']));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorPostWorkingHours(errorMessage));
       },
     );
   }
@@ -448,7 +544,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(const OfficeProviderState.loadedWorkingHours());
       },
       failure: (message) {
-        emit(OfficeProviderState.errorWorkingHours(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorWorkingHours(errorMessage));
       },
     );
   }
@@ -462,7 +564,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(OfficeProviderState.loadedRequestServices(data));
       },
       failure: (message) {
-        emit(OfficeProviderState.errorRequestServices(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorRequestServices(errorMessage));
       },
     );
   }
@@ -571,7 +679,13 @@ class OfficeProviderCubit extends Cubit<OfficeProviderState> {
         emit(const OfficeProviderState.loadedCreateAppointmentsTypes());
       },
       failure: (message) {
-        emit(OfficeProviderState.errorCreateAppointmentsTypes(message));
+        String errorMessage = "حدث خطأ ما";
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map && message.containsKey('message')) {
+          errorMessage = message['message'].toString();
+        }
+        emit(OfficeProviderState.errorCreateAppointmentsTypes(errorMessage));
       },
     );
   }

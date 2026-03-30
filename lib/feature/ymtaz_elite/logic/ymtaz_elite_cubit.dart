@@ -159,11 +159,41 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
       final result = await _ymtazEliteRepo.replyToPricingRequest(body);
       result.when(
         success: (data) => emit(YmtazElitePricingReplySuccess(data)),
-        failure: (error) => emit(YmtazElitePricingReplyError(error.toString())),
+        failure: (error) {
+          String errorMessage = _extractErrorMessage(error);
+          if (errorMessage.contains('Request is not pending pricing')) {
+            errorMessage = 'هذا الطلب لم يعد متاحاً للتسعير (ربما تم تسعيره بالفعل أو اكتمل)';
+          }
+          emit(YmtazElitePricingReplyError(errorMessage));
+        },
       );
     } catch (e) {
       emit(YmtazElitePricingReplyError(e.toString()));
     }
+  }
+
+  String _extractErrorMessage(dynamic error) {
+    if (error is Map) {
+      // التحقق من وجود أخطاء تحقق (Validation Errors)
+      if (error.containsKey('errors')) {
+        final Map<String, dynamic> errors = error['errors'];
+        if (errors.isNotEmpty) {
+          final firstErrorValue = errors.values.first;
+          if (firstErrorValue is List && firstErrorValue.isNotEmpty) {
+            return firstErrorValue.first.toString();
+          } else if (firstErrorValue is String) {
+            return firstErrorValue;
+          }
+        }
+      }
+      
+      // التحقق من وجود رسالة عامة
+      if (error.containsKey('message')) {
+        return error['message'].toString();
+      }
+    }
+    
+    return error?.toString() ?? 'حدث خطأ غير متوقع، يرجى المحاولة لاحقاً';
   }
 
   Future<void> approveOffer(String offerId, String type) async {
@@ -180,7 +210,7 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
           }
         },
         failure: (error) {
-          emit(YmtazEliteOfferApprovalError(error.toString()));
+          emit(YmtazEliteOfferApprovalError(_extractErrorMessage(error)));
         },
       );
     } catch (e) {

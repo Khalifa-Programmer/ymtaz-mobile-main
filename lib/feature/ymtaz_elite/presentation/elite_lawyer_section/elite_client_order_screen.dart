@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -10,7 +11,9 @@ import '../../../../core/widgets/custom_button.dart';
 import '../../logic/ymtaz_elite_cubit.dart';
 import '../../../../core/widgets/app_bar.dart';
 import 'package:photo_view/photo_view.dart';  // Add this import
-import 'package:url_launcher/url_launcher.dart';  // Add this import
+import 'package:url_launcher/url_launcher.dart';
+import '../../../../core/helpers/fuctions_helpers/functions_helpers.dart';
+import '../../../../core/widgets/spacing.dart';
 
 class EliteClientOrderScreen extends StatelessWidget {
   final YmtazEliteCubit cubit;
@@ -211,8 +214,7 @@ class EliteClientOrderScreen extends StatelessWidget {
                   ],
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                                    children: [
                     Row(
                       children: [
                         Container(
@@ -221,26 +223,69 @@ class EliteClientOrderScreen extends StatelessWidget {
                             vertical: 6.h,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            color: const Color(0xFFE3F2FD),
                             borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Text(
-                            request.eliteServiceCategory?.name ?? '',
+                            request.status == 'pending-pricing' ? 'قيد التسعير' : request.status ?? '',
                             style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.black54,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontFamily: 'Cairo',
+                            ),
+                          ),
+                        ),
+                        horizontalSpace(10.w),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 6.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFF8E1),
+                            borderRadius: BorderRadius.circular(20.r),
+                          ),
+                          child: Text(
+                            "مهم جداً",
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold,
+                              color: appColors.primaryColorYellow,
+                              fontFamily: 'Cairo',
                             ),
                           ),
                         ),
                         const Spacer(),
                         Text(
-                          request.createdAt ?? '',
+                          request.createdAt != null 
+                            ? "${getDate(request.createdAt)}  ${getTime(request.createdAt!)}"
+                            : "--",
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: 11.sp,
                             color: Colors.grey,
+                            fontFamily: 'Cairo',
                           ),
                         ),
                       ],
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      'نوع الخدمة المطلوبة',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: Colors.grey[500],
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    Text(
+                      request.eliteServiceCategory?.name ?? '',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF0F2D37),
+                        fontFamily: 'Cairo',
+                      ),
                     ),
                     SizedBox(height: 16.h),
                     Text(
@@ -248,6 +293,7 @@ class EliteClientOrderScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
+                        fontFamily: 'Cairo',
                       ),
                     ),
                     SizedBox(height: 8.h),
@@ -257,6 +303,7 @@ class EliteClientOrderScreen extends StatelessWidget {
                         fontSize: 14.sp,
                         color: Colors.black87,
                         height: 1.5,
+                        fontFamily: 'Cairo',
                       ),
                     ),
                     if (request.files?.isNotEmpty == true) ...[
@@ -266,24 +313,74 @@ class EliteClientOrderScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
+                          fontFamily: 'Cairo',
                         ),
                       ),
                       SizedBox(height: 8.h),
-                      ...request.files!.map((file) => _buildFileWidget(context, file)),  // Pass context here
+                      ...request.files!.map((file) => _buildFileWidget(context, file)),
                     ],
                   ],
                 ),
               ),
 
-              SizedBox(height: 20.h),
-              CustomButton(title: 'اضافة تسعير', onPress: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return BlocProvider.value(
-                    value: cubit,
-                    child: PricingScreen(),
-                  );
-                }));
-              }),
+              SizedBox(height: 30.h),
+              if (request.status != 'pending-pricing')
+                Container(
+                  padding: EdgeInsets.all(12.w),
+                  margin: EdgeInsets.only(bottom: 16.h),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.grey[600], size: 20.sp),
+                      horizontalSpace(10.w),
+                      Expanded(
+                        child: Text(
+                          request.status == 'completed' || request.status == 'مكتمل' 
+                              ? 'هذا الطلب مكتمل، لا يمكن إضافة المزيد من التسعير'
+                              : 'لقد قمت بالفعل بتسعير هذا الطلب أو انتهت مدة التسعير المتاحة',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.grey[700],
+                            fontFamily: 'Cairo',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              SizedBox(
+                width: double.infinity,
+                child: CupertinoButton(
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
+                  color: const Color(0xFFD4AF37),
+                  disabledColor: Colors.grey[300]!,
+                  borderRadius: BorderRadius.circular(12.r),
+                  onPressed: request.status != 'pending-pricing'
+                      ? null
+                      : () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                            return BlocProvider.value(
+                              value: cubit,
+                              child: const PricingScreen(),
+                            );
+                          }));
+                        },
+                  child: Text(
+                    'إضافة تسعير',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: request.status != 'pending-pricing' ? Colors.grey[500] : Colors.white,
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 40.h),
             ],
           ),
         ),

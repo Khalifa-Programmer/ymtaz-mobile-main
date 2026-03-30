@@ -27,6 +27,7 @@ class AdvisoryCubit extends Cubit<AdvisoryState> {
   int selectedAccurateType = 0;
   SubCategory? selectedAccurateData;
   lawyer.Datum? selectedLawyer;
+  Item? selectedAdvisoryItem;
 
   LevelElement? selectedLevel;
 
@@ -62,6 +63,7 @@ class AdvisoryCubit extends Cubit<AdvisoryState> {
   void resetSteps() {
     currentStep = 0;
     selectedAdvisoryType = 0;
+    selectedAdvisoryItem = null;
     isNeedAppointment = true;
     isInstant = false;
     showVisualOptions = false;

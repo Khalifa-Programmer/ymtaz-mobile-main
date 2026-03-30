@@ -141,7 +141,7 @@ class Offers {
   @JsonKey(name: "advisory_service_sub")
   AdvisoryServiceSub? advisoryServiceSub;
   @JsonKey(name: "advisory_service_sub_price")
-  int? advisoryServiceSubPrice;
+  dynamic advisoryServiceSubPrice;
   @JsonKey(name: "advisory_service_date")
   dynamic advisoryServiceDate;
   @JsonKey(name: "advisory_service_from_time")
@@ -151,11 +151,11 @@ class Offers {
   @JsonKey(name: "service_sub")
   ServiceSub? serviceSub;
   @JsonKey(name: "service_sub_price")
-  int? serviceSubPrice;
+  dynamic serviceSubPrice;
   @JsonKey(name: "reservation_type")
   ReservationType? reservationType;
   @JsonKey(name: "reservation_price")
-  int? reservationPrice;
+  dynamic reservationPrice;
   @JsonKey(name: "reservation_date")
   DateTime? reservationDate;
   @JsonKey(name: "reservation_from_time")

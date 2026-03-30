@@ -126,11 +126,14 @@ class LevelElement {
   int? duration;
   @JsonKey(name: "level")
   LevelLevel? level;
+  @JsonKey(name: "price")
+  String? price;
 
   LevelElement({
     this.id,
     this.duration,
     this.level,
+    this.price,
   });
 
   factory LevelElement.fromJson(Map<String, dynamic> json) =>

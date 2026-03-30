@@ -20,7 +20,7 @@ import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/layout/account/logic/my_account_cubit.dart';
 
 import '../../../../core/constants/assets.dart';
-import 'package:yamtaz/feature/digital_office/data/models/my_clients_response.dart';
+import 'package:yamtaz/feature/digital_office/data/models/my_clients_response.dart' as digital_office;
 import 'package:yamtaz/feature/digital_office/view/client_profile_screen.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/validators.dart';
@@ -675,9 +675,21 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
 
     return GestureDetector(
       onTap: () {
-        // Convert Account to Client
-        final clientJson = account.toJson();
-        final client = Client.fromJson(clientJson);
+        // Convert Account to Client manually to avoid Type Cast errors
+        final client = digital_office.Client(
+          id: account.id,
+          name: account.name,
+          image: account.image,
+          about: account.about,
+          gender: account.gender,
+          currentLevel: account.currentLevel,
+          city: account.city != null ? digital_office.AccurateSpecialty(id: account.city!.id, title: account.city!.title) : null,
+          country: account.country != null ? digital_office.Country(id: account.country!.id, name: account.country!.name) : null,
+          region: account.region != null ? digital_office.Country(id: account.region!.id, name: account.region!.name) : null,
+          nationality: account.nationality != null ? digital_office.Country(id: account.nationality!.id, name: account.nationality!.name) : null,
+          degree: account.degree != null ? digital_office.Degree(id: account.degree!.id, title: account.degree!.title) : null,
+          currentRank: account.currentRank != null ? digital_office.CurrentRank(id: account.currentRank!.id, name: account.currentRank!.name, image: account.currentRank!.image) : null,
+        );
         Navigator.push(
           context,
           MaterialPageRoute(

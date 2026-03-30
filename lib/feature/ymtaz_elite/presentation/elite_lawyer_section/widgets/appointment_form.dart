@@ -155,16 +155,33 @@ class _AppointmentFormState extends State<AppointmentForm> {
               });
               Navigator.of(context).pop();
             },
-            initialLocation: const LatLng(29.378586, 47.990341),
+            initialLocation: const LatLng(24.7136, 46.6753), // Riyadh default
             usePinPointingSearch: true,
-
+            localizationConfig: const LocalizationConfig(
+              languageCode: 'ar',
+              nearBy: 'الأماكن القريبة',
+              findingPlace: 'جاري البحث عن الموقع...',
+              noResultsFound: 'لم يتم العثور على نتائج',
+              unnamedLocation: 'موقع غير مسمى',
+            ),
+            selectedPlaceConfig: const SelectedPlaceConfig(
+              actionButtonText: 'تأكيد الموقع',
+            ),
+            googleAPIParameters: const GoogleAPIParameters(
+              language: 'ar',
+            ),
             searchInputConfig: const SearchInputConfig(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
               autofocus: false,
               textDirection: TextDirection.rtl,
             ),
-            searchInputDecorationConfig: const SearchInputDecorationConfig(
-              hintText: "ابحث عن مكان .....",
+            searchInputDecorationConfig: SearchInputDecorationConfig(
+              hintText: "ابحث عن مكان المقابلة...",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: BorderSide(color: const Color(0xFFD4AF37).withOpacity(0.5)),
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
             ),
           );
         },
@@ -395,29 +412,77 @@ class _AppointmentFormState extends State<AppointmentForm> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.bold,
-            color: appColors.blue100,
+            color: const Color(0xFF0F2D37),
+            fontFamily: 'Cairo',
           ),
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 12.h),
         InkWell(
           onTap: _selectLocation,
+          borderRadius: BorderRadius.circular(12.r),
           child: Container(
-            padding: EdgeInsets.all(12.w),
+            padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              border: Border.all(color: appColors.grey2),
-              borderRadius: BorderRadius.circular(8.r),
+              color: Colors.white,
+              border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
+              borderRadius: BorderRadius.circular(12.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.02),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Row(
               children: [
-                Icon(Icons.location_on, color: appColors.blue100),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: Text(
-                    address.isNotEmpty ? address : 'حدد موقع المقابلة',
-                    style: TextStyle(color: appColors.blue100),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                Container(
+                  padding: EdgeInsets.all(8.w),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD4AF37).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8.r),
                   ),
+                  child: Icon(
+                    Icons.location_on_rounded,
+                    color: const Color(0xFFD4AF37),
+                    size: 20.sp,
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        address.isNotEmpty ? address : 'حدد موقع المقابلة على الخريطة',
+                        style: TextStyle(
+                          color: address.isNotEmpty ? const Color(0xFF0F2D37) : Colors.grey[400],
+                          fontSize: 14.sp,
+                          fontFamily: 'Cairo',
+                          fontWeight: address.isNotEmpty ? FontWeight.w600 : FontWeight.normal,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      if (address.isEmpty)
+                        Padding(
+                          padding: EdgeInsets.only(top: 4.h),
+                          child: Text(
+                            'اضغط للذهاب إلى الخريطة',
+                            style: TextStyle(
+                              color: const Color(0xFFD4AF37),
+                              fontSize: 11.sp,
+                              fontFamily: 'Cairo',
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 16.sp,
+                  color: const Color(0xFFD4AF37).withOpacity(0.5),
                 ),
               ],
             ),

@@ -26,11 +26,15 @@ class ConsultationRequest extends BaseServiceRequest {
 class ServiceRequest extends BaseServiceRequest {
   final String mainServiceId;
   final String subServiceId;
+  final String? serviceName;
+  final String? levelName;
 
   ServiceRequest({
     required super.price,
     required this.mainServiceId,
     required this.subServiceId,
+    this.serviceName,
+    this.levelName,
   });
 }
 
