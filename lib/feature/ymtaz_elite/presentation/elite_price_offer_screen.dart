@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/core/widgets/app_bar.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
+import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
+import 'rejection_reason_screen.dart';
 
 class ElitePriceOfferScreen extends StatelessWidget {
   final Request request;
@@ -327,8 +330,9 @@ class ElitePriceOfferScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildBadge(String text, {required Color backgroundColor, required Color textColor}) {
     return Container(

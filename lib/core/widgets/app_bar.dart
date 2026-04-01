@@ -15,11 +15,11 @@ import '../di/dependency_injection.dart';
 import '../network/local/cache_helper.dart';
 import '../router/routes.dart';
 
-AppBar buildBlurredAppBar(BuildContext context, String title) {
+AppBar buildBlurredAppBar(BuildContext context, String title, {bool showBackButton = true}) {
   return AppBar(
     backgroundColor: Colors.transparent,
     automaticallyImplyLeading: false,
-    leading: Navigator.canPop(context) 
+    leading: (showBackButton && Navigator.canPop(context)) 
       ? IconButton(
           onPressed: () => Navigator.maybePop(context),
           icon: Icon(
