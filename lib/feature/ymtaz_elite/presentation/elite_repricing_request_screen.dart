@@ -72,6 +72,61 @@ class _EliteRepricingRequestScreenState extends State<EliteRepricingRequestScree
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Request Details Box
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(20.w),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.r),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.02),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "عنوان الطلب",
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    color: Colors.grey[400],
+                                    fontFamily: 'Cairo',
+                                  ),
+                                ),
+                                verticalSpace(4.h),
+                                Text(
+                                  widget.request.serviceTitle ?? widget.request.eliteServiceCategory?.name ?? "طلب خدمة النخبة",
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF0F2D37),
+                                    fontFamily: 'Cairo',
+                                  ),
+                                ),
+                                verticalSpace(12.h),
+                                Divider(color: Colors.grey[100], thickness: 1),
+                                verticalSpace(12.h),
+                                Text(
+                                  widget.request.description ?? "لا يوجد وصف متوفر لهذا الطلب.",
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    color: const Color(0xFF8E8E8E),
+                                    fontFamily: 'Cairo',
+                                    height: 1.8,
+                                  ),
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                          verticalSpace(24.h),
+
                           // Comment Box
                           Container(
                             decoration: BoxDecoration(

@@ -20,6 +20,8 @@ import 'package:yamtaz/feature/ymtaz_elite/data/repo/ymtaz_elite_repo.dart';
 import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
 import 'package:yamtaz/feature/advisory_committees/data/repos/advisory_committees_repo.dart';
 import 'package:yamtaz/feature/advisory_committees/logic/advisory_committees_cubit.dart';
+import 'package:yamtaz/feature/ymtaz_elite/data/repo/call_repo.dart';
+import 'package:yamtaz/feature/ymtaz_elite/logic/call_cubit.dart';
 
 
 import '../../config/enviroment.dart';
@@ -156,4 +158,8 @@ Future<void> setGetIt() async {
   getit.registerLazySingleton<LearningPathCubit>(() => LearningPathCubit(getit()));
   // getit.registerLazySingleton<LawDetailsCubit>(() => LawDetailsCubit(getit()));
   getit.registerLazySingleton<BookDetailsCubit>(() => BookDetailsCubit(getit()));
+
+  // Calls
+  getit.registerLazySingleton<CallRepo>(() => CallRepo(getit()));
+  getit.registerFactory<CallCubit>(() => CallCubit(getit()));
 }

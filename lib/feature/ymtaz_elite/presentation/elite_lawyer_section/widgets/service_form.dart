@@ -281,13 +281,8 @@ class _ServiceFormState extends State<ServiceForm> {
 
   List<services_model.Item> _getFilteredServices(List<services_model.Item>? allServices, int? eliteCategoryId) {
     if (allServices == null) return [];
-    if (eliteCategoryId == null) return allServices;
-    
-    // محاولة مطابقة القسم الرئيسي للنخبة مع أقسام الخدمات
-    final filtered = allServices.where((item) => item.id == eliteCategoryId).toList();
-    
-    // إذا لم يتم العثور على مطابقة مباشرة، تظهر قائمة فارغة أو الكل حسب الرغبة (هنا نتركها فارغة لضمان الدقة)
-    return filtered;
+    // لا نقم بفلترة الخدمات حسب قسم الطلب، بل نظهر كافة التصنيفات والخدمات
+    return allServices;
   }
 
   List<DropdownMenuItem<String>> _getMainServiceItems(List<services_model.Item> services) {

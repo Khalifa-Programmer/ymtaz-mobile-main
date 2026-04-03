@@ -11,6 +11,8 @@ class ConsultationRequest extends BaseServiceRequest {
   final String date;
   final String fromTime;
   final String toTime;
+  final String? levelId;     // مستوى الطلب (للاستشارة المرئية)
+  final int? duration;       // المدة بالدقائق
 
   ConsultationRequest({
     required super.price,
@@ -20,6 +22,8 @@ class ConsultationRequest extends BaseServiceRequest {
     required this.date,
     required this.fromTime,
     required this.toTime,
+    this.levelId,
+    this.duration,
   });
 }
 

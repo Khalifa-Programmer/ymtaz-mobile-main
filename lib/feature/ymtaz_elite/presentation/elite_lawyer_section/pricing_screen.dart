@@ -61,11 +61,13 @@ class _PricingScreenState extends State<PricingScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('تم إرسال التسعير بنجاح')),
             );
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.eliteRequestsClients,
-              (route) => false,
-            );
+            final userType = CacheHelper.getData(key: 'userType');
+            final targetRoute = userType == 'provider'
+                ? Routes.eliteRequestsClients
+                : Routes.eliteRequests;
+
+            Navigator.popUntil(context, (route) => route.settings.name == Routes.homeLayout || route.isFirst);
+            Navigator.pushNamed(context, targetRoute);
           } else if (state is YmtazElitePricingReplyError) {
             AppAlerts.showAlert(
               context: context,

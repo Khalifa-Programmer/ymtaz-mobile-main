@@ -84,13 +84,17 @@ class YmtazEliteRepo {
   }
 
   Future<ApiResult<EliteOfferApprovalResponse>> approveOffer(
-      String offerId, String type) async {
+      String offerId, String type, {String? reason}) async {
     var token = CacheHelper.getData(key: 'token');
     try {
+      final body = <String, String>{'type': type};
+      if (reason != null && reason.isNotEmpty) {
+        body['reason'] = reason;
+      }
       var response = await _apiService.approveEliteOffer(
         'Bearer $token',
         offerId,
-        {'type': type},
+        body,
       );
       return ApiResult.success(response);
     } on DioException catch (error) {

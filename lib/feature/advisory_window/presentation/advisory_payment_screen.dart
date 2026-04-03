@@ -323,13 +323,58 @@ class AdvisoryPaymentScreen extends StatelessWidget {
     final double taxAmount = price * taxPercent;
     final double total = price + taxAmount;
 
+    final String generalName = cubit.selectedGeneralData?.name ?? '-';
+    final String levelName = cubit.selectedLevel?.level?.title ?? '-';
+    final int? duration = cubit.selectedLevel?.duration;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _infoRow(label: 'التخصص الدقيق', value: specialtyName),
+        // Selection Path Summary
+        Container(
+          padding: EdgeInsets.all(12.w),
+          margin: EdgeInsets.only(bottom: 16.h),
+          decoration: BoxDecoration(
+            color: appColors.grey3.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(10.r),
+            border: Border.all(color: appColors.grey2),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "ملخص الاختيار",
+                style: TextStyles.cairo_10_bold.copyWith(color: appColors.grey15),
+              ),
+              verticalSpace(8.h),
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
+                children: [
+                  _buildPathBadge(mediumName),
+                  _buildPathBadge(generalName),
+                  _buildPathBadge(specialtyName),
+                  _buildPathBadge(levelName),
+                ],
+              ),
+              if (duration != null) ...[
+                verticalSpace(12.h),
+                Row(
+                  children: [
+                    Icon(Icons.timer_outlined, color: appColors.primaryColorYellow, size: 14.sp),
+                    horizontalSpace(6.w),
+                    Text(
+                      "المدة: $duration دقيقة",
+                      style: TextStyles.cairo_12_semiBold.copyWith(color: appColors.blue100),
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+
         verticalSpace(8.h),
-        _infoRow(label: 'وسيلة الاستشارة', value: mediumName),
-        verticalSpace(16.h),
         const Divider(),
         verticalSpace(16.h),
         Container(
@@ -353,15 +398,27 @@ class AdvisoryPaymentScreen extends StatelessWidget {
             style: TextStyles.cairo_12_regular.copyWith(color: appColors.grey15),
           ),
         ),
-        if (cubit.selectedLevel?.level?.title != null) ...[  
-          verticalSpace(16.h),
-          _infoRow(label: 'مستوى الطلب', value: cubit.selectedLevel!.level!.title!),
-        ],
         if (cubit.isNeedAppointment && !cubit.isInstant && cubit.selectedDate != null) ...[  
           verticalSpace(8.h),
           _infoRow(label: 'تاريخ الموعد', value: '${cubit.selectedDate} | ${cubit.selectedFrom} - ${cubit.selectedTo}'),
         ],
       ],
+    );
+  }
+
+  Widget _buildPathBadge(String label) {
+    if (label == '-' || label.isEmpty) return const SizedBox.shrink();
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: appColors.grey2),
+      ),
+      child: Text(
+        label,
+        style: TextStyles.cairo_10_semiBold.copyWith(color: appColors.blue100),
+      ),
     );
   }
 

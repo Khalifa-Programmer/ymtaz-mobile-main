@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:file_picker/file_picker.dart';
@@ -12,6 +13,7 @@ import 'package:yamtaz/core/di/dependency_injection.dart';
 import 'package:yamtaz/core/widgets/primary/text_form_primary.dart';
 import 'package:yamtaz/feature/advisory_window/presentation/widgets/selections_level.dart';
 import 'package:yamtaz/core/widgets/breadcrumb_widget.dart';
+import '../data/model/advisories_accurate_specialization.dart';
 
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
@@ -195,12 +197,86 @@ class _AdvisoryRequestDetailsScreenState
               ),
               verticalSpace(20.h),
               Text("مستوى الطلب ", style: TextStyles.cairo_12_bold),
-              CustomCheckSelectLevel(
-                items: selectedAccurateData.levels!,
-                onChanged: (item) {
-                  advisoryCubit.selectedLevel = item;
-                },
-              ),
+              verticalSpace(10.h),
+              if (advisoryCubit.selectedAdvisoryItem?.name?.contains("مرئي") ?? false) ...[
+                // Dropdown for Level (Visual Consultation)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(color: appColors.grey5.withOpacity(0.5)),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<LevelElement>(
+                      isExpanded: true,
+                      hint: Text("اختر مستوى الطلب", style: TextStyles.cairo_12_regular),
+                      value: advisoryCubit.selectedLevel,
+                      items: selectedAccurateData.levels!.map((lvl) => DropdownMenuItem(
+                        value: lvl,
+                        child: Text(lvl.level?.title ?? "مستوى", style: TextStyles.cairo_12_semiBold),
+                      )).toList(),
+                      onChanged: (LevelElement? val) {
+                        setState(() {
+                          advisoryCubit.selectedLevel = val;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                verticalSpace(16.h),
+                // Duration & Price Card
+                if (advisoryCubit.selectedLevel != null)
+                  Container(
+                    padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFBFBFB),
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(color: appColors.primaryColorYellow.withOpacity(0.3)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("مدة الاستشارة والسعر", style: TextStyles.cairo_10_bold.copyWith(color: Colors.grey)),
+                        verticalSpace(12.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(6.w),
+                                  decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), shape: BoxShape.circle),
+                                  child: Icon(Icons.timer_outlined, color: Colors.blue, size: 18.sp),
+                                ),
+                                horizontalSpace(10.w),
+                                Text(
+                                  "${advisoryCubit.selectedLevel?.duration ?? '--'} دقيقة",
+                                  style: TextStyles.cairo_14_bold.copyWith(color: appColors.blue100),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                              decoration: BoxDecoration(color: appColors.primaryColorYellow.withOpacity(0.1), borderRadius: BorderRadius.circular(20.r)),
+                              child: Text(
+                                "${advisoryCubit.selectedLevel?.price ?? '--'} ريال",
+                                style: TextStyles.cairo_14_bold.copyWith(color: appColors.primaryColorYellow),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ).animate().fadeIn().slideY(begin: 0.1, end: 0),
+                verticalSpace(20.h),
+              ] else
+                CustomCheckSelectLevel(
+                  items: selectedAccurateData.levels!,
+                  onChanged: (item) {
+                    advisoryCubit.selectedLevel = item;
+                  },
+                ),
               Text("تفاصيل الاستشارة", style: TextStyles.cairo_12_bold),
               CustomTextFieldPrimary(
                 hintText: "الموضوع",

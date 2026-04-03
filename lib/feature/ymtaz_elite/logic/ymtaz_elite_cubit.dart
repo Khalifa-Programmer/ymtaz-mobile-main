@@ -94,10 +94,6 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
 
   Future<void> getEliteRequests({bool forceRefresh = false}) async {
     if (_isLoadingElite && !forceRefresh) return;
-    if (eliteRequests != null && !forceRefresh) {
-      emit(YmtazEliteRequestsLoaded(eliteRequests!));
-      return;
-    }
     
     _isLoadingElite = true;
     emit(YmtazEliteLoading());
@@ -117,10 +113,6 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
 
   Future<void> getPricingRequests({bool forceRefresh = false}) async {
     if (_isLoadingPricing && !forceRefresh) return;
-    if (pricingRequests != null && !forceRefresh) {
-      emit(YmtazElitePricingRequestsLoaded(pricingRequests!));
-      return;
-    }
 
     _isLoadingPricing = true;
     emit(YmtazEliteLoading());
@@ -182,13 +174,22 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
       body['advisory_service_sub_id'] = consultationRequest.accurateSpecializationId;
       body['advisory_service_sub_price'] = consultationRequest.price;
       
-      // إضافة التاريخ والوقت فقط إذا كان نوع الاستشارة 2
+      // إضافة التاريخ والوقت فقط إذا كان نوع الاستشارة 2 (مرئية)
       if (consultationRequest.advisoryTypeId == "2") {
         body['advisory_service_date'] = consultationRequest.date;
         body['advisory_service_from_time'] = consultationRequest.fromTime;
         body['advisory_service_to_time'] = consultationRequest.toTime;
+        
+        // مستوى الطلب والمدة (خاصان بالاستشارة المرئية)
+        if (consultationRequest.levelId != null) {
+          body['advisory_level_id'] = consultationRequest.levelId;
+        }
+        if (consultationRequest.duration != null) {
+          body['advisory_service_duration'] = consultationRequest.duration;
+        }
       }
     }
+
 
     // استخراج الخدمة إذا وجدت
     final serviceRequest = serviceRequests.whereType<ServiceRequest>().firstOrNull;
@@ -261,11 +262,15 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
     emit(YmtazEliteOfferApprovalLoading());
     
     try {
-      final result = await _ymtazEliteRepo.approveOffer(offerId, 'rejected');
+      final result = await _ymtazEliteRepo.approveOffer(
+        offerId,
+        'rejected',
+        reason: reason,   // إرسال سبب الرفض للـ API
+      );
       result.when(
         success: (data) {
-          getEliteRequests(forceRefresh: true); // Refresh for client
-          emit(YmtazEliteOfferApprovalSuccess("rejected")); // Specific signal for rejection
+          getEliteRequests(forceRefresh: true);
+          emit(YmtazEliteOfferApprovalSuccess("rejected"));
         },
         failure: (error) {
           emit(YmtazEliteOfferApprovalError(_extractErrorMessage(error)));

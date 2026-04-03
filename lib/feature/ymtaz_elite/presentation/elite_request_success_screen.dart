@@ -233,20 +233,11 @@ class EliteRequestSuccessScreen extends StatelessWidget {
             ),
             onPressed: () {
               final userType = CacheHelper.getData(key: 'userType');
-              final backRoute = userType == 'provider'
-                  ? Routes.mainOffice
-                  : Routes.myAdvisoryOrders;
               final targetRoute = userType == 'provider'
                   ? Routes.eliteRequestsClients
                   : Routes.eliteRequests;
 
-              // Clear entire stack, push the parent screen first,
-              // then push eliteRequests on top so its back button returns to parent.
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                backRoute,
-                (route) => false,
-              );
+              Navigator.popUntil(context, (route) => route.settings.name == Routes.homeLayout || route.isFirst);
               Navigator.pushNamed(context, targetRoute);
             },
           ),

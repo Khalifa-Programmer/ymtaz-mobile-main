@@ -59,6 +59,19 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
     });
   }
 
+  TypesImportance _getSafeOffer() {
+    if (widget.request.offers?.reservationType?.typesImportance?.isNotEmpty == true) {
+      return widget.request.offers!.reservationType!.typesImportance!.first;
+    }
+    final totalPrice = (num.tryParse(widget.request.offers?.advisoryServiceSubPrice?.toString() ?? '0') ?? 0) +
+                       (num.tryParse(widget.request.offers?.serviceSubPrice?.toString() ?? '0') ?? 0) +
+                       (num.tryParse(widget.request.offers?.reservationPrice?.toString() ?? '0') ?? 0);
+    return TypesImportance(
+      id: widget.request.offers?.id,
+      price: totalPrice.toInt(),
+    );
+  }
+
   String _getFileType(String? filePath) {
     if (filePath == null || filePath.isEmpty) return '';
     final resolved = FileHelper.resolveUrl(filePath);
@@ -149,10 +162,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
   Widget build(BuildContext context) {
     return BlocListener<YmtazEliteCubit, YmtazEliteState>(
         listener: (context, state) {
-          if (state is YmtazEliteOfferApprovalSuccess) {
-            launchUrl(Uri.parse(state.paymentUrl), mode: LaunchMode.externalApplication);
-            Navigator.maybePop(context); // Return to requests list
-          } else if (state is YmtazEliteOfferApprovalError) {
+          if (state is YmtazEliteOfferApprovalError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
@@ -408,14 +418,13 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
 
     return InkWell(
       onTap: () {
-        Navigator.push(
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(
-            builder: (context) => ElitePriceOfferScreen(
-              request: widget.request,
-              offer: widget.request.offers!.reservationType!.typesImportance!.first,
-            ),
-          ),
+          Routes.elitePriceOffer,
+          arguments: {
+            'request': widget.request,
+            'offer': _getSafeOffer(),
+          },
         );
       },
       borderRadius: BorderRadius.circular(20.r),
@@ -572,7 +581,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                     Routes.elitePayment,
                     arguments: {
                       'request': widget.request,
-                      'offer': widget.request.offers!.reservationType!.typesImportance!.first,
+                      'offer': _getSafeOffer(),
                     },
                   );
                 },
@@ -642,7 +651,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                   Routes.eliteRepricingRequest,
                   arguments: {
                     'request': widget.request,
-                    'offer': widget.request.offers!.reservationType!.typesImportance!.first,
+                    'offer': _getSafeOffer(),
                   },
                 );
               },
@@ -1160,6 +1169,10 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
     if (widget.request.status == "pending-pricing" || 
         (replyDetailsText.isEmpty && (widget.request.status == "قيد الدراسة" || widget.request.status == "قيد الانتظار"))) {
       replyDetailsText = "الطلب قيد التسعير الان ، وسيتم الرد عليك قريبا من قبل فريق النخبة الاستشاري";
+    } else if (widget.request.offers != null && widget.request.status != "pending-pricing") {
+      replyDetailsText = replyDetailsText.isEmpty 
+          ? "تم الرد على طلبك بإرسال عرض أسعار وتحديد فريق المستشارين.\nيمكنك مراجعة تفاصيل التسعير وفريقك الاستشاري في تبويب (تفاصيل الطلب) أو من خلال اتخاذ إجراء." 
+          : replyDetailsText;
     } else if (replyDetailsText.isEmpty) {
       replyDetailsText = "لا يوجد رد حتى الآن";
     }
@@ -1358,20 +1371,21 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
   Widget _buildStatusTag(String status) {
     Color textColor;
     Color bgColor;
-    String displayStatus = status;
+    String displayStatus = getEliteRequestStatusText(status);
 
-    if (status == "pending-pricing") {
-      displayStatus = "قيد التسعير";
+    if (status == "pending-pricing" || 
+        status == "pending-pricing-change" || 
+        status == "pending-pricing-approval" || 
+        status == "pending-payment" ||
+        status == "قيد الدراسة" || 
+        status == "قيد الإنتظار") {
       textColor = const Color(0xFF2DAFAF);
       bgColor = const Color(0xFFE6F7F7);
-    } else if (status == "قيد الدراسة" || status == "قيد الإنتظار") {
-      textColor = const Color(0xFF2DAFAF);
-      bgColor = const Color(0xFFE6F7F7);
-    } else if (status == "مكتملة" || status == "مكتمل") {
-      textColor = const Color(0xFF4CAF50);
-      bgColor = const Color(0xFFE8F5E9);
-    } else if (status == "approved" || status == "accepted") {
-      displayStatus = "موافق";
+    } else if (status == "approved" || 
+               status == "accepted" || 
+               status == "completed" || 
+               status == "مكتملة" || 
+               status == "مكتمل") {
       textColor = const Color(0xFF4CAF50);
       bgColor = const Color(0xFFE8F5E9);
     } else {

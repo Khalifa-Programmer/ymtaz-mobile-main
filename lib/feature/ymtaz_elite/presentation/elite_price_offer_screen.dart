@@ -51,24 +51,24 @@ class ElitePriceOfferScreen extends StatelessWidget {
               ),
             ),
             verticalSpace(24.h),
-            _buildActionOption(
-              context,
-              label: "طلب إعادة تسعير",
-              icon: CupertinoIcons.refresh_thick,
-              color: const Color(0xFFD4AF37),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(
-                  context,
-                  Routes.eliteRepricingRequest,
-                  arguments: {
-                    'request': request,
-                    'offer': offer,
-                  },
-                );
-              },
-            ),
-            verticalSpace(12.h),
+            // _buildActionOption(
+            //   context,
+            //   label: "طلب إعادة تسعير",
+            //   icon: CupertinoIcons.refresh_thick,
+            //   color: const Color(0xFFD4AF37),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.pushNamed(
+            //       context,
+            //       Routes.eliteRepricingRequest,
+            //       arguments: {
+            //         'request': request,
+            //         'offer': offer,
+            //       },
+            //     );
+            //   },
+            // ),
+            // verticalSpace(12.h),
             _buildActionOption(
               context,
               label: "رفض العرض نهائياً",
@@ -76,11 +76,17 @@ class ElitePriceOfferScreen extends StatelessWidget {
               color: const Color(0xFFE54560),
               onTap: () {
                 Navigator.pop(context);
+                final cubit = context.read<YmtazEliteCubit>();
+                // نستخدم offers.id (معرف العرض الكامل) لا TypesImportance.id
+                final correctOfferId = request.offers?.id?.toString() ?? offer.id?.toString() ?? '';
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => RejectionReasonScreen(
-                      offerId: offer.id?.toString() ?? '',
+                    builder: (context) => BlocProvider.value(
+                      value: cubit,
+                      child: RejectionReasonScreen(
+                        offerId: correctOfferId,
+                      ),
                     ),
                   ),
                 );
