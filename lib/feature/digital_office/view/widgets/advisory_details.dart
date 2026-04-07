@@ -13,11 +13,13 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../advisory_window/presentation/video_call/video_call_lobby_screen.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
+import 'package:yamtaz/core/helpers/file_helper.dart';
 import 'package:yamtaz/core/helpers/fuctions_helpers/functions_helpers.dart';
 import 'package:yamtaz/core/network/local/cache_helper.dart';
 import 'package:yamtaz/core/widgets/custom_button.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/layout/account/logic/my_account_cubit.dart';
+import 'package:yamtaz/feature/advisory_window/logic/advisory_cubit.dart';
 
 import '../../../../core/constants/assets.dart';
 import 'package:yamtaz/feature/digital_office/data/models/my_clients_response.dart' as digital_office;
@@ -298,7 +300,7 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
                   durationMinutes: duration,
                   date: (widget.servicesRequirementsResponse.date ?? "الآن").toString(),
                   time: (widget.servicesRequirementsResponse.from ?? "").toString(),
-                  channelName: (widget.servicesRequirementsResponse.callId ?? "Ymtaz").toString(),
+                  channelName: "Ymtaz",
                 ),
               ),
             );
@@ -631,80 +633,101 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
     final account = widget.servicesRequirementsResponse.account;
     if (account == null) return const SizedBox.shrink();
 
-    return GestureDetector(
-      onTap: () {
-        // Convert Account to Client manually to avoid Type Cast errors
-        final client = digital_office.Client(
-          id: account.id,
-          name: account.name,
-          image: account.image,
-          about: account.about,
-          gender: account.gender,
-          currentLevel: account.currentLevel,
-          city: account.city != null ? digital_office.AccurateSpecialty(id: account.city!.id, title: account.city!.title) : null,
-          country: account.country != null ? digital_office.Country(id: account.country!.id, name: account.country!.name) : null,
-          region: account.region != null ? digital_office.Country(id: account.region!.id, name: account.region!.name) : null,
-          nationality: account.nationality != null ? digital_office.Country(id: account.nationality!.id, name: account.nationality!.name) : null,
-          degree: account.degree != null ? digital_office.Degree(id: account.degree!.id, title: account.degree!.title) : null,
-          currentRank: account.currentRank != null ? digital_office.CurrentRank(id: account.currentRank!.id, name: account.currentRank!.name, image: account.currentRank!.image) : null,
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ClientProfileScreen(client: client),
+    return Container(
+      margin: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.all(16.r),
-        padding: EdgeInsets.all(16.r),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 30.r,
-              backgroundColor: appColors.grey.withOpacity(0.1),
-              backgroundImage: NetworkImage(account.image ?? "https://api.ymtaz.sa/uploads/person.png"),
-            ),
-            horizontalSpace(16.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    account.name ?? "بدون اسم",
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Cairo',
-                      color: const Color(0xFF0F2D37),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 30.r,
+                backgroundColor: appColors.grey.withOpacity(0.1),
+                backgroundImage: NetworkImage(FileHelper.resolveUrl(
+                    (account.image == null)
+                        ? 'https://ymtaz.sa/uploads/person.png'
+                        : account.image!)),
+              ),
+              horizontalSpace(16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      account.name ?? "بدون اسم",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Cairo',
+                        color: const Color(0xFF0F2D37),
+                      ),
                     ),
-                  ),
-                  verticalSpace(4.h),
-                  Text(
-                    "طالب الخدمة",
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: Colors.grey,
-                      fontFamily: 'Cairo',
+                    verticalSpace(4.h),
+                    Text(
+                      "طالب الخدمة",
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.grey,
+                        fontFamily: 'Cairo',
+                      ),
                     ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          verticalSpace(16.h),
+          SizedBox(
+            width: double.infinity,
+            height: 40.h,
+            child: CupertinoButton(
+              padding: EdgeInsets.zero,
+              color: appColors.blue90,
+              onPressed: () {
+                final client = digital_office.Client(
+                  id: account.id,
+                  name: account.name,
+                  image: account.image,
+                  about: account.about,
+                  gender: account.gender,
+                  currentLevel: account.currentLevel,
+                  city: account.city != null ? digital_office.AccurateSpecialty(id: account.city!.id, title: account.city!.title) : null,
+                  country: account.country != null ? digital_office.Country(id: account.country!.id, name: account.country!.name) : null,
+                  region: account.region != null ? digital_office.Country(id: account.region!.id, name: account.region!.name) : null,
+                  nationality: account.nationality != null ? digital_office.Country(id: account.nationality!.id, name: account.nationality!.name) : null,
+                  degree: account.degree != null ? digital_office.Degree(id: account.degree!.id, title: account.degree!.title) : null,
+                  currentRank: account.currentRank != null ? digital_office.CurrentRank(id: account.currentRank!.id, name: account.currentRank!.name, image: account.currentRank!.image) : null,
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ClientProfileScreen(client: client),
                   ),
-                ],
+                );
+              },
+              child: Text(
+                "عرض",
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontFamily: 'Cairo',
+                ),
               ),
             ),
-            Icon(Icons.arrow_forward_ios, size: 16.sp, color: Colors.grey),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

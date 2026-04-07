@@ -8,6 +8,8 @@ import 'package:yamtaz/feature/intro/splash/presentation/splash_screen.dart';
 import 'package:yamtaz/feature/ymtaz_elite/logic/call_cubit.dart';
 import 'package:yamtaz/feature/ymtaz_elite/presentation/video_call/call_listener.dart';
 import 'package:yamtaz/core/di/dependency_injection.dart';
+import 'package:yamtaz/feature/advisory_window/logic/advisory_cubit.dart';
+import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
 
 class Yamtaz extends StatelessWidget {
   final AppRouter appRouter;
@@ -32,7 +34,9 @@ class Yamtaz extends StatelessWidget {
       },
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<CallCubit>(create: (context) => getit<CallCubit>()),
+          BlocProvider.value(value: getit<CallCubit>()),
+          BlocProvider.value(value: getit<AdvisoryCubit>()),
+          BlocProvider.value(value: getit<YmtazEliteCubit>()),
         ],
         child: ScreenUtilInit(
           useInheritedMediaQuery: true,

@@ -81,7 +81,7 @@ class RecentLawyers extends StatelessWidget {
                         clipBehavior: Clip.antiAlias,
                         child: (lawyer.photo == null ||
                                 lawyer.photo!.isEmpty ||
-                                lawyer.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                                lawyer.photo == "https://ymtaz.sa/uploads/person.png" ||
                                 lawyer.photo == "https://ymtaz.sa/uploads/person.png")
                             ? SvgPicture.asset(
                                 AppAssets.Male,

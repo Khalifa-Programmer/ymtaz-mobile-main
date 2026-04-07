@@ -315,7 +315,7 @@ class _HomeScreenLawyerState extends State<HomeScreenLawyer> {
           builder: (BuildContext context) => UserProfileRow(
             imageUrl: (getit<MyAccountCubit>().clientProfile?.data?.account?.photo == null ||
                         getit<MyAccountCubit>().clientProfile!.data!.account!.photo!.isEmpty ||
-                        getit<MyAccountCubit>().clientProfile!.data!.account!.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                        getit<MyAccountCubit>().clientProfile!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png" ||
                         getit<MyAccountCubit>().clientProfile!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png")
                     ? "default"
                     : getit<MyAccountCubit>().clientProfile!.data!.account!.photo!,
@@ -347,7 +347,7 @@ class _HomeScreenLawyerState extends State<HomeScreenLawyer> {
                 .hasBadge,
             imageUrl: (getit<MyAccountCubit>().userDataResponse?.data?.account?.photo == null ||
                         getit<MyAccountCubit>().userDataResponse!.data!.account!.photo!.isEmpty ||
-                        getit<MyAccountCubit>().userDataResponse!.data!.account!.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                        getit<MyAccountCubit>().userDataResponse!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png" ||
                         getit<MyAccountCubit>().userDataResponse!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png")
                     ? "default"
                     : getit<MyAccountCubit>().userDataResponse!.data!.account!.photo!,

@@ -84,7 +84,7 @@ class MyAdvisoryScreen extends StatelessWidget {
         servicePiriorty: request.importance!.title!,
         providerName: request.account!.name!,
         providerImage: request.account!.image == null
-            ? 'https://api.ymtaz.sa/uploads/person.png'
+            ? 'https://ymtaz.sa/uploads/person.png'
             : request.account!.image!,
         type: request
             .advisoryServicesSub!.generalCategory!.paymentCategoryType!.name!,

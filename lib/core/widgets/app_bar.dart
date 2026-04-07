@@ -15,13 +15,13 @@ import '../di/dependency_injection.dart';
 import '../network/local/cache_helper.dart';
 import '../router/routes.dart';
 
-AppBar buildBlurredAppBar(BuildContext context, String title, {bool showBackButton = true}) {
+AppBar buildBlurredAppBar(BuildContext context, String title, {bool showBackButton = true, VoidCallback? onBackPressed, PreferredSizeWidget? bottom}) {
   return AppBar(
     backgroundColor: Colors.transparent,
     automaticallyImplyLeading: false,
-    leading: (showBackButton && Navigator.canPop(context)) 
+    leading: (showBackButton && (onBackPressed != null || Navigator.canPop(context))) 
       ? IconButton(
-          onPressed: () => Navigator.maybePop(context),
+          onPressed: onBackPressed ?? () => Navigator.maybePop(context),
           icon: Icon(
             Icons.arrow_back_ios,
             color: Colors.black,
@@ -58,6 +58,7 @@ AppBar buildBlurredAppBar(BuildContext context, String title, {bool showBackButt
         color: Colors.black,
       ),
     ),
+    bottom: bottom,
   );
 }
 
@@ -102,7 +103,7 @@ Column _buildUserProfileRow(BuildContext context) {
         builder: (BuildContext context) => UserProfileRow(
           imageUrl:
               getit<MyAccountCubit>().clientProfile!.data!.account!.photo ??
-                  "https://api.ymtaz.sa/uploads/person.png",
+                  "https://ymtaz.sa/uploads/person.png",
           name: getit<MyAccountCubit>().clientProfile!.data!.account!.name!,
           color: getColor(getit<MyAccountCubit>()
               .clientProfile!
@@ -127,7 +128,7 @@ Column _buildUserProfileRow(BuildContext context) {
               getit<MyAccountCubit>().userDataResponse!.data!.account!.hasBadge,
           imageUrl:
               getit<MyAccountCubit>().userDataResponse!.data!.account!.photo ??
-                  "https://api.ymtaz.sa/uploads/person.png",
+                  "https://ymtaz.sa/uploads/person.png",
           name:
               '${getit<MyAccountCubit>().userDataResponse!.data!.account!.name}',
           color: getColor(getit<MyAccountCubit>()

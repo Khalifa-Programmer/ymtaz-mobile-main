@@ -20,6 +20,12 @@ import '../../../../core/widgets/webpay_new.dart';
 import '../../../../core/widgets/new_payment_success.dart';
 import '../../../advisory_window/presentation/advisor_time_selection.dart';
 
+import '../../../digital_guide/presentation/digetal_providers_screen.dart';
+import '../../../../core/helpers/file_helper.dart';
+import '../../../../core/network/local/cache_helper.dart';
+import 'package:yamtaz/feature/digital_office/data/models/my_clients_response.dart' as digital_office;
+import 'package:yamtaz/feature/digital_office/view/client_profile_screen.dart';
+
 class ViewAppointmentOfferScreen extends StatelessWidget {
   const ViewAppointmentOfferScreen(
       {super.key, required this.currentState, required this.offer});
@@ -29,6 +35,7 @@ class ViewAppointmentOfferScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userType = CacheHelper.getData(key: 'userType');
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: buildBlurredAppBar(
@@ -169,23 +176,94 @@ class ViewAppointmentOfferScreen extends StatelessWidget {
                     ),
                     verticalSpace(10.h),
                   ]) : const SizedBox(),
-                  _buildDetailsContainer(context, "بيانات المحامي", [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                  _buildDetailsContainer(context, 
+                      userType == 'provider' ? "بيانات العميل" : "بيانات المحامي", [
+                    Column(
                       children: [
-                        CircleAvatar(
-                          radius: 15.r,
-                          backgroundImage: NetworkImage(
-                              offer.lawyerId!.image == null
-                                  ? 'https://api.ymtaz.sa/uploads/person.png'
-                                  : offer.lawyerId!.image!),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 20.r,
+                              backgroundImage: NetworkImage(FileHelper.resolveUrl(
+                                  (userType == 'provider' ? offer.accountId?.image : offer.lawyerId?.image) == null
+                                      ? 'https://ymtaz.sa/uploads/person.png'
+                                      : (userType == 'provider' ? offer.accountId!.image! : offer.lawyerId!.image!))),
+                            ),
+                            horizontalSpace(12.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    (userType == 'provider' ? offer.accountId?.name : offer.lawyerId?.name) ?? "",
+                                    style: TextStyles.cairo_14_semiBold
+                                        .copyWith(color: appColors.blue100),
+                                  ),
+                                  Text(
+                                    userType == 'provider' ? "عميل" : "محامي",
+                                    style: TextStyles.cairo_12_regular.copyWith(color: appColors.grey15),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        horizontalSpace(10.w),
-                        Text(
-                          offer.lawyerId!.name!,
-                          style: TextStyles.cairo_14_semiBold
-                              .copyWith(color: appColors.blue100),
+                        verticalSpace(16.h),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 35.h,
+                          child: CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            color: appColors.blue90,
+                            onPressed: () {
+                              if (userType == 'provider') {
+                                if (offer.accountId != null) {
+                                  final client = digital_office.Client(
+                                    id: offer.accountId!.id?.toString(),
+                                    name: offer.accountId!.name,
+                                    image: offer.accountId!.image,
+                                    about: offer.accountId!.about,
+                                    gender: offer.accountId!.gender,
+                                    currentLevel: offer.accountId!.currentLevel,
+                                    city: offer.accountId!.city != null ? digital_office.AccurateSpecialty(id: offer.accountId!.city!.id, title: offer.accountId!.city!.title) : null,
+                                    country: offer.accountId!.country != null ? digital_office.Country(id: offer.accountId!.country!.id, name: offer.accountId!.country!.name) : null,
+                                    region: offer.accountId!.region != null ? digital_office.Country(id: offer.accountId!.region!.id, name: offer.accountId!.region!.name) : null,
+                                    nationality: offer.accountId!.nationality != null ? digital_office.Country(id: offer.accountId!.nationality!.id, name: offer.accountId!.nationality!.name) : null,
+                                    degree: offer.accountId!.degree != null ? digital_office.Degree(id: offer.accountId!.degree!.id, title: offer.accountId!.degree!.title) : null,
+                                    currentRank: offer.accountId!.currentRank != null ? digital_office.CurrentRank(id: offer.accountId!.currentRank!.id, name: offer.accountId!.currentRank!.name, image: offer.accountId!.currentRank!.image) : null,
+                                  );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ClientProfileScreen(client: client),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                if (offer.lawyerId?.id != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DigitalProvidersScreen(
+                                        idLawyer: offer.lawyerId!.id!.toString(),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            child: Text(
+                              "عرض",
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontFamily: 'Cairo',
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),

@@ -270,7 +270,7 @@ class AdvisoryPaymentScreen extends StatelessWidget {
           radius: 26.0.sp,
           child: CachedNetworkImage(
             imageUrl: lawyer.image?.isEmpty ?? true
-                ? "https://api.ymtaz.sa/uploads/person.png"
+                ? "https://ymtaz.sa/uploads/person.png"
                 : lawyer.image!,
             imageBuilder: (context, imageProvider) => Container(
               width: 48.0.w,

@@ -52,13 +52,15 @@ class _TrainingMainScreenState extends State<TrainingMainScreen> {
                   const Categories(),
                   BlocBuilder<LearningPathCubit, LearningPathState>(
                     builder: (context, state) {
-                      if (state is LearningPathsLoading) {
+                      final paths = cubit.paths;
+
+                      if (state is LearningPathsLoading && paths == null) {
                         return _buildShimmerSection();
-                      } else if (state is LearningPathsLoaded) {
+                      } else if (paths != null && paths.isNotEmpty) {
                         return Column(
                           children: [
-                            Lastet(paths: state.paths.take(3).toList()),
-                            SuggestedCourses(paths: state.paths.skip(3).toList()),
+                            Lastet(paths: paths.take(3).toList()),
+                            SuggestedCourses(paths: paths.skip(3).toList()),
                           ],
                         );
                       } else if (state is LearningPathError) {

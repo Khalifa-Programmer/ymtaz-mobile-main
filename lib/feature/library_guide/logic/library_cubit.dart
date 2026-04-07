@@ -12,7 +12,7 @@ class LibraryCubit extends Cubit<LibraryState> {
 
   BooksResponse? booksResponse;
 
-  void getLawGuide() async {
+  void getBooks() async {
     emit(LoadingBooks());
     try {
       final response = await _repo.getBooks();
@@ -22,7 +22,7 @@ class LibraryCubit extends Cubit<LibraryState> {
           emit(SuccessBooks());
         },
         failure: (error) {
-          emit(SuccessBooks());
+          emit(ErrorBooks());
         },
       );
     } catch (e) {

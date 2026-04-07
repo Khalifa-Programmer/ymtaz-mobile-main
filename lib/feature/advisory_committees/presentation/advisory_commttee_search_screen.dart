@@ -200,7 +200,7 @@ class AdvisoryCommitteeSearchScreen extends StatelessWidget {
     if (imageUrl == null ||
         imageUrl.isEmpty ||
         imageUrl == "https://ymtaz.sa/uploads/person.png" ||
-        imageUrl == "https://api.ymtaz.sa/uploads/person.png") {
+        imageUrl == "https://ymtaz.sa/uploads/person.png") {
       return SvgPicture.asset(
         defaultAvatar,
         width: 50.w,

@@ -15,6 +15,7 @@ import '../data/models/elite_service_item.dart';
 import '../../advisory_window/data/model/agora_token_response.dart';
 
 part 'ymtaz_elite_state.dart';
+// Triggering rebuild
 
 class YmtazEliteCubit extends Cubit<YmtazEliteState> {
   final YmtazEliteRepo _ymtazEliteRepo;
@@ -79,11 +80,22 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
   }
 
   Future<void> sendEliteRequest(FormData formData) async {
+    print('>>> ELITE DEBUG: Sending Elite Request...');
+    for (var field in formData.fields) {
+      print('FIELD: ${field.key} = ${field.value}');
+    }
+    for (var file in formData.files) {
+      print('FILE: ${file.key} = ${file.value.filename}');
+    }
+    
     emit(YmtazEliteRequestLoading());
     final result = await _ymtazEliteRepo.sendEliteRequest(formData);
     result.when(
-      success: (data) {
-        getEliteRequests(forceRefresh: true); // Trigger refresh from API
+      success: (data) async {
+        print('>>> ELITE DEBUG [${DateTime.now()}]: Request Sent Successfully! New ID: ${data.data?.id}');
+        await Future.delayed(const Duration(milliseconds: 1000)); // Increased delay for safety
+        await getEliteRequests(forceRefresh: true);
+        await getPricingRequests(forceRefresh: true);
         emit(YmtazEliteRequestSuccess(data));
       },
       failure: (error) {
@@ -95,39 +107,59 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
   Future<void> getEliteRequests({bool forceRefresh = false}) async {
     if (_isLoadingElite && !forceRefresh) return;
     
+    if (forceRefresh) {
+      eliteRequests = null;
+    }
+
     _isLoadingElite = true;
     emit(YmtazEliteLoading());
-    final result = await _ymtazEliteRepo.getEliteRequests();
-    _isLoadingElite = false;
-    
-    result.when(
-      success: (data) {
-        eliteRequests = data.data?.requests ?? [];
-        emit(YmtazEliteRequestsLoaded(eliteRequests!));
-      },
-      failure: (error) {
-        emit(YmtazEliteError(error.toString()));
-      },
-    );
+    try {
+      print('>>> ELITE DEBUG [${DateTime.now()}]: Starting getEliteRequests(forceRefresh: $forceRefresh)');
+      final result = await _ymtazEliteRepo.getEliteRequests();
+      result.when(
+        success: (data) {
+          eliteRequests = data.data?.requests ?? [];
+          final ids = eliteRequests!.map((e) => e.id).toList();
+          print('>>> ELITE DEBUG [${DateTime.now()}]: Success! Fetched ${eliteRequests!.length} client requests. IDs: $ids');
+          emit(YmtazEliteRequestsLoaded(eliteRequests!));
+        },
+        failure: (error) {
+          print('>>> ELITE DEBUG [${DateTime.now()}]: Failed! Error: $error');
+          emit(YmtazEliteError(error.toString()));
+        },
+      );
+    } finally {
+      _isLoadingElite = false;
+    }
   }
 
   Future<void> getPricingRequests({bool forceRefresh = false}) async {
     if (_isLoadingPricing && !forceRefresh) return;
 
+    if (forceRefresh) {
+      pricingRequests = null;
+    }
+
     _isLoadingPricing = true;
     emit(YmtazEliteLoading());
-    final result = await _ymtazEliteRepo.getPricingRequests();
-    _isLoadingPricing = false;
-
-    result.when(
-      success: (data) {
-        pricingRequests = data.data!.pendingPricing ?? [];
-        emit(YmtazElitePricingRequestsLoaded(pricingRequests!));
-      },
-      failure: (error) {
-        emit(YmtazEliteError(error.toString()));
-      },
-    );
+    try {
+      print('>>> ELITE DEBUG [${DateTime.now()}]: Starting getPricingRequests(forceRefresh: $forceRefresh)');
+      final result = await _ymtazEliteRepo.getPricingRequests();
+      result.when(
+        success: (data) {
+          pricingRequests = data.data!.pendingPricing ?? [];
+          final ids = pricingRequests!.map((e) => e.id).toList();
+          print('>>> ELITE DEBUG [${DateTime.now()}]: Success! Fetched ${pricingRequests!.length} provider pricing requests. IDs: $ids');
+          emit(YmtazElitePricingRequestsLoaded(pricingRequests!));
+        },
+        failure: (error) {
+          print('>>> ELITE DEBUG [${DateTime.now()}]: Failed! Error: $error');
+          emit(YmtazEliteError(error.toString()));
+        },
+      );
+    } finally {
+      _isLoadingPricing = false;
+    }
   }
 
   void selectRequest(PendingPricing request) {
@@ -212,13 +244,16 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
       });
     }
 
+    print('>>> ELITE DEBUG: Submitting Pricing Reply Body: $body');
     emit(YmtazElitePricingReplyLoading());
     
     try {
       final result = await _ymtazEliteRepo.replyToPricingRequest(body);
       result.when(
-        success: (data) {
-          getPricingRequests(forceRefresh: true); // Refresh for provider
+        success: (data) async {
+          await Future.delayed(const Duration(milliseconds: 800)); // Delay for server sync
+          await getPricingRequests(forceRefresh: true);
+          await getEliteRequests(forceRefresh: true);
           emit(YmtazElitePricingReplySuccess(data));
         },
         failure: (error) {
@@ -268,8 +303,8 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
         reason: reason,   // إرسال سبب الرفض للـ API
       );
       result.when(
-        success: (data) {
-          getEliteRequests(forceRefresh: true);
+        success: (data) async {
+          await getEliteRequests(forceRefresh: true);
           emit(YmtazEliteOfferApprovalSuccess("rejected"));
         },
         failure: (error) {
@@ -287,12 +322,12 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
     try {
       final result = await _ymtazEliteRepo.approveOffer(offerId, type);
       result.when(
-        success: (data) {
+        success: (data) async {
           if (data.data?.paymentUrl != null) {
-            getEliteRequests(forceRefresh: true); // Refresh list for client
+            await getEliteRequests(forceRefresh: true); // Refresh list for client
             emit(YmtazEliteOfferApprovalSuccess(data.data!.paymentUrl!));
           } else if (type == 'rejected') {
-             getEliteRequests(forceRefresh: true);
+             await getEliteRequests(forceRefresh: true);
              emit(const YmtazEliteOfferApprovalSuccess("rejected"));
           } else {
             emit(const YmtazEliteOfferApprovalError('لم يتم العثور على رابط الدفع'));
@@ -369,7 +404,7 @@ class YmtazEliteCubit extends Cubit<YmtazEliteState> {
 
   Future<void> getAgoraToken(String channelName) async {
     emit(YmtazEliteAgoraTokenLoading());
-    final result = await _ymtazEliteRepo.getAgoraToken(channelName);
+    final result = await _ymtazEliteRepo.getAgoraToken("Ymtaz");
     result.when(
       success: (data) {
         emit(YmtazEliteAgoraTokenSuccess(data));

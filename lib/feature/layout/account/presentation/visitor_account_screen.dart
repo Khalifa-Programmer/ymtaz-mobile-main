@@ -32,7 +32,7 @@ class VisitorAccountScreen extends StatelessWidget {
                 child: ListView(
                   children: [
                     UserProfileColumn(
-                      imageUrl: userImage ?? "https://api.ymtaz.sa/uploads/person.png",
+                      imageUrl: userImage ?? "https://ymtaz.sa/uploads/person.png",
                       name: userName ?? "زائر",
                       color: appColors.primaryColorYellow,
                       image: AppAssets.rank,

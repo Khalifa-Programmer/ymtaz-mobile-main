@@ -93,7 +93,7 @@ class SubDataDetails extends StatelessWidget {
                             data.image.toString() == "null" ||
                             data.image.toString().isEmpty ||
                             data.image.toString() ==
-                                "https://api.ymtaz.sa/uploads/person.png" ||
+                                "https://ymtaz.sa/uploads/person.png" ||
                             data.image.toString() ==
                                 "https://ymtaz.sa/uploads/person.png")
                         ? SvgPicture.asset(

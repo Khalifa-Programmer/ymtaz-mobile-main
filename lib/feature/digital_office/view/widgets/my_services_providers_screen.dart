@@ -80,7 +80,7 @@ class ProviderServicesScreen extends StatelessWidget {
         providerName:
             '${request.requesterLawyer!.firstName!} ${request.requesterLawyer!.secondName!} ${request.requesterLawyer!.fourthName!}',
         providerImage: request.requesterLawyer!.photo == null
-            ? 'https://api.ymtaz.sa/uploads/person.png'
+            ? 'https://ymtaz.sa/uploads/person.png'
             : request.requesterLawyer!.photo!,
       ),
     );

@@ -16,93 +16,57 @@ import '../../../core/di/dependency_injection.dart';
 
 import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
 
-class EliteRequestsScreen extends StatelessWidget {
+class EliteRequestsScreen extends StatefulWidget {
   const EliteRequestsScreen({super.key});
 
   @override
+  State<EliteRequestsScreen> createState() => _EliteRequestsScreenState();
+}
+
+class _EliteRequestsScreenState extends State<EliteRequestsScreen> {
+  late YmtazEliteCubit _cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = context.read<YmtazEliteCubit>();
+    _cubit.getEliteRequests(forceRefresh: true);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final cubit = getit<YmtazEliteCubit>();
-    if (cubit.eliteRequests == null) {
-      cubit.getEliteRequests();
-    }
-    
-    return BlocProvider.value(
-      value: cubit,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFFBFBFB),
-        appBar: buildBlurredAppBar(context, "طلبات النخبة"),
-        body: RefreshIndicator(
-          onRefresh: () => cubit.getEliteRequests(),
-          child: BlocBuilder<YmtazEliteCubit, YmtazEliteState>(
-            builder: (context, state) {
-              List<Request>? requestsToShow;
-              
-              if (state is YmtazEliteRequestsLoaded) {
-                requestsToShow = state.requests;
-              } else if (cubit.eliteRequests != null) {
-                requestsToShow = cubit.eliteRequests;
-              }
+    return Scaffold(
+      backgroundColor: const Color(0xFFFBFBFB),
+      appBar: buildBlurredAppBar(
+        context, 
+        "طلبات النخبة",
+        onBackPressed: () {
+          Navigator.pushNamedAndRemoveUntil(
+            context, 
+            Routes.homeLayout, 
+            (route) => false,
+            arguments: 1, // Index 1 is My Requests/Office
+          );
+        },
+      ),
+      body: RefreshIndicator(
+        onRefresh: () => _cubit.getEliteRequests(forceRefresh: true),
+        child: BlocBuilder<YmtazEliteCubit, YmtazEliteState>(
+          builder: (context, state) {
+            List<Request>? requestsToShow;
+            
+            if (state is YmtazEliteRequestsLoaded) {
+              requestsToShow = state.requests;
+            } else if (_cubit.eliteRequests != null) {
+              requestsToShow = _cubit.eliteRequests;
+            }
 
-              if (state is YmtazEliteLoading && requestsToShow == null) {
-                return const Center(child: CircularProgressIndicator());
-              }
+            if (state is YmtazEliteLoading && requestsToShow == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-              if (requestsToShow != null) {
-                if (requestsToShow.isEmpty) {
-                  return SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              AppAssets.crown,
-                              width: 60.w,
-                              colorFilter: ColorFilter.mode(
-                                Colors.grey[300]!,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                            verticalSpace(20.h),
-                            Text(
-                              "لا توجد طلبات حتى الآن",
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF0F2D37),
-                                fontFamily: 'Cairo',
-                                ),
-                              ),
-                              verticalSpace(8.h),
-                              Text(
-                                "يمكنك تقديم طلب جديد من الشاشة الرئيسية",
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: Colors.grey[400],
-                                  fontFamily: 'Cairo',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                }
-                final reversedRequests = requestsToShow.reversed.toList();
-                
-                return ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-                  itemCount: reversedRequests.length,
-                  itemBuilder: (context, index) {
-                    final request = reversedRequests[index];
-                    return _buildRequestCard(context, request);
-                  },
-                );
-              }
-
-              if (state is YmtazEliteError) {
+            if (requestsToShow != null) {
+              if (requestsToShow.isEmpty) {
                 return SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: SizedBox(
@@ -111,33 +75,86 @@ class EliteRequestsScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.error_outline, size: 48.sp, color: Colors.grey[400]),
-                          verticalSpace(16.h),
-                          Text(
-                            state.message,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: Colors.grey[500],
-                              fontFamily: 'Cairo',
+                          SvgPicture.asset(
+                            AppAssets.crown,
+                            width: 60.w,
+                            colorFilter: ColorFilter.mode(
+                              Colors.grey[300]!,
+                              BlendMode.srcIn,
                             ),
                           ),
-                          verticalSpace(16.h),
-                          TextButton.icon(
-                            onPressed: () => context.read<YmtazEliteCubit>().getEliteRequests(),
-                            icon: const Icon(Icons.refresh),
-                            label: const Text('إعادة المحاولة', style: TextStyle(fontFamily: 'Cairo')),
-                          ),
-                        ],
+                          verticalSpace(20.h),
+                          Text(
+                            "لا توجد طلبات حتى الآن",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF0F2D37),
+                              fontFamily: 'Cairo',
+                              ),
+                            ),
+                            verticalSpace(8.h),
+                            Text(
+                              "يمكنك تقديم طلب جديد من الشاشة الرئيسية",
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.grey[400],
+                                fontFamily: 'Cairo',
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
+                  );
               }
+              final reversedRequests = requestsToShow.reversed.toList();
+              
+              return ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+                itemCount: reversedRequests.length,
+                itemBuilder: (context, index) {
+                  final request = reversedRequests[index];
+                  return _buildRequestCard(context, request);
+                },
+              );
+            }
 
-              return const Center(child: CircularProgressIndicator());
-            },
-          ),
+            if (state is YmtazEliteError) {
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.error_outline, size: 48.sp, color: Colors.grey[400]),
+                        verticalSpace(16.h),
+                        Text(
+                          state.message,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            color: Colors.grey[500],
+                            fontFamily: 'Cairo',
+                          ),
+                        ),
+                        verticalSpace(16.h),
+                        TextButton.icon(
+                          onPressed: () => _cubit.getEliteRequests(forceRefresh: true),
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('إعادة المحاولة', style: TextStyle(fontFamily: 'Cairo')),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            return const Center(child: CircularProgressIndicator());
+          },
         ),
       ),
     );

@@ -13,7 +13,7 @@ import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.da
 import 'package:yamtaz/feature/ymtaz_elite/data/repo/ymtaz_elite_repo.dart';
 import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
 import 'package:yamtaz/core/router/routes.dart';
-import 'package:yamtaz/core/router/routes.dart';
+
 import '../../../core/constants/assets.dart';
 import '../../../core/widgets/audio_player_widget.dart';
 import '../../../core/widgets/app_bar.dart';
@@ -22,7 +22,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yamtaz/core/helpers/fuctions_helpers/functions_helpers.dart';
 import 'package:stream_video_flutter/stream_video_flutter.dart';
 import '../../advisory_window/presentation/call_screen.dart';
-import '../../../core/network/local/cache_helper.dart';
 import '../../layout/account/logic/my_account_cubit.dart';
 import '../../../core/widgets/users_images.dart';
 import 'consultants_list_screen.dart';
@@ -32,6 +31,8 @@ import '../../../../core/helpers/file_helper.dart';
 import '../../advisory_window/presentation/video_call/video_call_lobby_screen.dart';
 import '../../../core/widgets/app_attachment_tile.dart';
 import 'elite_price_offer_screen.dart';
+import 'package:yamtaz/feature/advisory_window/logic/advisory_cubit.dart';
+
 
 class EliteRequestDetailsScreen extends StatefulWidget {
   final Request request;
@@ -153,7 +154,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
       return;
     }
 
-    final channelName = "elite_$offerId";
+    final channelName = "Ymtaz";
     context.read<YmtazEliteCubit>().getAgoraToken(channelName);
   }
 
@@ -178,7 +179,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
                   durationMinutes: 30, // Or get from offer if available
                   date: widget.request.offers?.reservationDate != null ? DateFormat('yyyy/MM/dd').format(widget.request.offers!.reservationDate!) : "لا يوجد تاريخ",
                   time: widget.request.offers?.reservationFromTime ?? "",
-                  channelName: state.response.channel ?? "elite_${widget.request.offers?.id}",
+                  channelName: "Ymtaz",
                 ),
               ),
             );
@@ -862,7 +863,7 @@ class _EliteRequestDetailsScreenState extends State<EliteRequestDetailsScreen>
               height: 45.h,
               margin: EdgeInsets.symmetric(horizontal: 20.w),
               child: UsersImagesWidget(
-                imageList: consultants.map((c) => c.image ?? "https://api.ymtaz.sa/uploads/person.png").toList(),
+                imageList: consultants.map((c) => FileHelper.resolveUrl(c.image ?? "https://ymtaz.sa/uploads/person.png")).toList(),
                 totalCount: consultants.length,
                 imageRadius: 16.w,
                 imageCount: 9,

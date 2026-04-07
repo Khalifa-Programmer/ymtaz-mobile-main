@@ -129,7 +129,8 @@ class AppRouter {
       case Routes.onBoard:
         return _getFadeTransition(const OnboardingScreen());
       case Routes.homeLayout:
-        return _getFadeTransition(const LayoutScreen());
+        final initialIndex = settings.arguments as int? ?? 0;
+        return _getFadeTransition(LayoutScreen(initialIndex: initialIndex));
 
       case Routes.myAppointments:
         return _getFadeTransition(BlocProvider.value(
@@ -595,7 +596,7 @@ class AppRouter {
       case Routes.libraryGuide:
         return _getFadeTransition(BlocProvider.value(
             value: getit<LibraryCubit>()
-              ..getLawGuide(),
+              ..getBooks(),
             child: const MainBooksCategoryScreen()));
 
       /*case Routes.aiAssistant:

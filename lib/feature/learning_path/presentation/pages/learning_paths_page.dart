@@ -56,15 +56,17 @@ class _LearningPathsPageState extends State<LearningPathsPage> {
         ),
         body: BlocBuilder<LearningPathCubit, LearningPathState>(
           builder: (context, state) {
-            if (state is LearningPathsLoading) {
+            final paths = cubit.paths;
+
+            if (state is LearningPathsLoading && paths == null) {
               return _buildLoadingShimmer();
-            } else if (state is LearningPathsLoaded) {
-              if (state.paths.isEmpty) {
+            } else if (paths != null) {
+              if (paths.isEmpty) {
                 return Center(
                   child: Text('لا توجد مسارات تعلم حالياً', style: TextStyles.cairo_14_regular),
                 );
               }
-              return _buildContent(state.paths);
+              return _buildContent(paths);
             } else if (state is LearningPathError) {
               return Center(
                 child: Text('حدث خطأ: ${state.message}', style: TextStyles.cairo_14_regular),

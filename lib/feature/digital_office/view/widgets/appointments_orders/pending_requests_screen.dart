@@ -74,7 +74,7 @@ class AppointmetnsPendingRequestsScreen extends StatelessWidget {
         servicePiriorty: request.importance?.title ?? '',
         providerName: request.accountId!.name!,
         providerImage: request.accountId!.image == null
-            ? 'https://api.ymtaz.sa/uploads/person.png'
+            ? 'https://ymtaz.sa/uploads/person.png'
             : request.accountId!.image!,
       ),
     );

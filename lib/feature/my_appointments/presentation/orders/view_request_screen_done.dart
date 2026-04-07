@@ -177,7 +177,7 @@ class ViewAppointmentDoneScreen extends StatelessWidget {
                           radius: 15.r,
                           backgroundImage: NetworkImage(
                               offer.lawyer!.image == null
-                                  ? 'https://api.ymtaz.sa/uploads/person.png'
+                                  ? 'https://ymtaz.sa/uploads/person.png'
                                   : offer.lawyer!.image!),
                         ),
                         horizontalSpace(10.w),

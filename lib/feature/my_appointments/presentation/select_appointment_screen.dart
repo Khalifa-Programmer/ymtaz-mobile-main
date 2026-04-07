@@ -351,7 +351,7 @@ class SelectLawyerScreen extends StatelessWidget {
                     backgroundImage: CachedNetworkImageProvider(
                       (lawyer.image != null && lawyer.image!.isNotEmpty)
                           ? lawyer.image!
-                          : "https://api.ymtaz.sa/uploads/person.png",
+                          : "https://ymtaz.sa/uploads/person.png",
                     ),
                   ).animate();
                 }).toList(),

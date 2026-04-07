@@ -123,7 +123,7 @@ class MyClients extends StatelessWidget {
               ),
               child: ClipOval(
                 child: CachedNetworkImage(
-                  imageUrl: category[index].image ?? "https://api.ymtaz.sa/uploads/person.png",
+                  imageUrl: category[index].image ?? "https://ymtaz.sa/uploads/person.png",
                   width: 50.w,
                   height: 50.h,
                   fit: BoxFit.cover,

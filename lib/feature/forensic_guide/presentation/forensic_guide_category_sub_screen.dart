@@ -112,7 +112,7 @@ class ForensicGuideSubCategoryScreen extends StatelessWidget {
               child: (data.judicialGuides![index].image == null ||
                       data.judicialGuides![index].image!.isEmpty ||
                       data.judicialGuides![index].image ==
-                          "https://api.ymtaz.sa/uploads/person.png" ||
+                          "https://ymtaz.sa/uploads/person.png" ||
                       data.judicialGuides![index].image ==
                           "https://ymtaz.sa/uploads/person.png")
                   ? SvgPicture.asset(

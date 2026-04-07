@@ -5,6 +5,8 @@ import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/widgets/app_bar.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/ymtaz_elite/logic/ymtaz_elite_cubit.dart';
+import 'package:yamtaz/core/router/routes.dart';
+
 
 class RejectionReasonScreen extends StatefulWidget {
   final String offerId;
@@ -164,9 +166,12 @@ class _RejectionReasonScreenState extends State<RejectionReasonScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                // نرجع لشاشة تفاصيل الطلب ثم لقائمة الطلبات
-                Navigator.maybePop(context);
-                Navigator.maybePop(context);
+                // نتوجه مباشرة لقائمة طلبات النخبة ونزيل الشاشات الوسيطة (التفاصيل والرفض)
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  Routes.eliteRequests,
+                  (route) => route.settings.name == Routes.homeLayout,
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0F2D37),

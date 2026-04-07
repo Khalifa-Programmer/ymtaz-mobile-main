@@ -206,7 +206,7 @@ class DigitalGuideSearch extends StatelessWidget {
     final isFemale = lawyer.gender == 'female';
     final defaultAvatar = isFemale ? AppAssets.Female : AppAssets.Male;
 
-    if (imageUrl == null || imageUrl.isEmpty || imageUrl == "https://api.ymtaz.sa/uploads/person.png") {
+    if (imageUrl == null || imageUrl.isEmpty || imageUrl == "https://ymtaz.sa/uploads/person.png") {
       return SvgPicture.asset(
         defaultAvatar,
         width: 50.w,

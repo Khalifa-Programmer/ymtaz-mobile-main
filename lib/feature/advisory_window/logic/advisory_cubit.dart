@@ -332,7 +332,7 @@ class AdvisoryCubit extends Cubit<AdvisoryState> {
 
   void getAgoraToken(String channelName) async {
     emit(AgoraTokenLoading());
-    final result = await _advisoryRepo.getAgoraToken(channelName);
+    final result = await _advisoryRepo.getAgoraToken("Ymtaz");
     result.when(
       success: (data) {
         emit(AgoraTokenLoaded(data));

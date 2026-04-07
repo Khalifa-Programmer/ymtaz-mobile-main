@@ -18,7 +18,9 @@ import '../../home/logic/home_cubit.dart';
 part 'layout_state.dart';
 
 class LayoutCubit extends Cubit<LayoutState> {
-  LayoutCubit() : super(LayoutInitial());
+  LayoutCubit({int initialIndex = 0}) : super(LayoutInitial()) {
+    currentIndex = initialIndex;
+  }
 
   static LayoutCubit get(context) => BlocProvider.of(context);
 

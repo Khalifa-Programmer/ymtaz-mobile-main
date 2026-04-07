@@ -99,7 +99,7 @@ class ForensicGuideCategoryDetailsScreen extends StatelessWidget {
                     child: (data.image == null ||
                             data.image!.isEmpty ||
                             data.image ==
-                                "https://api.ymtaz.sa/uploads/person.png" ||
+                                "https://ymtaz.sa/uploads/person.png" ||
                             data.image == "https://ymtaz.sa/uploads/person.png")
                         ? SvgPicture.asset(
                             AppAssets.guide,

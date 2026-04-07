@@ -86,7 +86,7 @@ class ReqestsScreen extends StatelessWidget {
         servicePiriorty: request.priority!.title!,
         providerName: request.lawyer?.name?? " ",
         providerImage: request.lawyer?.image == null
-            ? 'https://api.ymtaz.sa/uploads/person.png'
+            ? 'https://ymtaz.sa/uploads/person.png'
             : request.lawyer!.image!,
         servicePath: _buildServicePath(request),
       ),

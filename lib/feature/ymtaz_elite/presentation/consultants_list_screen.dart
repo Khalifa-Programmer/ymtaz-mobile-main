@@ -8,6 +8,7 @@ import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/widgets/app_bar.dart';
 import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
 import 'package:yamtaz/feature/digital_guide/presentation/digetal_providers_screen.dart';
+import 'package:yamtaz/core/helpers/file_helper.dart';
 
 class ConsultantsListScreen extends StatelessWidget {
   final List<Lawyer> lawyers;
@@ -57,7 +58,7 @@ class ConsultantsListScreen extends StatelessWidget {
                     decoration: const BoxDecoration(shape: BoxShape.circle),
                     clipBehavior: Clip.antiAlias,
                     child: CachedNetworkImage(
-                      imageUrl: lawyer.image ?? "https://api.ymtaz.sa/uploads/person.png",
+                      imageUrl: FileHelper.resolveUrl(lawyer.image ?? "https://ymtaz.sa/uploads/person.png"),
                       fit: BoxFit.cover,
                       placeholder: (context, url) => SvgPicture.asset(AppAssets.Male),
                       errorWidget: (context, url, error) => SvgPicture.asset(AppAssets.Male),

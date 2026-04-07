@@ -80,7 +80,7 @@ class ReqestsAppointmentsDone extends StatelessWidget {
         servicePiriorty: request.reservationImportance?.title ?? '',
         providerName: request.lawyer!.name!,
         providerImage: request.lawyer!.image == null
-            ? 'https://api.ymtaz.sa/uploads/person.png'
+            ? 'https://ymtaz.sa/uploads/person.png'
             : request.lawyer!.image!,
         servicePath: _buildAppointmentDonePath(request),
       ),

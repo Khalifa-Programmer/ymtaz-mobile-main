@@ -75,7 +75,7 @@ class SeeMyProfileClient extends StatelessWidget {
                                           radius: 53.0.sp,
                                           child: (myAccountCubit.clientProfile!.data!.account!.photo == null ||
                                                   myAccountCubit.clientProfile!.data!.account!.photo!.isEmpty ||
-                                                  myAccountCubit.clientProfile!.data!.account!.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                                                  myAccountCubit.clientProfile!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png" ||
                                                   myAccountCubit.clientProfile!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png")
                                               ? SvgPicture.asset(
                                                   myAccountCubit.clientProfile!.data!.account!.gender == 'female'

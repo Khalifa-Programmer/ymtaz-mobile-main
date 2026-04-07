@@ -24,7 +24,18 @@ class EliteSuccessPaymentScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFFBFBFB),
-      appBar: buildBlurredAppBar(context, "تم حجز موعدك بنجاح"),
+      appBar: buildBlurredAppBar(
+        context, 
+        "تم حجز موعدك بنجاح",
+        onBackPressed: () {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            Routes.homeLayout,
+            (route) => false,
+            arguments: 1, // My Requests or Office tab
+          );
+        },
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -217,16 +228,15 @@ class EliteSuccessPaymentScreen extends StatelessWidget {
                 child: CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    final userType = CacheHelper.getData(key: 'userType');
-                    final backRoute = userType == 'provider'
-                        ? Routes.mainOffice
-                        : Routes.myAdvisoryOrders;
-
+                    // Reset stack to main layout at index 1 (My Requests / Office)
+                    // then push request details so back button goes to index 1
                     Navigator.pushNamedAndRemoveUntil(
                       context,
-                      backRoute,
+                      Routes.homeLayout,
                       (route) => false,
+                      arguments: 1, // My Requests or Office tab
                     );
+                    
                     Navigator.push(
                       context,
                       MaterialPageRoute(

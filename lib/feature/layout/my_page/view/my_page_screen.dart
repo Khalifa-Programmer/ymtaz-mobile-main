@@ -49,7 +49,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
         },
         builder: (context, state) {
           return Scaffold(
-            appBar: buildBlurredAppBar(context, "طلباتي"),
+            appBar: buildBlurredAppBar(context, "طلباتي", showBackButton: false),
             body: userType == "client" || userType == "provider"
                 ? const MyPageClientImproved()
                 : const GestScreen(),

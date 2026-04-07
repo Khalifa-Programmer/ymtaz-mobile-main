@@ -101,7 +101,7 @@ class CompletedAdvisory extends StatelessWidget {
                                         .title!,
                                 providerName: '',
                                 providerImage:
-                                    'https://api.ymtaz.sa/uploads/person.png',
+                                    'https://ymtaz.sa/uploads/person.png',
                               ),
                             ),
                           );

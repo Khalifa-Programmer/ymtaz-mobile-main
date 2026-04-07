@@ -772,7 +772,7 @@ class _AdvisorScreenState extends State<AdvisorScreen>
       ),
       child: (imageUrl == null ||
               imageUrl.isEmpty ||
-              imageUrl == "https://api.ymtaz.sa/uploads/person.png" ||
+              imageUrl == "https://ymtaz.sa/uploads/person.png" ||
               imageUrl == "https://ymtaz.sa/uploads/person.png")
           ? SvgPicture.asset(
               defaultAvatar,

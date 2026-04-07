@@ -119,11 +119,6 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
           if (Navigator.of(context, rootNavigator: true).canPop()) {
             Navigator.of(context, rootNavigator: true).pop();
           }
-          final userType = CacheHelper.getData(key: 'userType');
-          final route = userType == 'provider'
-              ? Routes.eliteRequestsClients
-              : Routes.eliteRequests;
-          context.pushNamedAndRemoveUntil(route, predicate: (route) => false);
           Navigator.push(context, MaterialPageRoute(builder: (context) => EliteRequestSuccessScreen(request: state.request)));
         } else if (state is YmtazEliteRequestError) {
           if (Navigator.of(context, rootNavigator: true).canPop()) {

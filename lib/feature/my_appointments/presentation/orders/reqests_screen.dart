@@ -80,7 +80,7 @@ class ReqestsAppointmentsScreen extends StatelessWidget {
         servicePiriorty: request.importance?.title ?? '',
         providerName: request.lawyerId!.name!,
         providerImage: request.lawyerId!.image == null
-            ? 'https://api.ymtaz.sa/uploads/person.png'
+            ? 'https://ymtaz.sa/uploads/person.png'
             : request.lawyerId!.image!,
         servicePath: _buildAppointmentPath(request),
       ),

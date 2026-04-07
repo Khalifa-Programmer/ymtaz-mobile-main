@@ -176,7 +176,7 @@ class _AppointmentScreenSetailsClientState
                           radius: 15.r,
                           backgroundImage: NetworkImage(
                               widget.offer.account!.image == null
-                                  ? 'https://api.ymtaz.sa/uploads/person.png'
+                                  ? 'https://ymtaz.sa/uploads/person.png'
                                   : widget.offer.account!.image!),
                         ),
                         horizontalSpace(10.w),

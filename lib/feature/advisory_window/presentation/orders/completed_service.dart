@@ -116,7 +116,7 @@ class CompletedAdvisory extends StatelessWidget {
                                           .reservations![index]
                                           .lawyer!
                                           .image ??
-                                      'https://api.ymtaz.sa/uploads/person.png',
+                                      'https://ymtaz.sa/uploads/person.png',
                                   type: getit<AdvisoryCubit>()
                                       .advisoriesResponseDigital!
                                       .data!

@@ -7,12 +7,13 @@ import 'package:yamtaz/feature/layout/layout/view/widgets/custom_bottom_bar/cust
 import '../logic/layout_cubit.dart';
 
 class LayoutScreen extends StatelessWidget {
-  const LayoutScreen({super.key});
+  final int initialIndex;
+  const LayoutScreen({super.key, this.initialIndex = 0});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => LayoutCubit(),
+      create: (BuildContext context) => LayoutCubit(initialIndex: initialIndex),
       child: BlocConsumer<LayoutCubit, LayoutState>(
         builder: (BuildContext context, state) {
           LayoutCubit mainPagesCubit = LayoutCubit.get(context);

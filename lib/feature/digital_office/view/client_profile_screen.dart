@@ -240,7 +240,7 @@ class ClientProfileScreen extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: CachedNetworkImage(
-        imageUrl: client.image ?? "https://api.ymtaz.sa/uploads/person.png",
+        imageUrl: client.image ?? "https://ymtaz.sa/uploads/person.png",
         fit: BoxFit.cover,
         placeholder: (context, url) => const CupertinoActivityIndicator(),
         errorWidget: (context, url, error) => const Icon(Icons.person, size: 50),

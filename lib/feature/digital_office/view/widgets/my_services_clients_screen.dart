@@ -79,7 +79,7 @@ class ClientServicesScreen extends StatelessWidget {
         servicePiriorty: request.priority!.title!,
         providerName: request.client!.name!,
         providerImage: request.client!.image == null
-            ? 'https://api.ymtaz.sa/uploads/person.png'
+            ? 'https://ymtaz.sa/uploads/person.png'
             : request.client!.image!,
       ),
     );

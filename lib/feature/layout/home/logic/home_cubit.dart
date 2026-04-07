@@ -110,7 +110,7 @@ class HomeCubit extends Cubit<HomeState> {
     //       width: 30.sp,
     //       height: 30.sp,
     //     )),
-    /*HomeModel(
+    HomeModel(
         title: LocaleKeys.trainingPlatform.tr(),
         description: LocaleKeys.trainingPlatform.tr(),
         route: Routes.trainingScreen,
@@ -128,7 +128,7 @@ class HomeCubit extends Cubit<HomeState> {
           AppAssets.booksNew,
           width: 30.sp,
           height: 30.sp,
-        )),*/
+        )),
     /*HomeModel(
         title: "المساعد الذكي",
         description: LocaleKeys.libraryAndSystems.tr(),
@@ -216,7 +216,7 @@ class HomeCubit extends Cubit<HomeState> {
           width: 30.sp,
           height: 30.sp,
         )),
-    /*HomeModel(
+    HomeModel(
         title: LocaleKeys.trainingPlatform.tr(),
         description: LocaleKeys.trainingPlatform.tr(),
         route: Routes.trainingScreen,
@@ -227,14 +227,14 @@ class HomeCubit extends Cubit<HomeState> {
         )),
 
     HomeModel(
-        title: "مسارات التدريب",
-        description: "مسارات التدريب",
+        title: LocaleKeys.trainingTracks.tr(),
+        description: LocaleKeys.trainingTracks.tr(),
         route: Routes.learningPaths,
         icon: SvgPicture.asset(
           AppAssets.booksNew,
           width: 30.sp,
           height: 30.sp,
-        )),*/
+        )),
   ];
   List<NewAdvisory>? advisoriesNew;
 

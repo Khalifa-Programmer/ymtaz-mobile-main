@@ -14,12 +14,17 @@ class FileHelper {
     
     String resolved = url.trim();
     
+    // Standardize domain to api.ymtaz.sa if it's ymtaz.sa (except for the placeholder)
+    if (resolved.contains('ymtaz.sa') && !resolved.contains('api.ymtaz.sa') && !resolved.contains('person.png')) {
+      resolved = resolved.replaceFirst('ymtaz.sa', 'api.ymtaz.sa');
+    }
+    
     // Ensure https or prepend base URL
     if (resolved.startsWith('http://')) {
       resolved = resolved.replaceFirst('http://', 'https://');
     } else if (!resolved.startsWith('http')) {
       // Handle relative paths
-      final String baseUrl = 'https://ymtaz.sa';
+      final String baseUrl = 'https://api.ymtaz.sa';
       if (resolved.startsWith('/')) {
         resolved = '$baseUrl$resolved';
       } else {

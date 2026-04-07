@@ -26,6 +26,9 @@ import '../../../../core/widgets/audio_player_widget.dart';
 import '../../../../core/helpers/fuctions_helpers/functions_helpers.dart';
 import '../../data/model/all_advirsory_response.dart';
 import '../video_call/video_call_lobby_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yamtaz/feature/advisory_window/logic/advisory_cubit.dart';
+
 
 class ViewOrderDetails extends StatelessWidget {
   const ViewOrderDetails(
@@ -462,7 +465,7 @@ class ViewOrderDetails extends StatelessWidget {
                                     durationMinutes: duration,
                                     date: (servicesRequirementsResponse.date ?? "الآن").toString(),
                                     time: (servicesRequirementsResponse.from ?? "").toString(),
-                                    channelName: (servicesRequirementsResponse.callId ?? "Ymtaz").toString(),
+                                    channelName: "Ymtaz",
                                   ),
                                 ),
                               );

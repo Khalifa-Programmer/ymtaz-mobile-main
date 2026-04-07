@@ -133,7 +133,7 @@ class MyLawyers extends StatelessWidget {
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   image: NetworkImage(category[index].image ??
-                      "https://api.ymtaz.sa/uploads/person.png"),
+                      "https://ymtaz.sa/uploads/person.png"),
                   fit: BoxFit.cover,
                 ),
               ),

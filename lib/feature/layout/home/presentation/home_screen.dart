@@ -263,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
               UserProfileRow(
                 imageUrl: (getit<MyAccountCubit>().clientProfile?.data?.account?.photo == null ||
                             getit<MyAccountCubit>().clientProfile!.data!.account!.photo!.isEmpty ||
-                            getit<MyAccountCubit>().clientProfile!.data!.account!.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                            getit<MyAccountCubit>().clientProfile!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png" ||
                             getit<MyAccountCubit>().clientProfile!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png")
                         ? "default"
                         : getit<MyAccountCubit>().clientProfile!.data!.account!.photo!,
@@ -291,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     .hasBadge,
                 imageUrl: (getit<MyAccountCubit>().userDataResponse?.data?.account?.photo == null ||
                             getit<MyAccountCubit>().userDataResponse!.data!.account!.photo!.isEmpty ||
-                            getit<MyAccountCubit>().userDataResponse!.data!.account!.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                            getit<MyAccountCubit>().userDataResponse!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png" ||
                             getit<MyAccountCubit>().userDataResponse!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png")
                         ? "default"
                         : getit<MyAccountCubit>().userDataResponse!.data!.account!.photo!,
@@ -317,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return UserProfileRow(
               imageUrl: (userImage == null || 
                           userImage.isEmpty || 
-                          userImage == "https://api.ymtaz.sa/uploads/person.png" || 
+                          userImage == "https://ymtaz.sa/uploads/person.png" || 
                           userImage == "https://ymtaz.sa/uploads/person.png")
                   ? "default"
                   : userImage,

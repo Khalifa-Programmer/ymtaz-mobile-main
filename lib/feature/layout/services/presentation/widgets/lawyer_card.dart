@@ -197,7 +197,7 @@ class LawyerCard extends StatelessWidget {
           radius: 26.0.sp,
           child: (imageUrl == null ||
                   imageUrl.isEmpty ||
-                  imageUrl == "https://api.ymtaz.sa/uploads/person.png" ||
+                  imageUrl == "https://ymtaz.sa/uploads/person.png" ||
                   imageUrl == "https://ymtaz.sa/uploads/person.png")
               ? SvgPicture.asset(
                   defaultAvatar,

@@ -85,7 +85,7 @@ class MyAppointmetsScreen extends StatelessWidget {
           servicePiriorty: request.reservationImportance!.name!,
           providerName:request.reservedFromLawyer!.name!,
           providerImage: request.reservedFromLawyer!.photo == null
-              ? 'https://api.ymtaz.sa/uploads/person.png'
+              ? 'https://ymtaz.sa/uploads/person.png'
               : request.reservedFromLawyer!.photo!,
         ),
     );
@@ -175,7 +175,7 @@ class MyAppointmetsScreenLawyer extends StatelessWidget {
         servicePiriorty: request.reservationImportance!.name!,
         providerName:request.reservedFromLawyer!.name!,
         providerImage: request.reservedFromLawyer!.photo == null
-            ? 'https://api.ymtaz.sa/uploads/person.png'
+            ? 'https://ymtaz.sa/uploads/person.png'
             : request.reservedFromLawyer!.photo!,
       ),
     );

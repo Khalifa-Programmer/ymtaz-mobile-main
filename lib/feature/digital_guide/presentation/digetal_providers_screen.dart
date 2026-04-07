@@ -155,7 +155,7 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
                 radius: 53.0.sp,
                 child: (lawyer.image == null ||
                         lawyer.image!.isEmpty ||
-                        lawyer.image == "https://api.ymtaz.sa/uploads/person.png" ||
+                        lawyer.image == "https://ymtaz.sa/uploads/person.png" ||
                         lawyer.image == "https://ymtaz.sa/uploads/person.png")
                     ? SvgPicture.asset(
                         lawyer.gender == 'female'

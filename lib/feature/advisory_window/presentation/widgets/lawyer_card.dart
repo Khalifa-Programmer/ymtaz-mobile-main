@@ -164,7 +164,7 @@ class LawyerCardAdvisory extends StatelessWidget {
           backgroundColor: appColors.grey,
           radius: 26.0.sp,
           child: CachedNetworkImage(
-            imageUrl: "https://api.ymtaz.sa/uploads/person.png",
+            imageUrl: "https://ymtaz.sa/uploads/person.png",
             imageBuilder: (context, imageProvider) => Container(
               width: 48.0.w,
               height: 48.0.h,

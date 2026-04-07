@@ -193,7 +193,7 @@ class AdvisoryServiceCard extends StatelessWidget {
               CircleAvatar(
                 radius: 10.r,
                 backgroundImage: NetworkImage(providerImage.isEmpty
-                    ? 'https://api.ymtaz.sa/uploads/person.png'
+                    ? 'https://ymtaz.sa/uploads/person.png'
                     : providerImage),
               ),
               horizontalSpace(10.w),

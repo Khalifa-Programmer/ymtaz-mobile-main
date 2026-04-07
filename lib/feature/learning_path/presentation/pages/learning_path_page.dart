@@ -77,7 +77,8 @@ class _LearningPathPageState extends State<LearningPathPage> {
         body: BlocBuilder<LearningPathCubit, LearningPathState>(
           buildWhen: (previous, current) => 
             current is LearningPathItemsLoading || 
-            current is LearningPathItemsLoaded,
+            current is LearningPathItemsLoaded ||
+            current is LearningPathError,
           builder: (context, state) {
             if (state is LearningPathItemsLoading) {
               return _buildLoadingShimmer();
@@ -88,6 +89,10 @@ class _LearningPathPageState extends State<LearningPathPage> {
                 return _buildErrorState(state.error!);
               }
               return _buildContent(state.items, state.analytics);
+            }
+
+            if (state is LearningPathError) {
+              return _buildErrorState(state.message);
             }
 
             return const SizedBox();

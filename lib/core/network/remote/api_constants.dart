@@ -330,7 +330,7 @@ class ApiConstants {
   static const String updateLearningProgress = '/learning-path/update-progress';
 
   // Agora
-  static const agoraToken = "api/agora/token";
+  static const agoraToken = "agora/token";
 
   // Calls
   static const calls = "calls";

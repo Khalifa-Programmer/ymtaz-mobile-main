@@ -36,59 +36,68 @@ class _AgoraVideoCallScreenState extends State<AgoraVideoCallScreen> {
   }
 
   Future<void> initAgora() async {
-    // retrieve permissions
-    await [Permission.microphone, Permission.camera].request();
+    try {
+      // retrieve permissions
+      await [Permission.microphone, Permission.camera].request();
 
-    // create the engine
-    _engine = createAgoraRtcEngine();
-    await _engine.initialize(const RtcEngineContext(
-      appId: appId,
-      channelProfile: ChannelProfileType.channelProfileCommunication,
-    ));
+      // create the engine
+      _engine = createAgoraRtcEngine();
+      await _engine.initialize(const RtcEngineContext(
+        appId: appId,
+        channelProfile: ChannelProfileType.channelProfileCommunication,
+      ));
 
-    _engine.registerEventHandler(
-      RtcEngineEventHandler(
-        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-          debugPrint("local user \${connection.localUid} joined");
-          setState(() {
-            _localUserJoined = true;
-          });
-        },
-        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          debugPrint("remote user \$remoteUid joined");
-          setState(() {
-            _remoteUid = remoteUid;
-          });
-        },
-        onUserOffline: (RtcConnection connection, int remoteUid,
-            UserOfflineReasonType reason) {
-          debugPrint("remote user \$remoteUid left channel");
-          setState(() {
-            _remoteUid = null;
-          });
-          // End call if remote user leaves
-          _onCallEnd(context);
-        },
-        onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-          debugPrint('[onTokenPrivilegeWillExpire] connection: \${connection.toJson()}, token: \$token');
-        },
-      ),
-    );
+      _engine.registerEventHandler(
+        RtcEngineEventHandler(
+          onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
+            debugPrint("local user ${connection.localUid} joined");
+            setState(() {
+              _localUserJoined = true;
+            });
+          },
+          onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+            debugPrint("remote user $remoteUid joined");
+            setState(() {
+              _remoteUid = remoteUid;
+            });
+          },
+          onUserOffline: (RtcConnection connection, int remoteUid,
+              UserOfflineReasonType reason) {
+            debugPrint("remote user $remoteUid left channel");
+            setState(() {
+              _remoteUid = null;
+            });
+            // End call if remote user leaves
+            _onCallEnd(context);
+          },
+          onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
+            debugPrint('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+          },
+        ),
+      );
 
-    await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-    await _engine.enableVideo();
-    await _engine.startPreview();
+      await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+      await _engine.enableVideo();
+      await _engine.startPreview();
 
-    await _engine.joinChannel(
-      token: widget.customToken ?? token,
-      channelId: widget.customChannelName ?? channelName,
-      uid: 0,
-      options: const ChannelMediaOptions(
-        clientRoleType: ClientRoleType.clientRoleBroadcaster,
-        publishCameraTrack: true,
-        publishMicrophoneTrack: true,
-      ),
-    );
+      await _engine.joinChannel(
+        token: widget.customToken ?? token,
+        channelId: widget.customChannelName ?? channelName,
+        uid: 0,
+        options: const ChannelMediaOptions(
+          clientRoleType: ClientRoleType.clientRoleBroadcaster,
+          publishCameraTrack: true,
+          publishMicrophoneTrack: true,
+        ),
+      );
+    } catch (e) {
+      debugPrint("Error initializing Agora: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("حدث خطأ أثناء الانضمام للمكالمة: $e")),
+        );
+      }
+    }
   }
 
   @override
@@ -131,26 +140,16 @@ class _AgoraVideoCallScreenState extends State<AgoraVideoCallScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
+      body: Column(
         children: [
           // Background/Remote Video
-          Center(
-            child: _remoteVideo(),
-          ),
+          _remoteVideo(),
           
           // Local Video (PiP or split view, here we use Split as per design)
-          SafeArea(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  _localVideoSplit(),
-                  _toolbar(),
-                ],
-              ),
-            ),
-          ),
+          _localVideoSplit(),
+          
+          // Toolbar
+          _toolbar(),
         ],
       ),
     );
@@ -221,9 +220,19 @@ class _AgoraVideoCallScreenState extends State<AgoraVideoCallScreen> {
                 children: [
                   Icon(Icons.circle, color: Colors.red, size: 10.sp),
                   SizedBox(width: 5.w),
-                  Text(
-                    "14:59", // Dummy timer for now
-                    style: TextStyles.cairo_14_bold.copyWith(color: Colors.white),
+                  StreamBuilder<int>(
+                    stream: Stream.periodic(const Duration(seconds: 1), (i) => i),
+                    builder: (context, snapshot) {
+                      final seconds = snapshot.data ?? 0;
+                      final h = (seconds / 3600).floor();
+                      final m = ((seconds % 3600) / 60).floor();
+                      final s = seconds % 60;
+                      final timeStr = "${h > 0 ? '$h:' : ''}${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}";
+                      return Text(
+                        timeStr,
+                        style: TextStyles.cairo_14_bold.copyWith(color: Colors.white),
+                      );
+                    }
                   ),
                 ],
               ),

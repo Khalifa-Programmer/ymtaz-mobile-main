@@ -7,6 +7,8 @@ import 'package:yamtaz/feature/ymtaz_elite/logic/call_cubit.dart';
 import 'package:yamtaz/feature/ymtaz_elite/data/model/call_model.dart';
 import 'package:yamtaz/feature/advisory_window/presentation/video_call/agora_video_call_screen.dart';
 
+import 'package:yamtaz/core/helpers/file_helper.dart';
+
 class IncomingCallScreen extends StatelessWidget {
   final CallModel call;
 
@@ -40,7 +42,7 @@ class IncomingCallScreen extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(60.w),
                   child: Image.network(
-                    "https://api.ymtaz.sa/uploads/person.png", // Placeholder
+                    FileHelper.resolveUrl("https://ymtaz.sa/uploads/person.png"), // Placeholder
                     fit: BoxFit.cover,
                   ),
                 ),

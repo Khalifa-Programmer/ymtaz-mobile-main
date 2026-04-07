@@ -19,7 +19,12 @@ import '../../../../core/widgets/moyasar_payment_screen.dart';
 import '../../../../core/widgets/webpay_new.dart';
 import '../../../../core/widgets/new_payment_success.dart';
 import '../../../advisory_window/presentation/advisor_time_selection.dart';
+import '../../../digital_guide/presentation/digetal_providers_screen.dart';
 import '../logic/services_cubit.dart';
+import '../../../../core/helpers/file_helper.dart';
+import '../../../../core/network/local/cache_helper.dart';
+import 'package:yamtaz/feature/digital_office/data/models/my_clients_response.dart' as digital_office;
+import 'package:yamtaz/feature/digital_office/view/client_profile_screen.dart';
 
 class ViewOfferScreen extends StatelessWidget {
   const ViewOfferScreen(
@@ -30,6 +35,7 @@ class ViewOfferScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userType = CacheHelper.getData(key: 'userType');
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: buildBlurredAppBar(
@@ -118,41 +124,94 @@ class ViewOfferScreen extends StatelessWidget {
                       _buildAudioFilesList(context),
                     ],
                   ]),
-                  _buildDetailsContainer(context, "بيانات المحامي", [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                  _buildDetailsContainer(context, 
+                      userType == 'provider' ? "بيانات العميل" : "بيانات المحامي", [
+                    Column(
                       children: [
-                        CircleAvatar(
-                          radius: 15.r,
-                          backgroundImage: NetworkImage(
-                              offer.lawyer?.image == null
-                                  ? 'https://api.ymtaz.sa/uploads/person.png'
-                                  : offer.lawyer!.image!),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 20.r,
+                              backgroundImage: NetworkImage(FileHelper.resolveUrl(
+                                  (userType == 'provider' ? offer.account?.image : offer.lawyer?.image) == null
+                                      ? 'https://ymtaz.sa/uploads/person.png'
+                                      : (userType == 'provider' ? offer.account!.image! : offer.lawyer!.image!))),
+                            ),
+                            horizontalSpace(12.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    (userType == 'provider' ? offer.account?.name : offer.lawyer?.name) ?? "",
+                                    style: TextStyles.cairo_14_semiBold
+                                        .copyWith(color: appColors.blue100),
+                                  ),
+                                  Text(
+                                    userType == 'provider' ? "عميل" : "محامي",
+                                    style: TextStyles.cairo_12_regular.copyWith(color: appColors.grey15),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        horizontalSpace(10.w),
-                        Text(
-                          offer.lawyer?.name??"",
-                          style: TextStyles.cairo_14_semiBold
-                              .copyWith(color: appColors.blue100),
+                        verticalSpace(16.h),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 35.h,
+                          child: CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            color: appColors.blue90,
+                            onPressed: () {
+                              if (userType == 'provider') {
+                                if (offer.account != null) {
+                                  final client = digital_office.Client(
+                                    id: offer.account!.id?.toString(),
+                                    name: offer.account!.name,
+                                    image: offer.account!.image,
+                                    gender: offer.account!.gender,
+                                    currentLevel: offer.account!.currentLevel,
+                                    city: offer.account!.city != null ? digital_office.AccurateSpecialty(id: offer.account!.city!.id, title: offer.account!.city!.title) : null,
+                                    country: offer.account!.country != null ? digital_office.Country(id: offer.account!.country!.id, name: offer.account!.country!.name) : null,
+                                    region: offer.account!.region != null ? digital_office.Country(id: offer.account!.region!.id, name: offer.account!.region!.name) : null,
+                                    nationality: offer.account!.nationality != null ? digital_office.Country(id: offer.account!.nationality!.id, name: offer.account!.nationality!.name) : null,
+                                    currentRank: offer.account!.currentRank != null ? digital_office.CurrentRank(id: offer.account!.currentRank!.id, name: offer.account!.currentRank!.name, image: offer.account!.currentRank!.image) : null,
+                                  );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ClientProfileScreen(client: client),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                if (offer.lawyer?.id != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DigitalProvidersScreen(
+                                        idLawyer: offer.lawyer!.id!.toString(),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            child: Text(
+                              "عرض",
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontFamily: 'Cairo',
+                              ),
+                            ),
+                          ),
                         ),
                       ],
-                    ),
-                    verticalSpace(10.h),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                      decoration: BoxDecoration(
-                        color:
-                            getOfferStatusColor(offer.status!).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(5.r),
-                      ),
-                      child: Center(
-                        child: Text(getOfferStatusText(offer.status!),
-                            style: TextStyles.cairo_12_bold.copyWith(
-                              color: getOfferStatusColor(offer.status!),
-                            )),
-                      ),
                     ),
                     verticalSpace(10.h),
                     offer.status! == "pending-acceptance"
@@ -456,7 +515,7 @@ class ViewOfferScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildAudioControls(audioPlayer, url),
-                  _buildSlider(position, duration, audioPlayer),
+                  Expanded(child: _buildSlider(position, duration, audioPlayer)),
                 ],
               ),
             );

@@ -1,4 +1,5 @@
 part of 'ymtaz_elite_cubit.dart';
+// State rebuild
 
 sealed class YmtazEliteState extends Equatable {
   const YmtazEliteState();

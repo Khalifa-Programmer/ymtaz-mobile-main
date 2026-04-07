@@ -90,7 +90,7 @@ class ClientMyAccount extends StatelessWidget {
                                         return [
                                           UserProfileColumn(
                                             imageUrl: profile.data?.account?.photo ??
-                                                "https://api.ymtaz.sa/uploads/person.png",
+                                                "https://ymtaz.sa/uploads/person.png",
                                             name: profile.data?.account?.name ?? "",
                                             color: getColor(
                                                 profile.data?.account?.currentRank?.borderColor ?? ""),

@@ -44,7 +44,7 @@ class UserProfileColumn extends StatelessWidget {
                 radius: 53.0.sp,
                 child: imageUrl.isEmpty ||
                         imageUrl == "default" ||
-                        imageUrl == "https://api.ymtaz.sa/uploads/person.png" ||
+                        imageUrl == "https://ymtaz.sa/uploads/person.png" ||
                         imageUrl == "https://ymtaz.sa/uploads/person.png"
                     ? SvgPicture.asset(
                         gender == 'female' ? AppAssets.Female : AppAssets.Male,
@@ -169,7 +169,7 @@ class UserProfileRow extends StatelessWidget {
                 radius: 26.0.sp,
                 child: imageUrl.isEmpty ||
                         imageUrl == "default" ||
-                        imageUrl == "https://api.ymtaz.sa/uploads/person.png" ||
+                        imageUrl == "https://ymtaz.sa/uploads/person.png" ||
                         imageUrl == "https://ymtaz.sa/uploads/person.png"
                     ? SvgPicture.asset(
                         gender == 'female' ? AppAssets.Female : AppAssets.Male,

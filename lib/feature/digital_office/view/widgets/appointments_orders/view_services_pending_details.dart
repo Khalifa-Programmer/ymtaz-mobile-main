@@ -121,7 +121,7 @@ class _ServiceScreenSetailsClientState
                           radius: 15.r,
                           backgroundImage: NetworkImage(
                               widget.offer.accountId!.image == null
-                                  ? 'https://api.ymtaz.sa/uploads/person.png'
+                                  ? 'https://ymtaz.sa/uploads/person.png'
                                   : widget.offer.accountId!.image!),
                         ),
                         horizontalSpace(10.w),

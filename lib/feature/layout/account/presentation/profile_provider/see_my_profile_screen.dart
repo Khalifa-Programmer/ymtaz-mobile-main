@@ -89,7 +89,7 @@ class SeeMyProfileProvider extends StatelessWidget {
                                         radius: 53.0.sp,
                                         child: (myAccountCubit.userDataResponse!.data!.account!.photo == null ||
                                                 myAccountCubit.userDataResponse!.data!.account!.photo!.isEmpty ||
-                                                myAccountCubit.userDataResponse!.data!.account!.photo == "https://api.ymtaz.sa/uploads/person.png" ||
+                                                myAccountCubit.userDataResponse!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png" ||
                                                 myAccountCubit.userDataResponse!.data!.account!.photo == "https://ymtaz.sa/uploads/person.png")
                                             ? SvgPicture.asset(
                                                 myAccountCubit.userDataResponse!.data!.account!.gender == 'female'

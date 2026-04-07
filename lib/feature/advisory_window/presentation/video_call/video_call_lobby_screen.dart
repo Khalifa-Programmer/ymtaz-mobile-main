@@ -104,7 +104,7 @@ class _VideoCallLobbyScreenState extends State<VideoCallLobbyScreen> {
                   ),
                   verticalSpace(5.h),
                   Text(
-                    "هذه المكالمة مدتها \${widget.durationMinutes} دقيقة فقط تبدأ من الموعد المحدد مسبقًا.",
+                    "هذه المكالمة مدتها " + widget.durationMinutes.toString() + " دقيقة فقط تبدأ من الموعد المحدد مسبقًا.",
                     style: TextStyles.cairo_12_regular.copyWith(color: appColors.grey15),
                   ),
                   verticalSpace(15.h),
@@ -141,7 +141,7 @@ class _VideoCallLobbyScreenState extends State<VideoCallLobbyScreen> {
                   );
                 } else if (state is AgoraTokenError) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("خطأ في جلب التوكن: \${state.error}")),
+                    SnackBar(content: Text("خطأ في جلب التوكن: ${state.error}")),
                   );
                 }
               },

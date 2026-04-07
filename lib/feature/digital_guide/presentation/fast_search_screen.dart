@@ -727,7 +727,7 @@ class _FastSearchScreenState extends State<FastSearchScreen> {
                         clipBehavior: Clip.antiAlias,
                         child: (lawyers[index].image == null ||
                                 lawyers[index].image!.isEmpty ||
-                                lawyers[index].image == "https://api.ymtaz.sa/uploads/person.png" ||
+                                lawyers[index].image == "https://ymtaz.sa/uploads/person.png" ||
                                 lawyers[index].image == "https://ymtaz.sa/uploads/person.png")
                             ? SvgPicture.asset(
                                 lawyers[index].gender == 'female'

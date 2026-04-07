@@ -58,7 +58,7 @@ class ForensicGuideScreen extends StatelessWidget {
     return RefreshIndicator(
       color: appColors.primaryColorYellow,
       onRefresh: () async {
-        // getit<DigitalGuideCubit>().getDigitalGuide();
+        getit<ForensicGuideCubit>().getJudicialGuide();
       },
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0.w),
