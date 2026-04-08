@@ -4409,7 +4409,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'api/agora/token',
+              'agora/token',
               queryParameters: queryParameters,
               data: _data,
             )
