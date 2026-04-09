@@ -261,8 +261,6 @@ class UserProfileRow extends StatelessWidget {
                               ),
                     ],
                   ),
-                        ],
-                  ),
                 ],
               ),
             ),
