@@ -17,14 +17,7 @@ class EliteLawyersSection extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
-        gradient: const LinearGradient(
-          colors: [
-            Color(0xFFFBF1D4), // Color from image
-            Color(0xFFF1D896), // Darker gold for bottom
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: const Color(0xFFD4AF37).withOpacity(0.15),
@@ -51,7 +44,7 @@ class EliteLawyersSection extends StatelessWidget {
                   ),
                   horizontalSpace(8.w),
                   Text(
-                    "فريقك الاستشاري",
+                    "هيئة المستشارين (خدمة النخبة)",
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
@@ -78,7 +71,7 @@ class EliteLawyersSection extends StatelessWidget {
               width: double.infinity,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: const Color(0xFFD4AF37),
                   borderRadius: BorderRadius.circular(12.r),
                   border: Border.all(
                     color: const Color(0xFFD4AF37),
@@ -95,7 +88,7 @@ class EliteLawyersSection extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Colors.white,
                       fontFamily: 'Cairo',
                     ),
                   ),
