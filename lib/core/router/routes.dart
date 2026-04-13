@@ -168,4 +168,9 @@ class Routes {
   static const String lawDetails = "/lawdetails";
 
   static const String bookDetails = '/book-details';
+  static const String learningPathPayment = '/learning-path-payment';
+  static const String learningPathDetails = '/learning-path-details';
+  static const String learningPathVideo = '/learning-path-video';
+  static const String learningPathCertificate = '/learning-path-certificate';
 }
+

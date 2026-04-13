@@ -96,8 +96,12 @@ import '../../feature/layout/services/presentation/service_details_screen.dart';
 import '../../feature/layout/services/presentation/servise_sub_type.dart';
 import '../../feature/learning_path/logic/learning_path_cubit.dart';
 import '../../feature/learning_path/presentation/pages/learning_path_page.dart';
+import '../../feature/learning_path/presentation/pages/learning_path_details_page.dart';
+import '../../feature/learning_path/presentation/pages/learning_path_payment_page.dart';
 import '../../feature/learning_path/presentation/pages/learning_paths_page.dart';
 import '../../feature/learning_path/presentation/pages/learning_path_home_page.dart';
+import '../../feature/learning_path/presentation/pages/learning_path_video_page.dart';
+import '../../feature/learning_path/presentation/pages/learning_path_certificate_page.dart';
 import '../../feature/library_guide/presentation/main_category_screen.dart';
 import '../../feature/my_appointments/logic/appointments_cubit.dart';
 import '../../feature/my_appointments/presentation/orders/my_requestes_screen.dart';
@@ -692,6 +696,18 @@ class AppRouter {
 
       case Routes.learningPaths:
         return _getFadeTransition(const LearningPathsPage());
+
+      case Routes.learningPathDetails:
+        return _getFadeTransition(LearningPathDetailsPage(pathId: settings.arguments as int));
+
+      case Routes.learningPathPayment:
+        return _getFadeTransition(const LearningPathPaymentPage());
+
+      case Routes.learningPathVideo:
+        return _getFadeTransition(LearningPathVideoPage(pathId: settings.arguments as int));
+
+      case Routes.learningPathCertificate:
+        return _getFadeTransition(const LearningPathCertificatePage());
 
       // case Routes.bookDetails:
       //   final args = settings.arguments as Map<String, dynamic>;

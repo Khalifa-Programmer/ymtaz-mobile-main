@@ -51,7 +51,7 @@ class HomeCubit extends Cubit<HomeState> {
           height: 30.sp,
         )),
 
-    HomeModel(
+    /*HomeModel(
         title: "هيئة المستشارين",
         description: "هيئة المستشارين",
         route: Routes.advisoryCommitteesScreen,
@@ -69,7 +69,7 @@ class HomeCubit extends Cubit<HomeState> {
           AppAssets.digital,
           width: 30.sp,
           height: 30.sp,
-        )),
+        )),*/
 
     HomeModel(
         title: LocaleKeys.legalGuide.tr(),
@@ -169,7 +169,7 @@ class HomeCubit extends Cubit<HomeState> {
           width: 30.sp,
           height: 30.sp,
         )),
-    HomeModel(
+    /*HomeModel(
         title: "هيئة المستشارين",
         description: "هيئة المستشارين",
         route: Routes.advisoryCommitteesScreen,
@@ -187,7 +187,7 @@ class HomeCubit extends Cubit<HomeState> {
           AppAssets.digital,
           width: 30.sp,
           height: 30.sp,
-        )),
+        )),*/
 
     HomeModel(
         title: "دليل الأنظمة",

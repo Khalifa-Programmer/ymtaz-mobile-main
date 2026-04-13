@@ -23,7 +23,7 @@ class RecentLawyers extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("المنضمون حديثا",
+        title: Text("المنظمون حديثاً",
             style: TextStyles.cairo_14_bold.copyWith(
               color: appColors.black,
             )),
@@ -34,30 +34,7 @@ class RecentLawyers extends StatelessWidget {
         child: ListView.separated(
             itemBuilder: (context, index) {
               var lawyer = homeData[index];
-              return CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  var userType = CacheHelper.getData(key: "userType");
-                  if (userType == "client" || userType == "provider") {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DigitalProvidersScreen(
-                            idLawyer: lawyer.id.toString(),
-                          ),
-                        ));
-                  } else {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GestScreen(),
-                        ));
-                  }
-
-                  // context.pushNamed(Routes.digitalGuideSearch, arguments: category);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              return Container(
                   decoration: ShapeDecoration(
                     color: Colors.white,
                     shadows: [
@@ -72,6 +49,32 @@ class RecentLawyers extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(10),
+                      splashColor: appColors.primaryColorYellow.withOpacity(0.2),
+                      highlightColor: appColors.primaryColorYellow.withOpacity(0.1),
+                      onTap: () {
+                        var userType = CacheHelper.getData(key: "userType");
+                        if (userType == "client" || userType == "provider") {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DigitalProvidersScreen(
+                                  idLawyer: lawyer.id.toString(),
+                                ),
+                              ));
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => GestScreen(),
+                              ));
+                        }
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                   child: Row(
                     children: [
                       Container(
@@ -142,7 +145,9 @@ class RecentLawyers extends StatelessWidget {
                     ],
                   ),
                 ),
-              );
+              ),
+            ),
+          );
             },
             separatorBuilder: (BuildContext context, int index) {
               return Padding(

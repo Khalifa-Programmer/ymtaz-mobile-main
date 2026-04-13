@@ -40,7 +40,6 @@ class EliteLawyersSection extends StatelessWidget {
                   SvgPicture.asset(
                     AppAssets.crown,
                     width: 18.sp,
-                    color: const Color(0xFFD4AF37),
                   ),
                   horizontalSpace(8.w),
                   Text(

@@ -14,6 +14,7 @@ import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/router/routes.dart';
 import '../../data/models/learning_paths_response.dart';
 import '../../logic/learning_path_state.dart';
+import '../widgets/learning_path_card.dart';
 
 class LearningPathsPage extends StatefulWidget {
   const LearningPathsPage({super.key});
@@ -47,137 +48,111 @@ class _LearningPathsPageState extends State<LearningPathsPage> {
     final cubit = getit<LearningPathCubit>();
     return BlocProvider.value(
       value: cubit,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(LocaleKeys.trainingTracks.tr(), style: TextStyles.cairo_15_bold),
-          centerTitle: true,
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
           backgroundColor: appColors.white,
-          elevation: 0,
-        ),
-        body: BlocBuilder<LearningPathCubit, LearningPathState>(
-          builder: (context, state) {
-            final paths = cubit.paths;
-
-            if (state is LearningPathsLoading && paths == null) {
-              return _buildLoadingShimmer();
-            } else if (paths != null) {
-              if (paths.isEmpty) {
-                return Center(
-                  child: Text('لا توجد مسارات تعلم حالياً', style: TextStyles.cairo_14_regular),
-                );
-              }
-              return _buildContent(paths);
-            } else if (state is LearningPathError) {
-              return Center(
-                child: Text('حدث خطأ: ${state.message}', style: TextStyles.cairo_14_regular),
-              );
-            }
-            return const SizedBox();
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoadingShimmer() {
-    return ListView.builder(
-      padding: EdgeInsets.all(16.w),
-      itemCount: 5,
-      itemBuilder: (context, index) => _buildShimmerCard(),
-    );
-  }
-
-  Widget _buildShimmerCard() {
-    return Shimmer.fromColors(
-      baseColor: appColors.grey1,
-      highlightColor: appColors.grey8,
-      child: Container(
-        margin: EdgeInsets.only(bottom: 8.h),
-        height: 100.h,
-        decoration: BoxDecoration(
-          color: appColors.white,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLearningPathItem(LearningPath path, int index) {
-    return Container(
-      margin: EdgeInsets.only(
-        left: 0.w,
-        right: 0.w,
-        bottom: 8.h,
-      ),
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shadows: [
-          BoxShadow(
-            color: Colors.black12.withOpacity(0.04),
-            spreadRadius: 3,
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-      ),
-      child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            Routes.learningPath,
-            arguments: path.id,
-          );
-        },
-        child: Row(
-          children: [
-            Container(
-              width: 4,
-              height: 60.h,
-              decoration: BoxDecoration(
-                color: index.isEven ? appColors.primaryColorYellow : appColors.blue100,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10.r),
-                  bottomRight: Radius.circular(10.r),
+          appBar: AppBar(
+            title: Text('مسارات التعلم', style: TextStyles.cairo_15_bold),
+            centerTitle: true,
+            backgroundColor: appColors.white,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios, color: appColors.blue100, size: 20.sp),
+              onPressed: () => Navigator.pop(context),
+            ),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.print_outlined, color: appColors.blue100),
+                onPressed: () {},
+              )
+            ],
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(50.h),
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: appColors.grey1,
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: TabBar(
+                  indicator: BoxDecoration(
+                    color: appColors.primaryColorYellow,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  labelColor: appColors.white,
+                  unselectedLabelColor: appColors.grey10,
+                  labelStyle: TextStyles.cairo_13_bold,
+                  tabs: const [
+                    Tab(text: 'مسارات التدريب'),
+                    Tab(text: 'مساراتي'),
+                  ],
                 ),
               ),
             ),
-            SizedBox(width: 20.w),
-            SvgPicture.asset(
-              AppAssets.booksNew,
-              width: 24.sp,
-              height: 24.sp,
-            ),
-            SizedBox(width: 15.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    path.title.trim(),
-                    style: TextStyles.cairo_13_bold.copyWith(
-                      color: appColors.blue100,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16.sp,
-              color: appColors.grey10,
-            ),
-            SizedBox(width: 24.w),
-          ],
+          ),
+          body: TabBarView(
+            children: [
+              _buildPathsList(cubit, false),
+              _buildPathsList(cubit, true),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildPathsList(LearningPathCubit cubit, bool isMyPaths) {
+    return BlocBuilder<LearningPathCubit, LearningPathState>(
+      builder: (context, state) {
+        final paths = cubit.paths;
+
+        if (state is LearningPathsLoading && paths == null) {
+          return _buildLoadingShimmer();
+        } else if (paths != null) {
+          // For now, filtering locally if we don't have separate APIs.
+          // In a real scenario, we might call different methods in cubit.
+          final displayedPaths = isMyPaths ? paths.where((p) => p.id % 2 == 0).toList() : paths;
+
+          if (displayedPaths.isEmpty) {
+            return _buildEmptyState(isMyPaths ? 'لا توجد مسارات ملتحق بها حالياً' : 'لا توجد مسارات تدريب متاحة');
+          }
+          return RefreshIndicator(
+            onRefresh: () async => cubit.getLearningPaths(),
+            child: ListView.builder(
+              padding: EdgeInsets.all(16.w),
+              itemCount: displayedPaths.length,
+              itemBuilder: (context, index) {
+                return LearningPathCard(
+                  path: displayedPaths[index],
+                  onTap: () {
+                    if (isMyPaths) {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.learningPath,
+                        arguments: displayedPaths[index].id,
+                      );
+                    } else {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.learningPathDetails,
+                        arguments: displayedPaths[index].id,
+                      );
+                    }
+                  },
+                );
+              },
+            ),
+          );
+        } else if (state is LearningPathError) {
+          return _buildErrorState(state.message);
+        }
+        return const SizedBox();
+      },
+    );
+  }
+
+  Widget _buildEmptyState(String message) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -185,14 +160,34 @@ class _LearningPathsPageState extends State<LearningPathsPage> {
           Icon(Icons.info_outline, color: appColors.grey10, size: 48.r),
           SizedBox(height: 16.h),
           Text(
-            'لا توجد مسارات تعلم متاحة حالياً',
-            style: TextStyles.cairo_14_medium.copyWith(
-              color: appColors.grey10,
-            ),
+            message,
+            style: TextStyles.cairo_14_medium.copyWith(color: appColors.grey10),
             textAlign: TextAlign.center,
           ),
         ],
       ),
+    );
+  }
+  Widget _buildLoadingShimmer() {
+    return ListView.builder(
+      padding: EdgeInsets.all(16.w),
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: 12.h),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              height: 100.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -205,41 +200,16 @@ class _LearningPathsPageState extends State<LearningPathsPage> {
           SizedBox(height: 16.h),
           Text(
             message,
-            style: TextStyles.cairo_14_medium,
+            style: TextStyles.cairo_14_medium.copyWith(color: appColors.red),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 16.h),
           ElevatedButton(
-            onPressed: _loadData,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: appColors.primaryColorYellow,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-            ),
-            child: const Text('إعادة المحاولة'),
-          ),
+            onPressed: () => getit<LearningPathCubit>().getLearningPaths(),
+            child: Text('إعادة المحاولة', style: TextStyles.cairo_12_regular),
+          )
         ],
       ),
     );
   }
-
-  Widget _buildContent(List<LearningPath> paths) {
-    if (paths.isEmpty) {
-      return _buildEmptyState();
-    }
-
-    return RefreshIndicator(
-      onRefresh: () async {
-        await context.read<LearningPathCubit>().getLearningPaths();
-      },
-      child: ListView.builder(
-        padding: EdgeInsets.all(16.w),
-        itemCount: paths.length,
-        itemBuilder: (context, index) {
-          return _buildLearningPathItem(paths[index], index);
-        },
-      ),
-    );
-  }
-} 
+}

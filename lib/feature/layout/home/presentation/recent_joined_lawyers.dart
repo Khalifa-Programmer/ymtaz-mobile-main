@@ -26,8 +26,15 @@ class RecentJoinedLawyers extends StatelessWidget {
         return advisories != null
             ? advisories.isEmpty
                 ? const SizedBox()
-                : Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                : InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return RecentLawyers(advisories);
+                      }));
+                    },
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
@@ -69,7 +76,7 @@ class RecentJoinedLawyers extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "منضم حديثاَ",
+                                    "المنظمون حديثاً",
                                     style: TextStyle(
                                       fontSize: 15.sp,
                                       fontWeight: FontWeight.w400,
@@ -78,33 +85,24 @@ class RecentJoinedLawyers extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              CupertinoButton(
-                                padding: EdgeInsets.zero,
-                                onPressed: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return RecentLawyers(advisories);
-                                  }));
-                                },
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'ابدأ الآن',
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        fontFamily: 'Cairo',
-                                        fontWeight: FontWeight.w500,
-                                        color: appColors.blue100,
-                                      ),
-                                    ),
-                                    horizontalSpace(5.w),
-                                    Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 14.sp,
+                              Row(
+                                children: [
+                                  Text(
+                                    'المزيد...',
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontFamily: 'Cairo',
+                                      fontWeight: FontWeight.w500,
                                       color: appColors.blue100,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  horizontalSpace(5.w),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 14.sp,
+                                    color: appColors.blue100,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -130,6 +128,7 @@ class RecentJoinedLawyers extends StatelessWidget {
                         ),
                         verticalSpace(10.h),
                       ],
+                    ),
                     ),
                   )
             : Shimmer.fromColors(
