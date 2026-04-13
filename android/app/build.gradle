@@ -36,7 +36,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.yamtaz.yamtaz"
-    compileSdk = 36  // Change from 35 to 36
+    compileSdk = 36
     ndkVersion flutter.ndkVersion
 
 
@@ -50,7 +50,7 @@ android {
         buildConfig true
     }
 
-    packagingOptions {
+    packaging {
         jniLibs {
             useLegacyPackaging = true
         }
