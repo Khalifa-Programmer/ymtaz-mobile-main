@@ -1,16 +1,43 @@
-# yamtaz
+# يمتاز (Ymtaz)
 
-A new Flutter project.
+تطبيق **يمتاز** هو منصة رقمية متكاملة لتقديم الاستشارات القانونية والتدريب، يهدف إلى ربط العملاء بنخبة من المحامين والمستشارين القانونيين، بالإضافة إلى تقديم مسارات تعليمية وتدريبية متخصصة.
 
-## Getting Started
+## 🌟 الميزات الرئيسية
 
-This project is a starting point for a Flutter application.
+- **نظام المستخدمين المتعدد:** يدعم التطبيق أنواع مختلفة من المستخدمين (عميل، محامي/مقدم خدمة) مع مسار تسجيل مخصص لكل نوع.
+- **طلبات النخبة (Elite Consultations):**
+  - تقديم طلبات استشارة لنخبة من المحامين.
+  - نظام تسعير ديناميكي وعروض للطلبات (قبول، رفض، تجاهل).
+  - مكالمات فيديو وصوت متكاملة للاستشارات (باستخدام Agora).
+- **المسارات التعليمية:** التعلم من خلال برامج مصممة لرفع كفاءة المحامين والمتدربين مع نظام تقدم ودفع للمسارات.
+- **إدارة المدفوعات:** بوابة دفع متكاملة لإتمام عمليات حجز الاستشارات والاشتراك في المسارات التعليمية.
+- **تصميم تفاعلي:** واجهات مستخدم عصرية باللغة العربية.
 
-A few resources to get you started if this is your first Flutter project:
+## 🛠️ التقنيات المستخدمة
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **إطار العمل:** [Flutter](https://flutter.dev/)
+- **مكالمات الفيديو/الصوت:** [Agora SDK](https://www.agora.io/)
+- **إدارة الحالة:** Bloc / Cubit
+- **الشبكات والتكامل:** RESTful APIs باستخدام Dio / Retrofit لتسهيل الربط مع الباك اند.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🚀 تشغيل المشروع
+
+للبدء في تشغيل المشروع على بيئتك المحلية:
+
+1. تأكد من تثبيت [Flutter SDK](https://docs.flutter.dev/get-started/install).
+2. قم باستنساخ المستودع (Clone).
+3. جلب الحزم المطلوبة من خلال موجه الأوامر:
+   ```bash
+   flutter pub get
+   ```
+4. لتشغيل التطبيق على محاكي أو جهاز حقيقي:
+   ```bash
+   flutter run
+   ```
+
+## 📦 بناء النسخة النهائية (Release)
+
+لبناء نسخة APK الخاصة ببيئة الإنتاج:
+```bash
+flutter build apk --flavor production --release --split-per-abi
+```
