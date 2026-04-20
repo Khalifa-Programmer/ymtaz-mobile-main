@@ -806,9 +806,9 @@ abstract class ApiService {
       @Header('Authorization') String token);
 
   // Agora
-  @POST(ApiConstants.agoraToken)
+  @GET(ApiConstants.agoraToken)
   Future<AgoraTokenResponse> getAgoraToken(
-      @Header('Authorization') String token, @Body() AgoraTokenRequest body);
+      @Header('Authorization') String token, @Query('channel') String channel);
 
   // ivcitations
 // send invitations

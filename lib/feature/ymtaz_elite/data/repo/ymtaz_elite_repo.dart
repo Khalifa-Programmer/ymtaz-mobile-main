@@ -107,7 +107,7 @@ class YmtazEliteRepo {
     try {
       var response = await _apiService.getAgoraToken(
         'Bearer $token',
-        AgoraTokenRequest(channel: channelName),
+        channelName,
       );
       return ApiResult.success(response);
     } on DioException catch (error) {

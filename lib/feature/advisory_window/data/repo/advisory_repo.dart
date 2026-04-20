@@ -169,7 +169,7 @@ class AdvisoryRepo {
     try {
       var response = await _apiService.getAgoraToken(
         token ?? '',
-        AgoraTokenRequest(channel: channelName),
+        channelName,
       );
       return ApiResult.success(response);
     } on DioException catch (error) {

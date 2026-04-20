@@ -27,61 +27,62 @@ class _AdvisoryRatingDialogState extends State<AdvisoryRatingDialog> {
           color: appColors.white,
           borderRadius: BorderRadius.circular(15.r),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "تقييم تجربتك",
-              style: TextStyles.cairo_16_bold.copyWith(color: appColors.blue100),
-            ),
-            verticalSpace(20.h),
-            RatingBar.builder(
-              initialRating: 0,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemPadding: EdgeInsets.symmetric(horizontal: 4.0.w),
-              itemBuilder: (context, _) => Icon(
-                Icons.star,
-                color: appColors.primaryColorYellow,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "تقييم تجربتك",
+                style: TextStyles.cairo_16_bold.copyWith(color: appColors.blue100),
               ),
-              onRatingUpdate: (rating) {
-                setState(() {
-                  _rating = rating;
-                });
-              },
-            ),
-            verticalSpace(20.h),
-            TextField(
-              controller: _commentController,
-              maxLines: 4,
-              decoration: InputDecoration(
-                hintText: "تعليقك...",
-                hintStyle: TextStyles.cairo_12_regular.copyWith(color: appColors.grey15),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.r),
-                  borderSide: BorderSide(color: appColors.grey5),
+              verticalSpace(15.h),
+              RatingBar.builder(
+                initialRating: 0,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemPadding: EdgeInsets.symmetric(horizontal: 4.0.w),
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: appColors.primaryColorYellow,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.r),
-                  borderSide: BorderSide(color: appColors.grey5),
+                onRatingUpdate: (rating) {
+                  setState(() {
+                    _rating = rating;
+                  });
+                },
+              ),
+              verticalSpace(15.h),
+              TextField(
+                controller: _commentController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: "تعليقك...",
+                  hintStyle: TextStyles.cairo_12_regular.copyWith(color: appColors.grey15),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                    borderSide: BorderSide(color: appColors.grey5),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                    borderSide: BorderSide(color: appColors.grey5),
+                  ),
                 ),
               ),
-            ),
-            verticalSpace(20.h),
-            CustomButton(
-              onPress: () {
-                // Submit rating using _rating and _commentController.text
-                Navigator.pop(context, {'rating': _rating, 'comment': _commentController.text});
-              },
-              title: "إرسال",
-              height: 45.h,
-              fontSize: 14.sp,
-              bgColor: appColors.primaryColorYellow,
-            ),
-          ],
+              verticalSpace(15.h),
+              CustomButton(
+                onPress: () {
+                  Navigator.pop(context, {'rating': _rating, 'comment': _commentController.text});
+                },
+                title: "إرسال",
+                height: 45.h,
+                fontSize: 14.sp,
+                bgColor: appColors.primaryColorYellow,
+              ),
+            ],
+          ),
         ),
       ),
     );

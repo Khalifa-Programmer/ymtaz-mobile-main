@@ -97,6 +97,7 @@ class IncomingCallScreen extends StatelessWidget {
                           builder: (context) => AgoraVideoCallScreen(
                             customToken: call.token,
                             customChannelName: call.channelName,
+                            callId: call.id.toString(),
                           ),
                         ),
                       );

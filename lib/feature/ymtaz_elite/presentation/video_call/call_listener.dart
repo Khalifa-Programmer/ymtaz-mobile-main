@@ -26,6 +26,7 @@ class CallListener extends StatelessWidget {
               builder: (context) => AgoraVideoCallScreen(
                 customToken: state.call.token,
                 customChannelName: state.call.channelName,
+                callId: state.call.id.toString(),
               ),
             ),
           );
@@ -36,6 +37,7 @@ class CallListener extends StatelessWidget {
               builder: (context) => AgoraVideoCallScreen(
                 customToken: state.call.token,
                 customChannelName: state.call.channelName,
+                callId: state.call.id.toString(),
               ),
             ),
           );

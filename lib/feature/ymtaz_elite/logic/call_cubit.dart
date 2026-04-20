@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 import '../data/repo/call_repo.dart';
 import '../data/model/call_model.dart';
@@ -38,35 +39,52 @@ class CallCubit extends Cubit<CallState> {
   }
 
   Future<void> acceptCall(String callId) async {
+    debugPrint("CallCubit: acceptCall API requested for $callId");
     emit(CallLoading());
     final result = await _callRepo.acceptCall(callId);
     result.when(
       success: (data) {
+        debugPrint("CallCubit: acceptCall SUCCESS: $data");
         activeCall = CallModel.fromJson(data);
         emit(CallAccepted(activeCall!));
       },
-      failure: (error) => emit(CallError(error.toString())),
+      failure: (error) {
+         debugPrint("CallCubit: acceptCall FAILED: $error");
+         emit(CallError(error.toString()));
+      },
     );
   }
 
   Future<void> rejectCall(String callId) async {
+    debugPrint("CallCubit: rejectCall API requested for $callId");
     emit(CallLoading());
     final result = await _callRepo.rejectCall(callId);
     result.when(
-      success: (data) => emit(CallRejected()),
-      failure: (error) => emit(CallError(error.toString())),
+      success: (data) {
+         debugPrint("CallCubit: rejectCall SUCCESS");
+         emit(CallRejected());
+      },
+      failure: (error) {
+         debugPrint("CallCubit: rejectCall FAILED: $error");
+         emit(CallError(error.toString()));
+      },
     );
   }
 
   Future<void> endCall(String callId) async {
+    debugPrint("CallCubit: endCall API requested for $callId");
     emit(CallLoading());
     final result = await _callRepo.endCall(callId);
     result.when(
       success: (data) {
+        debugPrint("CallCubit: endCall SUCCESS: $data");
         activeCall = null;
         emit(CallEnded());
       },
-      failure: (error) => emit(CallError(error.toString())),
+      failure: (error) {
+        debugPrint("CallCubit: endCall FAILED: $error");
+        emit(CallError(error.toString()));
+      },
     );
   }
 
