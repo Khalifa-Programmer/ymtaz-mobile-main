@@ -128,6 +128,7 @@ class LawyerPackageCard extends StatelessWidget {
                       AppAssets.pack,
                       width: 30.w,
                       height: 30.h,
+                      colorFilter: ColorFilter.mode(appColors.primaryColorYellow, BlendMode.srcIn),
                     ),
                     horizontalSpace(10.w),
                     Column(

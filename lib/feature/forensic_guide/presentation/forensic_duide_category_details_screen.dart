@@ -132,7 +132,7 @@ class ForensicGuideCategoryDetailsScreen extends StatelessWidget {
                 Row(
                   children: [
                     Icon(
-                      FontAwesomeIcons.gavel,
+                      Icons.gavel,
                       color: appColors.primaryColorYellow,
                       size: 20.0.sp,
                     ),

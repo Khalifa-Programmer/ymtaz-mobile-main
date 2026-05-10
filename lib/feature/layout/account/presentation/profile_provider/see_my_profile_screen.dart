@@ -434,7 +434,7 @@ class SeeMyProfileProvider extends StatelessWidget {
                                   verticalSpace(20.h),
                                   Row(
                                     children: [
-                                      Icon(
+                                      FaIcon(
                                         FontAwesomeIcons.earthAsia,
                                         color: appColors.primaryColorYellow,
                                         size: 20.sp,
@@ -474,7 +474,7 @@ class SeeMyProfileProvider extends StatelessWidget {
                                   verticalSpace(20.h),
                                   Row(
                                     children: [
-                                      Icon(
+                                      FaIcon(
                                         FontAwesomeIcons.earthAfrica,
                                         color: appColors.primaryColorYellow,
                                         size: 20.sp,
@@ -514,7 +514,7 @@ class SeeMyProfileProvider extends StatelessWidget {
                                   verticalSpace(20.h),
                                   Row(
                                     children: [
-                                      Icon(
+                                      FaIcon(
                                         FontAwesomeIcons.earthAsia,
                                         color: appColors.primaryColorYellow,
                                         size: 20.sp,
@@ -554,7 +554,7 @@ class SeeMyProfileProvider extends StatelessWidget {
                                   verticalSpace(20.h),
                                   Row(
                                     children: [
-                                      Icon(
+                                      FaIcon(
                                         FontAwesomeIcons.idCard,
                                         color: appColors.primaryColorYellow,
                                         size: 20.sp,

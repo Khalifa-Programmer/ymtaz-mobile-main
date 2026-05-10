@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yamtaz/feature/advisory_window/presentation/advisor_time_selection.dart';
 import 'package:yamtaz/feature/advisory_window/presentation/select_lawyer_screen.dart';
 
 import '../../../config/themes/styles.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/di/dependency_injection.dart';
+import '../../../core/widgets/flow_progress_indicator.dart';
 import '../../../core/widgets/custom_stepper.dart';
 import '../logic/advisory_cubit.dart';
 import 'advisory_accurate_type.dart';
@@ -98,44 +100,25 @@ class _MainAdvisoryScreenState extends State<MainAdvisoryScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'الاستشارات',
+          'نافذة الاستشارات',
           style: TextStyles.cairo_16_bold.copyWith(color: appColors.blue100),
         ),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(4.0),
+          preferredSize: Size.fromHeight(80.h),
           child: BlocBuilder<AdvisoryCubit, AdvisoryState>(
             builder: (context, state) {
               int currentStep = context.watch<AdvisoryCubit>().currentStep;
-              double progress = (currentStep + 1) / _steps.length;
-
-              if (state is AdvisoryStepChanged) {
-                _animation = Tween<double>(
-                  begin: (_previousStep + 1) / _steps.length,
-                  end: progress,
-                ).animate(_animationController);
-                _animationController.forward(from: 0);
-                _previousStep = currentStep;
-              } else if (currentStep == 0) {
-                _animation = Tween<double>(
-                  begin: 1 / _steps.length,
-                  end: 1 / _steps.length,
-                ).animate(_animationController);
-
-                if (!_animationController.isAnimating) {
-                  _animationController.forward(from: 0);
-                }
-              }
-
-              return AnimatedBuilder(
-                animation: _animation,
-                builder: (context, child) {
-                  return LinearProgressIndicator(
-                    value: _animation.value,
-                    backgroundColor: appColors.grey3,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        appColors.primaryColorYellow),
-                  );
-                },
+              return FlowProgressIndicator(
+                currentStep: currentStep,
+                steps: const [
+                  'وسيلة الاستشارة',
+                  'التخصص العام',
+                  'التخصص الخاص',
+                  'التفاصيل',
+                  'المحامين',
+                  'الموعد',
+                  'الدفع',
+                ],
               );
             },
           ),

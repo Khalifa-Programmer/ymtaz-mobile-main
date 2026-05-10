@@ -336,4 +336,8 @@ class ApiConstants {
   static const calls = "calls";
   static const callsActive = "calls/active";
   static const callsHistory = "calls/history";
+
+  // Specializations
+  static const specializations = "specializations";
+  static const specializationServices = "specializations/service/";
 }

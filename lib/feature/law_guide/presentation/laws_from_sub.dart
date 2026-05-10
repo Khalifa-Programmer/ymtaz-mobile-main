@@ -156,32 +156,28 @@ class LawsFromSub extends StatelessWidget {
                             context,
                             'النسخه العربية - PDF',
                             arPdfUrl,
-                            FontAwesomeIcons.filePdf,
-                            Colors.red,
+                            const FaIcon(FontAwesomeIcons.filePdf, color: Colors.red),
                             'لا يوجد ملف PDF',
                           ),
                           _buildListTile(
                             context,
                             'النسخه الانجليزية - PDF',
                             enPdfUrl,
-                            FontAwesomeIcons.filePdf,
-                            Colors.red,
+                            const FaIcon(FontAwesomeIcons.filePdf, color: Colors.red),
                             'لا يوجد ملف PDF',
                           ),
                           _buildListTile(
                             context,
                             'Word - النسخه العربية',
                             arwordUrl,
-                            FontAwesomeIcons.noteSticky,
-                            Colors.blueAccent,
+                            const FaIcon(FontAwesomeIcons.noteSticky, color: Colors.blueAccent),
                             'لا يوجد ملف WORD',
                           ),
                           _buildListTile(
                             context,
                             'Word - النسخه الانجليزية',
                             enwordUrl,
-                            FontAwesomeIcons.noteSticky,
-                            Colors.blueAccent,
+                            const FaIcon(FontAwesomeIcons.noteSticky, color: Colors.blueAccent),
                             'لا يوجد ملف WORD',
                           ),
                           verticalSpace(20.h),
@@ -189,7 +185,7 @@ class LawsFromSub extends StatelessWidget {
                       );
                     },
                     backgroundColor: appColors.primaryColorYellow,
-                    child: const Icon(FontAwesomeIcons.filePdf, color: Colors.white),
+                    child: const FaIcon(FontAwesomeIcons.filePdf, color: Colors.white),
                   ),
                   verticalSpace(10.h),
                   FloatingActionButton(
@@ -224,9 +220,9 @@ class LawsFromSub extends StatelessWidget {
 
   // Helper to keep the code clean and avoid repetition
   Widget _buildListTile(BuildContext context, String title, String? url,
-      IconData icon, Color iconColor, String errorMsg) {
+      Widget leadingIcon, String errorMsg) {
     return ListTile(
-      leading: Icon(icon, color: iconColor),
+      leading: leadingIcon,
       title: Text(title,
           style: TextStyles.cairo_14_semiBold.copyWith(color: appColors.black)),
       onTap: () {

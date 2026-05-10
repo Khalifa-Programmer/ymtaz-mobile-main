@@ -25,60 +25,66 @@ class ToolSelectionType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10.h),
-      padding: EdgeInsets.all(17.sp),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: appColors.primaryColorYellow),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SvgPicture.asset(
-                  svgAsset ?? (isVideo ? AppAssets.video : AppAssets.advisories)),
-              SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    verticalSpace(5.h),
-                    Text(description),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          verticalSpace(15.h),
-          SizedBox(
-            width: double.infinity,
-            child: CupertinoButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                onSelected();
-              },
-              color: appColors.primaryColorYellow,
-              child: Text(
-                "اطلب الان",
-                style:
-                    TextStyles.cairo_12_bold.copyWith(color: appColors.white),
-              ),
+    return GestureDetector(
+      onTap: onSelected,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10.h),
+        padding: EdgeInsets.all(17.sp),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.r),
+          border: Border.all(color: appColors.primaryColorYellow),
+          boxShadow: [
+            BoxShadow(
+              color: appColors.primaryColorYellow.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-          )
-        ],
+          ],
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SvgPicture.asset(
+                  svgAsset ?? (isVideo ? AppAssets.video : AppAssets.advisories),
+                  width: 32.sp,
+                  height: 32.sp,
+                  colorFilter: ColorFilter.mode(appColors.primaryColorYellow, BlendMode.srcIn),
+                ),
+                SizedBox(
+                  width: 15.w,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold,
+                          color: appColors.blue100,
+                        ),
+                      ),
+                      verticalSpace(8.h),
+                      Text(
+                        description,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: appColors.grey15,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -7,6 +7,7 @@ import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/feature/layout/home/data/models/home_model.dart';
 import 'package:yamtaz/feature/layout/home/data/repo/home_repo.dart';
 import 'package:yamtaz/feature/layout/home/logic/home_state.dart';
+import 'package:yamtaz/feature/layout/home/data/models/specialization_response.dart';
 import 'package:yamtaz/l10n/locale_keys.g.dart';
 
 import '../../../../core/network/error/api_result.dart';
@@ -22,9 +23,10 @@ class HomeCubit extends Cubit<HomeState> {
 
   List<HomeModel> homeData = [
     HomeModel(
-        title: LocaleKeys.consultationWindow.tr(),
-        description: LocaleKeys.consultationWindow.tr(),
+        title: "نافذة الاستشارات",
+        description: "تواصل مباشر وفوري مع أفضل المحامين المرخصين للحصول على استشارة قانونية دقيقة.",
         route: Routes.advisoryScreen,
+        subSpecializations: ["استشارة مرئية ( مباشرة )", "استشارة مرئية ( مجدولة )", "استشارة مكتوبة ( محررة )"],
         icon: SvgPicture.asset(
           AppAssets.advisories,
           width: 30.sp,
@@ -32,9 +34,10 @@ class HomeCubit extends Cubit<HomeState> {
         )),
 
     HomeModel(
-        title: LocaleKeys.servicesPortal.tr(),
-        description: LocaleKeys.servicesPortal.tr(),
+        title: "بوابة الخدمات",
+        description: "مجموعة واسعة من الخدمات القانونية المتكاملة لتلبية كافة احتياجاتك القضائية والإدارية.",
         route: Routes.services,
+        subSpecializations: ["طلبات التوثيق", "كتابات قانونية", "دراسة قضية", "حضور جلسة"],
         icon: SvgPicture.asset(
           AppAssets.services,
           width: 30.sp,
@@ -42,9 +45,10 @@ class HomeCubit extends Cubit<HomeState> {
         )),
 
     HomeModel(
-        title: LocaleKeys.appointments.tr(),
-        description: LocaleKeys.appointments.tr(),
+        title: "مفكرة المواعيد",
+        description: "نظم مواعيدك وجلساتك القانونية بكل سهولة مع نخبة من الخبراء القانونيين.",
         route: Routes.appointmentYmatz,
+        subSpecializations: ["زيارة عمل محددة", "موعد تأسيس شركة", "جلسة مع ورثة"],
         icon: SvgPicture.asset(
           AppAssets.appointments,
           width: 30.sp,
@@ -110,7 +114,7 @@ class HomeCubit extends Cubit<HomeState> {
     //       width: 30.sp,
     //       height: 30.sp,
     //     )),
-    HomeModel(
+    /*HomeModel(
         title: LocaleKeys.trainingPlatform.tr(),
         description: LocaleKeys.trainingPlatform.tr(),
         route: Routes.trainingScreen,
@@ -128,7 +132,7 @@ class HomeCubit extends Cubit<HomeState> {
           AppAssets.booksNew,
           width: 30.sp,
           height: 30.sp,
-        )),
+        )),*/
     /*HomeModel(
         title: "المساعد الذكي",
         description: LocaleKeys.libraryAndSystems.tr(),
@@ -141,9 +145,10 @@ class HomeCubit extends Cubit<HomeState> {
   ];
   List<HomeModel> homeDataLawyer = [
     HomeModel(
-        title: LocaleKeys.consultationWindow.tr(),
-        description: LocaleKeys.consultationWindow.tr(),
+        title: "نافذة الاستشارات",
+        description: "تواصل مباشر وفوري مع أفضل المحامين المرخصين للحصول على استشارة قانونية دقيقة.",
         route: Routes.advisoryScreen,
+        subSpecializations: ["استشارة مرئية ( مباشرة )", "استشارة مرئية ( مجدولة )", "استشارة مكتوبة ( محررة )"],
         icon: SvgPicture.asset(
           AppAssets.advisories,
           width: 30.sp,
@@ -151,9 +156,10 @@ class HomeCubit extends Cubit<HomeState> {
         )),
 
     HomeModel(
-        title: LocaleKeys.servicesPortal.tr(),
-        description: LocaleKeys.servicesPortal.tr(),
+        title: "بوابة الخدمات",
+        description: "مجموعة واسعة من الخدمات القانونية المتكاملة لتلبية كافة احتياجاتك القضائية والإدارية.",
         route: Routes.services,
+        subSpecializations: ["طلبات التوثيق", "كتابات قانونية", "دراسة قضية", "حضور جلسة"],
         icon: SvgPicture.asset(
           AppAssets.services,
           width: 30.sp,
@@ -161,9 +167,10 @@ class HomeCubit extends Cubit<HomeState> {
         )),
 
     HomeModel(
-        title: LocaleKeys.appointments.tr(),
-        description: LocaleKeys.appointments.tr(),
+        title: "مفكرة المواعيد",
+        description: "نظم مواعيدك وجلساتك القانونية بكل سهولة مع نخبة من الخبراء القانونيين.",
         route: Routes.appointmentYmatz,
+        subSpecializations: ["زيارة عمل محددة", "موعد تأسيس شركة", "جلسة مع ورثة"],
         icon: SvgPicture.asset(
           AppAssets.appointments,
           width: 30.sp,
@@ -216,7 +223,7 @@ class HomeCubit extends Cubit<HomeState> {
           width: 30.sp,
           height: 30.sp,
         )),
-    HomeModel(
+    /*HomeModel(
         title: LocaleKeys.trainingPlatform.tr(),
         description: LocaleKeys.trainingPlatform.tr(),
         route: Routes.trainingScreen,
@@ -234,9 +241,10 @@ class HomeCubit extends Cubit<HomeState> {
           AppAssets.booksNew,
           width: 30.sp,
           height: 30.sp,
-        )),
+        )),*/
   ];
   List<NewAdvisory>? advisoriesNew;
+  List<Specialization>? specializations;
 
   Future<void> getHomeData() async {
     // emit(HomeStateLoading()); // Removed to prevent persistent loading for visitors
@@ -252,11 +260,14 @@ class HomeCubit extends Cubit<HomeState> {
       final responses = await Future.wait([
         _homeRepo.getRecentLawyers(), // Fetch recent lawyers
         _homeRepo.getBanners(), // Fetch banners
+        _homeRepo.getSpecializations(), // Fetch specializations
       ]);
 
       final recentLawyersResponse =
           responses[0] as ApiResult<RecentJoinedLawyersModel>;
       final bannersResponse = responses[1] as ApiResult<BannersModel>;
+      final specializationsResponse =
+          responses[2] as ApiResult<SpecializationResponse>;
 
       // Handle recent lawyers response
       recentLawyersResponse.when(
@@ -281,6 +292,17 @@ class HomeCubit extends Cubit<HomeState> {
           emit(HomeStateBannersError("حدث خطأ اثناء تحميل البيانات"));
         },
       );
+
+      // Handle specializations response
+      specializationsResponse.when(
+        success: (response) {
+          specializations = response.data;
+          emit(HomeStateSpecializationsLoaded(response.data!));
+        },
+        failure: (fail) {
+          emit(HomeStateSpecializationsError("حدث خطأ اثناء تحميل البيانات"));
+        },
+      );
     } catch (e) {
       // Handle any errors that may occur during the requests
       advisoriesNew = []; // Stop loading logic
@@ -288,3 +310,4 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 }
+

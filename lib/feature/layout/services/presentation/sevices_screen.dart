@@ -12,6 +12,7 @@ import 'package:yamtaz/feature/layout/services/data/model/services_requirements_
 import 'package:yamtaz/feature/layout/services/logic/services_cubit.dart';
 import 'package:yamtaz/feature/layout/services/logic/services_state.dart';
 import 'package:yamtaz/feature/layout/services/presentation/widgets/item_widget.dart';
+import 'package:yamtaz/core/widgets/flow_progress_indicator.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/di/dependency_injection.dart';
@@ -48,8 +49,28 @@ class ServicesScreen extends StatelessWidget {
             current is ErrorServices,
         builder: (context, state) {
           return Scaffold(
-            extendBodyBehindAppBar: true,
-            appBar: buildBlurredAppBar(context, LocaleKeys.services.tr()),
+            extendBodyBehindAppBar: false,
+            appBar: buildBlurredAppBar(
+              context, 
+              LocaleKeys.servicesPortal.tr(),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(80.h),
+                child: BlocBuilder<ServicesCubit, ServicesState>(
+                  builder: (context, state) {
+                    return FlowProgressIndicator(
+                      currentStep: 0,
+                      steps: const [
+                        'وسيلة الخدمة',
+                        'التخصص العام',
+                        'التخصص الخاص',
+                        'التفاصيل',
+                        'الدفع',
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
             body: Animate(
                 effects: [FadeEffect(delay: 200.ms)],
                 child: _buildBody(state, context)),
@@ -77,16 +98,7 @@ class ServicesScreen extends StatelessWidget {
               child: ListView(
                 children: [
                   verticalSpace(20.h),
-                  Text(
-                    "تخصص الخدمة العام",
-                    style: TextStyles.cairo_14_bold,
-                  ),
-                  verticalSpace(5.h),
-                  Text(
-                    "اختر التخصص الذي ترغب فيه للحصول على الخدمات المتاحة",
-                    style: TextStyles.cairo_12_semiBold
-                        .copyWith(color: appColors.grey15),
-                  ),
+                  verticalSpace(10.h),
                   verticalSpace(20.h),
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),

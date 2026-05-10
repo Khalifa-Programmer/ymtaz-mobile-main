@@ -176,7 +176,7 @@ class DigetalScreen extends StatelessWidget {
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) {
                         return Icon(
-                          FontAwesomeIcons.briefcase,
+                          Icons.work_outline,
                           color: index % 4 < 2
                               ? appColors.primaryColorYellow
                               : appColors.blue90,

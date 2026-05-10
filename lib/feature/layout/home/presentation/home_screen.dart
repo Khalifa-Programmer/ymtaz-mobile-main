@@ -19,6 +19,8 @@ import 'package:yamtaz/feature/layout/home/logic/home_cubit.dart';
 import 'package:yamtaz/feature/layout/home/logic/home_state.dart';
 import 'package:yamtaz/feature/layout/home/presentation/recent_joined_lawyers.dart';
 import 'package:yamtaz/feature/layout/home/presentation/elite_lawyers_section.dart';
+import 'package:yamtaz/feature/layout/home/presentation/widgets/large_service_card.dart';
+import 'package:yamtaz/feature/layout/home/presentation/widgets/specialization_card.dart';
 import 'package:yamtaz/feature/ymtaz_elite/data/model/elite_my_requests_model.dart';
 
 import '../../../notifications/logic/notification_cubit.dart';
@@ -38,6 +40,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final FocusNode focusNode = FocusNode();
+  final bool useLargeCards = true; // Switch to false to use the original grid design for all items
 
   @override
   void initState() {
@@ -115,8 +118,29 @@ class _HomeScreenState extends State<HomeScreen> {
               const SliverToBoxAdapter(child: EliteLawyersSection()),
               SliverToBoxAdapter(child: verticalSpace(20.h)),
 
-              _buildGridSection(context),
+              if (useLargeCards) ...[
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    child: Text(
+                      "الخدمات الرئيسية",
+                      style: TextStyles.cairo_16_bold.copyWith(
+                        color: appColors.blue100,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                ),
+                _buildLargeCardsSection(context),
+                SliverToBoxAdapter(child: verticalSpace(20.h)),
+                _buildGridSection(context),
+              ] else ...[
+                SliverToBoxAdapter(child: _buildHomeGrid(context)),
+              ],
               SliverToBoxAdapter(child: verticalSpace(20.h)),
+
+              /*_buildSpecializationsSection(context),
+              SliverToBoxAdapter(child: verticalSpace(20.h)),*/
 
               // Grid Section
             ],
@@ -189,10 +213,53 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildSpecializationsSection(BuildContext context) {
+    final specializations = context.read<HomeCubit>().specializations;
+
+    if (specializations == null || specializations.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            return SpecializationCard(
+              specialization: specializations[index],
+              index: index,
+            );
+          },
+          childCount: specializations.length,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLargeCardsSection(BuildContext context) {
+    final homeData = context.read<HomeCubit>().homeData;
+    final largeItems = homeData.take(3).toList();
+
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            return LargeServiceCard(item: largeItems[index], index: index);
+          },
+          childCount: largeItems.length,
+        ),
+      ),
+    );
+  }
+
   Widget _buildGridSection(BuildContext context) {
-    final homeData = context
-        .read<HomeCubit>()
-        .homeData;
+    final homeData = context.read<HomeCubit>().homeData;
+    // Skip the first 3 items as they are shown as large cards
+    final gridItems = homeData.skip(3).toList();
+    
+    if (gridItems.isEmpty) return const SliverToBoxAdapter(child: SizedBox.shrink());
+
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 20.0.w),
       sliver: SliverGrid(
@@ -203,8 +270,8 @@ class _HomeScreenState extends State<HomeScreen> {
           childAspectRatio: 1.8,
         ),
         delegate: SliverChildBuilderDelegate(
-              (context, index) {
-            final item = homeData[index];
+          (context, index) {
+            final item = gridItems[index];
             return CupertinoButton(
               padding: EdgeInsets.zero,
               onPressed: () {
@@ -215,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _buildGridItem(context, item, index),
             );
           },
-          childCount: homeData.length,
+          childCount: gridItems.length,
         ),
       ),
     );

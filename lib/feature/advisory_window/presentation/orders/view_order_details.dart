@@ -106,7 +106,7 @@ class ViewOrderDetails extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        FontAwesomeIcons.ticket,
+                        Icons.confirmation_number_outlined,
                         color: appColors.primaryColorYellow,
                         size: 20.sp,
                       ),
@@ -157,7 +157,7 @@ class ViewOrderDetails extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        FontAwesomeIcons.dollar,
+                        Icons.attach_money,
                         color: appColors.primaryColorYellow,
                         size: 20.sp,
                       ),

@@ -1,6 +1,6 @@
-import 'package:yamtaz/feature/layout/home/data/models/banners_model.dart';
-
 import '../data/models/recent_joined_lawyers_model.dart';
+import '../data/models/specialization_response.dart';
+import '../data/models/banners_model.dart';
 
 sealed class HomeState {}
 
@@ -43,4 +43,19 @@ final class HomeStateBannersError extends HomeState {
   final String message;
 
   HomeStateBannersError(this.message);
+}
+
+// Specializations
+final class HomeStateSpecializationsLoading extends HomeState {}
+
+final class HomeStateSpecializationsLoaded extends HomeState {
+  final List<Specialization> specializations;
+
+  HomeStateSpecializationsLoaded(this.specializations);
+}
+
+final class HomeStateSpecializationsError extends HomeState {
+  final String message;
+
+  HomeStateSpecializationsError(this.message);
 }

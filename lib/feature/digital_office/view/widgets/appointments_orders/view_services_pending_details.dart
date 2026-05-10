@@ -75,9 +75,9 @@ class _ServiceScreenSetailsClientState
                 children: [
                   verticalSpace(110.h),
                   _buildDetailsContainer(context, "تفاصيل الموعد", [
-                    _buildDetailRow(FontAwesomeIcons.ticket, "نوع الموعد",
+                    _buildDetailRow(Icons.confirmation_number_outlined, "نوع الموعد",
                         widget.offer.reservationType!.name!),
-                    _buildDetailRow(FontAwesomeIcons.dollar, "السعر",
+                    _buildDetailRow(Icons.attach_money, "السعر",
                         "${widget.offer.price ?? "لا يوجد عرض مقدم"} ريال"),
                     _buildDetailRow(
                         Icons.label_important_outline_rounded,

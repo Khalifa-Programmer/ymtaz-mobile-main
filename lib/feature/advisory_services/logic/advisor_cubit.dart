@@ -24,6 +24,19 @@ class AdvisorCubit extends Cubit<AdvisorState> {
   AdvisoryServicesTypesResponse? typesResponse;
 
   int selectedTypeIndex = -1;
+  int currentStep = 0;
+
+  void updateStep(int step) {
+    currentStep = step;
+    emit(AdvisorState.sucessLoadMainCategory(mainCategoryResponse!)); // Simple emit to refresh UI
+  }
+
+  void previousStep() {
+    if (currentStep > 0) {
+      currentStep--;
+      emit(AdvisorState.sucessLoadMainCategory(mainCategoryResponse!));
+    }
+  }
 
   void getData() {
     if (typesResponse == null ||
@@ -227,7 +240,7 @@ class AdvisorCubit extends Cubit<AdvisorState> {
 
   Future<File?> pickFile() async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
+      FilePickerResult? result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: [
           'pdf',

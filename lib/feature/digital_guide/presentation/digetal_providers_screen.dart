@@ -401,7 +401,7 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
               Row(
                 children: [
                   Icon(
-                    FontAwesomeIcons.earthAsia,
+                    Icons.public,
                     color: appColors.primaryColorYellow,
                     size: 20.sp,
                   ),
@@ -428,7 +428,7 @@ class _DigitalProvidersScreenState extends State<DigitalProvidersScreen>
               Row(
                 children: [
                   Icon(
-                    FontAwesomeIcons.earthAsia,
+                    Icons.public,
                     color: appColors.primaryColorYellow,
                     size: 20.sp,
                   ),

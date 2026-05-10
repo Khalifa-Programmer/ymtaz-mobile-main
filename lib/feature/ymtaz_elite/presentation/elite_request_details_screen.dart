@@ -20,8 +20,7 @@ import '../../../core/widgets/app_bar.dart';
 import '../../../core/widgets/spacing.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yamtaz/core/helpers/fuctions_helpers/functions_helpers.dart';
-import 'package:stream_video_flutter/stream_video_flutter.dart';
-import '../../advisory_window/presentation/call_screen.dart';
+
 import '../../layout/account/logic/my_account_cubit.dart';
 import '../../../core/widgets/users_images.dart';
 import 'consultants_list_screen.dart';

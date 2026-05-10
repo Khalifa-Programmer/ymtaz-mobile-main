@@ -43,7 +43,7 @@ class _EliteRequestScreenState extends State<EliteRequestScreen> {
   }
 
   void _pickFiles() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
       allowMultiple: true,

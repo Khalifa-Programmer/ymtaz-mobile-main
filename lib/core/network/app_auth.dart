@@ -4,15 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AppServices {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-
   Future<Map<String, dynamic>?> signInWithGoogle(BuildContext context) async {
   try {
-    await _googleSignIn.signOut();
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    await GoogleSignIn.instance.signOut();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn.instance.authenticate();
     if (googleUser == null) return null;
 
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth = googleUser.authentication;
     
     // هذا هو التوكن الذي يحتاجه الباك اند غالباً
     final String? idToken = googleAuth.idToken; 

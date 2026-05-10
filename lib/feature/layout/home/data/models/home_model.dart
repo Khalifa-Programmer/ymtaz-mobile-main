@@ -5,11 +5,13 @@ class HomeModel {
   final String description;
   final SvgPicture icon;
   String? route;
+  List<String>? subSpecializations;
 
   HomeModel({
     required this.title,
     required this.description,
     required this.icon,
     this.route,
+    this.subSpecializations,
   });
 }

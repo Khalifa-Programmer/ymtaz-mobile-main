@@ -53,15 +53,15 @@ class Faq extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12.r),
                             ),
                             child: ExpansionTile(
-                              collapsedBackgroundColor: appColors.primaryColorYellow,
+                              collapsedBackgroundColor: appColors.lightYellow10.withOpacity(0.8),
                               backgroundColor: Colors.white,
-                              textColor: Colors.black,
-                              collapsedTextColor: Colors.white,
+                              textColor: appColors.blue100,
+                              collapsedTextColor: appColors.blue100,
                               iconColor: appColors.primaryColorYellow,
-                              collapsedIconColor: Colors.white,
+                              collapsedIconColor: appColors.blue100,
                               title: Text(
                                 datum.title ?? '',
-                                style: TextStyles.cairo_14_bold,
+                                style: TextStyles.cairo_14_bold.copyWith(color: appColors.blue100),
                               ),
                               collapsedShape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.r),
@@ -69,11 +69,12 @@ class Faq extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
-                              tilePadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+                              tilePadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                               expandedCrossAxisAlignment: CrossAxisAlignment.start,
                               childrenPadding: EdgeInsets.zero,
-                              trailing: const Icon(
+                              trailing: Icon(
                                 Icons.expand_more,
+                                color: appColors.blue100,
                               ),
                               children: [
                                 Container(

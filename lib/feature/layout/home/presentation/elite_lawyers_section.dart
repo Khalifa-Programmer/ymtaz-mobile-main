@@ -17,10 +17,20 @@ class EliteLawyersSection extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
-        color: Colors.white,
+        gradient: LinearGradient(
+          colors: [
+            appColors.primaryColorYellow.withOpacity(0.5),
+            appColors.lightYellow10,
+            appColors.lightYellow10.withOpacity(0.8),
+            appColors.primaryColorYellow.withOpacity(0.2),
+          ],
+          stops: [0.0, 0.2, 0.4, 1.0],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFD4AF37).withOpacity(0.15),
+            color: appColors.primaryColorYellow.withOpacity(0.15),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -29,25 +39,25 @@ class EliteLawyersSection extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(24.w),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end, // Aligns description text and button to right
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            // Align Header (Text + Icon) to the absolute right
             Align(
               alignment: Alignment.centerRight,
               child: Row(
-                mainAxisSize: MainAxisSize.min, // Takes only needed space
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   SvgPicture.asset(
                     AppAssets.crown,
-                    width: 18.sp,
+                    width: 30.sp, // Enlarged icon
+                    colorFilter: ColorFilter.mode(appColors.blue100, BlendMode.srcIn),
                   ),
                   horizontalSpace(8.w),
                   Text(
                     "هيئة المستشارين (خدمة النخبة)",
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF0F2D37),
+                      color: appColors.blue100,
                       fontFamily: 'Cairo',
                     ),
                   ),
@@ -67,29 +77,32 @@ class EliteLawyersSection extends StatelessWidget {
             ),
             verticalSpace(20.h),
             SizedBox(
-              width: double.infinity,
+              width: 140.w, // Smaller, more elegant button
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFFD4AF37),
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: const Color(0xFFD4AF37),
-                    width: 1,
-                  ),
+                  color: appColors.blue100,
+                  borderRadius: BorderRadius.circular(25.r),
                 ),
                 child: CupertinoButton(
-                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                  padding: EdgeInsets.symmetric(vertical: 8.h),
                   onPressed: () {
                     context.pushNamed(Routes.elitePromo);
                   },
-                  child: Text(
-                    "ابدأ الآن",
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontFamily: 'Cairo',
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "ابدأ الآن",
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                      horizontalSpace(5.w),
+                      Icon(Icons.arrow_forward_ios, color: Colors.white, size: 12.sp),
+                    ],
                   ),
                 ),
               ),

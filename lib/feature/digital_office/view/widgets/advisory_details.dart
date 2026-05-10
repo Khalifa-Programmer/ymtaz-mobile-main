@@ -112,7 +112,7 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
                    _buildClientInfo(context),
                   _buildDetailsContainer(context, "بيانات الطلب", [
                     _buildDetailRow(
-                        FontAwesomeIcons.ticket,
+                        Icons.confirmation_number_outlined,
                         "نوع الاستشارة",
                         widget.servicesRequirementsResponse.advisoryServicesSub!
                             .name!),
@@ -126,7 +126,7 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
                         "نوع الوسيلة",
                         widget.servicesRequirementsResponse.advisoryServicesSub!
                             .generalCategory!.paymentCategoryType!.name!),
-                    _buildDetailRow(FontAwesomeIcons.dollar, "السعر",
+                    _buildDetailRow(Icons.attach_money, "السعر",
                         "${widget.servicesRequirementsResponse.price ?? 0} ريال"),
                     _buildDetailRow(
                         Icons.label_important_outline_rounded,
@@ -459,7 +459,7 @@ class _ViewAdvisoryDetailsState extends State<ViewAdvisoryDetails> {
       return;
     }
 
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
       allowMultiple: true,

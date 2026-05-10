@@ -53,116 +53,89 @@ allContactRequests.sort((a, b) {
   return dateB.compareTo(dateA);
 });
                     return ListView.separated(
-                      itemBuilder: (context, index) => Container(
-                        decoration: BoxDecoration(
-                          color: appColors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              spreadRadius: 4,
-                              blurRadius: 9,
-                              offset: const Offset(3, 3),
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: ExpansionTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          collapsedShape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          backgroundColor:  appColors.grey3,
-                          collapsedBackgroundColor: appColors.white,
-                          tilePadding: EdgeInsets.symmetric(horizontal: 16.sp),
-                          expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                          childrenPadding: EdgeInsets.zero,
-                          leading: Icon(
-                            allContactRequests[index].replyDescription != null
-                                ? Icons.check_circle_outline
-                                : Icons.access_time,
-                            color: allContactRequests[index].replyDescription != null
-                                ? Colors.green
-                                : Colors.orange,
-                          ),
-                          title: Text(
-                            "${getTypeNameById(allContactRequests[index].type!)} -  ${allContactRequests[index].subject} - ${getTimeDate(allContactRequests[index].createdAt.toString())}",
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.bold,
-                              color: appColors.black,
-                            ),
-                          ),
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: appColors.grey3,
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(16.sp),
-                                  bottomRight: Radius.circular(16.sp),
-                                ),
+                      itemBuilder: (context, index) {
+                        final request = allContactRequests[index];
+                        final bool isReplied = request.replyDescription != null;
+                        
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: appColors.blue100.withOpacity(0.04),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
                               ),
-                              padding: EdgeInsets.all(16.sp),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "الرسالة ",
-                                        maxLines: 4,
-                                        style: TextStyles.cairo_16_bold
-                                            .copyWith(color: appColors.blue100),
-                                      )
-                                    ],
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.all(16.sp),
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Text(context
-                                        .read<ContactYmtazCubit>()
-                                        .myContactYmtazResponse!
-                                        .data!
-                                        .contactRequests![index]
-                                        .subject!),
-                                  ),
-                                  AppAttachmentTile(
-                                    url: context
-                                        .read<ContactYmtazCubit>()
-                                        .myContactYmtazResponse!
-                                        .data!
-                                        .contactRequests![index]
-                                        .file,
-                                    title: "تم إرفاق ملف",
-                                  ),
-                                  SizedBox(height: 16.sp),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "رد يمتاز",
-                                        style: TextStyles.cairo_16_bold
-                                            .copyWith(color: appColors.blue100),
+                            ],
+                            borderRadius: BorderRadius.circular(15.r),
+                            border: Border.all(color: Colors.grey[100]!, width: 1),
+                          ),
+                          child: ExpansionTile(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.r),
+                            ),
+                            collapsedShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.r),
+                            ),
+                            backgroundColor: const Color(0xFFFBFBFB),
+                            collapsedBackgroundColor: Colors.white,
+                            tilePadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+                            expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                            childrenPadding: EdgeInsets.zero,
+                            leading: Container(
+                              padding: EdgeInsets.all(8.sp),
+                              decoration: BoxDecoration(
+                                color: (isReplied ? Colors.green : Colors.orange).withOpacity(0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                isReplied ? Icons.check_circle_rounded : Icons.pending_actions_rounded,
+                                color: isReplied ? Colors.green : Colors.orange,
+                                size: 20.sp,
+                              ),
+                            ),
+                            title: Text(
+                              "${getTypeNameById(request.type!)} - ${request.subject}",
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.bold,
+                                color: appColors.blue100,
+                                fontFamily: 'Cairo',
+                              ),
+                            ),
+                            subtitle: Text(
+                              getTimeDate(request.createdAt.toString()),
+                              style: TextStyle(
+                                fontSize: 11.sp,
+                                color: Colors.grey[500],
+                                fontFamily: 'Cairo',
+                              ),
+                            ),
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(20.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildMessageSection("محتوى الرسالة", request.subject ?? "", appColors.blue100),
+                                    if (request.file != null) ...[
+                                      verticalSpace(16.h),
+                                      AppAttachmentTile(
+                                        url: request.file,
+                                        title: "المرفقات",
                                       ),
                                     ],
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.all(16.sp),
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Text(context
-                                            .read<ContactYmtazCubit>()
-                                            .myContactYmtazResponse!
-                                            .data!
-                                            .contactRequests![index]
-                                            .replyDescription ??
-                                        "سيتم الرد قريبا"),
-                                  ),
-                                ],
+                                    verticalSpace(20.h),
+                                    const Divider(),
+                                    verticalSpace(16.h),
+                                    _buildMessageSection("رد يمتاز", request.replyDescription ?? "سيتم الرد عليك في أقرب وقت ممكن", appColors.primaryColorYellow),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            ],
+                          ),
+                        );
+                      },
                       separatorBuilder: (context, index) => verticalSpace(10.h),
                       itemCount: context
                           .read<ContactYmtazCubit>()
@@ -181,6 +154,33 @@ allContactRequests.sort((a, b) {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildMessageSection(String title, String content, Color titleColor) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.bold,
+            color: titleColor,
+            fontFamily: 'Cairo',
+          ),
+        ),
+        verticalSpace(8.h),
+        Text(
+          content,
+          style: TextStyle(
+            fontSize: 13.sp,
+            color: Colors.grey[700],
+            fontFamily: 'Cairo',
+            height: 1.5,
+          ),
+        ),
+      ],
     );
   }
 }

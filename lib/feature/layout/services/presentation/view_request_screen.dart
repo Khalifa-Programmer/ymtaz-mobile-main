@@ -88,9 +88,9 @@ class ViewOfferScreen extends StatelessWidget {
                   verticalSpace(110.h),
                   _buildBreadcrumbSection(offer),
                   _buildDetailsContainer(context, "تفاصيل الخدمة", [
-                    _buildDetailRow(FontAwesomeIcons.ticket, "نوع الخدمة",
+                    _buildDetailRow(Icons.confirmation_number_outlined, "نوع الخدمة",
                         offer.service!.title!),
-                    _buildDetailRow(FontAwesomeIcons.dollar, "السعر",
+                    _buildDetailRow(Icons.attach_money, "السعر",
                         "${offer.price ?? "لا يوجد عرض مقدم"} ريال"),
                     _buildDetailRow(Icons.label_important_outline_rounded,
                         "مستوى الطلب", offer.priority?.title ?? "مجاني"),

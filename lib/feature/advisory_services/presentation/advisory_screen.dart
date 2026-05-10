@@ -12,6 +12,7 @@ import 'package:yamtaz/core/di/dependency_injection.dart';
 import 'package:yamtaz/core/helpers/extentions.dart';
 import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
+import 'package:yamtaz/core/widgets/flow_progress_indicator.dart';
 import 'package:yamtaz/feature/advisory_services/data/model/advisory_main_category_response.dart';
 import 'package:yamtaz/feature/advisory_services/data/model/advisory_payment_types.dart';
 import 'package:yamtaz/feature/advisory_services/logic/advisor_cubit.dart';
@@ -79,11 +80,32 @@ class _AdvisoryScreenState extends State<AdvisoryScreen> {
                   ),
                 )
               ],
-              centerTitle: true,
               title: Text(
-                'نافذة الاستشارات',
+                'بوابة الخدمات',
                 style:
                     TextStyles.cairo_16_bold.copyWith(color: appColors.blue100),
+              ),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(80.h),
+                child: BlocBuilder<AdvisorCubit, AdvisorState>(
+                  builder: (context, state) {
+                    final cubit = context.read<AdvisorCubit>();
+                    // Determine step based on navigation state
+                    int step = widget.indexMainCategory == -1 ? 0 : 
+                               cubit.typesResponse == null ? 1 : 2;
+                    
+                    return FlowProgressIndicator(
+                      currentStep: step,
+                      steps: const [
+                        'وسيلة الخدمة',
+                        'التخصص العام',
+                        'التخصص الخاص',
+                        'التفاصيل',
+                        'الدفع',
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
             body: PopScope(

@@ -4,15 +4,17 @@ class appColors {
   appColors._();
 
   // Light Theme Colors
-  static const Color primaryColorYellow = Color(0xFFDDB762);
+  static const Color primaryColorYellow = Color(0xFFE5C17A); // Lightened slightly from 0xFFDDB762
   static const Color darkYellow100 = Color(0xFFB89445);
   static const Color darkYellow90 = Color(0xFFF0CF86);
   static const Color darkYellow10 = Color(0xFFD3BD82);
   static const Color lightYellow10 = Color(0xFFF9EDD3);
+  static const Color lightYellow20 = Color(0xFFFFF9EB); // Added even lighter shade
 
-  static const Color blue100 = Color(0xFF00262f);
+  static const Color blue100 = Color(0xFF0F2D37); // Softer navy
   static const Color blue70 = Color(0xff24475d);
   static const Color blue90 = Color(0xFF2B4868);
+  static const Color softBlue = Color(0xFF1B424C); // For harmonious gradients
 
   static const Color grey10 = Color(0xFF8F8F8F);
   static const Color grey1 = Color(0xFFF8F8F8);

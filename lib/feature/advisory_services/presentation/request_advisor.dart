@@ -111,8 +111,21 @@ class _RequestAdvisorState extends State<RequestAdvisor> {
               centerTitle: true,
               title: Text('طلب استشارة',
                   style: TextStyles.cairo_14_bold.copyWith(
-                    color: appColors.black,
+                    color: appColors.blue100,
                   )),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(80.h),
+                child: FlowProgressIndicator(
+                  currentStep: 3,
+                  steps: const [
+                    'وسيلة الخدمة',
+                    'التخصص العام',
+                    'التخصص الخاص',
+                    'التفاصيل',
+                    'الدفع',
+                  ],
+                ),
+              ),
             ),
             body: Padding(
               padding: EdgeInsets.symmetric(vertical: 16.sp, horizontal: 16.sp),

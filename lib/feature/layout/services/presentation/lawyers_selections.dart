@@ -17,6 +17,7 @@ import '../../../../core/widgets/alerts.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/spacing.dart';
 import '../../../../core/widgets/breadcrumb_widget.dart';
+import 'package:yamtaz/core/widgets/flow_progress_indicator.dart';
 import '../../../../l10n/locale_keys.g.dart';
 import '../data/model/available_lawyers_for_service_model.dart';
 import '../logic/services_cubit.dart';
@@ -73,7 +74,23 @@ class LawyersSelections extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           extendBodyBehindAppBar: true,
-          appBar: buildBlurredAppBar(context, 'اختيار المحامين'),
+          appBar: buildBlurredAppBar(
+            context, 
+            'اختيار المحامين',
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(80.h),
+              child: FlowProgressIndicator(
+                currentStep: 3, // Selection is usually step 3/4
+                steps: const [
+                  'وسيلة الخدمة',
+                  'التخصص العام',
+                  'التخصص الخاص',
+                  'التفاصيل',
+                  'الدفع',
+                ],
+              ),
+            ),
+          ),
           body: state.whenOrNull(serviceLawyersByIdLoading: () {
             return const Center(
               child: LawyerCardLoading(),

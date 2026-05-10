@@ -11,6 +11,7 @@ import 'package:yamtaz/core/router/routes.dart';
 import 'package:yamtaz/feature/layout/services/logic/services_state.dart';
 import 'package:yamtaz/feature/layout/services/presentation/widgets/select_price_component.dart';
 import '../../../../core/widgets/breadcrumb_widget.dart';
+import 'package:yamtaz/core/widgets/flow_progress_indicator.dart';
 
 import '../../../../config/themes/styles.dart';
 import '../../../../core/constants/assets.dart';
@@ -53,7 +54,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
       return;
     }
 
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
       allowMultiple: true,
@@ -128,8 +129,24 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: buildBlurredAppBar(context, "تفاصيل الخدمة"),
+        extendBodyBehindAppBar: false,
+        appBar: buildBlurredAppBar(
+          context, 
+          "تفاصيل الخدمة",
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(80.h),
+            child: FlowProgressIndicator(
+              currentStep: 3, // Step 3: Details
+              steps: const [
+                'وسيلة الخدمة',
+                'التخصص العام',
+                'التخصص الخاص',
+                'التفاصيل',
+                'الدفع',
+              ],
+            ),
+          ),
+        ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.0.w),
           child: BlocConsumer<ServicesCubit, ServicesState>(

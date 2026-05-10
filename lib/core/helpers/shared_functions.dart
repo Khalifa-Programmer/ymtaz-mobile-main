@@ -219,7 +219,7 @@ String? getCountryCodeFromDialingCode(String dialingCode) {
 
 Future<File?> pickFile() async {
   try {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: [
         'pdf',

@@ -231,7 +231,7 @@ class LawGuideSearch extends StatelessWidget {
                                 ),
                               ),
                               horizontalSpace(20.w),
-                              FaIcon(
+                              Icon(
                                 Icons.local_library,
                                 size: 24.sp,
                                 color: appColors.primaryColorYellow,
@@ -371,7 +371,7 @@ class LawGuideSearch extends StatelessWidget {
                                 ),
                               ),
                               horizontalSpace(20.w),
-                              FaIcon(
+                              Icon(
                                 Icons.local_library,
                                 size: 24.sp,
                                 color: appColors.primaryColorYellow,

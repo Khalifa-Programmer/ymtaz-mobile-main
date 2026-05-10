@@ -112,7 +112,7 @@ class SubBooksScreen extends StatelessWidget {
                       )),
                   Row(
                     children: [
-                      Icon(
+                      FaIcon(
                         FontAwesomeIcons.userAlt,
                         size: 12.sp,
                         color: appColors.grey15,

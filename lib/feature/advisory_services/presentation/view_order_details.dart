@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:readmore/readmore.dart';
-import 'package:stream_video_flutter/stream_video_flutter.dart';
 import 'package:yamtaz/config/themes/styles.dart';
 import 'package:yamtaz/core/constants/colors.dart';
 import 'package:yamtaz/core/helpers/fuctions_helpers/functions_helpers.dart';
 import 'package:yamtaz/core/widgets/custom_button.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/feature/advisory_services/data/model/all_advirsory_response.dart';
-import 'package:yamtaz/feature/advisory_services/presentation/call_screen.dart';
+import 'package:yamtaz/feature/advisory_window/presentation/video_call/video_call_lobby_screen.dart';
 import 'package:yamtaz/feature/layout/account/logic/my_account_cubit.dart';
 
 import '../../../core/di/dependency_injection.dart';
@@ -71,7 +70,7 @@ class ViewOrderDetails extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        FontAwesomeIcons.ticket,
+                        Icons.confirmation_number_outlined,
                         color: appColors.primaryColorYellow,
                         size: 20.sp,
                       ),
@@ -93,7 +92,7 @@ class ViewOrderDetails extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        FontAwesomeIcons.dollar,
+                        Icons.attach_money,
                         color: appColors.primaryColorYellow,
                         size: 20.sp,
                       ),
@@ -291,72 +290,18 @@ class ViewOrderDetails extends StatelessWidget {
                           CustomButton(
                             onPress: () async {
                               try {
-                                var userType =
-                                    CacheHelper.getData(key: 'userType');
-                                if (userType == 'client') {
-                                  StreamVideo.reset();
-                                  StreamVideo(
-                                    'd3cgunkh7jrg',
-                                    user: User.regular(
-                                        userId: getit<MyAccountCubit>()
-                                            .clientProfile!
-                                            .data!
-                                            .client!
-                                            .streamioId
-                                            .toString(),
-                                        name: getit<MyAccountCubit>()
-                                            .clientProfile!
-                                            .data!
-                                            .client!
-                                            .name),
-                                    userToken: getit<MyAccountCubit>()
-                                        .clientProfile!
-                                        .data!
-                                        .client!
-                                        .streamioToken,
-                                  );
-                                } else {
-                                  StreamVideo.reset();
-                                  StreamVideo(
-                                    'd3cgunkh7jrg',
-                                    user: User.regular(
-                                        userId: getit<MyAccountCubit>()
-                                            .userDataResponse!
-                                            .data!
-                                            .client!
-                                            .streamioId
-                                            .toString(),
-                                        name: getit<MyAccountCubit>()
-                                            .userDataResponse!
-                                            .data!
-                                            .client!
-                                            .name),
-                                    userToken: getit<MyAccountCubit>()
-                                        .userDataResponse!
-                                        .data!
-                                        .client!
-                                        .streamioToken,
-                                  );
-                                }
-
-                                var call = StreamVideo.instance.makeCall(
-                                  // type: 'default',
-                                  callType: StreamCallType.custom("default"),
-                                  id: servicesRequirementsResponse.callId!,
-                                );
-
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        CallScreen(call: call),
+                                    builder: (context) => VideoCallLobbyScreen(
+                                      durationMinutes: 30,
+                                      date: getDate(servicesRequirementsResponse.from!),
+                                      time: getTime(servicesRequirementsResponse.from!),
+                                      channelName: servicesRequirementsResponse.callId ?? "Ymtaz",
+                                    ),
                                   ),
                                 );
-
-                                await call.getOrCreate();
                               } catch (e) {
-                                debugPrint(
-                                    'Error joining or creating call: $e');
-                                debugPrint(e.toString());
+                                debugPrint('Error joining or creating call: $e');
                               }
                             },
                             title: 'بدء المكالمة',

@@ -20,6 +20,12 @@ class ServicesCubit extends Cubit<ServicesState> {
   services.Service? selectedSubService;
   services.YmtazLevelsPrice? selectedLevel;
   FormData requestData = FormData();
+  int currentStep = 0;
+
+  void updateStep(int step) {
+    currentStep = step;
+    emit(const ServicesState.initial()); // Refresh UI
+  }
 
   List<Lawyer>? cachedLawyers;
 

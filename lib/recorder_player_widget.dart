@@ -128,7 +128,7 @@ class _RecorderPlayerWidgetState extends State<RecorderPlayerWidget> {
             widget.playerController.playerState == PlayerState.initialized) {
           await widget.playerController.preparePlayer(path: path!);
         }
-        await widget.playerController.startPlayer(finishMode: FinishMode.pause);
+        await widget.playerController.startPlayer();
       }
     } catch (e) {
       debugPrint("Error during playback: $e");

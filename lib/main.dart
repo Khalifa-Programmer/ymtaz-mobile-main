@@ -10,6 +10,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yamtaz/config/themes/localization.dart';
 import 'package:yamtaz/core/di/dependency_injection.dart';
 import 'package:yamtaz/core/helpers/local_notification.dart' as local_notification;
@@ -131,6 +132,13 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     }
   } catch (e) {
     debugPrint('Firebase already initialized: $e');
+  }
+
+  // Initialize GoogleSignIn (required for 7.2.0+)
+  try {
+    await GoogleSignIn.instance.initialize();
+  } catch (e) {
+    debugPrint('Error initializing GoogleSignIn: $e');
   }
 
   try{

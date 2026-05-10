@@ -53,16 +53,6 @@ class AdvisoryGeneralType extends StatelessWidget {
                 children: [
                   BreadcrumbWidget(path: breadcrumbPath),
                   verticalSpace(15.h),
-                  Text(
-                    "التخصص العام",
-                    style: TextStyles.cairo_14_bold,
-                  ),
-                  verticalSpace(5.h),
-                  Text(
-                    "اختر تخصص الاستشارة التي تريد الاستشارة فيها",
-                    style: TextStyles.cairo_12_semiBold
-                        .copyWith(color: appColors.grey15),
-                  ),
                   verticalSpace(10.h),
                   ListView.builder(
                     shrinkWrap: true,

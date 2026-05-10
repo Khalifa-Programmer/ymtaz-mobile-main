@@ -122,7 +122,7 @@ Future<void> setGetIt() async {
   getit.registerLazySingleton<MyPageCubit>(() => MyPageCubit(getit()));
 
   // home
-  getit.registerLazySingleton<HomeRepo>(() => HomeRepo(getit()));
+  getit.registerLazySingleton<HomeRepo>(() => HomeRepo(getit(), dio));
   getit.registerLazySingleton<HomeCubit>(() => HomeCubit(getit()));
 
   // notifications

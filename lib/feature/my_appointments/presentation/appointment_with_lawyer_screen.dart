@@ -19,6 +19,7 @@ import 'package:yamtaz/core/widgets/custom_container.dart';
 import 'package:yamtaz/core/widgets/primary/text_form_primary.dart';
 import 'package:yamtaz/core/widgets/spacing.dart';
 import 'package:yamtaz/core/widgets/breadcrumb_widget.dart';
+import 'package:yamtaz/core/widgets/flow_progress_indicator.dart';
 import 'package:yamtaz/feature/my_appointments/data/model/working_hours_response.dart';
 import 'package:yamtaz/feature/my_appointments/logic/appointments_state.dart';
 import 'package:yamtaz/feature/my_appointments/presentation/select_appointment_screen.dart';
@@ -90,6 +91,20 @@ class _AppointmentDataState extends State<AppointmentData> {
               style: TextStyles.cairo_14_bold.copyWith(
                 color: appColors.black,
               )),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(80.h),
+            child: FlowProgressIndicator(
+              currentStep: widget.selectedMainType == -1 ? 0 : 1,
+              steps: const [
+                'نوع الموعد',
+                'التخصص العام',
+                'التخصص الخاص',
+                'التفاصيل',
+                'المحامين',
+                'الدفع',
+              ],
+            ),
+          ),
           leading: widget.selectedMainType != -1 
               ? IconButton(
                   icon: const Icon(Icons.arrow_back),

@@ -399,7 +399,7 @@ class SeeMyProfileClient extends StatelessWidget {
                                           verticalSpace(20.h),
                                           Row(
                                             children: [
-                                              Icon(
+                                              FaIcon(
                                                 FontAwesomeIcons.earthAsia,
                                                 color: appColors
                                                     .primaryColorYellow,
@@ -459,7 +459,7 @@ class SeeMyProfileClient extends StatelessWidget {
                                           verticalSpace(20.h),
                                           Row(
                                             children: [
-                                              Icon(
+                                              FaIcon(
                                                 FontAwesomeIcons.earthAsia,
                                                 color: appColors
                                                     .primaryColorYellow,
@@ -519,7 +519,7 @@ class SeeMyProfileClient extends StatelessWidget {
                                           verticalSpace(20.h),
                                           Row(
                                             children: [
-                                              Icon(
+                                              FaIcon(
                                                 FontAwesomeIcons.earthAsia,
                                                 color: appColors
                                                     .primaryColorYellow,
@@ -579,7 +579,7 @@ class SeeMyProfileClient extends StatelessWidget {
                                           verticalSpace(20.h),
                                           Row(
                                             children: [
-                                              Icon(
+                                              FaIcon(
                                                 FontAwesomeIcons.idCard,
                                                 color: appColors
                                                     .primaryColorYellow,

@@ -311,7 +311,7 @@ class ViewAppointmentDoneScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(IconData icon, String label, String value) {
+  Widget _buildDetailRow(dynamic icon, String label, String value) {
     return Column(
       children: [
         Row(

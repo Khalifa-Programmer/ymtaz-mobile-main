@@ -8,6 +8,7 @@ import 'package:yamtaz/feature/layout/services/data/model/services_requirements_
 import 'package:yamtaz/feature/layout/services/logic/services_state.dart';
 import 'package:yamtaz/feature/layout/services/presentation/widgets/item_widget.dart';
 import 'package:yamtaz/l10n/locale_keys.g.dart';
+import 'package:yamtaz/core/widgets/flow_progress_indicator.dart';
 
 import '../../../../config/themes/styles.dart';
 import '../../../../core/di/dependency_injection.dart';
@@ -78,24 +79,31 @@ class _ServicesSubTypeScreenState extends State<ServicesSubTypeScreen> {
         },
         builder: (context, state) {
           return Scaffold(
-            extendBodyBehindAppBar: true,
-            appBar: buildBlurredAppBar(context, LocaleKeys.services.tr()),
+            extendBodyBehindAppBar: false,
+            appBar: buildBlurredAppBar(
+              context, 
+              LocaleKeys.servicesPortal.tr(),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(80.h),
+                child: FlowProgressIndicator(
+                  currentStep: 1, // Step 1: choosing sub-type
+                  steps: const [
+                    'وسيلة الخدمة',
+                    'التخصص العام',
+                    'التخصص الخاص',
+                    'التفاصيل',
+                    'الدفع',
+                  ],
+                ),
+              ),
+            ),
             body: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0.w),
               child: ListView(
                 children: [
                   BreadcrumbWidget(path: widget.items.name ?? ''),
                   verticalSpace(20.h),
-                  Text(
-                    "تخصص الخدمة الدقيق",
-                    style: TextStyles.cairo_14_bold,
-                  ),
-                  verticalSpace(5.h),
-                  Text(
-                    "اختر التخصص الدقيق الذي ترغب فيه للحصول على الخدمات المتاحة",
-                    style: TextStyles.cairo_12_semiBold
-                        .copyWith(color: appColors.grey15),
-                  ),
+                  verticalSpace(10.h),
                   verticalSpace(20.h),
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),

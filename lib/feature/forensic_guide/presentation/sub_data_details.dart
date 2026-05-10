@@ -126,7 +126,7 @@ class SubDataDetails extends StatelessWidget {
                 Row(
                   children: [
                     Icon(
-                      FontAwesomeIcons.gavel,
+                      Icons.gavel,
                       color: appColors.primaryColorYellow,
                       size: 20.0.sp,
                     ),
@@ -186,7 +186,7 @@ class SubDataDetails extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        FontAwesomeIcons.mapMarkerAlt,
+                        Icons.location_on,
                         color: appColors.primaryColorYellow,
                         size: 15.0.sp,
                       ),
@@ -424,7 +424,7 @@ class SubDataDetails extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Icon(
-                            FontAwesomeIcons.mapMarkerAlt,
+                            Icons.location_on,
                             color: appColors.white,
                             size: 20.0.sp,
                           ),

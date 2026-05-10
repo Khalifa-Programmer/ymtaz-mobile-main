@@ -115,12 +115,12 @@ class PackageCard extends StatelessWidget {
                   CustomExpansionTile(
                     title: 'مميزات الباقة',
                     initialGradient: const LinearGradient(
-                      colors: [Color.fromRGBO(20, 69, 82, 1), Color.fromRGBO(0, 38, 46, 1)],
+                      colors: [appColors.softBlue, appColors.blue100],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
                     expandedGradient: const LinearGradient(
-                      colors: [Color.fromRGBO(0, 38, 46, 1), Color.fromRGBO(20, 69, 82, 1)],
+                      colors: [appColors.blue100, appColors.softBlue],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),

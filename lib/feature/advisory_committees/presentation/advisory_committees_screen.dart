@@ -150,14 +150,14 @@ class AdvisoryCommitteesScreen extends StatelessWidget {
                             ? CachedNetworkImage(
                                 imageUrl: category.image!,
                                 fit: BoxFit.contain,
-                                placeholder: (context, url) => Icon(
+                                placeholder: (context, url) => FaIcon(
                                   FontAwesomeIcons.briefcase,
                                   color: index % 4 < 2
                                       ? appColors.primaryColorYellow
                                       : appColors.blue90,
                                   size: 30.sp,
                                 ),
-                                errorWidget: (context, url, error) => Icon(
+                                errorWidget: (context, url, error) => FaIcon(
                                   FontAwesomeIcons.briefcase,
                                   color: index % 4 < 2
                                       ? appColors.primaryColorYellow
@@ -165,7 +165,7 @@ class AdvisoryCommitteesScreen extends StatelessWidget {
                                   size: 30.sp,
                                 ),
                               )
-                            : Icon(
+                            : FaIcon(
                                 FontAwesomeIcons.briefcase,
                                 color: index % 4 < 2
                                     ? appColors.primaryColorYellow

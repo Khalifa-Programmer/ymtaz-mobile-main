@@ -38,16 +38,6 @@ class AdvisoryType extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "وسيلة الاستشارة",
-                      style: TextStyles.cairo_14_bold,
-                    ),
-                    verticalSpace(5.h),
-                    Text(
-                      "اختر وسيلة الاستشارة المناسبة لك للحصول على أفضل خدمة",
-                      style: TextStyles.cairo_12_semiBold
-                          .copyWith(color: appColors.grey15),
-                    ),
                     verticalSpace(10.h),
                     ListView.separated(
                       shrinkWrap: true,

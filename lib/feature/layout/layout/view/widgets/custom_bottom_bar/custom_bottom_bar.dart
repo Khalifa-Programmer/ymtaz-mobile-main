@@ -108,33 +108,32 @@ Widget CustomBottomAppBar(BuildContext context) {
 
 Widget _buildShadowWithRippleDestination(
   BuildContext context, {
-  required IconData? icon,
+  required dynamic icon,
   required String label,
   required bool isSelected,
   Widget? customIcon,
 }) {
-  return StatefulBuilder(
-    builder: (context, setState) {
-      return InkWell(
-        onTap: () {
-          int index = _getDestinationIndex(label);
-          LayoutCubit.get(context).changeCurrentPage(index);
-        },
-        child: NavigationDestination(
-          selectedIcon: customIcon ??
-              FaIcon(
-                icon,
-                color: appColors.blue100,
-              ),
-          icon: customIcon ??
-              FaIcon(
-                icon,
-                color: isSelected ? appColors.blue100 : appColors.grey5,
-              ),
-          label: label,
-        ),
-      );
+  Widget buildIcon(bool selected) {
+    if (customIcon != null) return customIcon;
+    final color = selected ? appColors.blue100 : appColors.grey5;
+    if (icon is FaIconData) {
+      return FaIcon(icon, color: color);
+    } else if (icon is IconData) {
+      return Icon(icon, color: color);
+    }
+    return const SizedBox();
+  }
+
+  return InkWell(
+    onTap: () {
+      int index = _getDestinationIndex(label);
+      LayoutCubit.get(context).changeCurrentPage(index);
     },
+    child: NavigationDestination(
+      selectedIcon: buildIcon(true),
+      icon: buildIcon(false),
+      label: label,
+    ),
   );
 }
 

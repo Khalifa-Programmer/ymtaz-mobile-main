@@ -157,20 +157,20 @@ class _AppointmentFormState extends State<AppointmentForm> {
             },
             initialLocation: const LatLng(24.7136, 46.6753), // Riyadh default
             usePinPointingSearch: true,
-            localizationConfig: const LocalizationConfig(
+            localizationConfig: LocalizationConfig(
               languageCode: 'ar',
               nearBy: 'الأماكن القريبة',
               findingPlace: 'جاري البحث عن الموقع...',
               noResultsFound: 'لم يتم العثور على نتائج',
               unnamedLocation: 'موقع غير مسمى',
             ),
-            selectedPlaceConfig: const SelectedPlaceConfig(
+            selectedPlaceConfig: SelectedPlaceConfig(
               actionButtonText: 'تأكيد الموقع',
             ),
-            googleAPIParameters: const GoogleAPIParameters(
+            googleAPIParameters: GoogleAPIParameters(
               language: 'ar',
             ),
-            searchInputConfig: const SearchInputConfig(
+            searchInputConfig: SearchInputConfig(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
               autofocus: false,
               textDirection: TextDirection.rtl,

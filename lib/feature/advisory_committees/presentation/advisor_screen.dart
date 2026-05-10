@@ -283,7 +283,7 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                   verticalSpace(20.h),
                                   Row(
                                     children: [
-                                      Icon(
+                                      FaIcon(
                                         FontAwesomeIcons.earthAsia,
                                         color:
                                             appColors.primaryColorYellow,
@@ -312,7 +312,7 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                   verticalSpace(20.h),
                                   Row(
                                     children: [
-                                      Icon(
+                                      FaIcon(
                                         FontAwesomeIcons.earthAsia,
                                         color:
                                             appColors.primaryColorYellow,
@@ -341,7 +341,7 @@ class _AdvisorScreenState extends State<AdvisorScreen>
                                   verticalSpace(20.h),
                                   Row(
                                     children: [
-                                      Icon(
+                                      FaIcon(
                                         FontAwesomeIcons.idCard,
                                         color:
                                             appColors.primaryColorYellow,
